@@ -6105,6 +6105,2448 @@
         }
       ],
       "notes": "Option Black Angus — NO supplement (included in tasting price). Position: alternative more accessible to Wagyu (+450K). Portion tasting 100g vs À la Carte 150g (33% reduction). Cuisson 45s/face (smaller portion)."
+    },
+    "SET370": {
+      "code": "SET370",
+      "name": "Set 370k",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 370000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC3001",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 101850.0,
+          "line_cost": 10784.117647058823
+        },
+        {
+          "ing_id": "NVLC5015",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 126500.0,
+          "line_cost": 11905.882352941177
+        },
+        {
+          "ing_id": "NLP3015",
+          "qty_net": 0.03,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.03529411764705882,
+          "unit_price": 135000.0,
+          "line_cost": 4764.705882352941
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.015,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.01764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 4407.105882352941
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "SET470": {
+      "code": "SET470",
+      "name": "Set 470k",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 470000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC6005",
+          "qty_net": 0.04,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.047058823529411764,
+          "unit_price": 200000.0,
+          "line_cost": 9411.764705882353
+        },
+        {
+          "ing_id": "NVLC3001",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 101850.0,
+          "line_cost": 10784.117647058823
+        },
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 85000.0,
+          "line_cost": 9000.0
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.015,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.01764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 4407.105882352941
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "SET600": {
+      "code": "SET600",
+      "name": "Set 600k",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 600000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 85000.0,
+          "line_cost": 8000.0
+        },
+        {
+          "ing_id": "NVLC1019",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 371280.0,
+          "line_cost": 39312.0
+        },
+        {
+          "ing_id": "NVLC4002",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 260000.0,
+          "line_cost": 27529.41176470588
+        },
+        {
+          "ing_id": "NLP4002",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 197000.0,
+          "line_cost": 11588.235294117649
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.015,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.01764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 4407.105882352941
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "SET770": {
+      "code": "SET770",
+      "name": "Set 770k",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 770000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.085,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1,
+          "unit_price": 300000.0,
+          "line_cost": 30000.0
+        },
+        {
+          "ing_id": "NVLC4002",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 260000.0,
+          "line_cost": 27529.41176470588
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.015,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.01764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 4407.105882352941
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "SET970": {
+      "code": "SET970",
+      "name": "Set 970k",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 970000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5022",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 580000.0,
+          "line_cost": 54588.23529411764
+        },
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.085,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1,
+          "unit_price": 300000.0,
+          "line_cost": 30000.0
+        },
+        {
+          "ing_id": "NVLC1003",
+          "qty_net": 0.1,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.11764705882352942,
+          "unit_price": 882000.0,
+          "line_cost": 103764.70588235295
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "SET1250": {
+      "code": "SET1250",
+      "name": "Set 1250k",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1250000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5001",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 550000.0,
+          "line_cost": 58235.294117647056
+        },
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.085,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1,
+          "unit_price": 300000.0,
+          "line_cost": 30000.0
+        },
+        {
+          "ing_id": "NVLC10025",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 1113000.0,
+          "line_cost": 157129.41176470587
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "SET1550": {
+      "code": "SET1550",
+      "name": "Set 1550k",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1550000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5001",
+          "qty_net": 0.06,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.07058823529411765,
+          "unit_price": 550000.0,
+          "line_cost": 38823.529411764706
+        },
+        {
+          "ing_id": "NVLC5022",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 580000.0,
+          "line_cost": 54588.23529411764
+        },
+        {
+          "ing_id": "NVLC60021",
+          "qty_net": 0.1,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.11764705882352942,
+          "unit_price": 840000.0,
+          "line_cost": 98823.52941176471
+        },
+        {
+          "ing_id": "NVLC10025",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 1113000.0,
+          "line_cost": 157129.41176470587
+        },
+        {
+          "ing_id": "NLP4002",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 197000.0,
+          "line_cost": 11588.235294117649
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "SET1800": {
+      "code": "SET1800",
+      "name": "Set 1800k",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1800000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC60021",
+          "qty_net": 0.06,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.07058823529411765,
+          "unit_price": 840000.0,
+          "line_cost": 59294.117647058825
+        },
+        {
+          "ing_id": "NLP2011",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 1690000.0,
+          "line_cost": 99411.76470588236
+        },
+        {
+          "ing_id": "NVLC10024",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 2128000.0,
+          "line_cost": 300423.5294117647
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "SET2000": {
+      "code": "SET2000",
+      "name": "Set 2000k",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 2000000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC60021",
+          "qty_net": 0.06,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.07058823529411765,
+          "unit_price": 840000.0,
+          "line_cost": 59294.117647058825
+        },
+        {
+          "ing_id": "NLP2011",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 1690000.0,
+          "line_cost": 99411.76470588236
+        },
+        {
+          "ing_id": "NVLC5020",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 1207500.0,
+          "line_cost": 170470.58823529413
+        },
+        {
+          "ing_id": "NVLC10024",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 2128000.0,
+          "line_cost": 300423.5294117647
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T290A": {
+      "code": "T290A",
+      "name": "Tour290A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 290000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T370A": {
+      "code": "T370A",
+      "name": "Tour370A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 370000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5015",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 126500.0,
+          "line_cost": 11905.882352941177
+        },
+        {
+          "ing_id": "NVLC3001",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 101850.0,
+          "line_cost": 10784.117647058823
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.015,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.01764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 4407.105882352941
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T380A": {
+      "code": "T380A",
+      "name": "Tour380A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 380000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC3001",
+          "qty_net": 0.18,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.21176470588235294,
+          "unit_price": 101850.0,
+          "line_cost": 21568.235294117647
+        },
+        {
+          "ing_id": "NLP3015",
+          "qty_net": 0.03,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.03529411764705882,
+          "unit_price": 135000.0,
+          "line_cost": 4764.705882352941
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.015,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.01764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 4407.105882352941
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T380B": {
+      "code": "T380B",
+      "name": "Tour380B",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 380000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5015",
+          "qty_net": 0.16,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.18823529411764706,
+          "unit_price": 126500.0,
+          "line_cost": 23811.764705882353
+        },
+        {
+          "ing_id": "NLP3015",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 135000.0,
+          "line_cost": 3176.470588235294
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T380C": {
+      "code": "T380C",
+      "name": "Tour380C",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 380000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.22,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.25882352941176473,
+          "unit_price": 85000.0,
+          "line_cost": 22000.000000000004
+        },
+        {
+          "ing_id": "NLP3015",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 135000.0,
+          "line_cost": 3176.470588235294
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T380D": {
+      "code": "T380D",
+      "name": "Tour380D",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 380000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.11,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.12941176470588237,
+          "unit_price": 85000.0,
+          "line_cost": 11000.000000000002
+        },
+        {
+          "ing_id": "NVLC3001",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 101850.0,
+          "line_cost": 10784.117647058823
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T380E": {
+      "code": "T380E",
+      "name": "Tour380E",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 380000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5015",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 126500.0,
+          "line_cost": 11905.882352941177
+        },
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.11,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.12941176470588237,
+          "unit_price": 85000.0,
+          "line_cost": 11000.000000000002
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T380F": {
+      "code": "T380F",
+      "name": "Tour380F",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 380000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5015",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 126500.0,
+          "line_cost": 11905.882352941177
+        },
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.11,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.12941176470588237,
+          "unit_price": 85000.0,
+          "line_cost": 11000.000000000002
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T380H": {
+      "code": "T380H",
+      "name": "Tour380H",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 380000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.11,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.12941176470588237,
+          "unit_price": 85000.0,
+          "line_cost": 11000.000000000002
+        },
+        {
+          "ing_id": "NVLC3001",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 101850.0,
+          "line_cost": 10784.117647058823
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T380J": {
+      "code": "T380J",
+      "name": "Tour380J",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 380000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.11,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.12941176470588237,
+          "unit_price": 85000.0,
+          "line_cost": 11000.000000000002
+        },
+        {
+          "ing_id": "NVLC5015",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 126500.0,
+          "line_cost": 11905.882352941177
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T380K": {
+      "code": "T380K",
+      "name": "Tour380K",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 380000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.11,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.12941176470588237,
+          "unit_price": 85000.0,
+          "line_cost": 11000.000000000002
+        },
+        {
+          "ing_id": "NVLC5015",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 126500.0,
+          "line_cost": 11905.882352941177
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T380N": {
+      "code": "T380N",
+      "name": "Tour380N",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 380000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC3001",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 101850.0,
+          "line_cost": 10784.117647058823
+        },
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.11,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.12941176470588237,
+          "unit_price": 85000.0,
+          "line_cost": 11000.000000000002
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T430G": {
+      "code": "T430G",
+      "name": "Tour430G",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 430000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5015",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 126500.0,
+          "line_cost": 11905.882352941177
+        },
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.11,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.12941176470588237,
+          "unit_price": 85000.0,
+          "line_cost": 11000.000000000002
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T470A": {
+      "code": "T470A",
+      "name": "Tour470A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 470000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC6005",
+          "qty_net": 0.04,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.047058823529411764,
+          "unit_price": 200000.0,
+          "line_cost": 9411.764705882353
+        },
+        {
+          "ing_id": "NVLC3001",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 101850.0,
+          "line_cost": 10784.117647058823
+        },
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 85000.0,
+          "line_cost": 9000.0
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.015,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.01764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 4407.105882352941
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T500A": {
+      "code": "T500A",
+      "name": "Tour500A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 500000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.11,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.12941176470588237,
+          "unit_price": 85000.0,
+          "line_cost": 11000.000000000002
+        },
+        {
+          "ing_id": "NVLC3001",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 101850.0,
+          "line_cost": 10784.117647058823
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T500B": {
+      "code": "T500B",
+      "name": "Tour500B",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 500000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC6005",
+          "qty_net": 0.04,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.047058823529411764,
+          "unit_price": 200000.0,
+          "line_cost": 9411.764705882353
+        },
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.11,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.12941176470588237,
+          "unit_price": 85000.0,
+          "line_cost": 11000.000000000002
+        },
+        {
+          "ing_id": "NVLC3001",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 101850.0,
+          "line_cost": 10784.117647058823
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T500C": {
+      "code": "T500C",
+      "name": "Tour500C",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 500000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.11,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.12941176470588237,
+          "unit_price": 85000.0,
+          "line_cost": 11000.000000000002
+        },
+        {
+          "ing_id": "NVLC3001",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 101850.0,
+          "line_cost": 10784.117647058823
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T500D": {
+      "code": "T500D",
+      "name": "Tour500D",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 500000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC6005",
+          "qty_net": 0.04,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.047058823529411764,
+          "unit_price": 200000.0,
+          "line_cost": 9411.764705882353
+        },
+        {
+          "ing_id": "NVLC5015",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 126500.0,
+          "line_cost": 11905.882352941177
+        },
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.11,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.12941176470588237,
+          "unit_price": 85000.0,
+          "line_cost": 11000.000000000002
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T500E": {
+      "code": "T500E",
+      "name": "Tour500E",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 500000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.11,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.12941176470588237,
+          "unit_price": 85000.0,
+          "line_cost": 11000.000000000002
+        },
+        {
+          "ing_id": "NVLC3001",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 101850.0,
+          "line_cost": 10784.117647058823
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T600A": {
+      "code": "T600A",
+      "name": "Tour600A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 600000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.17,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.2,
+          "unit_price": 300000.0,
+          "line_cost": 60000.0
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T600B": {
+      "code": "T600B",
+      "name": "Tour600B",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 600000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.085,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1,
+          "unit_price": 300000.0,
+          "line_cost": 30000.0
+        },
+        {
+          "ing_id": "NVLC1019",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 371280.0,
+          "line_cost": 39312.0
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T600D": {
+      "code": "T600D",
+      "name": "Tour600D",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 600000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 85000.0,
+          "line_cost": 8000.0
+        },
+        {
+          "ing_id": "NVLC1019",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 371280.0,
+          "line_cost": 39312.0
+        },
+        {
+          "ing_id": "NVLC4002",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 260000.0,
+          "line_cost": 27529.41176470588
+        },
+        {
+          "ing_id": "NLP4002",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 197000.0,
+          "line_cost": 11588.235294117649
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.015,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.01764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 4407.105882352941
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T650A": {
+      "code": "T650A",
+      "name": "Tour650A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 650000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC1019",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 371280.0,
+          "line_cost": 39312.0
+        },
+        {
+          "ing_id": "NVLC4002",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 260000.0,
+          "line_cost": 27529.41176470588
+        },
+        {
+          "ing_id": "NLP3015",
+          "qty_net": 0.03,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.03529411764705882,
+          "unit_price": 135000.0,
+          "line_cost": 4764.705882352941
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.015,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.01764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 4407.105882352941
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T650B": {
+      "code": "T650B",
+      "name": "Tour650B",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 650000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.085,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1,
+          "unit_price": 300000.0,
+          "line_cost": 30000.0
+        },
+        {
+          "ing_id": "NVLC1019",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 371280.0,
+          "line_cost": 39312.0
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T650C": {
+      "code": "T650C",
+      "name": "Tour650C",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 650000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC4002",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 260000.0,
+          "line_cost": 27529.41176470588
+        },
+        {
+          "ing_id": "NVLC1019",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 371280.0,
+          "line_cost": 39312.0
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.015,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.01764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 4407.105882352941
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T770A": {
+      "code": "T770A",
+      "name": "Tour770A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 770000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.085,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1,
+          "unit_price": 300000.0,
+          "line_cost": 30000.0
+        },
+        {
+          "ing_id": "NVLC4002",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 260000.0,
+          "line_cost": 27529.41176470588
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.015,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.01764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 4407.105882352941
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T770B": {
+      "code": "T770B",
+      "name": "Tour770B",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 770000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.085,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1,
+          "unit_price": 300000.0,
+          "line_cost": 30000.0
+        },
+        {
+          "ing_id": "NVLC1003",
+          "qty_net": 0.1,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.11764705882352942,
+          "unit_price": 882000.0,
+          "line_cost": 103764.70588235295
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T850A": {
+      "code": "T850A",
+      "name": "Tour850A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 850000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP2011",
+          "qty_net": 0.03,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.03529411764705882,
+          "unit_price": 1690000.0,
+          "line_cost": 59647.05882352941
+        },
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 300000.0,
+          "line_cost": 31764.70588235294
+        },
+        {
+          "ing_id": "NVLC4002",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 260000.0,
+          "line_cost": 27529.41176470588
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T850B": {
+      "code": "T850B",
+      "name": "Tour850B",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 850000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC1003",
+          "qty_net": 0.15,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.17647058823529413,
+          "unit_price": 882000.0,
+          "line_cost": 155647.05882352943
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.01,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.011764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 2938.070588235294
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T850C": {
+      "code": "T850C",
+      "name": "Tour850C",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 850000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5001",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 550000.0,
+          "line_cost": 51764.70588235294
+        },
+        {
+          "ing_id": "NVLC1003",
+          "qty_net": 0.075,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.08823529411764706,
+          "unit_price": 882000.0,
+          "line_cost": 77823.52941176471
+        },
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.075,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.08823529411764706,
+          "unit_price": 300000.0,
+          "line_cost": 26470.58823529412
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T850D": {
+      "code": "T850D",
+      "name": "Tour850D",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 850000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP2011",
+          "qty_net": 0.03,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.03529411764705882,
+          "unit_price": 1690000.0,
+          "line_cost": 59647.05882352941
+        },
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 300000.0,
+          "line_cost": 31764.70588235294
+        },
+        {
+          "ing_id": "NVLC1003",
+          "qty_net": 0.1,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.11764705882352942,
+          "unit_price": 882000.0,
+          "line_cost": 103764.70588235295
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T950A": {
+      "code": "T950A",
+      "name": "Tour950A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 950000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC4002",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 260000.0,
+          "line_cost": 36705.882352941175
+        },
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 300000.0,
+          "line_cost": 17647.058823529413
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T950B": {
+      "code": "T950B",
+      "name": "Tour950B",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 950000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 300000.0,
+          "line_cost": 17647.058823529413
+        },
+        {
+          "ing_id": "NVLC4010",
+          "qty_net": 0.06,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.07058823529411765,
+          "unit_price": 85000.0,
+          "line_cost": 6000.0
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T970A": {
+      "code": "T970A",
+      "name": "Tour970A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 970000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5022",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 580000.0,
+          "line_cost": 54588.23529411764
+        },
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.085,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1,
+          "unit_price": 300000.0,
+          "line_cost": 30000.0
+        },
+        {
+          "ing_id": "NVLC1003",
+          "qty_net": 0.1,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.11764705882352942,
+          "unit_price": 882000.0,
+          "line_cost": 103764.70588235295
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.015,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.01764705882352941,
+          "unit_price": 249736.0,
+          "line_cost": 4407.105882352941
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T1100A": {
+      "code": "T1100A",
+      "name": "Tour1100A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1100000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5001",
+          "qty_net": 0.06,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.07058823529411765,
+          "unit_price": 550000.0,
+          "line_cost": 38823.529411764706
+        },
+        {
+          "ing_id": "NVLC6007",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 547800.0,
+          "line_cost": 32223.52941176471
+        },
+        {
+          "ing_id": "NVLC1003",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 882000.0,
+          "line_cost": 124517.64705882352
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        },
+        {
+          "ing_id": "NLP4002",
+          "qty_net": 0.04,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.047058823529411764,
+          "unit_price": 197000.0,
+          "line_cost": 9270.588235294117
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T1100B": {
+      "code": "T1100B",
+      "name": "Tour1100B",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1100000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC6005",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 200000.0,
+          "line_cost": 18823.529411764706
+        },
+        {
+          "ing_id": "NLP2011",
+          "qty_net": 0.03,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.03529411764705882,
+          "unit_price": 1690000.0,
+          "line_cost": 59647.05882352941
+        },
+        {
+          "ing_id": "NVLC5001",
+          "qty_net": 0.1,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.11764705882352942,
+          "unit_price": 550000.0,
+          "line_cost": 64705.88235294118
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T1100C": {
+      "code": "T1100C",
+      "name": "Tour1100C",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1100000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5001",
+          "qty_net": 0.06,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.07058823529411765,
+          "unit_price": 550000.0,
+          "line_cost": 38823.529411764706
+        },
+        {
+          "ing_id": "NVLC1003",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 882000.0,
+          "line_cost": 124517.64705882352
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T1100D": {
+      "code": "T1100D",
+      "name": "Tour1100D",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1100000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5022",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 580000.0,
+          "line_cost": 54588.23529411764
+        },
+        {
+          "ing_id": "NVLC5001",
+          "qty_net": 0.1,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.11764705882352942,
+          "unit_price": 550000.0,
+          "line_cost": 64705.88235294118
+        },
+        {
+          "ing_id": "NVLC1003",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 882000.0,
+          "line_cost": 124517.64705882352
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T1200A": {
+      "code": "T1200A",
+      "name": "Tour1200A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1200000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC6030",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 650000.0,
+          "line_cost": 38235.29411764706
+        },
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 300000.0,
+          "line_cost": 17647.058823529413
+        },
+        {
+          "ing_id": "NVLC1003",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 882000.0,
+          "line_cost": 124517.64705882352
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.04,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.047058823529411764,
+          "unit_price": 249736.0,
+          "line_cost": 11752.282352941176
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T1200B": {
+      "code": "T1200B",
+      "name": "Tour1200B",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1200000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP2011",
+          "qty_net": 0.04,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.047058823529411764,
+          "unit_price": 1690000.0,
+          "line_cost": 79529.41176470589
+        },
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 300000.0,
+          "line_cost": 17647.058823529413
+        },
+        {
+          "ing_id": "NVLC1003",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 882000.0,
+          "line_cost": 124517.64705882352
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T1250A": {
+      "code": "T1250A",
+      "name": "Tour1250A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1250000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5001",
+          "qty_net": 0.09,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.10588235294117647,
+          "unit_price": 550000.0,
+          "line_cost": 58235.294117647056
+        },
+        {
+          "ing_id": "NVLC5005",
+          "qty_net": 0.085,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1,
+          "unit_price": 300000.0,
+          "line_cost": 30000.0
+        },
+        {
+          "ing_id": "NVLC10025",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 1113000.0,
+          "line_cost": 157129.41176470587
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T1500A": {
+      "code": "T1500A",
+      "name": "Tour1500A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1500000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC6005",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 200000.0,
+          "line_cost": 18823.529411764706
+        },
+        {
+          "ing_id": "NLP2011",
+          "qty_net": 0.03,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.03529411764705882,
+          "unit_price": 1690000.0,
+          "line_cost": 59647.05882352941
+        },
+        {
+          "ing_id": "NVLC60021",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 840000.0,
+          "line_cost": 118588.23529411765
+        },
+        {
+          "ing_id": "NVLC10011",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 609000.0,
+          "line_cost": 85976.47058823529
+        },
+        {
+          "ing_id": "NLP4002",
+          "qty_net": 0.06,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.07058823529411765,
+          "unit_price": 197000.0,
+          "line_cost": 13905.882352941177
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T1500B": {
+      "code": "T1500B",
+      "name": "Tour1500B",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1500000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC6017",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 250000.0,
+          "line_cost": 23529.41176470588
+        },
+        {
+          "ing_id": "NVLC10011",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 609000.0,
+          "line_cost": 85976.47058823529
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T1550A": {
+      "code": "T1550A",
+      "name": "Tour1550A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1550000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC5001",
+          "qty_net": 0.06,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.07058823529411765,
+          "unit_price": 550000.0,
+          "line_cost": 38823.529411764706
+        },
+        {
+          "ing_id": "NVLC5022",
+          "qty_net": 0.08,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.09411764705882353,
+          "unit_price": 580000.0,
+          "line_cost": 54588.23529411764
+        },
+        {
+          "ing_id": "NVLC60021",
+          "qty_net": 0.1,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.11764705882352942,
+          "unit_price": 840000.0,
+          "line_cost": 98823.52941176471
+        },
+        {
+          "ing_id": "NVLC10025",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 1113000.0,
+          "line_cost": 157129.41176470587
+        },
+        {
+          "ing_id": "NLP4002",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 197000.0,
+          "line_cost": 11588.235294117649
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T1800A": {
+      "code": "T1800A",
+      "name": "Tour1800A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 1800000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC60021",
+          "qty_net": 0.06,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.07058823529411765,
+          "unit_price": 840000.0,
+          "line_cost": 59294.117647058825
+        },
+        {
+          "ing_id": "NLP2011",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 1690000.0,
+          "line_cost": 99411.76470588236
+        },
+        {
+          "ing_id": "NVLC10024",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 2128000.0,
+          "line_cost": 300423.5294117647
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
+    },
+    "T2000A": {
+      "code": "T2000A",
+      "name": "Tour2000A",
+      "course": "Bếp",
+      "category": "Set Menu",
+      "menu_role": "Set Menu",
+      "price": 2000000.0,
+      "ingredients": [
+        {
+          "ing_id": "NVLC60021",
+          "qty_net": 0.06,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.07058823529411765,
+          "unit_price": 840000.0,
+          "line_cost": 59294.117647058825
+        },
+        {
+          "ing_id": "NLP2011",
+          "qty_net": 0.05,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.05882352941176471,
+          "unit_price": 1690000.0,
+          "line_cost": 99411.76470588236
+        },
+        {
+          "ing_id": "NVLC5020",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 1207500.0,
+          "line_cost": 170470.58823529413
+        },
+        {
+          "ing_id": "NVLC10024",
+          "qty_net": 0.12,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.1411764705882353,
+          "unit_price": 2128000.0,
+          "line_cost": 300423.5294117647
+        },
+        {
+          "ing_id": "NLP3008",
+          "qty_net": 0.02,
+          "unit": "kg",
+          "yield_pct": 0.85,
+          "qty_eff": 0.023529411764705882,
+          "unit_price": 249736.0,
+          "line_cost": 5876.141176470588
+        }
+      ],
+      "method": [],
+      "notes": ""
     }
   },
   "sales": [
