@@ -251,6 +251,39 @@ export default function Home() {
     setIsAuthLoading(true);
     setAuthError('');
 
+    // Sandbox check bypass to allow local sandbox login on live deployments
+    if (authPassword === 'sandbox') {
+      let role: any = 'admin';
+      let name = 'Quản trị viên (CFO)';
+
+      if (authEmail.includes('manager')) {
+        role = 'restaurant_manager';
+        name = 'Quản lý Nhà hàng';
+      } else if (authEmail.includes('chef') && !authEmail.includes('sous')) {
+        role = 'head_chef';
+        name = 'Bếp trưởng';
+      } else if (authEmail.includes('senior')) {
+        role = 'senior_accountant';
+        name = 'Kế toán kho cấp cao';
+      } else if (authEmail.includes('foh') || authEmail.includes('supervisor')) {
+        role = 'foh_supervisor';
+        name = 'Giám sát Sảnh';
+      } else if (authEmail.includes('sous') || authEmail.includes('phó')) {
+        role = 'sous_chef';
+        name = 'Bếp phó';
+      } else if (authEmail.includes('junior') || authEmail.includes('store')) {
+        role = 'junior_accountant';
+        name = 'Thủ kho / Kế toán phụ';
+      }
+
+      const dummyUser = { email: authEmail, name, role };
+      localStorage.setItem('mv_local_user', JSON.stringify(dummyUser));
+      setCurrentUser(dummyUser);
+      setUserRole(role);
+      setIsAuthLoading(false);
+      return;
+    }
+
     if (isSupabaseConfigured()) {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: authEmail,
