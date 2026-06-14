@@ -782,7 +782,7 @@ export default function Home() {
                     {/* Notes */}
                     {activeRecipeDetails.notes && (
                       <div className="bg-[#141a29]/30 rounded border border-gray-800 p-4 font-sans text-xs leading-relaxed text-gray-400">
-                        <strong className="text-amber-500 block mb-1">Ghi chú của Chef (Chef's Notes):</strong>
+                        <strong className="text-amber-500 block mb-1">Ghi chú của Chef (Chef&apos;s Notes):</strong>
                         <p className="italic">{activeRecipeDetails.notes}</p>
                       </div>
                     )}
