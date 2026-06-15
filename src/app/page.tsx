@@ -2299,6 +2299,18 @@ export default function Home() {
               >
                 📦 Thủ kho / Kế toán phụ
               </button>
+              <button 
+                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('BAR_SUPERVISOR'); }}
+                className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
+              >
+                🍸 Trưởng quầy Bar
+              </button>
+              <button 
+                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('BARTENDER'); }}
+                className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
+              >
+                🍺 Nhân viên Bar (Bartender)
+              </button>
             </div>
           </div>
         </div>
@@ -2394,14 +2406,6 @@ export default function Home() {
               </div>
             )}
             
-            <a 
-              href="/bar" 
-              target="_blank"
-              className="text-[10px] text-amber-400 hover:text-amber-300 bg-[#0c1220] border border-amber-500/20 px-3 py-1.5 rounded-sm font-sans uppercase font-bold text-center"
-            >
-              Cổng Quầy Bar (Tablet)
-            </a>
-            <div className="h-8 w-[1px] bg-amber-500/20 hidden sm:block"></div>
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
               <span className="text-xs text-gray-300 font-medium">Bản phẳng đồng bộ (Sync)</span>
@@ -4108,10 +4112,14 @@ export default function Home() {
                               className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
                             >
                               <option value="STAFF_MEAL">Cơm nhân viên (Staff meal)</option>
-                              <option value="COMP">Tặng khách (Comp)</option>
+                              <option value="COMP">Tặng món khách (Comp food)</option>
+                              <option value="COMP_DRINK">Tặng rượu khách (Comp drink)</option>
                               <option value="R&D">Nghiên cứu món mới (R&D)</option>
                               <option value="TRAINING">Đào tạo nhân sự (Training)</option>
                               <option value="EVENT">Sự kiện (Event)</option>
+                              <option value="SPILL">Rót quá tay (Spill)</option>
+                              <option value="BREAKAGE">Bể vỡ chai (Breakage)</option>
+                              <option value="TASTING">Thử rượu (Tasting)</option>
                             </select>
                           </div>
                         </div>
