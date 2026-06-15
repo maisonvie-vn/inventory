@@ -439,7 +439,15 @@ export default function Home() {
 
     setIsPasswordLoading(true);
 
+    let hasActiveSession = false;
     if (isSupabaseConfigured()) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        hasActiveSession = true;
+      }
+    }
+
+    if (hasActiveSession) {
       const { error } = await supabase.auth.updateUser({
         password: newPassword
       });
