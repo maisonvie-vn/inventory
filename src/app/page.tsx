@@ -238,26 +238,34 @@ export default function Home() {
   // Load session and profile on mount
   useEffect(() => {
     const checkSession = async () => {
+      let supabaseSessionRestored = false;
       if (isSupabaseConfigured()) {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-          // Fetch profile from supabase profiles table
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('role, full_name')
-            .eq('id', session.user.id)
-            .single();
-          
-          const role = (profile?.role || 'admin') as any;
-          setCurrentUser({
-            email: session.user.email || '',
-            name: profile?.full_name || session.user.email || '',
-            role: role
-          });
-          setUserRole(role);
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) {
+            // Fetch profile from supabase profiles table
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('role, full_name')
+              .eq('id', session.user.id)
+              .single();
+            
+            const role = (profile?.role || 'admin') as any;
+            setCurrentUser({
+              email: session.user.email || '',
+              name: profile?.full_name || session.user.email || '',
+              role: role
+            });
+            setUserRole(role);
+            supabaseSessionRestored = true;
+          }
+        } catch (e) {
+          console.error("Error getting Supabase session", e);
         }
-      } else {
-        // Fallback to localStorage sandbox user
+      }
+
+      if (!supabaseSessionRestored) {
+        // Fallback to localStorage sandbox user (either Supabase is not configured or no active Supabase session)
         const localUser = localStorage.getItem('mv_local_user');
         if (localUser) {
           try {
@@ -291,7 +299,25 @@ export default function Home() {
           });
           setUserRole(role);
         } else {
-          setCurrentUser(null);
+          // If we logged out explicitly
+          if (event === 'SIGNED_OUT') {
+            localStorage.removeItem('mv_local_user');
+            setCurrentUser(null);
+          } else {
+            // For INITIAL_SESSION or other events with null session, fallback to localStorage if it exists
+            const localUser = localStorage.getItem('mv_local_user');
+            if (localUser) {
+              try {
+                const parsed = JSON.parse(localUser);
+                setCurrentUser(parsed);
+                setUserRole(parsed.role);
+              } catch (e) {
+                setCurrentUser(null);
+              }
+            } else {
+              setCurrentUser(null);
+            }
+          }
         }
       });
       return () => subscription.unsubscribe();
@@ -601,9 +627,8 @@ export default function Home() {
   const handleLogout = async () => {
     if (isSupabaseConfigured()) {
       await supabase.auth.signOut();
-    } else {
-      localStorage.removeItem('mv_local_user');
     }
+    localStorage.removeItem('mv_local_user');
     setCurrentUser(null);
   };
 
