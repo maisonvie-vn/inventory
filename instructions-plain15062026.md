@@ -49,6 +49,32 @@ Cập nhật hệ thống nút đăng nhập nhanh ở màn hình Login của Sa
 ---
 
 ## 5. ĐỒNG BỘ HÓA & KHỞI CHẠY HỆ THỐNG
-*   **Git / GitHub**: Đã commit và push toàn bộ 11 file sửa đổi lên nhánh `main` của GitHub chính thức tại **`https://github.com/maisonvie-vn/inventory.git`**.
+*   **Git / GitHub**: Đã commit và push toàn bộ các file sửa đổi lên nhánh `main` của GitHub chính thức tại **`https://github.com/maisonvie-vn/inventory.git`**.
 *   **Vercel**: Tiến trình tự động build & deploy trên Vercel đã hoàn tất, cập nhật giao diện mới nhất lên môi trường chạy thật trực tuyến.
 *   **Local Dev Server**: Máy chủ Next.js cục bộ đã được khởi chạy thành công tại địa chỉ **[http://localhost:3000](http://localhost:3000)** phục vụ kiểm thử ngoại tuyến.
+
+---
+
+## 6. GỘP VAI TRÒ ĐĂNG NHẬP & PHÂN TÁCH KHO BẾP/BAR (CẬP NHẬT MỚI CUỐI NGÀY)
+Thực hiện yêu cầu tinh giản phân quyền và phân tách hiển thị kho Bếp/Bar độc lập:
+*   **Gộp 4 Nhóm Vai trò**: Thay thế hoàn toàn cổng đăng nhập phụ `/bar` bằng 4 nhóm tài khoản sandbox trực tiếp tại trang chủ:
+    1. `ceo@maisonvie.vn` -> Admin (Owner / CFO / Admin)
+    2. `maisonvie.vn@gmail.com` -> Restaurant Manager (Chef / Manager / Thủ Kho)
+    3. `maisonvie.vn@gmail.com` -> Senior Accountant (SousChef / Kế toán)
+    4. `maisonvie.vn@gmail.com` -> Bar Supervisor (Bar)
+*   **Tách hiển thị dữ liệu Bếp / Bar**:
+    *   Khi bộ phận Bar đăng nhập: Chỉ hiển thị các mặt hàng rượu, bia, nước ngọt, mocktails. Ẩn toàn bộ nguyên liệu thực phẩm của bếp.
+    *   Khi bộ phận Bếp đăng nhập: Chỉ hiển thị các mặt hàng thực phẩm sơ chế, gia vị, đồ bếp. Ẩn toàn bộ rượu bia nước ngọt của Bar.
+    *   Áp dụng trên Bảng Master Kho (Tab 1), Phiếu Kiểm Kho & Cân dở (Tab 5), Dropdown Chuyển kho nội bộ, và Khai hao ngoài bán hàng (Spill/Vỡ).
+
+---
+
+## 7. IMPORT TOÀN BỘ 183 MẶT HÀNG KHO BAR TỪ EXCEL
+Đã xử lý dứt điểm tình trạng quầy Bar chỉ hiển thị một vài loại rượu bằng cách nạp toàn bộ danh mục thực tế:
+*   **Đồng bộ 183 mặt hàng**: Sử dụng script Python đọc trực tiếp từ tệp [MAISON_VIE_v6_0_PRO.xlsx](file:///D:/Invenroty/MAISON_VIE_v6_0_PRO.xlsx) sheet `MASTER_BAR` vào danh mục nguyên liệu.
+*   **Mappings POS tự động**: Ánh xạ POS chuẩn trong [mockData.ts](file:///D:/Invenroty/maison-vie-crm/src/data/mockData.ts) đối với tất cả 183 mặt hàng bia chai/lon, nước ngọt lon, rượu vang chai, rượu mạnh... trừ kho 1-1 khi bán. Các đồ uống pha chế, ly rượu lẻ được tự động quy đổi để trừ hao các nguyên liệu quả/sữa/trà tương ứng.
+*   **Hạt giống dữ liệu SQL**: Cập nhật tệp [seed.sql](file:///D:/Invenroty/maison-vie-crm/supabase/seed.sql) bổ sung danh mục `BEVERAGE`, các đơn vị tính `CAN`, `GLASS`, `PACK`, `BOX`, `BAG` và 183 insert statements nguyên liệu kèm nhà cung cấp để đồng bộ lên Supabase Cloud.
+
+---
+*Tiến trình ngày 15/06/2026 kết thúc tốt đẹp. Toàn bộ code đã được push lên GitHub và deploy thành công lên Vercel. Máy chủ Next.js và dữ liệu đã sẵn sàng cho ngày làm việc tiếp theo.*
+

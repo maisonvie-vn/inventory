@@ -331,3 +331,36 @@ Bổ sung quyền cho luồng Module 2:
 
 ---
 *Hết bản v9.0. Các khối SQL là bản phác kiến trúc; khi vào code cần bổ sung index, ràng buộc khớp hai chân TRANSFER, trigger sinh `doc_no` tuần tự và policy RLS theo `location_id`. Mẫu chứng từ PDF ở Phụ lục A đã được duyệt giao diện, sẵn sàng để dựng bản render client-side.*
+
+---
+
+## 9. THỰC TẾ TRIỂN KHAI & CẬP NHẬT KHO BÊN TRONG (15/06/2026 - v9.3)
+
+Hệ thống đã được cập nhật thực tế theo đúng yêu cầu gộp vai trò đăng nhập và chuẩn hóa kho Bar của chủ đầu tư:
+
+### 9.1. Gộp Đăng nhập & Tinh giản Phân quyền
+- **Cắt bỏ hoàn toàn** trang đăng nhập phụ `/bar` dùng mã PIN tablet. Thay vào đó, tích hợp trực tiếp 4 nút đăng nhập sandbox ngay tại trang chủ (`/`):
+  1. `Owner / CFO / Admin` (Tương đương vai trò `admin`)
+  2. `Chef / Manager / Thủ Kho` (Tương đương vai trò `restaurant_manager`)
+  3. `SousChef / Kế toán` (Tương đương vai trò `senior_accountant`)
+  4. `Bar` (Tương đương vai trò `BAR_SUPERVISOR`)
+- Cấu hình lại logic chuyển Tab `hasTabAccess` ở [src/app/page.tsx](file:///D:/Invenroty/maison-vie-crm/src/app/page.tsx) để mở rộng đầy đủ các quyền nghiệp vụ cho các vai trò gộp mới này.
+
+### 9.2. Phân tách Dữ liệu Bếp / Bar Cô lập
+- Cơ chế lọc động `roleFilteredIngredients` và `filteredStockCountIngredients` tự động ẩn thực phẩm/đồ bếp khi người dùng thuộc bộ phận Bar đăng nhập, và ngược lại tự động ẩn rượu/bia/đồ uống khi người dùng thuộc bộ phận Bếp đăng nhập.
+- Áp dụng phân tách này cho:
+  - **Bảng Master Kho (Tab 1)**
+  - **Phiếu Kiểm Kho & Cân dở điện tử (Tab 5)**
+  - **Biểu mẫu Chuyển kho nội bộ**
+  - **Biểu mẫu Tiêu hao ngoài bán hàng (Spill, Breakage, Comp, Tasting)**
+
+### 9.3. Nhập 183 mã đồ uống & Chuẩn hóa Mappings POS từ Excel
+- Đọc và import tự động toàn bộ **183 mặt hàng Bar** từ tệp [MAISON_VIE_v6_0_PRO.xlsx](file:///D:/Invenroty/MAISON_VIE_v6_0_PRO.xlsx) sheet `MASTER_BAR` vào danh mục nguyên liệu.
+- Cập nhật ánh xạ POS trong [mockData.ts](file:///D:/Invenroty/maison-vie-crm/src/data/mockData.ts):
+  - Bia Heineken, Tiger, 333, Sài Gòn, Sapporo, nước ngọt, vang chai, rượu mạnh... tự động trừ kho 1-1 theo mã POS bán ra.
+  - Các đồ uống pha chế bằng nguyên liệu phụ (Nước cam, xoài, dưa hấu, mocktail Virgin Mojito, Shirley Temple...) hoặc ly rượu lẻ được tự động quy đổi để trừ hao hụt các nguyên liệu quả/sữa/syrup/rượu nền tương ứng.
+- Đã bổ sung 183 mặt hàng, đơn vị tính mới (`CAN`, `GLASS`, `PACK`, `BOX`, `BAG`), và liên kết nhà cung cấp vào tệp hạt giống [supabase/seed.sql](file:///D:/Invenroty/maison-vie-crm/supabase/seed.sql) để sẵn sàng đồng bộ lên Supabase Cloud.
+
+---
+*Bản cập nhật v9.3 hoàn tất ngày 15/06/2026. Hệ thống chạy ổn định, build production thành công.*
+
