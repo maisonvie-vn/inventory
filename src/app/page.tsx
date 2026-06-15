@@ -257,11 +257,11 @@ export default function Home() {
     if (role === 'admin') return true;
     switch (role) {
       case 'restaurant_manager':
-        return ['dashboard', 'inventory', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing'].includes(tab);
+        return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing'].includes(tab);
       case 'head_chef':
         return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation'].includes(tab);
       case 'senior_accountant':
-        return ['dashboard', 'inventory', 'stockcount', 'reconciliation', 'purchasing'].includes(tab);
+        return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing'].includes(tab);
       case 'foh_supervisor':
         return ['recipes'].includes(tab);
       case 'sous_chef':
@@ -952,43 +952,65 @@ export default function Home() {
   }, [salesData, consumptionData, ingredients, actualStocks, transactions]);
 
   // Categories list
+  // v9.0 Role-based ingredient filtering (Bar vs Kitchen isolation)
+  const roleFilteredIngredients = useMemo(() => {
+    return ingredients.filter(ing => {
+      const isBarItem = ['Wine', 'Alcohol', 'beverage', 'Beverage'].includes(ing.category) || 
+                        ing.id === 'ING-070' || ing.id === 'ING-071' || ing.id === 'ING-072' ||
+                        ing.vi_name.toLowerCase().includes('vang') || ing.vi_name.toLowerCase().includes('bia') ||
+                        ing.stock_uom === 'BOTTLE';
+      
+      if (userRole === 'admin') {
+        return true; // CFO/Owner/Admin sees everything
+      } else if (userRole === 'BAR_SUPERVISOR' || userRole === 'BARTENDER') {
+        return isBarItem; // Bar role sees only Bar items
+      } else {
+        return !isBarItem; // Kitchen roles see only Kitchen items
+      }
+    });
+  }, [ingredients, userRole]);
+
+  // Load categories dynamically for filter options
   const categories = useMemo(() => {
     const cats = new Set<string>();
-    ingredients.forEach(i => {
+    roleFilteredIngredients.forEach(i => {
       if (i.category) cats.add(i.category);
     });
     return Array.from(cats);
-  }, [ingredients]);
+  }, [roleFilteredIngredients]);
 
   // Filtering ingredients for Master Kho Tab
   const filteredIngredients = useMemo(() => {
-    return ingredients.filter(ing => {
+    return roleFilteredIngredients.filter(ing => {
       const matchesSearch = ing.vi_name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                             ing.fr_name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                             ing.id.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = categoryFilter === 'ALL' || ing.category === categoryFilter;
       return matchesSearch && matchesCategory;
     });
-  }, [ingredients, searchQuery, categoryFilter]);
+  }, [roleFilteredIngredients, searchQuery, categoryFilter]);
 
   // Filtering ingredients for Stock Count Tab (Kitchen vs Bar)
   const filteredStockCountIngredients = useMemo(() => {
-    return ingredients.filter(ing => {
+    return roleFilteredIngredients.filter(ing => {
       const matchesSearch = ing.vi_name.toLowerCase().includes(stockCountSearch.toLowerCase()) || 
                             ing.id.toLowerCase().includes(stockCountSearch.toLowerCase()) ||
                             ing.fr_name.toLowerCase().includes(stockCountSearch.toLowerCase());
       
-      const isBarItem = ['Wine', 'Alcohol', 'Beverage'].includes(ing.category) || ing.stock_uom === 'BOTTLE';
-      let matchesFilter = true;
-      if (stockCountFilter === 'BAR') {
-        matchesFilter = isBarItem;
-      } else if (stockCountFilter === 'KITCHEN') {
-        matchesFilter = !isBarItem;
+      if (userRole === 'admin') {
+        const isBarItem = ['Wine', 'Alcohol', 'Beverage'].includes(ing.category) || ing.stock_uom === 'BOTTLE';
+        let matchesFilter = true;
+        if (stockCountFilter === 'BAR') {
+          matchesFilter = isBarItem;
+        } else if (stockCountFilter === 'KITCHEN') {
+          matchesFilter = !isBarItem;
+        }
+        return matchesSearch && matchesFilter;
       }
       
-      return matchesSearch && matchesFilter;
+      return matchesSearch;
     });
-  }, [ingredients, stockCountFilter, stockCountSearch]);
+  }, [roleFilteredIngredients, stockCountFilter, stockCountSearch, userRole]);
 
   // Filtered recipes
   const filteredRecipes = useMemo(() => {
@@ -2267,49 +2289,25 @@ export default function Home() {
                 onClick={() => { setAuthEmail('ceo@maisonvie.vn'); setAuthPassword('sandbox'); setSandboxRoleOverride('admin'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
-                💼 CFO / Owner (Admin)
+                💼 Owner / CFO / Admin
               </button>
               <button 
                 onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('restaurant_manager'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
-                📋 Quản lý Nhà hàng
-              </button>
-              <button 
-                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('head_chef'); }}
-                className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
-              >
-                👨‍🍳 Bếp trưởng
+                👨‍🍳 Chef / Manager / Thủ Kho
               </button>
               <button 
                 onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('senior_accountant'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
-                📊 Kế toán cao cấp
-              </button>
-              <button 
-                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('sous_chef'); }}
-                className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
-              >
-                🍳 Bếp phó
-              </button>
-              <button 
-                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('junior_accountant'); }}
-                className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
-              >
-                📦 Thủ kho / Kế toán phụ
+                📊 SousChef / Kế toán
               </button>
               <button 
                 onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('BAR_SUPERVISOR'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
-                🍸 Trưởng quầy Bar
-              </button>
-              <button 
-                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('BARTENDER'); }}
-                className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
-              >
-                🍺 Nhân viên Bar (Bartender)
+                🍸 Bar
               </button>
             </div>
           </div>
@@ -2393,15 +2391,10 @@ export default function Home() {
                   onChange={(e) => setUserRole(e.target.value as any)}
                   className="bg-transparent border-none text-xs text-[#d4af37] focus:outline-none cursor-pointer font-semibold"
                 >
-                  <option value="admin" className="bg-[#090d16] text-gray-300">Cấp 1: Admin (CFO/Owner)</option>
-                  <option value="restaurant_manager" className="bg-[#090d16] text-gray-300">Cấp 2: Quản lý Nhà hàng</option>
-                  <option value="head_chef" className="bg-[#090d16] text-gray-300">Cấp 3: Bếp trưởng</option>
-                  <option value="senior_accountant" className="bg-[#090d16] text-gray-300">Cấp 4: Kế toán kho cấp cao</option>
-                  <option value="foh_supervisor" className="bg-[#090d16] text-gray-300">Cấp 5: Giám sát (FOH)</option>
-                  <option value="sous_chef" className="bg-[#090d16] text-gray-300">Cấp 6: Bếp phó</option>
-                  <option value="junior_accountant" className="bg-[#090d16] text-gray-300">Cấp 7: Thủ kho / Kế toán phụ</option>
-                  <option value="BAR_SUPERVISOR" className="bg-[#090d16] text-gray-300">Cấp 8: Trưởng quầy Bar</option>
-                  <option value="BARTENDER" className="bg-[#090d16] text-gray-300">Cấp 9: Bartender / Pha chế</option>
+                  <option value="admin" className="bg-[#090d16] text-gray-300">Owner/CFO/Admin</option>
+                  <option value="restaurant_manager" className="bg-[#090d16] text-gray-300">Chef/Manager/Thủ Kho</option>
+                  <option value="senior_accountant" className="bg-[#090d16] text-gray-300">SousChef/Kế toán</option>
+                  <option value="BAR_SUPERVISOR" className="bg-[#090d16] text-gray-300">Bar</option>
                 </select>
               </div>
             )}
@@ -2911,7 +2904,7 @@ export default function Home() {
                         required
                       >
                         <option value="">-- Chọn nguyên liệu --</option>
-                        {ingredients.map(ing => (
+                        {roleFilteredIngredients.map(ing => (
                           <option key={ing.id} value={ing.id}>{ing.id} - {ing.vi_name} ({ing.unit})</option>
                         ))}
                       </select>
@@ -3332,36 +3325,38 @@ export default function Home() {
                     />
                   </div>
 
-                  <div className="flex items-center gap-1.5 bg-[#0c1220]/60 p-1.5 rounded border border-amber-500/10 text-xs font-sans">
-                    <span className="text-gray-400 px-2 font-sans">Loại kho lọc:</span>
-                    <button 
-                      type="button"
-                      onClick={() => setStockCountFilter('ALL')}
-                      className={`px-3 py-1 rounded font-bold uppercase text-[9px] transition-all active:scale-95 ${
-                        stockCountFilter === 'ALL' ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40' : 'bg-transparent text-gray-400 hover:text-gray-200'
-                      }`}
-                    >
-                      Tất cả
-                    </button>
-                    <button 
-                      type="button"
-                      onClick={() => setStockCountFilter('KITCHEN')}
-                      className={`px-3 py-1 rounded font-bold uppercase text-[9px] transition-all active:scale-95 ${
-                        stockCountFilter === 'KITCHEN' ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40' : 'bg-transparent text-gray-400 hover:text-gray-200'
-                      }`}
-                    >
-                      Kho Bếp
-                    </button>
-                    <button 
-                      type="button"
-                      onClick={() => setStockCountFilter('BAR')}
-                      className={`px-3 py-1 rounded font-bold uppercase text-[9px] transition-all active:scale-95 ${
-                        stockCountFilter === 'BAR' ? 'bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/40 font-bold' : 'bg-transparent text-gray-400 hover:text-gray-200'
-                      }`}
-                    >
-                      Kho Bar (Rượu)
-                    </button>
-                  </div>
+                  {userRole === 'admin' && (
+                    <div className="flex items-center gap-1.5 bg-[#0c1220]/60 p-1.5 rounded border border-amber-500/10 text-xs font-sans">
+                      <span className="text-gray-400 px-2 font-sans">Loại kho lọc:</span>
+                      <button 
+                        type="button"
+                        onClick={() => setStockCountFilter('ALL')}
+                        className={`px-3 py-1 rounded font-bold uppercase text-[9px] transition-all active:scale-95 ${
+                          stockCountFilter === 'ALL' ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40' : 'bg-transparent text-gray-400 hover:text-gray-200'
+                        }`}
+                      >
+                        Tất cả
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={() => setStockCountFilter('KITCHEN')}
+                        className={`px-3 py-1 rounded font-bold uppercase text-[9px] transition-all active:scale-95 ${
+                          stockCountFilter === 'KITCHEN' ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40' : 'bg-transparent text-gray-400 hover:text-gray-200'
+                        }`}
+                      >
+                        Kho Bếp
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={() => setStockCountFilter('BAR')}
+                        className={`px-3 py-1 rounded font-bold uppercase text-[9px] transition-all active:scale-95 ${
+                          stockCountFilter === 'BAR' ? 'bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/40 font-bold' : 'bg-transparent text-gray-400 hover:text-gray-200'
+                        }`}
+                      >
+                        Kho Bar (Rượu)
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -4085,7 +4080,7 @@ export default function Home() {
                              required
                            >
                              <option value="">-- Chọn nguyên liệu tiêu hao --</option>
-                             {ingredients.map(ing => (
+                             {roleFilteredIngredients.map(ing => (
                                <option key={ing.id} value={ing.id}>📦 {ing.id} - {ing.vi_name} ({ing.unit})</option>
                              ))}
                            </select>
