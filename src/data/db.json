@@ -1055,6 +1055,171 @@
       "unit": "kg",
       "price": 1113000.0,
       "yield_rate": 0.8
+    },
+    {
+      "id": "ING-101",
+      "fr_name": "Bière Heineken",
+      "vi_name": "Bia Heineken",
+      "en_name": "Heineken Beer",
+      "category": "Alcohol",
+      "supplier_tier": "Local",
+      "unit": "BOTTLE",
+      "price": 35000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-102",
+      "fr_name": "Bière Tiger",
+      "vi_name": "Bia Tiger",
+      "en_name": "Tiger Beer",
+      "category": "Alcohol",
+      "supplier_tier": "Local",
+      "unit": "BOTTLE",
+      "price": 30000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-103",
+      "fr_name": "Bière 333",
+      "vi_name": "Bia 333",
+      "en_name": "333 Beer",
+      "category": "Alcohol",
+      "supplier_tier": "Local",
+      "unit": "BOTTLE",
+      "price": 25000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-104",
+      "fr_name": "Bière Saigon",
+      "vi_name": "Bia Sài Gòn",
+      "en_name": "Saigon Beer",
+      "category": "Alcohol",
+      "supplier_tier": "Local",
+      "unit": "BOTTLE",
+      "price": 25000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-105",
+      "fr_name": "Bière Sapporo",
+      "vi_name": "Bia Sapporo",
+      "en_name": "Sapporo Beer",
+      "category": "Alcohol",
+      "supplier_tier": "Local",
+      "unit": "BOTTLE",
+      "price": 32000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-106",
+      "fr_name": "Coca Cola",
+      "vi_name": "Coca Cola",
+      "en_name": "Coca Cola",
+      "category": "Beverage",
+      "supplier_tier": "Local",
+      "unit": "CAN",
+      "price": 20000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-107",
+      "fr_name": "Sprite",
+      "vi_name": "Sprite",
+      "en_name": "Sprite",
+      "category": "Beverage",
+      "supplier_tier": "Local",
+      "unit": "CAN",
+      "price": 20000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-108",
+      "fr_name": "Fanta",
+      "vi_name": "Fanta",
+      "en_name": "Fanta",
+      "category": "Beverage",
+      "supplier_tier": "Local",
+      "unit": "CAN",
+      "price": 20000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-109",
+      "fr_name": "Eau gazeuse Schweppes",
+      "vi_name": "Soda Schweppes",
+      "en_name": "Schweppes Soda",
+      "category": "Beverage",
+      "supplier_tier": "Local",
+      "unit": "CAN",
+      "price": 18000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-110",
+      "fr_name": "Jus d'orange frais",
+      "vi_name": "Nước cam ép tươi",
+      "en_name": "Fresh orange juice",
+      "category": "Beverage",
+      "supplier_tier": "Local",
+      "unit": "L",
+      "price": 60000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-111",
+      "fr_name": "Jus de pastèque",
+      "vi_name": "Nước dưa hấu ép",
+      "en_name": "Watermelon juice",
+      "category": "Beverage",
+      "supplier_tier": "Local",
+      "unit": "L",
+      "price": 50000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-112",
+      "fr_name": "Jus de citron frais",
+      "vi_name": "Nước chanh tươi",
+      "en_name": "Fresh lemon juice",
+      "category": "Beverage",
+      "supplier_tier": "Local",
+      "unit": "L",
+      "price": 40000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-113",
+      "fr_name": "Mocktail Virgin Mojito",
+      "vi_name": "Mocktail Virgin Mojito",
+      "en_name": "Virgin Mojito Mocktail",
+      "category": "Beverage",
+      "supplier_tier": "House-made",
+      "unit": "GLASS",
+      "price": 85000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-114",
+      "fr_name": "Mocktail Shirley Temple",
+      "vi_name": "Mocktail Shirley Temple",
+      "en_name": "Shirley Temple Mocktail",
+      "category": "Beverage",
+      "supplier_tier": "House-made",
+      "unit": "GLASS",
+      "price": 80000.0,
+      "yield_rate": 1.0
+    },
+    {
+      "id": "ING-115",
+      "fr_name": "Vin rouge de la maison",
+      "vi_name": "Rượu vang đỏ House",
+      "en_name": "House red wine",
+      "category": "Alcohol",
+      "supplier_tier": "Imported IT",
+      "unit": "BOTTLE",
+      "price": 120000.0,
+      "yield_rate": 1.0
     }
   ],
   "recipes": {
