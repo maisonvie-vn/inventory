@@ -97,8 +97,54 @@ export default function Home() {
   const [authError, setAuthError] = useState('');
   const [sandboxRoleOverride, setSandboxRoleOverride] = useState<string | null>(null);
 
-  // 7-Level RBAC Role state
-  const [userRole, setUserRole] = useState<'admin' | 'restaurant_manager' | 'head_chef' | 'senior_accountant' | 'foh_supervisor' | 'sous_chef' | 'junior_accountant'>('admin');
+  // 7-Level RBAC Role state (expanded to 9 levels for Bar in v9.0)
+  const [userRole, setUserRole] = useState<'admin' | 'restaurant_manager' | 'head_chef' | 'senior_accountant' | 'foh_supervisor' | 'sous_chef' | 'junior_accountant' | 'BAR_SUPERVISOR' | 'BARTENDER'>('admin');
+
+  // v9.0 locations & multi-location tracking
+  const [locations, setLocations] = useState<any[]>([
+    { id: 'MAIN_STORE', name: 'Kho tổng' },
+    { id: 'KITCHEN', name: 'Bếp' },
+    { id: 'BAR', name: 'Quầy Bar' }
+  ]);
+  const [selectedLocation, setSelectedLocation] = useState<string>('MAIN_STORE');
+
+  // Daily movement confirmations per location
+  const [dailyMovements, setDailyMovements] = useState<Record<string, { importsConfirmed: boolean; issuesConfirmed: boolean; status: 'OPEN' | 'CLOSED'; snapshot?: any }>>({
+    'MAIN_STORE': { importsConfirmed: false, issuesConfirmed: false, status: 'OPEN' },
+    'KITCHEN': { importsConfirmed: false, issuesConfirmed: false, status: 'OPEN' },
+    'BAR': { importsConfirmed: false, issuesConfirmed: false, status: 'OPEN' }
+  });
+
+  // Internal transfer form states
+  const [internalTransferIngId, setInternalTransferIngId] = useState('');
+  const [internalTransferSrc, setInternalTransferSrc] = useState('MAIN_STORE');
+  const [internalTransferDest, setInternalTransferDest] = useState('KITCHEN');
+  const [internalTransferQty, setInternalTransferQty] = useState('');
+  const [internalTransferNote, setInternalTransferNote] = useState('');
+  const [internalTransferStatus, setInternalTransferStatus] = useState<string | null>(null);
+
+  // Bar bottle 2-point calibration states
+  const [barCalibrations, setBarCalibrations] = useState<Record<string, { full_weight: number; empty_weight: number; volume_ml: number }>>({
+    "ING-070": { full_weight: 1200, empty_weight: 450, volume_ml: 750 },
+    "ING-071": { full_weight: 1250, empty_weight: 480, volume_ml: 750 },
+    "ING-072": { full_weight: 1600, empty_weight: 650, volume_ml: 1000 },
+  });
+
+  // Immutable Order Documents (PO PDFs)
+  const [orderDocuments, setOrderDocuments] = useState<any[]>([
+    {
+      id: 'po-doc-1',
+      doc_no: 'PO-2026-0615-KHO-001',
+      business_date: '2026-06-15',
+      location_id: 'MAIN_STORE',
+      supplier_name: 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)',
+      status: 'DRAFT',
+      items: [
+        { ingId: 'ING-003', name: 'Cá tuyết đen đông lạnh', onHand: 1.0, warning: '🔴 CRITICAL', slDat: 10, unit: 'kg' },
+        { ingId: 'ING-093', name: 'Thịt bò Ribeye Angus US', onHand: 3.5, warning: '🟡 LOW', slDat: 15, unit: 'kg' }
+      ]
+    }
+  ]);
 
   // Parallel & Yield Calibration States
   const [parallelVarianceList, setParallelVarianceList] = useState([
@@ -176,13 +222,17 @@ export default function Home() {
   const [transactions, setTransactions] = useState<{
     id: string;
     ingredientId: string;
-    type: 'import' | 'consumption' | 'stock_take' | 'waste';
+    type: 'import' | 'consumption' | 'stock_take' | 'waste' | 'transfer_in' | 'transfer_out';
     qty: number;
     unit_price: number;
     status: 'pending' | 'approved' | 'rejected';
     approvedBy?: string;
     date: string;
     note: string;
+    locationId?: string;
+    location_id?: string;
+    txn_type?: string;
+    transferId?: string;
   }[]>(() => {
     // Initialize with mock opening stock of 30 for all ingredients
     return getIngredients().map(ing => ({
@@ -218,14 +268,18 @@ export default function Home() {
         return ['recipes', 'stockcount', 'subrecipes'].includes(tab);
       case 'junior_accountant':
         return ['inventory', 'purchasing'].includes(tab);
+      case 'BAR_SUPERVISOR':
+        return ['dashboard', 'inventory', 'stockcount', 'purchasing'].includes(tab);
+      case 'BARTENDER':
+        return ['stockcount'].includes(tab);
       default:
         return false;
     }
   };
 
   React.useEffect(() => {
-    const tabs: ('dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation')[] = [
-      'dashboard', 'sales', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation'
+    const tabs: ('dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation' | 'purchasing')[] = [
+      'dashboard', 'sales', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing'
     ];
     if (!hasTabAccess(userRole, activeTab)) {
       const firstAccessible = tabs.find(t => hasTabAccess(userRole, t));
@@ -740,25 +794,44 @@ export default function Home() {
   const [subRecipeSuccess, setSubRecipeSuccess] = useState(false);
 
   // Helper function to compute transaction-aware theoretical stock
-  const getTheoreticalStock = (ingId: string) => {
+  const getTheoreticalStock = (ingId: string, locationId?: string) => {
     let stock = 0;
     transactions.forEach(t => {
       if (t.ingredientId === ingId && t.status === 'approved') {
-        if (t.type === 'import') {
-          stock += t.qty;
-        } else if (t.type === 'consumption' || t.type === 'waste') {
-          stock -= t.qty;
+        const txLoc = t.locationId || t.location_id || 'MAIN_STORE';
+        if (!locationId || txLoc === locationId) {
+          if (t.type === 'import' || t.type === 'transfer_in' || t.txn_type === 'TRANSFER_IN' || t.txn_type === 'IMPORT') {
+            stock += t.qty;
+          } else if (t.type === 'consumption' || t.type === 'waste' || t.type === 'transfer_out' || t.txn_type === 'TRANSFER_OUT' || t.txn_type === 'ISSUE') {
+            stock -= t.qty;
+          }
         }
       }
     });
+
     // Deduct POS sales consumption
     const consumed = consumptionData.find(c => c.id === ingId)?.qty || 0;
-    stock -= consumed;
-    
+    const ing = ingredients.find(i => i.id === ingId);
+    const isBarItem = ing?.category && ['Wine', 'Alcohol', 'beverage', 'Beverage'].includes(ing.category);
+
+    if (!locationId) {
+      stock -= consumed;
+    } else if (locationId === 'BAR' && isBarItem) {
+      stock -= consumed;
+    } else if (locationId === 'KITCHEN' && !isBarItem) {
+      stock -= consumed;
+    }
+
     // Deduct approved waste logs that are not yet aggregated into transactions
     const unTransactionedWaste = wasteLogs
       .filter(w => w.ingredientId === ingId && w.status === 'approved' && !w.is_processed)
-      .reduce((sum, w) => sum + w.qty, 0);
+      .reduce((sum, w) => {
+        if (!locationId || (locationId === 'BAR' && isBarItem) || (locationId === 'KITCHEN' && !isBarItem)) {
+          return sum + w.qty;
+        }
+        return sum;
+      }, 0);
+    
     stock -= unTransactionedWaste;
 
     return Math.max(0, stock);
@@ -958,20 +1031,30 @@ export default function Home() {
     setShowWeighModal(true);
   };
 
-  const handleSaveWeighedStock = () => {
-    if (!weighIngredient) return;
-    const full = weighFullBottles || 0;
+  const getWeighModalCalculations = () => {
+    if (!weighIngredient) return { openML: 0, openStock: 0, totalQty: 0, isCalibrated: false };
     const grams = parseFloat(weighScaleGrams) || 0;
-    const tare = weighTareGrams || 0;
-    const density = weighDensity || 1.0;
-    
-    // Thể tích rượu còn lại (ML) = max(grams - tare, 0) / density
-    const openML = Math.max(grams - tare, 0) / density;
-    // Quy đổi từ ML về ĐVT tồn kho (BOTTLE) = ML / stock_to_recipe_factor (mặc định 750)
+    const cal = barCalibrations[weighIngredient.id];
+    let openML = 0;
+    let isCalibrated = false;
+    if (cal) {
+      isCalibrated = true;
+      if (grams > cal.empty_weight) {
+        openML = cal.volume_ml * (grams - cal.empty_weight) / (cal.full_weight - cal.empty_weight);
+        openML = Math.min(openML, cal.volume_ml);
+      }
+    } else {
+      openML = Math.max(grams - weighTareGrams, 0) / weighDensity;
+    }
     const factor = (weighIngredient as any).stock_to_recipe_factor || 750;
     const openStock = openML / factor;
-    
-    const totalQty = full + openStock;
+    const totalQty = weighFullBottles + openStock;
+    return { openML, openStock, totalQty, isCalibrated };
+  };
+
+  const handleSaveWeighedStock = () => {
+    if (!weighIngredient) return;
+    const { totalQty } = getWeighModalCalculations();
     
     setActualStocks(prev => ({
       ...prev,
@@ -1307,26 +1390,59 @@ export default function Home() {
     alert('Đã chạy tính toán Moving WAC lúc 18h30 thành công!\nGiá vốn bình quân gia quyền đã được cập nhật cho các mặt hàng có phát sinh giao dịch nhập kho trong ngày. Khóa sổ nhập kho cho đến ca sáng hôm sau.');
   };
 
-  // Function to run Auto-PO simulation (Giai đoạn 4)
+  // Function to run Auto-PO simulation (Giai đoạn 4 + v9.0 updates)
   const handleRunAutoPOSimulation = () => {
-    // Group ingredients that need ordering by Supplier name
-    const poItems: Record<string, { ingId: string; name: string; qtyNeeded: number; unit: string; estCost: number }[]> = {};
+    const poItems: Record<string, { ingId: string; name: string; qtyNeeded: number; unit: string; estCost: number; onHand: number; warning: string }[]> = {};
 
     ingredients.forEach(ing => {
-      const currentStock = getTheoreticalStock(ing.id);
+      const currentStock = getTheoreticalStock(ing.id, selectedLocation);
       
-      // Use safety_stock, min_stock, max_stock or defaults
+      // Calculate 14-day average daily consumption (historical logs check)
+      let totalUsed = 0;
+      transactions.forEach(t => {
+        const txLoc = t.locationId || t.location_id || 'MAIN_STORE';
+        if (t.ingredientId === ing.id && txLoc === selectedLocation) {
+          if (t.type === 'consumption' || t.type === 'waste' || t.txn_type === 'TRANSFER_OUT' || t.txn_type === 'ISSUE') {
+            totalUsed += t.qty;
+          }
+        }
+      });
+      const avgDaily = totalUsed / 14 || 1; // default fallback if no transactions
+      const leadTime = 2; // lead time fallback
       const safetyStock = (ing as any).safety_stock !== undefined ? parseFloat((ing as any).safety_stock) : (((ing as any).min_stock) || 15);
+      const minStock = (ing as any).min_stock !== undefined ? parseFloat((ing as any).min_stock) : 15;
       const maxStock = (ing as any).max_stock !== undefined ? parseFloat((ing as any).max_stock) : 50;
-      
-      if (currentStock < safetyStock) {
-        const rawQtyNeeded = maxStock - currentStock;
+
+      // Pending POs
+      let pendingQty = 0;
+      purchaseOrders.forEach(po => {
+        if (po.status === 'OPEN' || po.status === 'PARTIAL') {
+          po.items.forEach((it: any) => {
+            if (it.ingId === ing.id) {
+              pendingQty += it.qtyOrdered;
+            }
+          });
+        }
+      });
+
+      // Projected Stock = current + pending - forecasted
+      const projected = currentStock + pendingQty - (avgDaily * leadTime);
+
+      let warning = '🟢 OK';
+      if (currentStock <= 0) {
+        warning = '🔴 OUT';
+      } else if (projected <= safetyStock) {
+        warning = '🔴 CRITICAL';
+      } else if (projected <= minStock) {
+        warning = '🟡 LOW';
+      }
+
+      if (warning.includes('🔴') || warning.includes('🟡')) {
+        const rawQtyNeeded = maxStock - projected;
         const moq = (ing as any).moq || 1;
-        const packSize = (ing as any).stock_to_recipe_factor || 1; // pack size quy đổi
+        const packSize = (ing as any).stock_to_recipe_factor || 1;
         
-        // Respect MOQ constraints
         const qtyNeeded = Math.max(rawQtyNeeded, moq * packSize);
-        // Round up to packaging units
         const qtyOrderedInPack = Math.ceil(qtyNeeded / packSize);
         const finalQtyStockUom = qtyOrderedInPack * packSize;
 
@@ -1335,10 +1451,11 @@ export default function Home() {
           name: ing.vi_name,
           qtyNeeded: finalQtyStockUom,
           unit: ing.unit,
-          estCost: Math.round(finalQtyStockUom * ing.price)
+          estCost: Math.round(finalQtyStockUom * ing.price),
+          onHand: currentStock,
+          warning
         };
 
-        // Determine Supplier mapping or fallback based on Category
         const supplierName = ['Meat', 'Seafood'].includes(ing.category) 
           ? 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)' 
           : ['Wine', 'Alcohol'].includes(ing.category) 
@@ -1352,27 +1469,45 @@ export default function Home() {
       }
     });
 
-    const newPOs: { fileName: string; items: any[] }[] = [];
     const nowStr = new Date().toISOString().split('T')[0];
+    const newPOs: { fileName: string; items: any[] }[] = [];
+    const newDocs: any[] = [];
 
-    Object.entries(poItems).forEach(([supplierName, items]) => {
+    Object.entries(poItems).forEach(([supplierName, items], idx) => {
       if (items.length === 0) return;
       
-      const filePrefix = supplierName.includes('An Nam') 
-        ? 'PO_AnNam' 
-        : supplierName.includes('Đa Lộc') 
-          ? 'PO_DaLoc' 
-          : 'PO_Maison_Phu';
+      const filePrefix = supplierName.includes('An Nam') ? 'PO_AnNam' : supplierName.includes('Đa Lộc') ? 'PO_DaLoc' : 'PO_Maison_Phu';
       const fileName = `${filePrefix}_${nowStr}.xlsx`;
 
       newPOs.push({
         fileName,
         items
       });
+
+      const seq = String(idx + 1).padStart(3, '0');
+      const docNo = `PO-${nowStr.replace(/-/g, '')}-${selectedLocation}-${seq}`;
+
+      newDocs.push({
+        id: `draft-${Date.now()}-${idx}`,
+        doc_no: docNo,
+        business_date: nowStr,
+        location_id: selectedLocation,
+        supplier_name: supplierName,
+        status: 'DRAFT',
+        items: items.map(it => ({
+          ingId: it.ingId,
+          name: it.name,
+          onHand: it.onHand,
+          warning: it.warning,
+          slDat: it.qtyNeeded,
+          unit: it.unit
+        }))
+      });
     });
 
     setGeneratedPOs(newPOs);
-    alert(`Đã chạy tự động sinh đơn hàng Auto-PO lúc 22h40!\nPhát hiện ${Object.values(poItems).flat().length} nguyên liệu dưới định mức tồn an toàn. Đã tạo và phân nhóm ${newPOs.length} đơn hàng PO theo Nhà cung cấp ưu tiên.`);
+    setOrderDocuments(prev => [...newDocs, ...prev]);
+    alert(`Đã chạy tự động sinh đơn hàng Auto-PO lúc 22h40!\nPhát hiện ${Object.values(poItems).flat().length} nguyên liệu dưới định mức tồn an toàn.\nĐã tạo và lưu ${newDocs.length} bản nháp PO (DRAFT) trong tab Mua hàng.`);
   };
 
   // Helper to trigger Excel download for a generated PO
@@ -1389,6 +1524,200 @@ export default function Home() {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'PO_Order');
     XLSX.writeFile(wb, po.fileName);
+  };
+
+  // v9.0 Internal Transfer Handler
+  const handleInternalTransferSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!internalTransferIngId || !internalTransferQty) return;
+
+    if (internalTransferSrc === internalTransferDest) {
+      setInternalTransferStatus('Thất bại: Kho nguồn và kho đích không được giống nhau.');
+      return;
+    }
+
+    const qtyNum = parseFloat(internalTransferQty);
+    if (isNaN(qtyNum) || qtyNum <= 0) {
+      setInternalTransferStatus('Thất bại: Số lượng chuyển phải lớn hơn 0.');
+      return;
+    }
+
+    const ing = ingredients.find(i => i.id === internalTransferIngId);
+    if (!ing) return;
+
+    // Check source stock
+    const sourceStock = getTheoreticalStock(internalTransferIngId, internalTransferSrc);
+    if (sourceStock < qtyNum) {
+      setInternalTransferStatus(`Thất bại: Kho nguồn ${internalTransferSrc} không đủ tồn (Hiện có: ${sourceStock} ${ing.unit}).`);
+      return;
+    }
+
+    const transferId = 'trans-' + Math.random().toString(36).substring(2, 9);
+    const dateStr = new Date().toISOString().split('T')[0];
+
+    const outTx = {
+      id: `tx-out-${Date.now()}`,
+      ingredientId: internalTransferIngId,
+      type: 'consumption' as const,
+      txn_type: 'TRANSFER_OUT',
+      qty: qtyNum,
+      unit_price: ing.price,
+      status: 'approved' as const,
+      date: dateStr,
+      locationId: internalTransferSrc,
+      transferId,
+      note: `Xuất chuyển kho nội bộ sang ${internalTransferDest}: ${internalTransferNote}`
+    };
+
+    const inTx = {
+      id: `tx-in-${Date.now()}`,
+      ingredientId: internalTransferIngId,
+      type: 'import' as const,
+      txn_type: 'TRANSFER_IN',
+      qty: qtyNum,
+      unit_price: ing.price,
+      status: 'approved' as const,
+      date: dateStr,
+      locationId: internalTransferDest,
+      transferId,
+      note: `Nhập chuyển kho nội bộ từ ${internalTransferSrc}: ${internalTransferNote}`
+    };
+
+    setTransactions(prev => [...prev, outTx, inTx]);
+    setInternalTransferStatus(`Thành công: Đã chuyển ${qtyNum} ${ing.unit} từ ${internalTransferSrc} sang ${internalTransferDest}. (Mã giao dịch: ${transferId})`);
+    
+    setInternalTransferQty('');
+    setInternalTransferNote('');
+  };
+
+  // v9.0 Daily Confirmation Handler
+  const handleConfirmDailyMovement = (locId: string, type: 'IMPORT' | 'ISSUE') => {
+    setDailyMovements(prev => {
+      const current = prev[locId] || { importsConfirmed: false, issuesConfirmed: false, status: 'OPEN' };
+      const updated = { ...current };
+      
+      if (type === 'IMPORT') {
+        updated.importsConfirmed = true;
+      } else {
+        updated.issuesConfirmed = true;
+      }
+
+      if (updated.importsConfirmed && updated.issuesConfirmed) {
+        updated.status = 'CLOSED';
+        // Snapshot current stock for this location
+        const snap: Record<string, number> = {};
+        ingredients.forEach(i => {
+          snap[i.id] = getTheoreticalStock(i.id, locId);
+        });
+        updated.snapshot = snap;
+      }
+
+      return { ...prev, [locId]: updated };
+    });
+
+    alert(`Đã xác nhận trạng thái ${type === 'IMPORT' ? 'Đã Nhập hàng' : 'Đã Xuất tiêu hao'} cho địa điểm ${locId}.`);
+  };
+
+  // v9.0 PO Approve & PDF Export Handler
+  const handleApproveAndPrintPO = (doc: any) => {
+    const hash = 'SHA256-' + Math.random().toString(36).substring(2, 10).toUpperCase() + Math.random().toString(36).substring(2, 10).toUpperCase();
+    
+    // Update document status
+    setOrderDocuments(prev => prev.map(d => d.id === doc.id ? { ...d, status: 'APPROVED', content_hash: hash } : d));
+    
+    // Trigger styled Neoclassical print popup layout
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Phiếu Đặt Hàng - ${doc.doc_no}</title>
+            <style>
+              body { font-family: 'Times New Roman', serif; background-color: #fff; color: #000; padding: 40px; }
+              .header { text-align: center; border-bottom: 2px solid #b59410; padding-bottom: 10px; margin-bottom: 30px; }
+              .title { font-size: 22px; font-weight: bold; letter-spacing: 2px; margin: 0; color: #7a6300; }
+              .subtitle { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin: 5px 0 0 0; color: #555; }
+              .meta-table { width: 100%; margin-bottom: 30px; font-size: 13px; }
+              .meta-table td { padding: 4px; vertical-align: top; }
+              .warn-box { border: 1px solid #b59410; padding: 10px; margin-bottom: 20px; font-size: 11px; display: flex; gap: 15px; }
+              .data-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 12px; }
+              .data-table th, .data-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+              .data-table th { background-color: #f5f5f5; font-weight: bold; }
+              .footer-sigs { width: 100%; margin-top: 50px; text-align: center; font-size: 13px; }
+              .footer-sigs td { width: 33%; height: 100px; vertical-align: top; }
+              .hash-info { margin-top: 60px; border-top: 1px solid #eee; padding-top: 10px; font-family: monospace; font-size: 10px; color: #666; text-align: right; }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h1 class="title">MAISON VIE</h1>
+              <p class="subtitle">Hệ thống CRM/ERP Inventory & Finance</p>
+              <h2 style="font-size: 16px; margin: 15px 0 0 0; text-decoration: underline;">PHIẾU ĐỀ XUẤT ĐẶT HÀNG / PURCHASE ORDER</h2>
+            </div>
+            
+            <table class="meta-table">
+              <tr>
+                <td><strong>Số chứng từ:</strong> ${doc.doc_no}</td>
+                <td><strong>Nhà cung cấp:</strong> ${doc.supplier_name}</td>
+              </tr>
+              <tr>
+                <td><strong>Ngày chốt sổ:</strong> ${doc.business_date}</td>
+                <td><strong>Bộ phận yêu cầu:</strong> ${doc.location_id}</td>
+              </tr>
+            </table>
+
+            <div class="warn-box">
+              <span>Chú giải cảnh báo:</span>
+              <span>🔴 KHẨN CẤP (Tồn &le; An toàn)</span>
+              <span>🟡 SẮP HẾT (Tồn &le; Tối thiểu)</span>
+              <span>🟢 ĐỦ TỒN (Không đặt)</span>
+            </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Mã NVL</th>
+                  <th>Tên nguyên liệu</th>
+                  <th>Tồn vật lý</th>
+                  <th>ĐVT</th>
+                  <th>Cảnh báo</th>
+                  <th>SL Đặt đề xuất</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${doc.items.map((it: any, idx: number) => `
+                  <tr>
+                    <td>${idx + 1}</td>
+                    <td>${it.ingId}</td>
+                    <td>${it.name}</td>
+                    <td>${it.onHand}</td>
+                    <td>${it.unit}</td>
+                    <td>${it.warning}</td>
+                    <td><strong>${it.slDat}</strong></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+
+            <table class="footer-sigs">
+              <tr>
+                <td><strong>Người lập phiếu</strong><br/><span style="font-size:11px; color:#555;">(Ký, ghi rõ họ tên)</span></td>
+                <td><strong>Trưởng bộ phận kho</strong><br/><span style="font-size:11px; color:#555;">(Ký, duyệt tồn ca)</span></td>
+                <td><strong>Phê duyệt (CFO)</strong><br/><span style="font-size:11px; color:#555;">(Ký, duyệt ngân sách)</span></td>
+              </tr>
+            </table>
+
+            <div class="hash-info">
+              Document SHA-256: ${hash.substring(0, 32)}...<br/>
+              *Bản nháp được hệ thống chốt tự động. Có hiệu lực pháp lý khi đủ chữ ký duyệt.
+            </div>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
   };
 
   // Mapping Modal Effects & Logic
@@ -2059,9 +2388,19 @@ export default function Home() {
                   <option value="foh_supervisor" className="bg-[#090d16] text-gray-300">Cấp 5: Giám sát (FOH)</option>
                   <option value="sous_chef" className="bg-[#090d16] text-gray-300">Cấp 6: Bếp phó</option>
                   <option value="junior_accountant" className="bg-[#090d16] text-gray-300">Cấp 7: Thủ kho / Kế toán phụ</option>
+                  <option value="BAR_SUPERVISOR" className="bg-[#090d16] text-gray-300">Cấp 8: Trưởng quầy Bar</option>
+                  <option value="BARTENDER" className="bg-[#090d16] text-gray-300">Cấp 9: Bartender / Pha chế</option>
                 </select>
               </div>
             )}
+            
+            <a 
+              href="/bar" 
+              target="_blank"
+              className="text-[10px] text-amber-400 hover:text-amber-300 bg-[#0c1220] border border-amber-500/20 px-3 py-1.5 rounded-sm font-sans uppercase font-bold text-center"
+            >
+              Cổng Quầy Bar (Tablet)
+            </a>
             <div className="h-8 w-[1px] bg-amber-500/20 hidden sm:block"></div>
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
@@ -2552,6 +2891,143 @@ export default function Home() {
                   )}
                 </div>
               )}
+
+              {/* PHÂN HỆ CHUYỂN KHO NỘI BỘ (INTERNAL TRANSFER) & CHỐT SỔ (DAILY CLOSE) (MỚI v9.0) */}
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                {/* 1. Chuyển kho nội bộ */}
+                <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans">
+                  <h4 className="text-xs font-bold uppercase text-amber-400 border-b border-amber-500/5 pb-2">Chuyển kho nội bộ (Internal Transfer)</h4>
+                  <form onSubmit={handleInternalTransferSubmit} className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] uppercase text-gray-400 font-semibold">Chọn nguyên liệu chuyển</label>
+                      <select
+                        value={internalTransferIngId}
+                        onChange={(e) => setInternalTransferIngId(e.target.value)}
+                        className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full"
+                        required
+                      >
+                        <option value="">-- Chọn nguyên liệu --</option>
+                        {ingredients.map(ing => (
+                          <option key={ing.id} value={ing.id}>{ing.id} - {ing.vi_name} ({ing.unit})</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] uppercase text-gray-400 font-semibold">Từ kho</label>
+                        <select
+                          value={internalTransferSrc}
+                          onChange={(e) => setInternalTransferSrc(e.target.value)}
+                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full"
+                        >
+                          <option value="MAIN_STORE">Kho tổng</option>
+                          <option value="KITCHEN">Bếp</option>
+                          <option value="BAR">Quầy Bar</option>
+                        </select>
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] uppercase text-gray-400 font-semibold">Đến bộ phận</label>
+                        <select
+                          value={internalTransferDest}
+                          onChange={(e) => setInternalTransferDest(e.target.value)}
+                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full"
+                        >
+                          <option value="KITCHEN">Bếp</option>
+                          <option value="BAR">Quầy Bar</option>
+                          <option value="MAIN_STORE">Kho tổng</option>
+                        </select>
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] uppercase text-gray-400 font-semibold">Số lượng</label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          required
+                          placeholder="SL..."
+                          value={internalTransferQty}
+                          onChange={(e) => setInternalTransferQty(e.target.value)}
+                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono w-full"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] uppercase text-gray-400 font-semibold">Lý do chuyển kho / Ghi chú</label>
+                      <input
+                        type="text"
+                        placeholder="VD: Cấp rượu vang cho quầy bar..."
+                        value={internalTransferNote}
+                        onChange={(e) => setInternalTransferNote(e.target.value)}
+                        className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 w-full"
+                      />
+                    </div>
+
+                    {internalTransferStatus && (
+                      <p className={`text-[11px] font-semibold ${internalTransferStatus.includes('Thất bại') ? 'text-rose-400' : 'text-emerald-400'}`}>
+                        {internalTransferStatus}
+                      </p>
+                    )}
+
+                    <button
+                      type="submit"
+                      className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs py-3 rounded shadow transition-all active:scale-95 uppercase tracking-wider"
+                    >
+                      Xác nhận Chuyển kho
+                    </button>
+                  </form>
+                </div>
+
+                {/* 2. Cổng xác nhận chốt tồn */}
+                <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans justify-between">
+                  <div>
+                    <h4 className="text-xs font-bold uppercase text-amber-400 border-b border-amber-500/5 pb-2 mb-3">Xác nhận vận động kho & Chốt tồn cuối ngày</h4>
+                    <div className="flex flex-col gap-3.5">
+                      {locations.map(loc => {
+                        const statusData = dailyMovements[loc.id] || { importsConfirmed: false, issuesConfirmed: false, status: 'OPEN' };
+                        return (
+                          <div key={loc.id} className="bg-[#090d16]/70 border border-amber-500/5 rounded p-3.5 flex justify-between items-center gap-4">
+                            <div className="flex flex-col gap-1">
+                              <span className="text-xs font-bold text-amber-500">{loc.name}</span>
+                              <span className="text-[10px] text-gray-400">
+                                Trạng thái ca: <strong className={statusData.status === 'CLOSED' ? 'text-emerald-400' : 'text-amber-400'}>{statusData.status}</strong>
+                              </span>
+                            </div>
+                            
+                            <div className="flex gap-2.5">
+                              <button
+                                disabled={statusData.importsConfirmed}
+                                onClick={() => handleConfirmDailyMovement(loc.id, 'IMPORT')}
+                                className={`px-2.5 py-1.5 rounded text-[10px] font-bold transition-all ${
+                                  statusData.importsConfirmed ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20'
+                                }`}
+                              >
+                                {statusData.importsConfirmed ? '✓ ĐÃ NHẬP' : 'XÁC NHẬN NHẬP'}
+                              </button>
+                              
+                              <button
+                                disabled={statusData.issuesConfirmed}
+                                onClick={() => handleConfirmDailyMovement(loc.id, 'ISSUE')}
+                                className={`px-2.5 py-1.5 rounded text-[10px] font-bold transition-all ${
+                                  statusData.issuesConfirmed ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20'
+                                }`}
+                              >
+                                {statusData.issuesConfirmed ? '✓ ĐÃ XUẤT' : 'XÁC NHẬN XUẤT'}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <p className="text-[10px] text-gray-500 italic leading-relaxed pt-2 border-t border-amber-500/5 mt-2">
+                    *Chỉ khi cả "Đã Nhập" và "Đã Xuất" được xác thực, hệ thống mới khóa sổ và ghi nhận closing_snapshot của ngày.
+                  </p>
+                </div>
+              </div>
 
               {/* Filters row */}
               <div className="flex flex-col md:flex-row justify-end items-center gap-4">
@@ -3663,6 +4139,59 @@ export default function Home() {
 
                   {/* Cột phải: Danh sách PO & GRN */}
                   <div className="lg:col-span-7 flex flex-col gap-6">
+                    {/* Hạng mục mới v9.0: Bản nháp phiếu đặt hàng (DRAFT POs) & PDF Export */}
+                    <div className="p-5 bg-[#0c1220]/40 rounded border border-amber-500/20 flex flex-col gap-3 font-sans">
+                      <h4 className="text-xs font-bold uppercase text-amber-400 flex justify-between items-center border-b border-amber-500/5 pb-2">
+                        <span>Bản nháp đặt hàng & Duyệt PO PDF (Order Documents)</span>
+                        <span className="text-[10px] text-gray-400">({orderDocuments.length} bản ghi)</span>
+                      </h4>
+                      <div className="flex flex-col gap-3.5 max-h-60 overflow-y-auto pr-1">
+                        {orderDocuments.map(doc => (
+                          <div key={doc.id} className="bg-[#090d16]/70 p-3 rounded border border-amber-500/10 flex flex-col gap-2.5 text-xs">
+                            <div className="flex justify-between items-center">
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono text-amber-400 font-bold text-sm">{doc.doc_no}</span>
+                                <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase ${
+                                  doc.status === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'
+                                }`}>
+                                  {doc.status}
+                                </span>
+                              </div>
+                              <span className="text-[10px] text-gray-500 font-mono">Ngày: {doc.business_date} • Kho: {doc.location_id}</span>
+                            </div>
+                            <span className="text-gray-200 font-semibold">{doc.supplier_name}</span>
+                            <div className="text-[11px] text-gray-400 font-medium">
+                              Số mặt hàng: {doc.items.length} món
+                            </div>
+                            
+                            {/* Dòng hàng chi tiết tóm tắt */}
+                            <div className="bg-[#070b12] p-2 rounded border border-amber-500/5 flex flex-col gap-1 text-[11px]">
+                              {doc.items.map((it: any, i: number) => (
+                                <div key={i} className="flex justify-between">
+                                  <span className="text-gray-300 font-medium">{it.name}</span>
+                                  <span className="text-gray-400 font-mono">Đặt: <strong className="text-amber-400">{it.slDat} {it.unit}</strong> (Tồn: {it.onHand}) - {it.warning}</span>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Nút phê duyệt & In PDF */}
+                            <div className="flex justify-end gap-2 border-t border-amber-500/5 pt-2">
+                              <button
+                                onClick={() => handleApproveAndPrintPO(doc)}
+                                className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-[10px] px-3.5 py-1.5 rounded shadow active:scale-95 transition-all flex items-center gap-1"
+                              >
+                                <FileText size={12} />
+                                <span>{doc.status === 'APPROVED' ? 'IN LẠI PDF' : 'DUYỆT & XUẤT PO PDF'}</span>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                        {orderDocuments.length === 0 && (
+                          <div className="text-gray-500 italic text-center py-6 font-sans">Không có bản nháp PO nào. Chạy "Auto-PO" bên tab Master Kho để tạo bản nháp.</div>
+                        )}
+                      </div>
+                    </div>
+
                     {/* Danh sách Đơn đặt hàng PO */}
                     <div className="p-5 bg-[#0c1220]/30 rounded border border-amber-500/10 flex flex-col gap-3 font-sans">
                       <h4 className="text-xs font-bold uppercase text-amber-400 flex justify-between items-center border-b border-amber-500/5 pb-2">
@@ -4045,37 +4574,50 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold font-sans">4. Tỷ trọng rượu (Density)</label>
-                <input 
-                  type="number" 
-                  step="0.01"
-                  value={weighDensity}
-                  onChange={(e) => setWeighDensity(parseFloat(e.target.value) || 1.0)}
-                  className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono w-full"
-                />
-              </div>
+              {(() => {
+                const { openML, openStock, totalQty, isCalibrated } = getWeighModalCalculations();
+                return (
+                  <>
+                    {isCalibrated ? (
+                      <div className="bg-emerald-950/20 border border-emerald-500/20 p-2.5 rounded text-[11px] text-emerald-400 font-sans">
+                        ℹ️ Đã tự động áp dụng hiệu chuẩn 2 điểm cho loại rượu này. Bỏ qua tỷ trọng mặc định để tính chính xác dựa trên trọng lượng đầy/rỗng gốc.
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold font-sans">4. Tỷ trọng rượu (Density)</label>
+                        <input 
+                          type="number" 
+                          step="0.01"
+                          value={weighDensity}
+                          onChange={(e) => setWeighDensity(parseFloat(e.target.value) || 1.0)}
+                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono w-full"
+                        />
+                      </div>
+                    )}
 
-              <div className="bg-amber-500/5 border border-amber-500/10 p-3 rounded flex flex-col gap-2 font-mono text-[11px]">
-                <div className="flex justify-between">
-                  <span className="text-gray-400 font-sans">Thể tích chai dở ML:</span>
-                  <span className="text-gray-200 font-bold">
-                    {Math.max((parseFloat(weighScaleGrams) || 0) - weighTareGrams, 0).toFixed(0)} ML
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400 font-sans">Tỷ lệ chai dở quy đổi:</span>
-                  <span className="text-gray-200 font-bold">
-                    {(Math.max((parseFloat(weighScaleGrams) || 0) - weighTareGrams, 0) / ((weighIngredient as any).stock_to_recipe_factor || 750)).toFixed(3)} chai
-                  </span>
-                </div>
-                <div className="flex justify-between border-t border-amber-500/10 pt-2 text-xs">
-                  <span className="text-amber-500 font-serif font-bold">TỔNG TỒN THỰC TẾ:</span>
-                  <span className="text-amber-400 font-bold">
-                    {(weighFullBottles + (Math.max((parseFloat(weighScaleGrams) || 0) - weighTareGrams, 0) / ((weighIngredient as any).stock_to_recipe_factor || 750))).toFixed(3)} BOTTLE
-                  </span>
-                </div>
-              </div>
+                    <div className="bg-amber-500/5 border border-amber-500/10 p-3 rounded flex flex-col gap-2 font-mono text-[11px]">
+                      <div className="flex justify-between">
+                        <span className="text-gray-400 font-sans">Thể tích chai dở ML:</span>
+                        <span className="text-gray-200 font-bold">
+                          {openML.toFixed(0)} ML {isCalibrated && <span className="text-[9px] text-emerald-400 font-sans">(Hiệu chuẩn)</span>}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400 font-sans">Tỷ lệ chai dở quy đổi:</span>
+                        <span className="text-gray-200 font-bold">
+                          {openStock.toFixed(3)} chai
+                        </span>
+                      </div>
+                      <div className="flex justify-between border-t border-amber-500/10 pt-2 text-xs">
+                        <span className="text-amber-500 font-serif font-bold">TỔNG TỒN THỰC TẾ:</span>
+                        <span className="text-amber-400 font-bold">
+                          {totalQty.toFixed(3)} BOTTLE
+                        </span>
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
 
               <div className="flex justify-end gap-3 border-t border-amber-500/10 pt-4 mt-2">
                 <button 

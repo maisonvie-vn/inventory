@@ -560,3 +560,161 @@ revoke select on table ingredients, inventory_transactions from public, authenti
 grant select on table v_inventory_ops to authenticated;
 grant select on table v_inventory_cost to authenticated;
 grant select on table v_inventory_finance to authenticated;
+
+-- =========================================================================
+-- v9.0 SCHEMA ADDITIONS (BAR INDEPENDENCE, INTERNAL TRANSFER, ORDER DOCUMENTS)
+-- =========================================================================
+
+-- 1. Locations Table
+create table if not exists locations (
+  id          text primary key,     -- 'MAIN_STORE','KITCHEN','BAR'
+  name        text not null,
+  loc_type    text not null,        -- 'STORE' (kho) | 'STATION' (quầy/bộ phận sử dụng)
+  is_bar      boolean default false
+);
+
+alter table locations enable row level security;
+
+-- Insert default locations
+insert into locations (id, name, loc_type, is_bar) values
+('MAIN_STORE', 'Kho tổng', 'STORE', false),
+('KITCHEN', 'Bếp', 'STATION', false),
+('BAR', 'Quầy Bar', 'STATION', true)
+on conflict (id) do nothing;
+
+-- 2. Alter profiles to add bar attributes
+alter table profiles add column if not exists home_location text references locations(id);
+alter table profiles add column if not exists pin_hash text;
+alter table profiles add column if not exists shift_role text;
+
+-- Drop and recreate profiles check constraint to include new bar roles
+alter table profiles drop constraint if exists profiles_role_check;
+alter table profiles add constraint profiles_role_check check (role in (
+    'admin',
+    'restaurant_manager',
+    'head_chef',
+    'senior_accountant',
+    'foh_supervisor',
+    'sous_chef',
+    'junior_accountant',
+    'BAR_SUPERVISOR',
+    'BARTENDER'
+));
+
+-- 3. Alter inventory_transactions for location tracking & transfer link
+alter table inventory_transactions add column if not exists location_id text references locations(id) default 'MAIN_STORE';
+alter table inventory_transactions add column if not exists transfer_id uuid;
+
+-- Drop and recreate txn_type check constraint
+alter table inventory_transactions drop constraint if exists inventory_transactions_txn_type_check;
+alter table inventory_transactions add constraint inventory_transactions_txn_type_check check (txn_type in (
+  'IMPORT', 'SALE_DEPLETION', 'WASTE', 'NON_SALE', 'STOCK_TAKE_ADJ', 'REVERSAL',
+  'TRANSFER_OUT', 'TRANSFER_IN', 'ISSUE'
+));
+
+-- 4. Create View for Stock on Hand per Location
+create or replace view v_stock_on_hand as
+  select ingredient_id, location_id, sum(qty) as qty_on_hand
+  from inventory_transactions 
+  where status = 'approved'
+  group by ingredient_id, location_id;
+
+-- 5. Calibration for Bar Bottles
+create table if not exists bar_bottle_calibration (
+  ingredient_id      varchar(50) primary key references ingredients(id) on delete cascade,
+  full_weight_grams  numeric not null,
+  empty_weight_grams numeric not null,
+  full_volume_ml     numeric not null
+);
+
+alter table bar_bottle_calibration enable row level security;
+
+-- 6. Bar Counts by Shift
+create table if not exists bar_counts (
+  id                uuid primary key default gen_random_uuid(),
+  business_date     date not null,
+  ingredient_id     varchar(50) references ingredients(id) on delete cascade,
+  sealed_qty        numeric default 0,
+  open_bottle_grams numeric,
+  derived_volume_ml numeric,
+  shift             text check (shift in ('OPEN', 'CLOSE')),
+  counted_by        uuid references profiles(id) on delete set null,
+  counted_at        timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table bar_counts enable row level security;
+
+-- 7. Daily Stock Movement Confirmation
+create table if not exists daily_stock_movement (
+  business_date         date,
+  location_id           text references locations(id),
+  imports_confirmed     boolean default false,
+  imports_confirmed_by  uuid references profiles(id),
+  imports_confirmed_at  timestamp with time zone,
+  issues_confirmed      boolean default false,
+  issues_confirmed_by   uuid references profiles(id),
+  issues_confirmed_at   timestamp with time zone,
+  closing_snapshot      jsonb,
+  status                text default 'OPEN' check (status in ('OPEN', 'CLOSED')),
+  primary key (business_date, location_id)
+);
+
+alter table daily_stock_movement enable row level security;
+
+-- 8. Order Documents (Immutable PO PDFs)
+create table if not exists order_documents (
+  id            uuid primary key default gen_random_uuid(),
+  doc_no        text unique not null,
+  business_date date not null,
+  location_id   text references locations(id),
+  supplier_id   uuid references suppliers(id) on delete set null,
+  status        text default 'DRAFT' check (status in ('DRAFT', 'APPROVED', 'SENT')),
+  generated_by  uuid references profiles(id),
+  approved_by   uuid references profiles(id),
+  pdf_path      text,
+  content_hash  text,
+  payload       jsonb,
+  created_at    timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table order_documents enable row level security;
+
+-- Setup RLS Policies for new items
+create policy "Allow select locations for all staff" on locations for select to authenticated using (true);
+create policy "Allow select calibration for all staff" on bar_bottle_calibration for select to authenticated using (true);
+create policy "Allow select bar_counts for all staff" on bar_counts for select to authenticated using (true);
+create policy "Allow select daily_stock_movement for all staff" on daily_stock_movement for select to authenticated using (true);
+create policy "Allow select order_documents for all staff" on order_documents for select to authenticated using (true);
+
+-- Write policies for bar_bottle_calibration
+create policy "Allow write calibration for authorized staff"
+on bar_bottle_calibration for all to authenticated
+using (get_current_user_role() in ('BAR_SUPERVISOR', 'admin', 'senior_accountant', 'restaurant_manager'))
+with check (get_current_user_role() in ('BAR_SUPERVISOR', 'admin', 'senior_accountant', 'restaurant_manager'));
+
+-- Write policies for bar_counts
+create policy "Allow insert bar_counts for bartender, supervisor and admin"
+on bar_counts for insert to authenticated
+with check (get_current_user_role() in ('BARTENDER', 'BAR_SUPERVISOR', 'admin'));
+
+create policy "Allow update/delete bar_counts for supervisor and admin"
+on bar_counts for update to authenticated
+using (get_current_user_role() in ('BAR_SUPERVISOR', 'admin'))
+with check (get_current_user_role() in ('BAR_SUPERVISOR', 'admin'));
+
+-- Write policies for daily_stock_movement
+create policy "Allow manage daily_stock_movement for authorized roles"
+on daily_stock_movement for all to authenticated
+using (get_current_user_role() in ('BAR_SUPERVISOR', 'admin', 'senior_accountant', 'junior_accountant', 'head_chef', 'restaurant_manager'))
+with check (get_current_user_role() in ('BAR_SUPERVISOR', 'admin', 'senior_accountant', 'junior_accountant', 'head_chef', 'restaurant_manager'));
+
+-- Write policies for order_documents
+create policy "Allow manage order_documents for authorized roles"
+on order_documents for all to authenticated
+using (get_current_user_role() in ('BAR_SUPERVISOR', 'admin', 'senior_accountant', 'restaurant_manager'))
+with check (get_current_user_role() in ('BAR_SUPERVISOR', 'admin', 'senior_accountant', 'restaurant_manager'));
+
+-- Grant select on new views
+grant select on table v_stock_on_hand to authenticated;
+
+

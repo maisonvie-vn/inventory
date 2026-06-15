@@ -645,3 +645,108 @@ select cron.schedule(
     end;
     $$
 );
+
+-- =========================================================================
+-- v9.0 FUNCTIONS (INTERNAL TRANSFER & DAILY MOVEMENT CONFIRMATION)
+-- =========================================================================
+
+-- 1. Record internal transfers between locations
+create or replace function record_internal_transfer(
+  p_src_loc text,
+  p_dest_loc text,
+  p_ing_id varchar,
+  p_qty numeric,
+  p_user_id uuid,
+  p_date date,
+  p_note text
+)
+returns uuid as $$
+declare
+  v_transfer_id uuid;
+  v_wac numeric(12, 2);
+begin
+  -- Validate quantity
+  if p_qty <= 0 then
+    raise exception 'Số lượng chuyển kho phải lớn hơn 0.';
+  end if;
+
+  -- Validate locations
+  if p_src_loc = p_dest_loc then
+    raise exception 'Kho nguồn và kho đích không được trùng nhau.';
+  end if;
+
+  -- Fetch current WAC for this ingredient
+  select wac_price into v_wac from ingredients where id = p_ing_id;
+
+  -- Generate unique transfer_id
+  v_transfer_id := gen_random_uuid();
+
+  -- 1. Insert TRANSFER_OUT (negative quantity)
+  insert into inventory_transactions (
+    ingredient_id, txn_type, qty, unit_cost, location_id, transfer_id, business_date, status, created_by, note
+  ) values (
+    p_ing_id, 'TRANSFER_OUT', -p_qty, v_wac, p_src_loc, v_transfer_id, p_date, 'approved', p_user_id, p_note
+  );
+
+  -- 2. Insert TRANSFER_IN (positive quantity)
+  insert into inventory_transactions (
+    ingredient_id, txn_type, qty, unit_cost, location_id, transfer_id, business_date, status, created_by, note
+  ) values (
+    p_ing_id, 'TRANSFER_IN', p_qty, v_wac, p_dest_loc, v_transfer_id, p_date, 'approved', p_user_id, p_note
+  );
+
+  return v_transfer_id;
+end;
+$$ language plpgsql security definer;
+
+
+-- 2. Confirm daily movement imports or issues for location, chốt sổ snapshot khi cả 2 confirmed
+create or replace function confirm_daily_movement(
+  p_date date,
+  p_loc_id text,
+  p_type text, -- 'IMPORT' or 'ISSUE'
+  p_user_id uuid
+)
+returns void as $$
+declare
+  v_imports_confirmed boolean;
+  v_issues_confirmed boolean;
+  v_snapshot jsonb;
+begin
+  if p_type = 'IMPORT' then
+    insert into daily_stock_movement (business_date, location_id, imports_confirmed, imports_confirmed_by, imports_confirmed_at)
+    values (p_date, p_loc_id, true, p_user_id, now())
+    on conflict (business_date, location_id) do update set
+      imports_confirmed = true,
+      imports_confirmed_by = p_user_id,
+      imports_confirmed_at = now();
+  elsif p_type = 'ISSUE' then
+    insert into daily_stock_movement (business_date, location_id, issues_confirmed, issues_confirmed_by, issues_confirmed_at)
+    values (p_date, p_loc_id, true, p_user_id, now())
+    on conflict (business_date, location_id) do update set
+      issues_confirmed = true,
+      issues_confirmed_by = p_user_id,
+      issues_confirmed_at = now();
+  else
+    raise exception 'Loại xác nhận không hợp lệ. Phải là IMPORT hoặc ISSUE.';
+  end if;
+
+  -- Check if both are confirmed now to build closing snapshot
+  select imports_confirmed, issues_confirmed into v_imports_confirmed, v_issues_confirmed
+  from daily_stock_movement
+  where business_date = p_date and location_id = p_loc_id;
+
+  if v_imports_confirmed = true and v_issues_confirmed = true then
+    -- Generate snapshot of stock on hand for this location
+    select jsonb_object_agg(ingredient_id, qty_on_hand) into v_snapshot
+    from v_stock_on_hand
+    where location_id = p_loc_id;
+
+    update daily_stock_movement
+    set closing_snapshot = v_snapshot,
+        status = 'CLOSED'
+    where business_date = p_date and location_id = p_loc_id;
+  end if;
+end;
+$$ language plpgsql security definer;
+
