@@ -62,11 +62,11 @@ export default function Home() {
 
   // Parallel & Yield Calibration States
   const [parallelVarianceList, setParallelVarianceList] = useState([
-    { code: 'ING-093', name: 'Thịt bò Ribeye Angus US', excelQty: 25.5, crmQty: 28.05, variance: -2.55, pct: -10.0, reason: 'Do CRM tự động cộng 10% Wastage Buffer định mức bếp' },
-    { code: 'ING-007', name: 'Cá hồi Na Uy phi lê', excelQty: 18.0, crmQty: 19.80, variance: -1.80, pct: -10.0, reason: 'Do CRM tự động cộng 10% Wastage Buffer định mức bếp' },
-    { code: 'ING-011', name: 'Thịt trâu Việt Nam (Wellington)', excelQty: 12.0, crmQty: 14.70, variance: -2.70, pct: -22.5, reason: 'CRM bao gồm 1.5kg Waste Log nướng hỏng đã duyệt trong ca + 10% buffer' },
-    { code: 'ING-017', name: 'Bơ Isigny Pháp', excelQty: 10.0, crmQty: 11.00, variance: -1.00, pct: -10.0, reason: 'Do CRM tự động cộng 10% Wastage Buffer định mức bếp' },
-    { code: 'ING-003', name: 'Cá tuyết đen phi lê', excelQty: 15.0, crmQty: 16.50, variance: -1.50, pct: -10.0, reason: 'Do CRM tự động cộng 10% Wastage Buffer định mức bếp' },
+    { code: 'ING-093', name: 'Thịt bò Ribeye Angus US', excelQty: 25.5, crmQty: 25.50, variance: 0.00, pct: 0.0, reason: 'Khớp hoàn hảo sau khi bỏ 10% buffer hao hụt ảo' },
+    { code: 'ING-007', name: 'Cá hồi Na Uy phi lê', excelQty: 18.0, crmQty: 18.00, variance: 0.00, pct: 0.0, reason: 'Khớp hoàn hảo sau khi bỏ 10% buffer hao hụt ảo' },
+    { code: 'ING-011', name: 'Thịt trâu Việt Nam (Wellington)', excelQty: 12.0, crmQty: 13.50, variance: -1.50, pct: -12.5, reason: 'CRM ghi nhận thêm 1.5kg từ Waste Log hủy hỏng thực tế trong ca' },
+    { code: 'ING-017', name: 'Bơ Isigny Pháp', excelQty: 10.0, crmQty: 10.00, variance: 0.00, pct: 0.0, reason: 'Khớp hoàn hảo sau khi bỏ 10% buffer hao hụt ảo' },
+    { code: 'ING-003', name: 'Cá tuyết đen phi lê', excelQty: 15.0, crmQty: 15.00, variance: 0.00, pct: 0.0, reason: 'Khớp hoàn hảo sau khi bỏ 10% buffer hao hụt ảo' },
   ]);
   const [calibSuccessMsg, setCalibSuccessMsg] = useState<string | null>(null);
   const [rlsAuditLogs, setRlsAuditLogs] = useState<string[]>([]);
@@ -106,6 +106,14 @@ export default function Home() {
     qty: number;
     price: number;
   }[]>([]);
+
+  // Change Password States
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isPasswordLoading, setIsPasswordLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
 
   // Editable lists loaded into state
   const [ingredients, setIngredients] = useState<Ingredient[]>(() => getIngredients());
@@ -155,13 +163,13 @@ export default function Home() {
     if (role === 'admin') return true;
     switch (role) {
       case 'restaurant_manager':
-        return ['dashboard', 'sales', 'inventory', 'stockcount', 'subrecipes', 'reconciliation'].includes(tab);
+        return ['dashboard', 'inventory', 'stockcount', 'subrecipes', 'reconciliation'].includes(tab);
       case 'head_chef':
         return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation'].includes(tab);
       case 'senior_accountant':
-        return ['dashboard', 'sales', 'inventory', 'stockcount', 'reconciliation'].includes(tab);
+        return ['dashboard', 'inventory', 'stockcount', 'reconciliation'].includes(tab);
       case 'foh_supervisor':
-        return ['sales', 'recipes'].includes(tab);
+        return ['recipes'].includes(tab);
       case 'sous_chef':
         return ['recipes', 'stockcount', 'subrecipes'].includes(tab);
       case 'junior_accountant':
@@ -393,6 +401,55 @@ export default function Home() {
     setCurrentUser(null);
   };
 
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordError('');
+    setPasswordSuccess(false);
+
+    if (newPassword.length < 6) {
+      setPasswordError('Mật khẩu mới phải có ít nhất 6 ký tự.');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError('Mật khẩu xác nhận không khớp.');
+      return;
+    }
+
+    setIsPasswordLoading(true);
+
+    if (isSupabaseConfigured()) {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+
+      setIsPasswordLoading(false);
+      if (error) {
+        setPasswordError(error.message);
+      } else {
+        setPasswordSuccess(true);
+        setNewPassword('');
+        setConfirmPassword('');
+        setTimeout(() => {
+          setShowPasswordModal(false);
+          setPasswordSuccess(false);
+        }, 2000);
+      }
+    } else {
+      // Mock Sandbox password change
+      setTimeout(() => {
+        setIsPasswordLoading(false);
+        setPasswordSuccess(true);
+        setNewPassword('');
+        setConfirmPassword('');
+        setTimeout(() => {
+          setShowPasswordModal(false);
+          setPasswordSuccess(false);
+        }, 2000);
+      }, 1000);
+    }
+  };
+
   // Sub-recipe formulas (how raw ingredients are consumed when prepared in-house)
   const SUB_RECIPE_FORMULAS: Record<string, { name: string; unit: string; ingredients: { ing_id: string; qty: number }[] }> = {
     "ING-081": {
@@ -488,7 +545,9 @@ export default function Home() {
         const r = recipes[recipe];
         if (r && r.ingredients) {
           r.ingredients.forEach(ing => {
-            const totalDeduction = ing.qty_eff * qty * 1.10; // 10% wastage buffer
+            const ingObj = ingMap.get(ing.ing_id) as any;
+            const factor = ingObj?.stock_to_recipe_factor || 1;
+            const totalDeduction = (ing.qty_eff * qty) / factor;
             consumption[ing.ing_id] = (consumption[ing.ing_id] || 0) + totalDeduction;
           });
         }
@@ -499,9 +558,11 @@ export default function Home() {
           const r = recipes[baseCode]; // Get À La Carte recipe
           if (r && r.ingredients) {
             r.ingredients.forEach(ing => {
+              const ingObj = ingMap.get(ing.ing_id) as any;
+              const factor = ingObj?.stock_to_recipe_factor || 1;
               // Deduct set menu portion at exactly 70% of À La Carte
               const scaledQty = ing.qty_eff * 0.70;
-              const totalDeduction = scaledQty * qty * 1.10;
+              const totalDeduction = (scaledQty * qty) / factor;
               consumption[ing.ing_id] = (consumption[ing.ing_id] || 0) + totalDeduction;
             });
           } else {
@@ -509,7 +570,9 @@ export default function Home() {
             const degR = recipes[sub];
             if (degR && degR.ingredients) {
               degR.ingredients.forEach(ing => {
-                const totalDeduction = ing.qty_eff * qty * 1.10;
+                const ingObj = ingMap.get(ing.ing_id) as any;
+                const factor = ingObj?.stock_to_recipe_factor || 1;
+                const totalDeduction = (ing.qty_eff * qty) / factor;
                 consumption[ing.ing_id] = (consumption[ing.ing_id] || 0) + totalDeduction;
               });
             }
@@ -1406,8 +1469,21 @@ export default function Home() {
               <span className="text-[10px] text-gray-400 font-sans uppercase">Đăng nhập:</span>
               <span className="text-xs font-semibold text-gray-200">{currentUser.name || currentUser.email}</span>
               <button 
+                onClick={() => {
+                  setPasswordError('');
+                  setPasswordSuccess(false);
+                  setNewPassword('');
+                  setConfirmPassword('');
+                  setShowPasswordModal(true);
+                }}
+                className="text-[10px] text-amber-400 hover:text-amber-300 underline cursor-pointer ml-2 font-sans uppercase font-bold"
+              >
+                Đổi mật khẩu
+              </button>
+              <span className="text-[10px] text-gray-600 px-1">|</span>
+              <button 
                 onClick={handleLogout}
-                className="text-[10px] text-rose-400 hover:text-rose-300 underline cursor-pointer ml-1 font-sans uppercase font-bold"
+                className="text-[10px] text-rose-400 hover:text-rose-300 underline cursor-pointer font-sans uppercase font-bold"
               >
                 Thoát
               </button>
@@ -1587,15 +1663,21 @@ export default function Home() {
           {/* 3. Global Stats Grid */}
           <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             
-            <div className="glass-panel rounded-md p-5 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl"></div>
-              <div className="flex items-center justify-between text-gray-400 mb-2">
-                <span className="text-xs uppercase tracking-wider font-sans">Tổng Doanh thu POS</span>
-                <DollarSign size={16} className="text-amber-500" />
+            {userRole === 'admin' && (
+              <div className="glass-panel rounded-md p-5 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl"></div>
+                <div className="flex items-center justify-between text-gray-400 mb-2">
+                  <span className="text-xs uppercase tracking-wider font-sans">Tổng Doanh thu POS</span>
+                  <DollarSign size={16} className="text-amber-500" />
+                </div>
+                <div className="text-2xl font-bold text-gray-100">
+                  {metrics.salesRevenue.toLocaleString()} đ
+                </div>
+                <div className="text-[10px] text-gray-400 mt-1">
+                  Nửa đầu tháng 6 (Chưa trừ CK: {metrics.salesDiscount.toLocaleString()}đ)
+                </div>
               </div>
-              <div className="text-2xl font-bold text-gray-100">{metrics.salesRevenue.toLocaleString()} <span className="text-xs text-amber-500">đ</span></div>
-              <div className="text-[10px] text-gray-400 mt-1">Nửa đầu tháng 6 (Chưa trừ CK: {metrics.salesDiscount.toLocaleString()}đ)</div>
-            </div>
+            )}
 
             <div className="glass-panel rounded-md p-5 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl"></div>
@@ -2663,8 +2745,8 @@ export default function Home() {
                   </div>
 
                   <div className="bg-[#090d16] p-3 rounded text-[10px] text-gray-400 border border-amber-500/5 leading-relaxed font-sans">
-                    <strong className="text-amber-500 font-serif block mb-1">NHẬN XÉT CỦA CFO:</strong>
-                    Chênh lệch 10% đồng đều ở các mã Ribeye, Cá hồi và Cá tuyết là do CRM áp dụng cơ chế <strong>Wastage Buffer (+10%)</strong> tự động để bù hao hụt sơ chế/chế biến bếp. Mã bò Wellington (ING-011) lệch nhiều hơn (22.5%) do trong tuần phát sinh sự cố nướng hỏng 1.5kg đã được Bếp phó log và Admin duyệt. Số liệu hoàn toàn minh bạch.
+                    <strong className="text-amber-500 font-serif block mb-1">NHẬN XÉT CỦA CFO (v8.0):</strong>
+                    Sau khi BỎ hệ số hao hụt ảo 1.10 ở bản v8.0, số liệu xuất bán lý thuyết của CRM và Excel đã <strong>khớp nhau 100%</strong> ở các mặt hàng tiêu chuẩn. Riêng thịt trâu Wellington (ING-011) lệch đúng bằng lượng 1.5kg từ <strong>Waste Log hủy hỏng thực tế</strong> đã được Bếp phó khai báo và Admin duyệt trong ca. Việc bỏ hệ số giúp phát hiện chính xác thất thoát.
                   </div>
                 </div>
 
@@ -2927,6 +3009,76 @@ export default function Home() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Change Password Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-[#0c1220] border border-amber-500/30 w-full max-w-md rounded-md p-6 flex flex-col gap-5 shadow-2xl relative font-sans">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl"></div>
+            
+            <div className="border-b border-amber-500/20 pb-3">
+              <h3 className="text-lg font-semibold text-[#d4af37] font-serif">ĐỔI MẬT KHẨU TÀI KHẢN</h3>
+              <p className="text-[11px] text-gray-400 mt-1">Đặt lại mật khẩu bảo mật cho tài khoản đang đăng nhập.</p>
+            </div>
+
+            {passwordError && (
+              <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-3 rounded text-xs">
+                {passwordError}
+              </div>
+            )}
+
+            {passwordSuccess && (
+              <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-3 rounded text-xs">
+                ✓ Đổi mật khẩu thành công! Cửa sổ sẽ đóng sau vài giây...
+              </div>
+            )}
+
+            <form onSubmit={handleUpdatePassword} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] uppercase tracking-wider text-gray-400">Mật khẩu mới</label>
+                <input 
+                  type="password" 
+                  required
+                  placeholder="Tối thiểu 6 ký tự..." 
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] uppercase tracking-wider text-gray-400">Xác nhận mật khẩu</label>
+                <input 
+                  type="password" 
+                  required
+                  placeholder="Nhập lại mật khẩu mới..." 
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 border-t border-amber-500/10 pt-4 mt-2">
+                <button 
+                  type="button"
+                  onClick={() => setShowPasswordModal(false)}
+                  disabled={isPasswordLoading}
+                  className="border border-gray-700 hover:bg-gray-800 text-gray-300 px-4 py-2 rounded text-xs font-semibold"
+                >
+                  Hủy
+                </button>
+                <button 
+                  type="submit"
+                  disabled={isPasswordLoading}
+                  className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs px-5 py-2 rounded shadow flex items-center gap-1.5"
+                >
+                  {isPasswordLoading ? "Đang xử lý..." : "Cập nhật mật khẩu"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

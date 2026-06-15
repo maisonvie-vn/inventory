@@ -170,7 +170,54 @@ export const SET_MENU_DEFINITIONS: Record<string, string[]> = {
   ]
 };
 
-export const getIngredients = (): Ingredient[] => dbData.ingredients as Ingredient[];
+export const getIngredients = (): Ingredient[] => {
+  return (dbData.ingredients as any[]).map(ing => {
+    // Ngưỡng tolerance theo nhóm hàng ABC
+    let tolerance = 5.0;
+    if (['Seafood', 'Meat', 'Wine', 'Alcohol'].includes(ing.category)) {
+      tolerance = 2.0; // Nhóm A: 2%
+    } else if (['Vegetable', 'Herb', 'Fruit'].includes(ing.category)) {
+      tolerance = 10.0; // Nhóm C: 10%
+    }
+
+    // Thiết lập đơn vị và hệ số quy đổi mặc định
+    let factor = 1;
+    let recipe_uom = ing.unit;
+    let stock_uom = ing.unit;
+    
+    // Quy đổi đặc thù cho v8.0
+    if (['Wine', 'Alcohol'].includes(ing.category) || ing.id.startsWith('ING-069') || ing.id.startsWith('ING-070') || ing.id.startsWith('ING-071')) {
+      // Rượu: Tồn theo BOTTLE (Chai), công thức dùng ML
+      stock_uom = 'BOTTLE';
+      recipe_uom = 'ML';
+      factor = 750; // 1 Chai = 750 ML
+    } else if (ing.id === 'ING-021') {
+      // Trứng: Tồn theo CASE (Thùng), công thức dùng cái (pc)
+      stock_uom = 'CASE';
+      recipe_uom = 'pc';
+      factor = 300; // 1 Thùng = 300 Quả
+    } else if (ing.unit === 'kg') {
+      // Nguyên liệu khô/thực phẩm: Tồn theo KG, công thức dùng Gram (g)
+      recipe_uom = 'g';
+      factor = 1000;
+    }
+
+    // Trọng lượng vỏ chai rỗng (Tare weight) cho rượu Bar
+    let tareWeight = 0;
+    if (['Wine', 'Alcohol', 'Beverage'].includes(ing.category)) {
+      tareWeight = 450; // Mặc định vỏ chai nặng 450g
+    }
+
+    return {
+      ...ing,
+      stock_uom,
+      recipe_uom,
+      stock_to_recipe_factor: factor,
+      tolerance_percent: tolerance,
+      tare_weight_grams: tareWeight
+    };
+  }) as unknown as Ingredient[];
+};
 export const getRecipes = (): Record<string, Recipe> => dbData.recipes as unknown as Record<string, Recipe>;
 export const getSales = (): SaleRecord[] => dbData.sales as SaleRecord[];
 
@@ -226,8 +273,10 @@ export const getSimulatedConsumption = () => {
       const r = recipes[recipe];
       if (r && r.ingredients) {
         r.ingredients.forEach(ing => {
-          // Add 10% wastage buffer
-          const totalDeduction = ing.qty_eff * qty * 1.10;
+          // Bỏ hệ số 1.10 hao hụt ảo và chia cho hệ số quy đổi tồn -> công thức (mặc định 1)
+          const ingObj = ingMap.get(ing.ing_id) as any;
+          const factor = ingObj?.stock_to_recipe_factor || 1;
+          const totalDeduction = (ing.qty_eff * qty) / factor;
           consumption[ing.ing_id] = (consumption[ing.ing_id] || 0) + totalDeduction;
         });
       }
@@ -237,7 +286,10 @@ export const getSimulatedConsumption = () => {
         const r = recipes[sub];
         if (r && r.ingredients) {
           r.ingredients.forEach(ing => {
-            const totalDeduction = ing.qty_eff * qty * 1.10;
+            // Bỏ hệ số 1.10 hao hụt ảo và chia cho hệ số quy đổi tồn -> công thức (mặc định 1)
+            const ingObj = ingMap.get(ing.ing_id) as any;
+            const factor = ingObj?.stock_to_recipe_factor || 1;
+            const totalDeduction = (ing.qty_eff * qty) / factor;
             consumption[ing.ing_id] = (consumption[ing.ing_id] || 0) + totalDeduction;
           });
         }
