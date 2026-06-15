@@ -1365,7 +1365,7 @@ export default function Home() {
                 required
                 value={authEmail}
                 onChange={(e) => setAuthEmail(e.target.value)}
-                placeholder="email@maisonvie.vn"
+                placeholder="ceo@maisonvie.vn"
                 className="bg-[#090d16] border border-amber-500/20 rounded-sm p-3 text-xs text-gray-200 focus:outline-none focus:border-amber-500 font-sans"
               />
             </div>
@@ -1406,7 +1406,7 @@ export default function Home() {
             </p>
             <div className="grid grid-cols-2 gap-2 text-[9px] font-sans">
               <button 
-                onClick={() => { setAuthEmail('admin@maisonvie.vn'); setAuthPassword('sandbox'); }}
+                onClick={() => { setAuthEmail('ceo@maisonvie.vn'); setAuthPassword('sandbox'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
                 💼 CFO / Owner (Admin)
@@ -1418,25 +1418,25 @@ export default function Home() {
                 📋 Quản lý Nhà hàng
               </button>
               <button 
-                onClick={() => { setAuthEmail('headchef@maisonvie.vn'); setAuthPassword('sandbox'); }}
+                onClick={() => { setAuthEmail('maisonvie.vn+headchef@gmail.com'); setAuthPassword('sandbox'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
                 👨‍🍳 Bếp trưởng
               </button>
               <button 
-                onClick={() => { setAuthEmail('senior.accountant@maisonvie.vn'); setAuthPassword('sandbox'); }}
+                onClick={() => { setAuthEmail('maisonvie.vn+senior@gmail.com'); setAuthPassword('sandbox'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
                 📊 Kế toán cao cấp
               </button>
               <button 
-                onClick={() => { setAuthEmail('souschef@maisonvie.vn'); setAuthPassword('sandbox'); }}
+                onClick={() => { setAuthEmail('maisonvie.vn+souschef@gmail.com'); setAuthPassword('sandbox'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
                 🍳 Bếp phó
               </button>
               <button 
-                onClick={() => { setAuthEmail('storekeeper@maisonvie.vn'); setAuthPassword('sandbox'); }}
+                onClick={() => { setAuthEmail('maisonvie.vn+storekeeper@gmail.com'); setAuthPassword('sandbox'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
                 📦 Thủ kho / Kế toán phụ
