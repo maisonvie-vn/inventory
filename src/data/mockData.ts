@@ -59,11 +59,25 @@ export interface SaleRecord {
 // Map POS codes to recipe codes
 export const POS_MAPPING: Record<string, { recipe: string; type: 'alc' | 'set' | 'beer' }> = {
   // Beer
-  "B5001": { recipe: "ING-056", type: "beer" }, // Heineken - mapped to its raw material or self
-  "B5002": { recipe: "ING-057", type: "beer" }, // Tiger
-  "B5004": { recipe: "ING-058", type: "beer" }, // 333
-  "B5005": { recipe: "ING-060", type: "beer" }, // Saigon
-  "B5007": { recipe: "ING-061", type: "beer" }, // Sapporo
+  "B5001": { recipe: "ING-101", type: "beer" }, // Bia Heineken
+  "B5002": { recipe: "ING-102", type: "beer" }, // Bia Tiger
+  "B5004": { recipe: "ING-103", type: "beer" }, // Bia 333
+  "B5005": { recipe: "ING-104", type: "beer" }, // Bia Sài Gòn
+  "B5007": { recipe: "ING-105", type: "beer" }, // Bia Sapporo
+  // Soft Drinks (Nước ngọt)
+  "M6020": { recipe: "ING-106", type: "beer" }, // Coca Cola
+  "M6004": { recipe: "ING-107", type: "beer" }, // Sprite
+  "M6005": { recipe: "ING-108", type: "beer" }, // Fanta
+  "M6002": { recipe: "ING-109", type: "beer" }, // Soda Schweppes
+  // Juices & Drinks (Nước ép)
+  "M7001": { recipe: "ING-110", type: "beer" }, // Nước cam ép tươi
+  "M7003": { recipe: "ING-111", type: "beer" }, // Nước dưa hấu ép
+  "M7008": { recipe: "ING-112", type: "beer" }, // Nước chanh tươi
+  // Mocktails
+  "M7031": { recipe: "ING-113", type: "beer" }, // Mocktail Virgin Mojito
+  "M7015": { recipe: "ING-114", type: "beer" }, // Mocktail Shirley Temple
+  // House Wines
+  "V6034": { recipe: "ING-115", type: "beer" }, // Rượu vang đỏ House
   // Food
   "R1121": { recipe: "R-001", type: "alc" }, // Tuna carpaccio
   "R3125": { recipe: "R-004", type: "alc" }, // Scallops
