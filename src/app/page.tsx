@@ -56,6 +56,7 @@ export default function Home() {
   const [authPassword, setAuthPassword] = useState('');
   const [isAuthLoading, setIsAuthLoading] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [sandboxRoleOverride, setSandboxRoleOverride] = useState<string | null>(null);
 
   // 7-Level RBAC Role state
   const [userRole, setUserRole] = useState<'admin' | 'restaurant_manager' | 'head_chef' | 'senior_accountant' | 'foh_supervisor' | 'sous_chef' | 'junior_accountant'>('admin');
@@ -264,24 +265,34 @@ export default function Home() {
       let role: any = 'admin';
       let name = 'Quản trị viên (CFO)';
 
-      if (authEmail.includes('manager')) {
-        role = 'restaurant_manager';
-        name = 'Quản lý Nhà hàng';
-      } else if (authEmail.includes('chef') && !authEmail.includes('sous')) {
-        role = 'head_chef';
-        name = 'Bếp trưởng';
-      } else if (authEmail.includes('senior')) {
-        role = 'senior_accountant';
-        name = 'Kế toán kho cấp cao';
-      } else if (authEmail.includes('foh') || authEmail.includes('supervisor')) {
-        role = 'foh_supervisor';
-        name = 'Giám sát Sảnh';
-      } else if (authEmail.includes('sous') || authEmail.includes('phó')) {
-        role = 'sous_chef';
-        name = 'Bếp phó';
-      } else if (authEmail.includes('junior') || authEmail.includes('store')) {
-        role = 'junior_accountant';
-        name = 'Thủ kho / Kế toán phụ';
+      if (sandboxRoleOverride) {
+        role = sandboxRoleOverride;
+        if (role === 'restaurant_manager') name = 'Quản lý Nhà hàng';
+        else if (role === 'head_chef') name = 'Bếp trưởng';
+        else if (role === 'senior_accountant') name = 'Kế toán kho cấp cao';
+        else if (role === 'foh_supervisor') name = 'Giám sát Sảnh';
+        else if (role === 'sous_chef') name = 'Bếp phó';
+        else if (role === 'junior_accountant') name = 'Thủ kho / Kế toán phụ';
+      } else {
+        if (authEmail.includes('manager')) {
+          role = 'restaurant_manager';
+          name = 'Quản lý Nhà hàng';
+        } else if (authEmail.includes('chef') && !authEmail.includes('sous')) {
+          role = 'head_chef';
+          name = 'Bếp trưởng';
+        } else if (authEmail.includes('senior')) {
+          role = 'senior_accountant';
+          name = 'Kế toán kho cấp cao';
+        } else if (authEmail.includes('foh') || authEmail.includes('supervisor')) {
+          role = 'foh_supervisor';
+          name = 'Giám sát Sảnh';
+        } else if (authEmail.includes('sous') || authEmail.includes('phó')) {
+          role = 'sous_chef';
+          name = 'Bếp phó';
+        } else if (authEmail.includes('junior') || authEmail.includes('store')) {
+          role = 'junior_accountant';
+          name = 'Thủ kho / Kế toán phụ';
+        }
       }
 
       const dummyUser = { email: authEmail, name, role };
@@ -323,24 +334,34 @@ export default function Home() {
       let role: any = 'admin';
       let name = 'Quản trị viên (CFO)';
 
-      if (authEmail.includes('manager')) {
-        role = 'restaurant_manager';
-        name = 'Quản lý Nhà hàng';
-      } else if (authEmail.includes('chef') && !authEmail.includes('sous')) {
-        role = 'head_chef';
-        name = 'Bếp trưởng';
-      } else if (authEmail.includes('senior')) {
-        role = 'senior_accountant';
-        name = 'Kế toán kho cấp cao';
-      } else if (authEmail.includes('foh') || authEmail.includes('supervisor')) {
-        role = 'foh_supervisor';
-        name = 'Giám sát Sảnh';
-      } else if (authEmail.includes('sous') || authEmail.includes('phó')) {
-        role = 'sous_chef';
-        name = 'Bếp phó';
-      } else if (authEmail.includes('junior') || authEmail.includes('store')) {
-        role = 'junior_accountant';
-        name = 'Thủ kho / Kế toán phụ';
+      if (sandboxRoleOverride) {
+        role = sandboxRoleOverride;
+        if (role === 'restaurant_manager') name = 'Quản lý Nhà hàng';
+        else if (role === 'head_chef') name = 'Bếp trưởng';
+        else if (role === 'senior_accountant') name = 'Kế toán kho cấp cao';
+        else if (role === 'foh_supervisor') name = 'Giám sát Sảnh';
+        else if (role === 'sous_chef') name = 'Bếp phó';
+        else if (role === 'junior_accountant') name = 'Thủ kho / Kế toán phụ';
+      } else {
+        if (authEmail.includes('manager')) {
+          role = 'restaurant_manager';
+          name = 'Quản lý Nhà hàng';
+        } else if (authEmail.includes('chef') && !authEmail.includes('sous')) {
+          role = 'head_chef';
+          name = 'Bếp trưởng';
+        } else if (authEmail.includes('senior')) {
+          role = 'senior_accountant';
+          name = 'Kế toán kho cấp cao';
+        } else if (authEmail.includes('foh') || authEmail.includes('supervisor')) {
+          role = 'foh_supervisor';
+          name = 'Giám sát Sảnh';
+        } else if (authEmail.includes('sous') || authEmail.includes('phó')) {
+          role = 'sous_chef';
+          name = 'Bếp phó';
+        } else if (authEmail.includes('junior') || authEmail.includes('store')) {
+          role = 'junior_accountant';
+          name = 'Thủ kho / Kế toán phụ';
+        }
       }
 
       const dummyUser = { email: authEmail, name, role };
@@ -1406,37 +1427,37 @@ export default function Home() {
             </p>
             <div className="grid grid-cols-2 gap-2 text-[9px] font-sans">
               <button 
-                onClick={() => { setAuthEmail('ceo@maisonvie.vn'); setAuthPassword('sandbox'); }}
+                onClick={() => { setAuthEmail('ceo@maisonvie.vn'); setAuthPassword('sandbox'); setSandboxRoleOverride('admin'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
                 💼 CFO / Owner (Admin)
               </button>
               <button 
-                onClick={() => { setAuthEmail('manager@maisonvie.vn'); setAuthPassword('sandbox'); }}
+                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('restaurant_manager'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
                 📋 Quản lý Nhà hàng
               </button>
               <button 
-                onClick={() => { setAuthEmail('maisonvie.vn+headchef@gmail.com'); setAuthPassword('sandbox'); }}
+                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('head_chef'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
                 👨‍🍳 Bếp trưởng
               </button>
               <button 
-                onClick={() => { setAuthEmail('maisonvie.vn+senior@gmail.com'); setAuthPassword('sandbox'); }}
+                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('senior_accountant'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
                 📊 Kế toán cao cấp
               </button>
               <button 
-                onClick={() => { setAuthEmail('maisonvie.vn+souschef@gmail.com'); setAuthPassword('sandbox'); }}
+                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('sous_chef'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
                 🍳 Bếp phó
               </button>
               <button 
-                onClick={() => { setAuthEmail('maisonvie.vn+storekeeper@gmail.com'); setAuthPassword('sandbox'); }}
+                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('junior_accountant'); }}
                 className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
               >
                 📦 Thủ kho / Kế toán phụ
