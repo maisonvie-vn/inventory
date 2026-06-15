@@ -10,6 +10,11 @@ export interface Ingredient {
   unit: string;
   price: number;
   yield_rate: number;
+  stock_uom?: string;
+  recipe_uom?: string;
+  stock_to_recipe_factor?: number;
+  tolerance_percent?: number;
+  tare_weight_grams?: number;
 }
 
 export interface RecipeIngredient {

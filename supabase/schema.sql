@@ -194,6 +194,7 @@ alter table recipes enable row level security;
 -- Đơn đặt hàng (Purchase Orders v8.0)
 create table purchase_orders (
     id uuid default gen_random_uuid() primary key,
+    po_number varchar(100) unique not null,
     supplier_id uuid references suppliers(id) on delete cascade not null,
     status text default 'OPEN' not null check (status in ('OPEN', 'PARTIAL', 'RECEIVED', 'CLOSED', 'CANCELLED')),
     source text default 'AUTO_PO' not null check (source in ('AUTO_PO', 'MANUAL_REQUISITION')),
@@ -277,6 +278,7 @@ create table inventory_transactions (
     ref_id varchar(100),                                          -- ID của bản ghi gốc
     reverses_id bigint references inventory_transactions(id) on delete set null, -- Link bút toán đảo (nếu có)
     business_date date not null,                                  -- Ngày kế toán ghi nhận
+    status varchar(20) default 'approved' not null,               -- Trạng thái giao dịch
     created_by uuid references profiles(id) on delete set null,
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );

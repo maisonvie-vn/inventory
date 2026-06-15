@@ -99,9 +99,9 @@ begin
 
     -- Tính Moving WAC mới
     if (v_adjusted_qty + v_qty_received_stock_uom) > 0 then
-      v_new_wac := (v_adjusted_qty * v_current_wac + v_qty_received_stock_uom * v_landed_cost) / (v_adjusted_qty + v_qty_received_stock_uom);
+      v_new_wac := (v_adjusted_qty * v_current_wac + v_qty_received_stock_uom * v_landed_unit_cost) / (v_adjusted_qty + v_qty_received_stock_uom);
     else
-      v_new_wac := v_landed_cost;
+      v_new_wac := v_landed_unit_cost;
     end if;
 
     -- Cập nhật giá WAC mới vào Master
@@ -529,9 +529,10 @@ begin
     where po_number = po_number_out;
 
     if v_po_id is null then
-      insert into purchase_orders (id, supplier_id, status, source, expected_date)
+      insert into purchase_orders (id, po_number, supplier_id, status, source, expected_date)
       select 
         gen_random_uuid(), 
+        po_number_out,
         s.id, 
         'OPEN', 
         'AUTO_PO', 
@@ -571,3 +572,76 @@ begin
   on conflict (business_date) do update set status = 'PO_DONE';
 end;
 $$ language plpgsql security definer;
+
+-- =========================================================================
+-- 4. AUTOMATION JOBS SCHEDULING (pg_cron v8.0)
+-- =========================================================================
+
+-- Note: We enable pg_cron extension and schedule the daily inventory jobs.
+-- Since Supabase servers run in UTC, we convert ICT (Asia/Ho_Chi_Minh) times to UTC:
+-- 1. WAC snapshot close: 18:30 ICT -> 11:30 UTC
+-- 2. Daily Stock depletion (FEFO): 22:30 ICT -> 15:30 UTC
+-- 3. Auto-PO: 22:40 ICT -> 15:40 UTC
+-- 4. Watchdog alert: 23:00 ICT -> 16:00 UTC
+
+-- Enable cron extension (requires superuser, usually enabled in Supabase by default)
+create extension if not exists pg_cron;
+
+-- Unschedule existing jobs to avoid duplication/errors
+select cron.unschedule('daily-wac-snapshot-job') where exists (select 1 from cron.job where jobname = 'daily-wac-snapshot-job');
+select cron.unschedule('daily-consumption-depletion-job') where exists (select 1 from cron.job where jobname = 'daily-consumption-depletion-job');
+select cron.unschedule('daily-auto-po-job') where exists (select 1 from cron.job where jobname = 'daily-auto-po-job');
+select cron.unschedule('daily-watchdog-job') where exists (select 1 from cron.job where jobname = 'daily-watchdog-job');
+
+-- 1. Job 18:30 ICT (11:30 UTC): Tính WAC và chụp snapshot (WAC_DONE)
+select cron.schedule(
+    'daily-wac-snapshot-job',
+    '30 11 * * *',
+    $$
+    insert into daily_close (business_date, status)
+    values (current_date, 'WAC_DONE')
+    on conflict (business_date) do update set status = 'WAC_DONE';
+    $$
+);
+
+-- 2. Job 22:30 ICT (15:30 UTC): Trừ kho tự động theo FEFO (CONSUMPTION_DONE)
+select cron.schedule(
+    'daily-consumption-depletion-job',
+    '30 15 * * *',
+    $$
+    select process_daily_consumption(current_date, '00000000-0000-0000-0000-000000000000'::uuid);
+    $$
+);
+
+-- 3. Job 22:40 ICT (15:40 UTC): Tự động đặt hàng Auto-PO (PO_DONE)
+select cron.schedule(
+    'daily-auto-po-job',
+    '40 15 * * *',
+    $$
+    select * from generate_auto_po(current_date, '00000000-0000-0000-0000-000000000000'::uuid);
+    $$
+);
+
+-- 4. Job 23:00 ICT (16:00 UTC): Watchdog kiểm tra trạng thái khóa sổ ngày
+select cron.schedule(
+    'daily-watchdog-job',
+    '00 16 * * *',
+    $$
+    declare
+        v_status text;
+    begin
+        select status into v_status from daily_close where business_date = current_date;
+        if v_status is null or v_status <> 'PO_DONE' then
+            insert into audit_log (actor, action, entity, entity_id, before_data, after_data)
+            values (
+                '00000000-0000-0000-0000-000000000000'::uuid,
+                'WATCHDOG_ALERT_DAILY_CLOSE_FAILED',
+                'daily_close',
+                current_date::varchar,
+                null,
+                jsonb_build_object('current_status', v_status, 'error', 'Hệ thống chưa hoàn thành khóa sổ tự động cuối ngày. Yêu cầu kiểm tra tiến trình.')
+            );
+        end if;
+    end;
+    $$
+);

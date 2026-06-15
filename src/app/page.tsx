@@ -40,7 +40,7 @@ import {
 } from '../data/mockData';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation' | 'purchasing'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [recipeType, setRecipeType] = useState<'alc' | 'deg'>('alc');
@@ -49,6 +49,45 @@ export default function Home() {
   const [isImporting, setIsImporting] = useState(false);
   const [importSuccess, setImportSuccess] = useState(false);
   const [salesData, setSalesData] = useState<SaleRecord[]>(getSales());
+
+  // Scale Weighing states for Bar
+  const [showWeighModal, setShowWeighModal] = useState(false);
+  const [weighIngredient, setWeighIngredient] = useState<Ingredient | null>(null);
+  const [weighFullBottles, setWeighFullBottles] = useState<number>(0);
+  const [weighScaleGrams, setWeighScaleGrams] = useState<string>('');
+  const [weighTareGrams, setWeighTareGrams] = useState<number>(450);
+  const [weighDensity, setWeighDensity] = useState<number>(1.0);
+
+  // Purchasing & Goods Receipts states
+  const [purchaseOrders, setPurchaseOrders] = useState<any[]>([
+    { id: 'po-1', poNumber: 'PO-20260615-ANNA', supplierName: 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)', supplierId: 's0000000-0000-0000-0000-000000000001', expectedDate: '2026-06-16', status: 'OPEN', source: 'AUTO_PO', items: [
+      { ingId: 'ING-003', name: 'Cá tuyết đen đông lạnh', qtyOrdered: 5, unit: 'kg', price: 1400000 },
+      { ingId: 'ING-093', name: 'Thịt bò Ribeye Angus US', qtyOrdered: 10, unit: 'kg', price: 890000 }
+    ]},
+    { id: 'po-2', poNumber: 'PO-20260615-DALO', supplierName: 'Tổng kho Rượu vang Đa Lộc', supplierId: 's0000000-0000-0000-0000-000000000003', expectedDate: '2026-06-17', status: 'OPEN', source: 'AUTO_PO', items: [
+      { ingId: 'ING-070', name: 'Vang trắng khô', qtyOrdered: 12, unit: 'BOTTLE', price: 86000 },
+      { ingId: 'ING-071', name: 'Vang đỏ đậm', qtyOrdered: 18, unit: 'BOTTLE', price: 86000 }
+    ]}
+  ]);
+  const [goodsReceipts, setGoodsReceipts] = useState<any[]>([
+    { id: 'grn-1', poId: 'po-1', poNumber: 'PO-20260615-ANNA', supplierName: 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)', invoiceNo: 'INV-ANNAM-9988', invoiceAmount: 15900000, fxRate: 1.0, duty: 0, freight: 400000, status: 'approved', matchStatus: 'APPROVED', date: '2026-06-14', lines: [
+      { ingredientId: 'ING-003', qtyReceived: 5, purchaseUom: 'kg', unitPriceFx: 1400000, landedUnitCost: 1435000 },
+      { ingredientId: 'ING-093', qtyReceived: 10, purchaseUom: 'kg', unitPriceFx: 890000, landedUnitCost: 912000 }
+    ]}
+  ]);
+  
+  // New GRN creation form states
+  const [selectedPoForGrn, setSelectedPoForGrn] = useState<string>('');
+  const [grnInvoiceNo, setGrnInvoiceNo] = useState<string>('');
+  const [grnFreight, setGrnFreight] = useState<string>('0');
+  const [grnDuty, setGrnDuty] = useState<string>('0');
+  const [grnLines, setGrnLines] = useState<any[]>([]);
+
+  // Non-sale consumption form states
+  const [nonSaleIngId, setNonSaleIngId] = useState('');
+  const [nonSaleQty, setNonSaleQty] = useState('');
+  const [nonSaleType, setNonSaleType] = useState('STAFF_MEAL');
+  const [nonSaleNote, setNonSaleNote] = useState('');
 
   // Auth states
   const [currentUser, setCurrentUser] = useState<{ email: string; name?: string; role: string } | null>(null);
@@ -120,6 +159,10 @@ export default function Home() {
   const [ingredients, setIngredients] = useState<Ingredient[]>(() => getIngredients());
   const [recipes, setRecipes] = useState<Record<string, Recipe>>(() => getRecipes());
 
+  // Stock count filters & search
+  const [stockCountFilter, setStockCountFilter] = useState<'ALL' | 'KITCHEN' | 'BAR'>('ALL');
+  const [stockCountSearch, setStockCountSearch] = useState('');
+
   // Stock count state - initialize with empty strings (represents not counted yet)
   const [actualStocks, setActualStocks] = useState<Record<string, string>>({
     "ING-003": "15.5", 
@@ -164,17 +207,17 @@ export default function Home() {
     if (role === 'admin') return true;
     switch (role) {
       case 'restaurant_manager':
-        return ['dashboard', 'inventory', 'stockcount', 'subrecipes', 'reconciliation'].includes(tab);
+        return ['dashboard', 'inventory', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing'].includes(tab);
       case 'head_chef':
         return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation'].includes(tab);
       case 'senior_accountant':
-        return ['dashboard', 'inventory', 'stockcount', 'reconciliation'].includes(tab);
+        return ['dashboard', 'inventory', 'stockcount', 'reconciliation', 'purchasing'].includes(tab);
       case 'foh_supervisor':
         return ['recipes'].includes(tab);
       case 'sous_chef':
         return ['recipes', 'stockcount', 'subrecipes'].includes(tab);
       case 'junior_accountant':
-        return ['inventory'].includes(tab);
+        return ['inventory', 'purchasing'].includes(tab);
       default:
         return false;
     }
@@ -254,6 +297,147 @@ export default function Home() {
       return () => subscription.unsubscribe();
     }
   }, []);
+
+  // Fetch actual data from Supabase if configured (Giai đoạn 1 & 2)
+  useEffect(() => {
+    if (!isSupabaseConfigured() || !currentUser) return;
+
+    const fetchSupabaseData = async () => {
+      try {
+        // 1. Fetch ingredients from corresponding view based on user role
+        let viewName = 'v_inventory_ops';
+        if (userRole === 'admin') {
+          viewName = 'v_inventory_finance';
+        } else if (userRole === 'senior_accountant') {
+          viewName = 'v_inventory_cost';
+        }
+        
+        const { data: ingData, error: ingError } = await supabase
+          .from(viewName)
+          .select('*');
+
+        if (ingError) {
+          console.error("Error fetching ingredients view:", ingError);
+        } else if (ingData && ingData.length > 0) {
+          const mappedIngs = ingData.map(item => ({
+            id: item.ingredient_id,
+            fr_name: item.nom_fr || '',
+            vi_name: item.ten_vi || '',
+            en_name: '',
+            category: item.nom_fr ? 'Seafood' : 'Khác', 
+            supplier_tier: 'A',
+            unit: item.stock_uom || 'kg',
+            price: item.wac_price || 0,
+            yield_rate: 100.0,
+            stock_uom: item.stock_uom,
+            recipe_uom: item.recipe_uom,
+            stock_to_recipe_factor: parseFloat(item.stock_to_recipe_factor) || 1,
+            tolerance_percent: parseFloat(item.tolerance_percent) || 5.0,
+            tare_weight_grams: parseFloat(item.tare_weight_grams) || 0
+          }));
+          setIngredients(mappedIngs as any[]);
+        }
+
+        // 2. Fetch purchase orders
+        const { data: poData } = await supabase
+          .from('purchase_orders')
+          .select('*, po_lines(*)');
+        
+        if (poData) {
+          const mappedPos = poData.map(po => ({
+            id: po.id,
+            poNumber: po.po_number,
+            supplierName: po.supplier_id || 'Nhà cung cấp',
+            supplierId: po.supplier_id,
+            expectedDate: po.expected_date,
+            status: po.status,
+            source: po.source,
+            items: (po.po_lines || []).map((line: any) => ({
+              ingId: line.ingredient_id,
+              name: line.ingredient_id,
+              qtyOrdered: line.qty_ordered,
+              unit: line.purchase_uom || 'kg',
+              price: 0
+            }))
+          }));
+          setPurchaseOrders(mappedPos);
+        }
+
+        // 3. Fetch goods receipts
+        const { data: grnData } = await supabase
+          .from('goods_receipts')
+          .select('*, grn_lines(*)');
+
+        if (grnData) {
+          const mappedGrns = grnData.map(grn => ({
+            id: grn.id,
+            poId: grn.po_id,
+            poNumber: grn.po_id || '',
+            supplierName: grn.supplier_id || 'Nhà cung cấp',
+            invoiceNo: grn.invoice_no,
+            invoiceAmount: grn.invoice_amount,
+            fxRate: grn.fx_rate,
+            duty: grn.duty,
+            freight: grn.freight,
+            status: grn.status,
+            matchStatus: grn.match_status,
+            date: grn.business_date || grn.created_at?.split('T')[0],
+            lines: (grn.grn_lines || []).map((line: any) => ({
+              ingredientId: line.ingredient_id,
+              qtyReceived: line.qty_received,
+              purchaseUom: line.purchase_uom,
+              unitPriceFx: line.unit_price_fx,
+              landedUnitCost: line.landed_unit_cost || line.unit_price_fx
+            }))
+          }));
+          setGoodsReceipts(mappedGrns);
+        }
+
+        // 4. Fetch waste logs
+        const { data: wasteData } = await supabase
+          .from('waste_logs')
+          .select('*');
+
+        if (wasteData) {
+          const mappedWastes = wasteData.map(w => ({
+            id: w.id,
+            ingredientId: w.ingredient_id,
+            qty: w.qty,
+            reason: w.reason,
+            status: w.status,
+            is_processed: w.is_processed,
+            createdBy: w.created_by || 'Staff',
+            createdAt: w.created_at?.split('T')[0]
+          }));
+          setWasteLogs(mappedWastes);
+        }
+
+        // 5. Fetch inventory transactions
+        const { data: txData } = await supabase
+          .from('inventory_transactions')
+          .select('*');
+
+        if (txData) {
+          const mappedTxs = txData.map(tx => ({
+            id: tx.id.toString(),
+            ingredientId: tx.ingredient_id,
+            type: tx.txn_type === 'IMPORT' ? 'import' : tx.txn_type === 'WASTE' ? 'waste' : 'consumption',
+            qty: Math.abs(tx.qty),
+            unit_price: tx.unit_cost || 0,
+            status: tx.status as any,
+            date: tx.business_date,
+            note: tx.ref_table ? `${tx.txn_type}: ${tx.ref_table} ID ${tx.ref_id}` : tx.txn_type
+          }));
+          setTransactions(mappedTxs as any[]);
+        }
+
+      } catch (err) {
+        console.error("Error pulling Supabase data:", err);
+      }
+    };
+
+    fetchSupabaseData();
+  }, [currentUser, userRole]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -678,7 +862,7 @@ export default function Home() {
     return Array.from(cats);
   }, [ingredients]);
 
-  // Filtering ingredients
+  // Filtering ingredients for Master Kho Tab
   const filteredIngredients = useMemo(() => {
     return ingredients.filter(ing => {
       const matchesSearch = ing.vi_name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -688,6 +872,25 @@ export default function Home() {
       return matchesSearch && matchesCategory;
     });
   }, [ingredients, searchQuery, categoryFilter]);
+
+  // Filtering ingredients for Stock Count Tab (Kitchen vs Bar)
+  const filteredStockCountIngredients = useMemo(() => {
+    return ingredients.filter(ing => {
+      const matchesSearch = ing.vi_name.toLowerCase().includes(stockCountSearch.toLowerCase()) || 
+                            ing.id.toLowerCase().includes(stockCountSearch.toLowerCase()) ||
+                            ing.fr_name.toLowerCase().includes(stockCountSearch.toLowerCase());
+      
+      const isBarItem = ['Wine', 'Alcohol', 'Beverage'].includes(ing.category) || ing.stock_uom === 'BOTTLE';
+      let matchesFilter = true;
+      if (stockCountFilter === 'BAR') {
+        matchesFilter = isBarItem;
+      } else if (stockCountFilter === 'KITCHEN') {
+        matchesFilter = !isBarItem;
+      }
+      
+      return matchesSearch && matchesFilter;
+    });
+  }, [ingredients, stockCountFilter, stockCountSearch]);
 
   // Filtered recipes
   const filteredRecipes = useMemo(() => {
@@ -718,6 +921,274 @@ export default function Home() {
     const clean = String(val).replace(/[^0-9.-]/g, '');
     const num = parseFloat(clean);
     return isNaN(num) ? 0 : num;
+  };
+
+  // Cân rượu Bar dùng cân điện tử (Section 4.G)
+  const handleOpenWeighModal = (ing: Ingredient) => {
+    setWeighIngredient(ing);
+    setWeighFullBottles(0);
+    setWeighScaleGrams('');
+    setWeighTareGrams((ing as any).tare_weight_grams || 450);
+    setWeighDensity(1.0);
+    setShowWeighModal(true);
+  };
+
+  const handleSaveWeighedStock = () => {
+    if (!weighIngredient) return;
+    const full = weighFullBottles || 0;
+    const grams = parseFloat(weighScaleGrams) || 0;
+    const tare = weighTareGrams || 0;
+    const density = weighDensity || 1.0;
+    
+    // Thể tích rượu còn lại (ML) = max(grams - tare, 0) / density
+    const openML = Math.max(grams - tare, 0) / density;
+    // Quy đổi từ ML về ĐVT tồn kho (BOTTLE) = ML / stock_to_recipe_factor (mặc định 750)
+    const factor = (weighIngredient as any).stock_to_recipe_factor || 750;
+    const openStock = openML / factor;
+    
+    const totalQty = full + openStock;
+    
+    setActualStocks(prev => ({
+      ...prev,
+      [weighIngredient.id]: totalQty.toFixed(3)
+    }));
+    setShowWeighModal(false);
+  };
+
+  // Mua hàng & Goods Receipts (3-way match & landed cost)
+  const handleSelectPo = (poId: string) => {
+    setSelectedPoForGrn(poId);
+    if (!poId) {
+      setGrnLines([]);
+      return;
+    }
+    const po = purchaseOrders.find(p => p.id === poId);
+    if (po) {
+      const initialLines = po.items.map((item: any) => ({
+        ingredientId: item.ingId,
+        name: item.name,
+        qtyOrdered: item.qtyOrdered,
+        qtyReceived: item.qtyOrdered, // mặc định nhận đủ
+        unit: item.unit,
+        unitPriceFx: item.price,
+        landedUnitCost: 0
+      }));
+      setGrnLines(initialLines);
+    }
+  };
+
+  const handleCreateGrn = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedPoForGrn || !grnInvoiceNo) {
+      alert('Vui lòng chọn Đơn hàng PO và nhập Số hóa đơn.');
+      return;
+    }
+    const po = purchaseOrders.find(p => p.id === selectedPoForGrn);
+    if (!po) return;
+
+    const freightVal = parseFloat(grnFreight) || 0;
+    const dutyVal = parseFloat(grnDuty) || 0;
+
+    // Tính tổng giá trị hàng thô (VND)
+    let totalRawValue = 0;
+    grnLines.forEach(line => {
+      totalRawValue += line.qtyReceived * line.unitPriceFx;
+    });
+
+    // Phân bổ Landed Cost theo tỷ trọng giá trị hàng hóa
+    const finalLines = grnLines.map(line => {
+      const lineRawValue = line.qtyReceived * line.unitPriceFx;
+      const ratio = totalRawValue > 0 ? (lineRawValue / totalRawValue) : 0;
+      const allocatedFreight = freightVal * ratio;
+      const allocatedDuty = dutyVal * ratio;
+      
+      // Landed cost trên một đơn vị tồn = (giá trị + thuế phân bổ + cước phân bổ) / qty
+      const qtyReceivedStockUom = line.qtyReceived * 1; // mock pack_size = 1
+      const landedUnitCost = qtyReceivedStockUom > 0 
+        ? Math.round((lineRawValue + allocatedFreight + allocatedDuty) / qtyReceivedStockUom) 
+        : line.unitPriceFx;
+
+      return {
+        ...line,
+        landedUnitCost
+      };
+    });
+
+    const newGrnId = `grn-${Date.now()}`;
+    const newGrn = {
+      id: newGrnId,
+      poId: selectedPoForGrn,
+      poNumber: po.poNumber,
+      supplierName: po.supplierName,
+      invoiceNo: grnInvoiceNo,
+      invoiceAmount: totalRawValue + freightVal + dutyVal,
+      fxRate: 1.0,
+      duty: dutyVal,
+      freight: freightVal,
+      status: 'pending',
+      matchStatus: freightVal > 0 || dutyVal > 0 ? 'VARIANCE' : 'MATCHED',
+      date: new Date().toISOString().split('T')[0],
+      lines: finalLines
+    };
+
+    setGoodsReceipts(prev => [newGrn, ...prev]);
+    
+    setPurchaseOrders(prev => prev.map(p => {
+      if (p.id === selectedPoForGrn) {
+        return { ...p, status: 'RECEIVED' };
+      }
+      return p;
+    }));
+
+    setSelectedPoForGrn('');
+    setGrnInvoiceNo('');
+    setGrnFreight('0');
+    setGrnDuty('0');
+    setGrnLines([]);
+    
+    alert('Đã lập Phiếu nhận hàng (GRN) thành công ở trạng thái PENDING chờ duyệt tăng kho!');
+  };
+
+  const handleApproveGrn = async (grnId: string) => {
+    const grn = goodsReceipts.find(g => g.id === grnId);
+    if (!grn) return;
+
+    if (isSupabaseConfigured()) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const userId = session?.user.id || '00000000-0000-0000-0000-000000000000';
+        
+        const { error } = await supabase.rpc('approve_goods_receipt', {
+          p_grn_id: grnId,
+          p_user_id: userId
+        });
+
+        if (error) {
+          alert(`Lỗi phê duyệt trên Supabase: ${error.message}`);
+          return;
+        }
+      } catch (err) {
+        console.error("RPC call failed:", err);
+      }
+    }
+
+    const newTransList = [...transactions];
+    const updatedIngredients = ingredients.map(ing => {
+      const grnLine = grn.lines.find((l: any) => l.ingredientId === ing.id);
+      if (!grnLine) return ing;
+
+      // Tính WAC theo công thức có bảo vệ tồn âm (Section 4.A)
+      const currentQty = getTheoreticalStock(ing.id);
+      const adjustedQty = Math.max(currentQty, 0); // bảo vệ tồn âm
+      const landedUnitCost = grnLine.landedUnitCost;
+      const qtyReceivedStockUom = grnLine.qtyReceived;
+      
+      const newWac = (adjustedQty * ing.price + qtyReceivedStockUom * landedUnitCost) / (adjustedQty + qtyReceivedStockUom);
+      
+      newTransList.push({
+        id: `grn-tx-${Date.now()}-${ing.id}`,
+        ingredientId: ing.id,
+        type: 'import' as const,
+        qty: qtyReceivedStockUom,
+        unit_price: landedUnitCost,
+        status: 'approved' as const,
+        date: grn.date,
+        note: `Nhập kho từ GRN: ${grn.invoiceNo} (Landed Cost)`
+      });
+
+      return {
+        ...ing,
+        price: Math.round(newWac)
+      };
+    });
+
+    setIngredients(updatedIngredients);
+    setTransactions(newTransList);
+    setGoodsReceipts(prev => prev.map(g => {
+      if (g.id === grnId) {
+        return { ...g, status: 'approved', matchStatus: 'APPROVED' };
+      }
+      return g;
+    }));
+
+    alert(`Đã phê duyệt nhập kho phiếu ${grn.invoiceNo}!\n- Cập nhật giá vốn Moving WAC mới.\n- Tăng tồn kho thực tế.`);
+  };
+
+  // Log non-sale consumption (Giai đoạn 2)
+  const handleLogNonSaleConsumption = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const qty = parseFloat(nonSaleQty);
+    if (!nonSaleIngId) {
+      alert('Vui lòng chọn nguyên liệu.');
+      return;
+    }
+    if (isNaN(qty) || qty <= 0) {
+      alert('Vui lòng nhập số lượng hợp lệ.');
+      return;
+    }
+
+    const ing = ingredients.find(i => i.id === nonSaleIngId);
+    if (!ing) {
+      alert('Không tìm thấy nguyên liệu.');
+      return;
+    }
+
+    const nowStr = new Date().toISOString().split('T')[0];
+    const newTx = {
+      id: `non-sale-tx-${Date.now()}`,
+      ingredientId: nonSaleIngId,
+      type: 'consumption' as const,
+      qty: qty,
+      unit_price: ing.price,
+      status: 'approved' as const,
+      date: nowStr,
+      note: `Tiêu thụ ngoài bán hàng (${nonSaleType}): ${nonSaleNote || 'Không có ghi chú'}`
+    };
+
+    if (isSupabaseConfigured()) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const userId = session?.user.id || '00000000-0000-0000-0000-000000000000';
+        
+        // Log to non_sale_consumption in Supabase
+        const { error: err1 } = await supabase
+          .from('non_sale_consumption')
+          .insert({
+            ingredient_id: nonSaleIngId,
+            qty: qty,
+            consumption_type: nonSaleType,
+            business_date: nowStr,
+            created_by: userId,
+            note: nonSaleNote
+          });
+        
+        // Log to inventory_transactions in Supabase
+        const { error: err2 } = await supabase
+          .from('inventory_transactions')
+          .insert({
+            ingredient_id: nonSaleIngId,
+            txn_type: 'NON_SALE',
+            qty: -qty, // negative for depletion
+            unit_cost: ing.price,
+            business_date: nowStr,
+            ref_table: 'non_sale_consumption',
+            status: 'approved',
+            created_by: userId
+          });
+
+        if (err1 || err2) {
+          console.error("Supabase insert error:", err1 || err2);
+        }
+      } catch (err) {
+        console.error("Supabase operation failed:", err);
+      }
+    }
+
+    setTransactions(prev => [...prev, newTx]);
+    setNonSaleIngId('');
+    setNonSaleQty('');
+    setNonSaleNote('');
+    alert(`Đã ghi nhận tiêu thụ ngoài bán hàng cho ${ing.vi_name}: ${qty} ${ing.unit} (${nonSaleType})`);
   };
 
   // Log in-house cooked sub-recipe production
@@ -811,69 +1282,72 @@ export default function Home() {
     alert('Đã chạy tính toán Moving WAC lúc 18h30 thành công!\nGiá vốn bình quân gia quyền đã được cập nhật cho các mặt hàng có phát sinh giao dịch nhập kho trong ngày. Khóa sổ nhập kho cho đến ca sáng hôm sau.');
   };
 
-  // Function to run Auto-PO simulation
+  // Function to run Auto-PO simulation (Giai đoạn 4)
   const handleRunAutoPOSimulation = () => {
-    const minStock = 15;
-    const maxStock = 50;
-    
-    // Group ingredients that need ordering
-    const poItems: Record<string, { ingId: string; name: string; qtyNeeded: number; unit: string; price: number; category: string }[]> = {
-      'Thịt & Thủy Hải Sản': [],
-      'Rau Củ & Đồ Khô': [],
-      'Rượu Vang & Đồ Uống': []
-    };
+    // Group ingredients that need ordering by Supplier name
+    const poItems: Record<string, { ingId: string; name: string; qtyNeeded: number; unit: string; estCost: number }[]> = {};
 
     ingredients.forEach(ing => {
       const currentStock = getTheoreticalStock(ing.id);
-      if (currentStock < minStock) {
-        const qtyNeeded = maxStock - currentStock;
+      
+      // Use safety_stock, min_stock, max_stock or defaults
+      const safetyStock = (ing as any).safety_stock !== undefined ? parseFloat((ing as any).safety_stock) : (((ing as any).min_stock) || 15);
+      const maxStock = (ing as any).max_stock !== undefined ? parseFloat((ing as any).max_stock) : 50;
+      
+      if (currentStock < safetyStock) {
+        const rawQtyNeeded = maxStock - currentStock;
+        const moq = (ing as any).moq || 1;
+        const packSize = (ing as any).stock_to_recipe_factor || 1; // pack size quy đổi
+        
+        // Respect MOQ constraints
+        const qtyNeeded = Math.max(rawQtyNeeded, moq * packSize);
+        // Round up to packaging units
+        const qtyOrderedInPack = Math.ceil(qtyNeeded / packSize);
+        const finalQtyStockUom = qtyOrderedInPack * packSize;
+
         const item = {
           ingId: ing.id,
           name: ing.vi_name,
-          qtyNeeded: parseFloat(qtyNeeded.toFixed(2)),
+          qtyNeeded: finalQtyStockUom,
           unit: ing.unit,
-          price: ing.price,
-          category: ing.category
+          estCost: Math.round(finalQtyStockUom * ing.price)
         };
 
-        // Classify into PO groups
-        if (['Meat', 'Seafood'].includes(ing.category)) {
-          poItems['Thịt & Thủy Hải Sản'].push(item);
-        } else if (['Produce', 'Dry', 'Dairy', 'Groceries'].includes(ing.category) || ing.category === 'Khác') {
-          poItems['Rau Củ & Đồ Khô'].push(item);
-        } else if (['Wine', 'Beverage', 'Bar'].includes(ing.category)) {
-          poItems['Rượu Vang & Đồ Uống'].push(item);
+        // Determine Supplier mapping or fallback based on Category
+        const supplierName = ['Meat', 'Seafood'].includes(ing.category) 
+          ? 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)' 
+          : ['Wine', 'Alcohol'].includes(ing.category) 
+            ? 'Tổng kho Rượu vang Đa Lộc'
+            : 'Nhà cung cấp Nguyên liệu phụ Maison';
+        
+        if (!poItems[supplierName]) {
+          poItems[supplierName] = [];
         }
+        poItems[supplierName].push(item);
       }
     });
 
     const newPOs: { fileName: string; items: any[] }[] = [];
+    const nowStr = new Date().toISOString().split('T')[0];
 
-    Object.entries(poItems).forEach(([groupName, items]) => {
+    Object.entries(poItems).forEach(([supplierName, items]) => {
       if (items.length === 0) return;
       
-      let filePrefix = '';
-      if (groupName === 'Thịt & Thủy Hải Sản') filePrefix = 'PO_Thit_HaiSan';
-      else if (groupName === 'Rau Củ & Đồ Khô') filePrefix = 'PO_RauCu_DoKho';
-      else filePrefix = 'PO_RuouVang_DoUong';
-
-      const nowStr = new Date().toISOString().split('T')[0];
+      const filePrefix = supplierName.includes('An Nam') 
+        ? 'PO_AnNam' 
+        : supplierName.includes('Đa Lộc') 
+          ? 'PO_DaLoc' 
+          : 'PO_Maison_Phu';
       const fileName = `${filePrefix}_${nowStr}.xlsx`;
 
       newPOs.push({
         fileName,
-        items: items.map(it => ({
-          ingId: it.ingId,
-          name: it.name,
-          qtyNeeded: it.qtyNeeded,
-          unit: it.unit,
-          estCost: Math.round(it.qtyNeeded * it.price)
-        }))
+        items
       });
     });
 
     setGeneratedPOs(newPOs);
-    alert(`Đã chạy tự động sinh đơn hàng Auto-PO lúc 22h40!\nPhát hiện ${Object.values(poItems).flat().length} nguyên liệu dưới định mức min-stock (15). Đã tạo ${newPOs.length} đơn hàng PO tách biệt.`);
+    alert(`Đã chạy tự động sinh đơn hàng Auto-PO lúc 22h40!\nPhát hiện ${Object.values(poItems).flat().length} nguyên liệu dưới định mức tồn an toàn. Đã tạo và phân nhóm ${newPOs.length} đơn hàng PO theo Nhà cung cấp ưu tiên.`);
   };
 
   // Helper to trigger Excel download for a generated PO
@@ -1678,6 +2152,20 @@ export default function Home() {
             </button>
           )}
 
+          {hasTabAccess(userRole, 'purchasing') && (
+            <button 
+              onClick={() => setActiveTab('purchasing')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                activeTab === 'purchasing' 
+                  ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-medium' 
+                  : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-[#141a29]/50'
+              }`}
+            >
+              <DollarSign size={18} />
+              <span>Mua hàng & Nhập kho (GRN)</span>
+            </button>
+          )}
+
 
           {/* Quick Info Box */}
           <div className="mt-8 glass-panel rounded-md p-4 border-amber-500/10 text-[11px] text-gray-400 leading-relaxed font-sans">
@@ -2327,9 +2815,47 @@ export default function Home() {
                       className="hidden" 
                     />
                   </label>
-                  <div className="flex items-center gap-2 bg-[#0c1220]/60 p-1.5 rounded border border-amber-500/10 text-xs">
+                  {/* Search box for Stock Count */}
+                  <div className="relative flex items-center bg-[#090d16] border border-amber-500/20 rounded px-2.5 w-full md:w-60">
+                    <Search className="w-3.5 h-3.5 text-gray-500 mr-2" />
+                    <input 
+                      type="text" 
+                      placeholder="Tìm kiếm nguyên liệu..." 
+                      value={stockCountSearch}
+                      onChange={(e) => setStockCountSearch(e.target.value)}
+                      className="bg-transparent border-none text-xs text-gray-100 py-2 focus:outline-none w-full font-sans"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-1.5 bg-[#0c1220]/60 p-1.5 rounded border border-amber-500/10 text-xs font-sans">
                     <span className="text-gray-400 px-2 font-sans">Loại kho lọc:</span>
-                    <button className="bg-amber-500/15 text-amber-400 px-3 py-1 rounded font-semibold uppercase text-[10px]">Tất cả Bếp</button>
+                    <button 
+                      type="button"
+                      onClick={() => setStockCountFilter('ALL')}
+                      className={`px-3 py-1 rounded font-bold uppercase text-[9px] transition-all active:scale-95 ${
+                        stockCountFilter === 'ALL' ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40' : 'bg-transparent text-gray-400 hover:text-gray-200'
+                      }`}
+                    >
+                      Tất cả
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => setStockCountFilter('KITCHEN')}
+                      className={`px-3 py-1 rounded font-bold uppercase text-[9px] transition-all active:scale-95 ${
+                        stockCountFilter === 'KITCHEN' ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40' : 'bg-transparent text-gray-400 hover:text-gray-200'
+                      }`}
+                    >
+                      Kho Bếp
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => setStockCountFilter('BAR')}
+                      className={`px-3 py-1 rounded font-bold uppercase text-[9px] transition-all active:scale-95 ${
+                        stockCountFilter === 'BAR' ? 'bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/40 font-bold' : 'bg-transparent text-gray-400 hover:text-gray-200'
+                      }`}
+                    >
+                      Kho Bar (Rượu)
+                    </button>
                   </div>
                 </div>
               </div>
@@ -2356,7 +2882,7 @@ export default function Home() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-amber-500/5">
-                    {ingredients.slice(0, 15).map((ing) => {
+                    {filteredStockCountIngredients.slice(0, 40).map((ing) => {
                       const theoretical = getTheoreticalStock(ing.id);
                       const consumed = consumptionData.find(c => c.id === ing.id)?.qty || 0;
                       
@@ -2368,14 +2894,19 @@ export default function Home() {
                       return (
                         <tr key={ing.id} className="hover:bg-[#141a29]/30">
                           <td className="px-4 py-3 font-mono text-amber-500/70">{ing.id}</td>
-                          <td className="px-4 py-3 font-medium text-gray-100">{ing.vi_name}</td>
+                          <td className="px-4 py-3 font-medium text-gray-100">
+                            {ing.vi_name}
+                            {['Wine', 'Alcohol', 'Beverage'].includes(ing.category) && (
+                              <span className="ml-2 bg-[#d4af37]/10 border border-[#d4af37]/30 text-[#d4af37] px-1.5 py-0.5 rounded text-[9px] font-sans font-semibold">BAR</span>
+                            )}
+                          </td>
                           <td className="px-4 py-3 text-right">{ing.price.toLocaleString()} đ</td>
                           <td className="px-4 py-3 text-right font-mono text-amber-500">{consumed.toFixed(3)} {ing.unit}</td>
                           <td className="px-4 py-3 text-right font-mono text-gray-400">{theoretical.toFixed(3)} {ing.unit}</td>
-                          <td className="px-4 py-3 text-center">
+                          <td className="px-4 py-3 text-center flex items-center justify-center gap-2">
                             <input 
                               type="number"
-                              placeholder="Cân đếm..."
+                              placeholder="Đếm..."
                               value={actualStr}
                               onChange={(e) => {
                                 setActualStocks({
@@ -2385,26 +2916,40 @@ export default function Home() {
                               }}
                               className="bg-[#090d16] border border-amber-500/20 rounded-sm text-center text-xs w-20 py-1 font-mono text-gray-100 focus:outline-none focus:border-amber-500"
                             />
+                            {['Wine', 'Alcohol', 'Beverage', 'BOTTLE'].includes(ing.category) || ing.stock_uom === 'BOTTLE' ? (
+                              <button
+                                onClick={() => handleOpenWeighModal(ing)}
+                                title="Cân chai dở bằng cân điện tử"
+                                className="bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 px-2 py-1 rounded text-[10px] font-semibold flex items-center gap-1 active:scale-95 transition-all"
+                              >
+                                <span>⚖️ Cân</span>
+                              </button>
+                            ) : null}
                           </td>
                           <td className={`px-4 py-3 text-right font-mono font-semibold ${
                             isNaN(actualVal) 
                               ? 'text-gray-500' 
-                              : variance < 0 
-                                ? 'text-rose-400' 
-                                : variance > 0 
-                                  ? 'text-emerald-400' 
-                                  : 'text-gray-300'
+                              : variance === 0 
+                                ? 'text-gray-400'
+                                : (variance < 0 && (theoretical > 0 ? (Math.abs(variance) / theoretical * 100) : 0) > (ing.tolerance_percent || 5.0))
+                                  ? 'text-rose-400 bg-rose-500/5 border border-rose-500/20 px-1 rounded' 
+                                  : 'text-amber-300/80'
                           }`}>
-                            {isNaN(actualVal) ? "Chưa kiểm" : `${variance > 0 ? "+" : ""}${variance.toFixed(3)} ${ing.unit}`}
+                            {isNaN(actualVal) 
+                              ? "Chưa kiểm" 
+                              : `${variance > 0 ? "+" : ""}${variance.toFixed(3)} ${ing.unit}`}
+                            {!isNaN(actualVal) && variance < 0 && (theoretical > 0 ? (Math.abs(variance) / theoretical * 100) : 0) > (ing.tolerance_percent || 5.0) && (
+                              <span className="block text-[9px] text-rose-300 font-sans mt-0.5">⚠️ Vượt ngưỡng {ing.tolerance_percent}%</span>
+                            )}
                           </td>
                           <td className={`px-4 py-3 text-right font-mono font-semibold ${
                             isNaN(actualVal) 
                               ? 'text-gray-500' 
-                              : varianceCost < 0 
-                                ? 'text-rose-400' 
-                                : varianceCost > 0 
-                                  ? 'text-emerald-400' 
-                                  : 'text-gray-300'
+                              : variance === 0
+                                ? 'text-gray-400'
+                                : (varianceCost < 0 && (theoretical > 0 ? (Math.abs(variance) / theoretical * 100) : 0) > (ing.tolerance_percent || 5.0))
+                                  ? 'text-rose-400 font-bold' 
+                                  : 'text-amber-300/80'
                           }`}>
                             {isNaN(actualVal) ? "—" : `${varianceCost > 0 ? "+" : ""}${Math.round(varianceCost).toLocaleString()} đ`}
                           </td>
@@ -2917,6 +3462,314 @@ export default function Home() {
             </div>
           )}
 
+          {activeTab === 'purchasing' && (
+            <div className="flex flex-col gap-6">
+              <div className="glass-panel rounded-md p-6 flex flex-col gap-6">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-amber-500/10 pb-4">
+                  <div>
+                    <h3 className="text-xl font-semibold text-[#d4af37] font-serif">Nghiệp vụ Mua hàng & Nhập kho (PO / GRN)</h3>
+                    <p className="text-xs text-gray-400 font-sans">Kiểm soát đơn đặt hàng PO, lập phiếu nhận hàng GRN và phân bổ Landed Cost tự động cập nhật WAC.</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  {/* Cột trái: Nhập kho (GRN) */}
+                  <div className="lg:col-span-5 p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans">
+                    <h4 className="text-xs font-bold uppercase text-amber-400 border-b border-amber-500/5 pb-2">Lập phiếu nhận hàng (Goods Receipt)</h4>
+                    
+                    <form onSubmit={handleCreateGrn} className="flex flex-col gap-4">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] uppercase text-gray-400 font-semibold">1. Chọn đơn đặt hàng PO</label>
+                        <select
+                          value={selectedPoForGrn}
+                          onChange={(e) => handleSelectPo(e.target.value)}
+                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
+                          required
+                        >
+                          <option value="">-- Chọn đơn đặt hàng đang mở --</option>
+                          {purchaseOrders.filter(p => p.status === 'OPEN').map(po => (
+                            <option key={po.id} value={po.id}>📄 {po.poNumber} ({po.supplierName.slice(0, 25)}...)</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] uppercase text-gray-400 font-semibold">2. Số Hóa đơn NCC</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="VD: INV-ANNAM-9988"
+                          value={grnInvoiceNo}
+                          onChange={(e) => setGrnInvoiceNo(e.target.value)}
+                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[10px] uppercase text-gray-400 font-semibold">3. Thuế nhập khẩu (VND)</label>
+                          <input
+                            type="number"
+                            placeholder="0"
+                            value={grnDuty}
+                            onChange={(e) => setGrnDuty(e.target.value)}
+                            className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none"
+                          />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[10px] uppercase text-gray-400 font-semibold">4. Cước vận chuyển (VND)</label>
+                          <input
+                            type="number"
+                            placeholder="0"
+                            value={grnFreight}
+                            onChange={(e) => setGrnFreight(e.target.value)}
+                            className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none"
+                          />
+                        </div>
+                      </div>
+
+                      {grnLines.length > 0 && (
+                        <div className="border-t border-amber-500/10 pt-3 flex flex-col gap-2">
+                          <label className="text-[10px] uppercase text-gray-400 font-semibold">5. Số lượng nhận thực tế</label>
+                          <div className="flex flex-col gap-2.5 max-h-48 overflow-y-auto">
+                            {grnLines.map((line, idx) => (
+                              <div key={line.ingredientId} className="flex justify-between items-center bg-[#090d16]/70 p-2 rounded border border-amber-500/5">
+                                <div className="flex flex-col gap-0.5">
+                                  <span className="text-xs text-gray-200 font-semibold">{line.name}</span>
+                                  <span className="text-[10px] text-gray-500">Mã PO: {line.qtyOrdered} {line.unit} @ {line.unitPriceFx.toLocaleString()}đ</span>
+                                </div>
+                                <input
+                                  type="number"
+                                  required
+                                  value={line.qtyReceived}
+                                  onChange={(e) => {
+                                    const updated = [...grnLines];
+                                    updated[idx] = { ...line, qtyReceived: parseFloat(e.target.value) || 0 };
+                                    setGrnLines(updated);
+                                  }}
+                                  className="bg-[#090d16] border border-amber-500/30 rounded text-center text-xs w-16 py-1 font-mono text-gray-100 focus:outline-none focus:border-amber-500"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      <button
+                        type="submit"
+                        disabled={grnLines.length === 0}
+                        className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs py-3 rounded shadow mt-2 transition-all active:scale-95 disabled:opacity-50"
+                      >
+                        Gửi duyệt Phiếu nhận hàng (GRN)
+                      </button>
+                    </form>
+                  </div>
+
+                  {/* Khai báo Tiêu thụ Ngoài Bán Hàng (Non-Sale Consumption) (Giai đoạn 2) */}
+                  <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans">
+                    <h4 className="text-xs font-bold uppercase text-amber-400 border-b border-amber-500/5 pb-2">Khai báo Tiêu thụ Ngoài Bán Hàng (Non-Sale)</h4>
+                    <form onSubmit={handleLogNonSaleConsumption} className="flex flex-col gap-4">
+                      <div className="flex flex-col gap-1.5">
+                         <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">1. Chọn nguyên liệu</label>
+                         <select
+                           value={nonSaleIngId}
+                           onChange={(e) => setNonSaleIngId(e.target.value)}
+                           className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
+                           required
+                         >
+                           <option value="">-- Chọn nguyên liệu tiêu hao --</option>
+                           {ingredients.map(ing => (
+                             <option key={ing.id} value={ing.id}>📦 {ing.id} - {ing.vi_name} ({ing.unit})</option>
+                           ))}
+                         </select>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">2. Số lượng hao phí</label>
+                          <input
+                            type="number"
+                            step="0.01"
+                            required
+                            placeholder="Số lượng..."
+                            value={nonSaleQty}
+                            onChange={(e) => setNonSaleQty(e.target.value)}
+                            className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono"
+                          />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">3. Loại tiêu thụ</label>
+                          <select
+                            value={nonSaleType}
+                            onChange={(e) => setNonSaleType(e.target.value)}
+                            className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
+                          >
+                            <option value="STAFF_MEAL">Cơm nhân viên (Staff meal)</option>
+                            <option value="COMP">Tặng khách (Comp)</option>
+                            <option value="R&D">Nghiên cứu món mới (R&D)</option>
+                            <option value="TRAINING">Đào tạo nhân sự (Training)</option>
+                            <option value="EVENT">Sự kiện (Event)</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">4. Ghi chú lý do</label>
+                        <input
+                          type="text"
+                          placeholder="Lý do chi tiết..."
+                          value={nonSaleNote}
+                          onChange={(e) => setNonSaleNote(e.target.value)}
+                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500"
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs py-3 rounded shadow transition-all active:scale-95 font-sans"
+                      >
+                        Ghi nhận Tiêu hao Ngoài bán hàng
+                      </button>
+                    </form>
+                  </div>
+
+                  {/* Cột phải: Danh sách PO & GRN */}
+                  <div className="lg:col-span-7 flex flex-col gap-6">
+                    {/* Danh sách Đơn đặt hàng PO */}
+                    <div className="p-5 bg-[#0c1220]/30 rounded border border-amber-500/10 flex flex-col gap-3 font-sans">
+                      <h4 className="text-xs font-bold uppercase text-amber-400 flex justify-between items-center border-b border-amber-500/5 pb-2">
+                        <span>Đơn đặt hàng đang theo dõi (POs)</span>
+                        <span className="text-[10px] text-gray-400">({purchaseOrders.length} đơn)</span>
+                      </h4>
+                      <div className="flex flex-col gap-2.5 max-h-48 overflow-y-auto pr-1">
+                        {purchaseOrders.map(po => (
+                          <div key={po.id} className="bg-[#090d16]/50 p-3 rounded border border-amber-500/5 flex justify-between items-center text-xs">
+                            <div className="flex flex-col gap-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono text-amber-500 font-semibold">{po.poNumber}</span>
+                                <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold font-sans uppercase ${po.status === 'OPEN' ? 'bg-amber-500/10 text-amber-400' : 'bg-emerald-500/10 text-emerald-400'}`}>
+                                  {po.status}
+                                </span>
+                              </div>
+                              <span className="text-gray-300 font-medium">{po.supplierName}</span>
+                              <span className="text-[10px] text-gray-500 font-mono">Dự kiến giao: {po.expectedDate} • Nguồn: {po.source}</span>
+                            </div>
+                            <div className="text-right">
+                              <span className="block text-gray-400 font-mono">{po.items.length} mặt hàng</span>
+                              <span className="text-[10px] text-gray-500 font-mono">Tổng: {po.items.reduce((sum: number, it: any) => sum + (it.qtyOrdered * it.price), 0).toLocaleString()} đ</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Danh sách Phiếu nhập kho GRN */}
+                    <div className="p-5 bg-[#0c1220]/30 rounded border border-amber-500/10 flex flex-col gap-3 font-sans">
+                      <h4 className="text-xs font-bold uppercase text-amber-400 flex justify-between items-center border-b border-amber-500/5 pb-2">
+                        <span>Phiếu nhận hàng & Landed Cost (GRNs)</span>
+                        <span className="text-[10px] text-gray-400">({goodsReceipts.length} phiếu)</span>
+                      </h4>
+                      <div className="flex flex-col gap-3 max-h-72 overflow-y-auto pr-1">
+                        {goodsReceipts.map(grn => (
+                          <div key={grn.id} className="bg-[#090d16]/50 p-4 rounded border border-amber-500/5 flex flex-col gap-3 text-xs">
+                            <div className="flex justify-between items-start">
+                              <div className="flex flex-col gap-0.5">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold text-gray-100">Hóa đơn: {grn.invoiceNo}</span>
+                                  <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase ${
+                                    grn.status === 'approved' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                                  }`}>
+                                    {grn.status === 'approved' ? 'Đã duyệt' : 'Chờ duyệt'}
+                                  </span>
+                                  <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase ${
+                                    grn.matchStatus === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'
+                                  }`}>
+                                    3-Way: {grn.matchStatus}
+                                  </span>
+                                </div>
+                                <span className="text-gray-400 text-[10px]">{grn.supplierName}</span>
+                              </div>
+                              <div className="text-right">
+                                <span className="block font-semibold text-amber-400 font-mono">{grn.invoiceAmount.toLocaleString()} đ</span>
+                                <span className="text-[9px] text-gray-500 font-mono font-sans">Cước: {grn.freight.toLocaleString()}đ • Thuế: {grn.duty.toLocaleString()}đ</span>
+                              </div>
+                            </div>
+
+                            {/* Dòng hàng nhận */}
+                            <div className="bg-[#070b12] p-2.5 rounded border border-amber-500/5 flex flex-col gap-1.5">
+                              <span className="text-[9px] uppercase tracking-wider text-gray-500 font-bold font-sans">Đối soát 3-Way Match & Landed Cost:</span>
+                              <div className="flex flex-col gap-1 divide-y divide-amber-500/5">
+                                {grn.lines.map((line: any, i: number) => (
+                                  <div key={i} className="flex justify-between text-[11px] py-1 font-sans">
+                                    <span className="text-gray-300 font-medium">{line.name || line.ingredientId}</span>
+                                    <div className="flex gap-4 font-mono text-gray-400">
+                                      <span>Nhận: {line.qtyReceived} • Giá gốc: {line.unitPriceFx.toLocaleString()}đ</span>
+                                      <span className="text-amber-300">Landed Cost: {line.landedUnitCost.toLocaleString()}đ</span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Phê duyệt bởi Kế toán trưởng / Admin (Cấp 1 & 4) */}
+                            {grn.status === 'pending' && (userRole === 'admin' || userRole === 'senior_accountant') && (
+                              <div className="flex justify-end pt-1 border-t border-amber-500/5">
+                                <button
+                                  onClick={() => handleApproveGrn(grn.id)}
+                                  className="bg-emerald-600 hover:bg-emerald-500 text-gray-100 text-[10px] font-bold px-3 py-1.5 rounded shadow active:scale-95 transition-all font-sans"
+                                >
+                                  Duyệt Nhập kho & Tính WAC
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Lịch sử tiêu thụ ngoài bán hàng (Non-Sale Logs) (Giai đoạn 2) */}
+                    <div className="p-5 bg-[#0c1220]/30 rounded border border-amber-500/10 flex flex-col gap-3 font-sans">
+                      <h4 className="text-xs font-bold uppercase text-amber-400 flex justify-between items-center border-b border-amber-500/5 pb-2">
+                        <span>Lịch sử tiêu thụ ngoài bán hàng (Non-Sale Logs)</span>
+                        <span className="text-[10px] text-gray-400">
+                          ({transactions.filter(t => t.note.includes('Tiêu thụ ngoài bán hàng')).length} giao dịch)
+                        </span>
+                      </h4>
+                      <div className="flex flex-col gap-2.5 max-h-48 overflow-y-auto pr-1">
+                        {transactions
+                          .filter(t => t.note.includes('Tiêu thụ ngoài bán hàng'))
+                          .slice()
+                          .reverse()
+                          .map(t => {
+                            const ingDetail = ingredients.find(i => i.id === t.ingredientId);
+                            return (
+                              <div key={t.id} className="bg-[#090d16]/50 p-3 rounded border border-amber-500/5 flex justify-between items-center text-xs">
+                                <div className="flex flex-col gap-1">
+                                  <div className="flex items-center gap-2 font-sans">
+                                    <span className="font-mono text-amber-500 font-semibold">{t.ingredientId}</span>
+                                    <span className="text-gray-300 font-medium">{ingDetail?.vi_name || 'Nguyên liệu'}</span>
+                                  </div>
+                                  <span className="text-[10px] text-gray-400 leading-tight font-sans">{t.note}</span>
+                                  <span className="text-[9px] text-gray-500 font-mono">Ngày: {t.date}</span>
+                                </div>
+                                <div className="text-right">
+                                  <span className="block text-rose-400 font-mono font-bold">-{t.qty.toFixed(2)} {ingDetail?.unit || 'kg'}</span>
+                                  <span className="text-[9px] text-gray-500 font-mono">Trị giá: {Math.round(t.qty * t.unit_price).toLocaleString()}đ</span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        {transactions.filter(t => t.note.includes('Tiêu thụ ngoài bán hàng')).length === 0 && (
+                          <div className="text-gray-500 italic text-center py-6 font-sans font-normal">Chưa có giao dịch tiêu thụ ngoài bán hàng nào được ghi nhận.</div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
         </main>
       </div>
 
@@ -3109,6 +3962,110 @@ export default function Home() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* 4.G. Cân rượu Bar dùng cân điện tử (Scale Weighing Modal) */}
+      {showWeighModal && weighIngredient && (
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-[#0c1220] border border-amber-500/30 w-full max-w-md rounded-md p-6 flex flex-col gap-5 shadow-2xl relative font-sans">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl"></div>
+            
+            <div className="border-b border-amber-500/20 pb-3">
+              <h3 className="text-lg font-semibold text-[#d4af37] font-serif">⚖️ PHÂN HỆ KIỂM BAR - CÂN CHAI MỞ</h3>
+              <p className="text-[11px] text-gray-400 mt-1">Sử dụng cân điện tử để cân đo lượng rượu còn lại trong chai dở của Bar.</p>
+            </div>
+
+            <div className="bg-[#090d16]/80 p-3.5 rounded border border-amber-500/10 flex flex-col gap-1.5 text-xs text-gray-300">
+              <p><strong>Nguyên liệu kiểm:</strong> <span className="text-gray-100 font-semibold">{weighIngredient.vi_name}</span></p>
+              <p><strong>Mã hàng:</strong> <span className="font-mono text-amber-500/80">{weighIngredient.id}</span></p>
+              <p><strong>Quy cách:</strong> 1 chai = <span className="font-semibold text-amber-400">{(weighIngredient as any).stock_to_recipe_factor || 750} ML</span></p>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold font-sans">1. Số chai nguyên vẹn (Full Bottles)</label>
+                <input 
+                  type="number" 
+                  min="0"
+                  value={weighFullBottles}
+                  onChange={(e) => setWeighFullBottles(parseInt(e.target.value) || 0)}
+                  className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono w-full"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold font-sans">2. Trọng lượng cân (g)</label>
+                  <input 
+                    type="number" 
+                    placeholder="VD: 850"
+                    value={weighScaleGrams}
+                    onChange={(e) => setWeighScaleGrams(e.target.value)}
+                    className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono"
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold font-sans">3. Trọng lượng vỏ (g)</label>
+                  <input 
+                    type="number" 
+                    value={weighTareGrams}
+                    onChange={(e) => setWeighTareGrams(parseInt(e.target.value) || 450)}
+                    className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold font-sans">4. Tỷ trọng rượu (Density)</label>
+                <input 
+                  type="number" 
+                  step="0.01"
+                  value={weighDensity}
+                  onChange={(e) => setWeighDensity(parseFloat(e.target.value) || 1.0)}
+                  className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono w-full"
+                />
+              </div>
+
+              <div className="bg-amber-500/5 border border-amber-500/10 p-3 rounded flex flex-col gap-2 font-mono text-[11px]">
+                <div className="flex justify-between">
+                  <span className="text-gray-400 font-sans">Thể tích chai dở ML:</span>
+                  <span className="text-gray-200 font-bold">
+                    {Math.max((parseFloat(weighScaleGrams) || 0) - weighTareGrams, 0).toFixed(0)} ML
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400 font-sans">Tỷ lệ chai dở quy đổi:</span>
+                  <span className="text-gray-200 font-bold">
+                    {(Math.max((parseFloat(weighScaleGrams) || 0) - weighTareGrams, 0) / ((weighIngredient as any).stock_to_recipe_factor || 750)).toFixed(3)} chai
+                  </span>
+                </div>
+                <div className="flex justify-between border-t border-amber-500/10 pt-2 text-xs">
+                  <span className="text-amber-500 font-serif font-bold">TỔNG TỒN THỰC TẾ:</span>
+                  <span className="text-amber-400 font-bold">
+                    {(weighFullBottles + (Math.max((parseFloat(weighScaleGrams) || 0) - weighTareGrams, 0) / ((weighIngredient as any).stock_to_recipe_factor || 750))).toFixed(3)} BOTTLE
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 border-t border-amber-500/10 pt-4 mt-2">
+                <button 
+                  type="button"
+                  onClick={() => setShowWeighModal(false)}
+                  className="border border-gray-700 hover:bg-gray-800 text-gray-300 px-4 py-2 rounded text-xs font-semibold font-sans"
+                >
+                  Hủy
+                </button>
+                <button 
+                  type="button"
+                  onClick={handleSaveWeighedStock}
+                  className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs px-5 py-2 rounded shadow font-sans"
+                >
+                  Lưu kết quả cân
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
