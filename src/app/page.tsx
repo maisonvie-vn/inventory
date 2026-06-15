@@ -3473,164 +3473,167 @@ export default function Home() {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                  {/* Cột trái: Nhập kho (GRN) */}
-                  <div className="lg:col-span-5 p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans">
-                    <h4 className="text-xs font-bold uppercase text-amber-400 border-b border-amber-500/5 pb-2">Lập phiếu nhận hàng (Goods Receipt)</h4>
-                    
-                    <form onSubmit={handleCreateGrn} className="flex flex-col gap-4">
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] uppercase text-gray-400 font-semibold">1. Chọn đơn đặt hàng PO</label>
-                        <select
-                          value={selectedPoForGrn}
-                          onChange={(e) => handleSelectPo(e.target.value)}
-                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
-                          required
-                        >
-                          <option value="">-- Chọn đơn đặt hàng đang mở --</option>
-                          {purchaseOrders.filter(p => p.status === 'OPEN').map(po => (
-                            <option key={po.id} value={po.id}>📄 {po.poNumber} ({po.supplierName.slice(0, 25)}...)</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] uppercase text-gray-400 font-semibold">2. Số Hóa đơn NCC</label>
-                        <input
-                          type="text"
-                          required
-                          placeholder="VD: INV-ANNAM-9988"
-                          value={grnInvoiceNo}
-                          onChange={(e) => setGrnInvoiceNo(e.target.value)}
-                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
+                  {/* Cột trái: Nhập kho (GRN) & Tiêu thụ ngoài bán hàng (Non-Sale) */}
+                  <div className="lg:col-span-5 flex flex-col gap-6">
+                    {/* Lập phiếu nhận hàng (Goods Receipt) */}
+                    <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans">
+                      <h4 className="text-xs font-bold uppercase text-amber-400 border-b border-amber-500/5 pb-2">Lập phiếu nhận hàng (Goods Receipt)</h4>
+                      
+                      <form onSubmit={handleCreateGrn} className="flex flex-col gap-4">
                         <div className="flex flex-col gap-1.5">
-                          <label className="text-[10px] uppercase text-gray-400 font-semibold">3. Thuế nhập khẩu (VND)</label>
-                          <input
-                            type="number"
-                            placeholder="0"
-                            value={grnDuty}
-                            onChange={(e) => setGrnDuty(e.target.value)}
-                            className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none"
-                          />
-                        </div>
-                        <div className="flex flex-col gap-1.5">
-                          <label className="text-[10px] uppercase text-gray-400 font-semibold">4. Cước vận chuyển (VND)</label>
-                          <input
-                            type="number"
-                            placeholder="0"
-                            value={grnFreight}
-                            onChange={(e) => setGrnFreight(e.target.value)}
-                            className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none"
-                          />
-                        </div>
-                      </div>
-
-                      {grnLines.length > 0 && (
-                        <div className="border-t border-amber-500/10 pt-3 flex flex-col gap-2">
-                          <label className="text-[10px] uppercase text-gray-400 font-semibold">5. Số lượng nhận thực tế</label>
-                          <div className="flex flex-col gap-2.5 max-h-48 overflow-y-auto">
-                            {grnLines.map((line, idx) => (
-                              <div key={line.ingredientId} className="flex justify-between items-center bg-[#090d16]/70 p-2 rounded border border-amber-500/5">
-                                <div className="flex flex-col gap-0.5">
-                                  <span className="text-xs text-gray-200 font-semibold">{line.name}</span>
-                                  <span className="text-[10px] text-gray-500">Mã PO: {line.qtyOrdered} {line.unit} @ {line.unitPriceFx.toLocaleString()}đ</span>
-                                </div>
-                                <input
-                                  type="number"
-                                  required
-                                  value={line.qtyReceived}
-                                  onChange={(e) => {
-                                    const updated = [...grnLines];
-                                    updated[idx] = { ...line, qtyReceived: parseFloat(e.target.value) || 0 };
-                                    setGrnLines(updated);
-                                  }}
-                                  className="bg-[#090d16] border border-amber-500/30 rounded text-center text-xs w-16 py-1 font-mono text-gray-100 focus:outline-none focus:border-amber-500"
-                                />
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      <button
-                        type="submit"
-                        disabled={grnLines.length === 0}
-                        className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs py-3 rounded shadow mt-2 transition-all active:scale-95 disabled:opacity-50"
-                      >
-                        Gửi duyệt Phiếu nhận hàng (GRN)
-                      </button>
-                    </form>
-                  </div>
-
-                  {/* Khai báo Tiêu thụ Ngoài Bán Hàng (Non-Sale Consumption) (Giai đoạn 2) */}
-                  <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans">
-                    <h4 className="text-xs font-bold uppercase text-amber-400 border-b border-amber-500/5 pb-2">Khai báo Tiêu thụ Ngoài Bán Hàng (Non-Sale)</h4>
-                    <form onSubmit={handleLogNonSaleConsumption} className="flex flex-col gap-4">
-                      <div className="flex flex-col gap-1.5">
-                         <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">1. Chọn nguyên liệu</label>
-                         <select
-                           value={nonSaleIngId}
-                           onChange={(e) => setNonSaleIngId(e.target.value)}
-                           className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
-                           required
-                         >
-                           <option value="">-- Chọn nguyên liệu tiêu hao --</option>
-                           {ingredients.map(ing => (
-                             <option key={ing.id} value={ing.id}>📦 {ing.id} - {ing.vi_name} ({ing.unit})</option>
-                           ))}
-                         </select>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-1.5">
-                          <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">2. Số lượng hao phí</label>
-                          <input
-                            type="number"
-                            step="0.01"
-                            required
-                            placeholder="Số lượng..."
-                            value={nonSaleQty}
-                            onChange={(e) => setNonSaleQty(e.target.value)}
-                            className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono"
-                          />
-                        </div>
-                        <div className="flex flex-col gap-1.5">
-                          <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">3. Loại tiêu thụ</label>
+                          <label className="text-[10px] uppercase text-gray-400 font-semibold">1. Chọn đơn đặt hàng PO</label>
                           <select
-                            value={nonSaleType}
-                            onChange={(e) => setNonSaleType(e.target.value)}
+                            value={selectedPoForGrn}
+                            onChange={(e) => handleSelectPo(e.target.value)}
                             className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
+                            required
                           >
-                            <option value="STAFF_MEAL">Cơm nhân viên (Staff meal)</option>
-                            <option value="COMP">Tặng khách (Comp)</option>
-                            <option value="R&D">Nghiên cứu món mới (R&D)</option>
-                            <option value="TRAINING">Đào tạo nhân sự (Training)</option>
-                            <option value="EVENT">Sự kiện (Event)</option>
+                            <option value="">-- Chọn đơn đặt hàng đang mở --</option>
+                            {purchaseOrders.filter(p => p.status === 'OPEN').map(po => (
+                              <option key={po.id} value={po.id}>📄 {po.poNumber} ({po.supplierName.slice(0, 25)}...)</option>
+                            ))}
                           </select>
                         </div>
-                      </div>
 
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">4. Ghi chú lý do</label>
-                        <input
-                          type="text"
-                          placeholder="Lý do chi tiết..."
-                          value={nonSaleNote}
-                          onChange={(e) => setNonSaleNote(e.target.value)}
-                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500"
-                        />
-                      </div>
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[10px] uppercase text-gray-400 font-semibold">2. Số Hóa đơn NCC</label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="VD: INV-ANNAM-9988"
+                            value={grnInvoiceNo}
+                            onChange={(e) => setGrnInvoiceNo(e.target.value)}
+                            className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none"
+                          />
+                        </div>
 
-                      <button
-                        type="submit"
-                        className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs py-3 rounded shadow transition-all active:scale-95 font-sans"
-                      >
-                        Ghi nhận Tiêu hao Ngoài bán hàng
-                      </button>
-                    </form>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] uppercase text-gray-400 font-semibold">3. Thuế nhập khẩu (VND)</label>
+                            <input
+                              type="number"
+                              placeholder="0"
+                              value={grnDuty}
+                              onChange={(e) => setGrnDuty(e.target.value)}
+                              className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none"
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] uppercase text-gray-400 font-semibold">4. Cước vận chuyển (VND)</label>
+                            <input
+                              type="number"
+                              placeholder="0"
+                              value={grnFreight}
+                              onChange={(e) => setGrnFreight(e.target.value)}
+                              className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none"
+                            />
+                          </div>
+                        </div>
+
+                        {grnLines.length > 0 && (
+                          <div className="border-t border-amber-500/10 pt-3 flex flex-col gap-2">
+                            <label className="text-[10px] uppercase text-gray-400 font-semibold">5. Số lượng nhận thực tế</label>
+                            <div className="flex flex-col gap-2.5 max-h-48 overflow-y-auto">
+                              {grnLines.map((line, idx) => (
+                                <div key={line.ingredientId} className="flex justify-between items-center bg-[#090d16]/70 p-2 rounded border border-amber-500/5">
+                                  <div className="flex flex-col gap-0.5">
+                                    <span className="text-xs text-gray-200 font-semibold">{line.name}</span>
+                                    <span className="text-[10px] text-gray-500">Mã PO: {line.qtyOrdered} {line.unit} @ {line.unitPriceFx.toLocaleString()}đ</span>
+                                  </div>
+                                  <input
+                                    type="number"
+                                    required
+                                    value={line.qtyReceived}
+                                    onChange={(e) => {
+                                      const updated = [...grnLines];
+                                      updated[idx] = { ...line, qtyReceived: parseFloat(e.target.value) || 0 };
+                                      setGrnLines(updated);
+                                    }}
+                                    className="bg-[#090d16] border border-amber-500/30 rounded text-center text-xs w-16 py-1 font-mono text-gray-100 focus:outline-none focus:border-amber-500"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <button
+                          type="submit"
+                          disabled={grnLines.length === 0}
+                          className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs py-3 rounded shadow mt-2 transition-all active:scale-95 disabled:opacity-50"
+                        >
+                          Gửi duyệt Phiếu nhận hàng (GRN)
+                        </button>
+                      </form>
+                    </div>
+
+                    {/* Khai báo Tiêu thụ Ngoài Bán Hàng (Non-Sale Consumption) (Giai đoạn 2) */}
+                    <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans">
+                      <h4 className="text-xs font-bold uppercase text-amber-400 border-b border-amber-500/5 pb-2">Khai báo Tiêu thụ Ngoài Bán Hàng (Non-Sale)</h4>
+                      <form onSubmit={handleLogNonSaleConsumption} className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-1.5">
+                           <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">1. Chọn nguyên liệu</label>
+                           <select
+                             value={nonSaleIngId}
+                             onChange={(e) => setNonSaleIngId(e.target.value)}
+                             className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
+                             required
+                           >
+                             <option value="">-- Chọn nguyên liệu tiêu hao --</option>
+                             {ingredients.map(ing => (
+                               <option key={ing.id} value={ing.id}>📦 {ing.id} - {ing.vi_name} ({ing.unit})</option>
+                             ))}
+                           </select>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">2. Số lượng hao phí</label>
+                            <input
+                              type="number"
+                              step="0.01"
+                              required
+                              placeholder="Số lượng..."
+                              value={nonSaleQty}
+                              onChange={(e) => setNonSaleQty(e.target.value)}
+                              className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono"
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">3. Loại tiêu thụ</label>
+                            <select
+                              value={nonSaleType}
+                              onChange={(e) => setNonSaleType(e.target.value)}
+                              className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
+                            >
+                              <option value="STAFF_MEAL">Cơm nhân viên (Staff meal)</option>
+                              <option value="COMP">Tặng khách (Comp)</option>
+                              <option value="R&D">Nghiên cứu món mới (R&D)</option>
+                              <option value="TRAINING">Đào tạo nhân sự (Training)</option>
+                              <option value="EVENT">Sự kiện (Event)</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">4. Ghi chú lý do</label>
+                          <input
+                            type="text"
+                            placeholder="Lý do chi tiết..."
+                            value={nonSaleNote}
+                            onChange={(e) => setNonSaleNote(e.target.value)}
+                            className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500"
+                          />
+                        </div>
+
+                        <button
+                          type="submit"
+                          className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs py-3 rounded shadow transition-all active:scale-95 font-sans"
+                        >
+                          Ghi nhận Tiêu hao Ngoài bán hàng
+                        </button>
+                      </form>
+                    </div>
                   </div>
 
                   {/* Cột phải: Danh sách PO & GRN */}
