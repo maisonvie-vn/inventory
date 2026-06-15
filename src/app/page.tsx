@@ -404,7 +404,8 @@ export default function Home() {
     let currentIdx = 0;
     const interval = setInterval(() => {
       if (currentIdx < logs.length) {
-        setRlsAuditLogs(prev => [...prev, logs[currentIdx]]);
+        const nextLog = logs[currentIdx];
+        setRlsAuditLogs(prev => [...prev, nextLog]);
         currentIdx++;
       } else {
         clearInterval(interval);
