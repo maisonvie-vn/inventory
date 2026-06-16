@@ -1585,6 +1585,7 @@ END $$;
 
 COMMIT;
 
+
 -- ADD MISSING INGREDIENTS AND UOMS FOR IMPORT EXCEL 01/06 - 14/06
 INSERT INTO uom (id, name, uom_type) VALUES 
 ('CHAI', 'Chai (Excel)', 'COUNT'),
@@ -1603,7 +1604,7 @@ INSERT INTO ingredients (
   'Kaiken « Ultra » Malbec (Malbec · Uco Valley, Mendoza — Argentina)', 
   'Kaiken Ultra Malbec', 
   'CHAI', 'CHAI', 1, 
-  '5b0ee48b-8e19-5d8f-853a-4056cefff5e5', -- ALCOHOL
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
   638000.0, 638000.0, true, true
 ),
 (
@@ -1612,7 +1613,7 @@ INSERT INTO ingredients (
   'Nguyên liệu chế biến bếp', 
   'Kitchen processing ingredient', 
   'KG', 'g', 1000, 
-  'f09a1423-afa4-5fe6-99f6-789561f23c83', -- STOCK
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
   570984.7, 570984.7, false, true
 ),
 (
@@ -1621,7 +1622,7 @@ INSERT INTO ingredients (
   'Nho xanh ko hạt', 
   'Green seedless grapes', 
   'KG', 'g', 1000, 
-  '5fbe46c0-78c8-5e66-ae7e-5f78ebb2b1af', -- FRUIT
+  (SELECT id FROM purchase_categories WHERE code = 'FRUIT' LIMIT 1),
   150000.0, 150000.0, false, true
 )
 ON CONFLICT (id) DO NOTHING;
