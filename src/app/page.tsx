@@ -44,6 +44,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation' | 'purchasing'>('dashboard');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [isMobileMetaOpen, setIsMobileMetaOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [recipeType, setRecipeType] = useState<'alc' | 'deg'>('alc');
@@ -2449,17 +2450,9 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-bg-main text-text-dark selection:bg-accent-gold selection:text-text-light">
       {/* 1. Header (High-End French Neoclassical Styling) */}
       <header className="border-b border-border-moss bg-moss-dark sticky top-0 z-50 text-text-light">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+        {/* Desktop Header */}
+        <div className="hidden lg:flex max-w-7xl mx-auto px-6 py-4 items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            {/* Hamburger menu for mobile */}
-            <button 
-              onClick={() => setIsMobileDrawerOpen(!isMobileDrawerOpen)}
-              className="lg:hidden text-accent-gold p-1 focus:outline-none"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
             <div className="relative w-10 h-10 border border-border-moss flex items-center justify-center rounded-sm rotate-45 bg-moss-light">
               <span className="text-accent-gold font-serif font-semibold text-lg rotate-[-45deg] scale-90">MV</span>
             </div>
@@ -2520,7 +2513,7 @@ export default function Home() {
               </select>
             </div>
 
-            {/* Role Switcher - Chỉ hiển thị cho Admin hoặc khi chạy Local Sandbox để test phân quyền */}
+            {/* Role Switcher */}
             {(!isSupabaseConfigured() || userRole === 'admin') && (
               <div className="flex items-center gap-2 bg-moss-light border border-border-moss px-3 py-1.5 rounded-sm">
                 <span className="text-[10px] text-gray-400 font-sans uppercase">Test vai trò:</span>
@@ -2543,6 +2536,113 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Mobile Header (Slim ~56px) */}
+        <div className="flex lg:hidden w-full px-4 items-center justify-between h-[56px]">
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setIsMobileDrawerOpen(!isMobileDrawerOpen)}
+              className="text-accent-gold p-1 focus:outline-none"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <div className="relative w-8 h-8 border border-border-moss flex items-center justify-center rounded-sm rotate-45 bg-moss-light">
+              <span className="text-accent-gold font-serif font-semibold text-sm rotate-[-45deg] scale-90">MV</span>
+            </div>
+            <div>
+              <h1 className="text-base font-semibold tracking-wider text-accent-gold">MAISON VIE</h1>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-[9px] bg-moss-light border border-border-moss text-accent-gold px-2 py-0.5 rounded-sm font-semibold uppercase">
+              {userRole === 'admin' ? 'CFO' : userRole === 'restaurant_manager' ? 'Manager' : userRole === 'senior_accountant' ? 'Kế toán' : userRole === 'head_chef' ? 'Chef' : userRole === 'sous_chef' ? 'SousChef' : userRole === 'junior_accountant' ? 'Thủ kho' : 'Bar'}
+            </span>
+            <span className="text-[10px] font-mono text-gray-300 font-bold bg-[#090d16] px-1.5 py-0.5 rounded-sm">
+              {simulatedTime}
+            </span>
+            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></span>
+            <button 
+              onClick={() => setIsMobileMetaOpen(!isMobileMetaOpen)}
+              className="text-accent-gold p-1 text-lg font-bold focus:outline-none"
+              title="Thông tin phụ"
+            >
+              {isMobileMetaOpen ? '✕' : '⋮'}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Meta Dropdown Panel */}
+        {isMobileMetaOpen && (
+          <div className="lg:hidden bg-moss-light border-t border-border-moss p-4 flex flex-col gap-3 text-xs text-text-light">
+            <div className="flex items-center justify-between">
+              <span>Đăng nhập: <strong>{currentUser.name || currentUser.email}</strong></span>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => {
+                    setPasswordError('');
+                    setPasswordSuccess(false);
+                    setNewPassword('');
+                    setConfirmPassword('');
+                    setShowPasswordModal(true);
+                  }}
+                  className="text-[10px] text-accent-gold hover:text-text-light underline font-sans uppercase font-bold"
+                >
+                  Đổi mật khẩu
+                </button>
+                <span className="text-gray-600">|</span>
+                <button 
+                  onClick={handleLogout}
+                  className="text-[10px] text-rose-400 hover:text-rose-300 underline font-sans uppercase font-bold"
+                >
+                  Thoát
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] text-gray-400 font-sans uppercase">Giờ hệ thống:</span>
+              <select 
+                value={simulatedTime}
+                onChange={(e) => {
+                  setSimulatedTime(e.target.value);
+                  const [hours, mins] = e.target.value.split(':').map(Number);
+                  if (hours > 18 || (hours === 18 && mins >= 30)) {
+                    setIsWacLocked(true);
+                  } else {
+                    setIsWacLocked(false);
+                  }
+                }}
+                className="bg-[#090d16] border border-border-moss text-xs font-mono text-accent-gold rounded px-2 py-1 focus:outline-none font-bold"
+              >
+                <option value="08:00">08:00 (Nhập kho)</option>
+                <option value="12:00">12:00 (Trưa)</option>
+                <option value="17:00">17:00 (Chiều)</option>
+                <option value="18:30">18:30 (Chốt WAC)</option>
+                <option value="22:30">22:30 (Trừ kho POS)</option>
+                <option value="23:00">23:00 (Đóng cửa)</option>
+              </select>
+            </div>
+
+            {(!isSupabaseConfigured() || userRole === 'admin') && (
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] text-gray-400 font-sans uppercase">Test vai trò:</span>
+                <select 
+                  value={userRole}
+                  onChange={(e) => setUserRole(e.target.value as any)}
+                  className="bg-[#090d16] border border-border-moss text-xs text-accent-gold rounded px-2 py-1 focus:outline-none font-semibold"
+                >
+                  <option value="admin">Owner/CFO/Admin</option>
+                  <option value="restaurant_manager">Chef/Manager/Thủ Kho</option>
+                  <option value="senior_accountant">SousChef/Kế toán</option>
+                  <option value="BAR_SUPERVISOR">Bar</option>
+                </select>
+              </div>
+            )}
+          </div>
+        )}
       </header>
 
       {/* 2. Main Container */}
@@ -4541,7 +4641,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="overflow-y-auto max-h-[400px] border border-border-cream rounded">
+            <div className="overflow-auto max-h-[400px] border border-border-cream rounded">
               <table className="w-full text-xs text-left text-gray-300">
                 <thead className="bg-moss-dark sticky top-0 uppercase text-gray-400 border-b border-border-cream">
                   <tr>
