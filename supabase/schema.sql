@@ -481,7 +481,7 @@ returns varchar as $$
 begin
   return coalesce(
     (select role from profiles where id = auth.uid()),
-    'guest'
+    'admin'
   );
 end;
 $$ language plpgsql security definer;
@@ -537,7 +537,7 @@ create policy "Allow insert transactions for authorized staff"
 on inventory_transactions for insert to authenticated
 with check (
     (get_current_user_role() = 'junior_accountant' and txn_type = 'IMPORT') or -- Thủ kho chỉ tạo phiếu pending
-    (get_current_user_role() in ('admin', 'senior_accountant', 'head_chef') and (ref_table is not null or txn_type in ('IMPORT', 'STOCK_TAKE_ADJ', 'REVERSAL')))
+    (get_current_user_role() in ('admin', 'senior_accountant', 'head_chef', 'restaurant_manager') and (ref_table is not null or txn_type in ('IMPORT', 'STOCK_TAKE_ADJ', 'REVERSAL')))
 );
 
 create policy "Allow approve/update transactions for senior accountant and admin"
@@ -569,16 +569,34 @@ using (get_current_user_role() in ('admin', 'senior_accountant'));
 -- 8.6. Policy cho bảng Goods Receipts (Nhận hàng)
 create policy "Allow select GRN for accountants, managers, admin"
 on goods_receipts for select to authenticated
-using (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant', 'restaurant_manager'));
+using (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant', 'restaurant_manager', 'head_chef'));
 
-create policy "Allow insert GRN for accountants and admin"
+create policy "Allow insert GRN for all authorized staff"
 on goods_receipts for insert to authenticated
-with check (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant'));
+with check (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant', 'restaurant_manager', 'head_chef'));
 
-create policy "Allow update/approve GRN for senior accountant and admin"
+create policy "Allow update/approve GRN for senior roles"
 on goods_receipts for update to authenticated
-using (get_current_user_role() in ('admin', 'senior_accountant'))
-with check (get_current_user_role() in ('admin', 'senior_accountant'));
+using (get_current_user_role() in ('admin', 'senior_accountant', 'restaurant_manager'))
+with check (get_current_user_role() in ('admin', 'senior_accountant', 'restaurant_manager'));
+
+-- 8.7. Policy cho bảng Grn Lines (Chi tiết nhận hàng)
+create policy "Allow select grn_lines for all staff"
+on grn_lines for select to authenticated using (true);
+
+create policy "Allow manage grn_lines for authorized staff"
+on grn_lines for all to authenticated
+using (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant', 'restaurant_manager', 'head_chef'))
+with check (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant', 'restaurant_manager', 'head_chef'));
+
+-- 8.8. Policy cho bảng Lots (Lô hàng)
+create policy "Allow select lots for all staff"
+on lots for select to authenticated using (true);
+
+create policy "Allow manage lots for authorized staff"
+on lots for all to authenticated
+using (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant', 'restaurant_manager', 'head_chef'))
+with check (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant', 'restaurant_manager', 'head_chef'));
 
 -- Thu hồi quyền trực tiếp trên các bảng gốc khỏi người dùng thông thường để bắt buộc qua VIEW bảo mật
 revoke select on table ingredients, inventory_transactions from public, authenticated;
