@@ -593,7 +593,15 @@ Hệ thống đã được cập nhật và nghiệm thu toàn bộ các tính n
   - Bổ sung đơn vị tính `'HOP'` vào tệp `seed.sql` dưới phần seed `uom` để ngăn lỗi khóa ngoại `ingredients_stock_uom_fkey`.
   - Trích xuất cấu hình Tasting Set Menu từ code logic của hệ thống (`src/data/mockData.ts` và `src/data/db.json`) và bổ sung 3 bản ghi `INSERT INTO menu_items` cho `R6212, R6213, R6218` (Tasting 5, 6, 7 courses) với giá tương ứng.
 
+### 10.7. Thực hiện hoàn thành toàn bộ Giai đoạn 5 (Tuần 9-12) (Hoàn tất 100%)
+- **Cổng đăng nhập Bar `/bar`**: Tích hợp cổng đăng nhập bằng mã PIN cho tablet quầy bar chung của 3 nhân sự (`b-1`, `b-2`, `b-3`) cùng hệ thống tự động đăng xuất sau 3 phút không hoạt động để quy trách nhiệm pour variance cho từng bartender.
+- **Nội suy thể tích 2 điểm (2-point calibration)**: Đã triển khai công thức tính toán thể tích dở bằng cách cân chai điện tử, nội suy tuyến tính dựa trên thông số chai đầy và vỏ rỗng của từng nguyên liệu.
+- **Kiểm kho Đóng/Mở ca**: Cho phép đếm số chai nguyên seal và cân chai dở tại quầy bar đầu ca (`shift='OPEN'`) và cuối ca (`shift='CLOSE'`), tự động đồng bộ lên Supabase qua bảng `bar_counts`.
+- **Hao hụt rót (Pour Variance)**: Đối soát chênh lệch tiêu thụ thực tế với dữ liệu lý thuyết từ POS của 183 mã Bar, hiển thị cảnh báo đỏ khi lệch âm vượt quá dung sai `weightToleranceGrams` (từ 2% đến 10% tùy chỉnh).
+- **Nhật ký hao hụt & Yêu cầu cấp hàng**: Tích hợp các biểu mẫu khai báo vỡ/đổ/comp (`waste_logs`) và gửi phiếu yêu cầu cấp hàng/chuyển kho từ Kho tổng (`inventory_transactions`).
+- **Liên kết Hệ thống**: Tích hợp liên kết truy cập nhanh "Cổng Quầy Bar (/bar)" trong Menu Sidebar (máy tính) và Mobile Navigation Drawer (điện thoại).
+
 ---
-*Nghiệm thu v9.2 hoàn tất ngày 16/06/2026. Biên dịch thành công 100%, đồng bộ hóa cơ sở dữ liệu và triển khai trực tiếp lên Vercel.*
+*Nghiệm thu v9.4 hoàn tất ngày 16/06/2026. Biên dịch thành công 100%, đồng bộ hóa cơ sở dữ liệu và triển khai trực tiếp lên Vercel.*
 
 
