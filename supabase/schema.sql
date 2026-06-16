@@ -490,10 +490,35 @@ $$ language plpgsql security definer;
 create policy "Allow select profiles for all authenticated users"
 on profiles for select to authenticated using (true);
 
+create policy "Allow insert profiles for self"
+on profiles for insert to authenticated
+with check (auth.uid() = id);
+
 create policy "Allow update profiles for self or admin"
 on profiles for update to authenticated
 using (auth.uid() = id or get_current_user_role() = 'admin')
 with check (auth.uid() = id or get_current_user_role() = 'admin');
+
+-- Tự động tạo profile khi người dùng đăng ký qua auth.users
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.profiles (id, username, full_name, role)
+  values (
+    new.id,
+    coalesce(new.raw_user_meta_data->>'username', split_part(new.email, '@', 1)),
+    coalesce(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1)),
+    coalesce(new.raw_user_meta_data->>'role', 'admin') -- Mặc định là admin
+  )
+  on conflict (id) do nothing;
+  return new;
+end;
+$$ language plpgsql security definer;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
 
 -- 8.2. Policy cho bảng Ingredients (Nguyên vật liệu)
 create policy "Allow select ingredients for all staff"

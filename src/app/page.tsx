@@ -302,12 +302,34 @@ export default function Home() {
           const { data: { session } } = await supabase.auth.getSession();
           if (session) {
             // Fetch profile from supabase profiles table
-            const { data: profile } = await supabase
+            let { data: profile, error: profileErr } = await supabase
               .from('profiles')
               .select('role, full_name')
               .eq('id', session.user.id)
               .single();
             
+            // Auto-create profile if missing to prevent RLS violations
+            if ((profileErr && profileErr.code === 'PGRST116') || !profile) {
+              try {
+                const emailPrefix = session.user.email?.split('@')[0] || 'user';
+                const { data: newProfile, error: insertErr } = await supabase
+                  .from('profiles')
+                  .insert({
+                    id: session.user.id,
+                    username: emailPrefix,
+                    full_name: emailPrefix,
+                    role: 'admin'
+                  })
+                  .select('role, full_name')
+                  .single();
+                if (!insertErr && newProfile) {
+                  profile = newProfile;
+                }
+              } catch (err) {
+                console.error("Auto-creating profile failed", err);
+              }
+            }
+
             const role = (profile?.role || 'admin') as any;
             setCurrentUser({
               email: session.user.email || '',
@@ -343,12 +365,34 @@ export default function Home() {
     if (isSupabaseConfigured()) {
       const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
         if (session) {
-          const { data: profile } = await supabase
+          let { data: profile, error: profileErr } = await supabase
             .from('profiles')
             .select('role, full_name')
             .eq('id', session.user.id)
             .single();
           
+          // Auto-create profile if missing to prevent RLS violations
+          if ((profileErr && profileErr.code === 'PGRST116') || !profile) {
+            try {
+              const emailPrefix = session.user.email?.split('@')[0] || 'user';
+              const { data: newProfile, error: insertErr } = await supabase
+                .from('profiles')
+                .insert({
+                  id: session.user.id,
+                  username: emailPrefix,
+                  full_name: emailPrefix,
+                  role: 'admin'
+                })
+                .select('role, full_name')
+                .single();
+              if (!insertErr && newProfile) {
+                profile = newProfile;
+              }
+            } catch (err) {
+              console.error("Auto-creating profile failed in auth state change", err);
+            }
+          }
+
           const role = (profile?.role || 'admin') as any;
           setCurrentUser({
             email: session.user.email || '',
@@ -589,12 +633,34 @@ export default function Home() {
         setAuthError(error.message);
         setIsAuthLoading(false);
       } else if (data.user) {
-        const { data: profile } = await supabase
+        let { data: profile, error: profileErr } = await supabase
           .from('profiles')
           .select('role, full_name')
           .eq('id', data.user.id)
           .single();
         
+        // Auto-create profile if missing to prevent RLS violations
+        if ((profileErr && profileErr.code === 'PGRST116') || !profile) {
+          try {
+            const emailPrefix = data.user.email?.split('@')[0] || 'user';
+            const { data: newProfile, error: insertErr } = await supabase
+              .from('profiles')
+              .insert({
+                id: data.user.id,
+                username: emailPrefix,
+                full_name: emailPrefix,
+                role: 'admin'
+              })
+              .select('role, full_name')
+              .single();
+            if (!insertErr && newProfile) {
+              profile = newProfile;
+            }
+          } catch (err) {
+            console.error("Auto-creating profile failed in sign in", err);
+          }
+        }
+
         const role = (profile?.role || 'admin') as any;
         setCurrentUser({
           email: data.user.email || '',
