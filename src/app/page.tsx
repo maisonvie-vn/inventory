@@ -2677,15 +2677,7 @@ export default function Home() {
             </button>
           )}
 
-          {/* Cổng quầy Bar link */}
-          <a 
-            href="/bar"
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border border-transparent text-text-dark/70 hover:text-[#ECE0C6] hover:bg-moss-dark"
-            title="Cổng Tablet Quầy Bar"
-          >
-            <Wine size={18} className="text-accent-gold" />
-            {!isSidebarCollapsed && <span className="font-semibold text-accent-gold">Cổng Quầy Bar (/bar)</span>}
-          </a>
+
 
           {!isSidebarCollapsed && (
             <div className="mt-8 glass-panel rounded-md p-4 border-border-cream text-[11px] text-text-light/60 leading-relaxed font-sans bg-moss-dark">
@@ -4963,15 +4955,7 @@ export default function Home() {
                 </button>
               )}
               
-              {/* Cổng quầy Bar link */}
-              <a 
-                href="/bar"
-                onClick={() => setIsMobileDrawerOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border border-transparent text-accent-gold hover:text-text-light hover:bg-moss-light text-sm font-semibold"
-              >
-                <Wine size={18} />
-                <span>Cổng Quầy Bar (/bar)</span>
-              </a>
+
             </div>
             <div className="mt-auto border-t border-border-moss pt-4 text-[10px] text-text-muted-light leading-relaxed">
               <p>Maison Vie CRM v9.1</p>
