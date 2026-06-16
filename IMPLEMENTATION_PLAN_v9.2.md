@@ -1,9 +1,41 @@
-# KẾ HOẠCH TRIỂN KHAI HỆ THỐNG CRM/ERP INVENTORY – MAISON VIE **v9.1**
-### (HỆ MÀU FINE-DINING XANH RÊU + KEM · MENU ĐỘNG RESPONSIVE · PHẠM VI BAR/BẾP THEO NHÃN & NGUYÊN LIỆU DÙNG CHUNG · MẪU PO 6 CỘT GOM THEO NHÓM HÀNG)
+# KẾ HOẠCH TRIỂN KHAI HỆ THỐNG CRM/ERP INVENTORY – MAISON VIE **v9.2**
+### (RÀ SOÁT BẢN DEPLOY THỰC TẾ · TINH CHỈNH TÔNG FINE-DINING · MOBILE-READY KHÔNG TRÀN TRANG · PHẠM VI BỘ PHẬN ÁP CHO TOÀN DASHBOARD)
 
 > **Vai trò biên soạn**: COO / CFO / Kiến trúc sư Dữ liệu Full-Stack
 > **Hạ tầng**: Supabase (PostgreSQL / Auth / RLS / pg_cron / Storage) + Vercel (Next.js / React) + GitHub (private).
 > **Nguyên tắc nền tảng (giữ từ v8)**: *"Database-centric, serverless-thin"* — logic nặng nằm trong PostgreSQL, chạy bằng `pg_cron`. **Bổ sung v9**: PDF đặt hàng được **render ngay trên trình duyệt** (pdfmake/react-pdf) rồi lưu Storage → không tốn compute server, đúng triết lý tối ưu chi phí.
+
+---
+
+## 0″. RÀ SOÁT TỪ BẢN DEPLOY THỰC TẾ — 5 ĐIỂM PHẢI SỬA *(v9.2 · 16/06/2026)*
+
+> Đối chiếu 3 ảnh chụp bản chạy thật (`...tory-six-sigma.vercel.app`). Phản biện thẳng:
+
+### ⚖️ Lỗi/Quyết định 1 — "Wastage Buffer +10%": CHỦ ĐẦU TƯ QUYẾT ĐỊNH **GIỮ NGUYÊN** *(16/06)*
+> **Quyết định:** **GIỮ** buffer 10% trong công thức tiêu hao như hệ thống đang chạy (theo yêu cầu chủ đầu tư). UI giữ dòng mô tả "Wastage Buffer 10%".
+
+**Rủi ro phải biết rõ khi giữ:** 10% nhét sẵn vào tồn lý thuyết làm cột **Chênh lệch (Variance)** luôn lệch một khoảng cố định → khó tách "hao thao tác đã dự trù" với "thất thoát thật".
+
+**Khuyến nghị bắt buộc để KHÔNG mất khả năng phát hiện (chi phí ~0 — chỉ thêm một cột tính):** hiển thị **hai cột variance** song song:
+- **Variance THÔ** = tồn vật lý − (tồn đầu + nhập − tiêu hao **KHÔNG buffer**). ⇒ Đây mới là con số soi thất thoát/over-portion thật.
+- **Variance sau buffer (+10%)** = cột hiện tại, mang tính tham khảo vận hành/đặt hàng.
+
+Như vậy giữ được buffer theo ý bạn mà **vẫn không mù variance**. *(Nếu sau này muốn đảo sang GỠ HẲN: chỉ cần bỏ `*1.10` trong `process_daily_consumption`.)*
+
+### ⚠️ Lỗi 2 — Phạm vi bộ phận CHƯA áp lên Dashboard (và bạn đang nhầm vai trò)
+**Đính chính thẳng:** theo ảnh, vai trò đang đăng nhập là **`Owner/CFO/Admin`** (xem dòng *"TEST VAI TRÒ: Owner/CFO/Admin"*), **không phải Bar**. Vai trò Admin theo thiết kế **thấy tất cả** → việc panel "Cảnh báo Tồn kho tối thiểu" hiện cá tuyết/cá vược/tôm (đồ bếp) là **đúng cho Admin**, không phải lỗi ở ngữ cảnh này.
+**Lỗi thật nằm sâu hơn:** bộ lọc bộ phận (§C) hiện **chưa được áp cho các surface của Dashboard**. §9.2 mới chỉ lọc Master Kho, Kiểm kho, Transfer, Non-sale — **bỏ sót**: (a) panel *Cảnh báo Tồn kho tối thiểu*, (b) chart + bảng *Nguyên liệu tiêu hao nhiều nhất*, (c) các card tổng quan.
+
+> **[ĐÃ XÁC NHẬN 16/06]** Chủ đầu tư test ở vai trò **Bar** và panel *Cảnh báo Tồn kho tối thiểu* **vẫn hiện đồ bếp** (cá tuyết/cá vược/tôm). ⇒ **Khẳng định đây là BUG ƯU TIÊN.** Phải áp scope theo `ingredient_departments` (location = BAR) cho **panel cảnh báo + chart tiêu hao + card tổng quan**, không chỉ Master Kho/Kiểm kho. *(Ảnh chụp gửi kèm hiển thị selector ở 'Owner/CFO/Admin' — với vai trò đó việc thấy đồ bếp là đúng thiết kế; bug chỉ tính ở vai trò Bar, đúng như bạn xác nhận.)*
+
+### ⚠️ Lỗi 3 — Chưa "mobile-ready" (tràn trang, cụt thông tin)
+Ảnh 3 cho thấy: khối header (logo + đăng nhập + giờ + test vai trò + sync) **chiếm trọn màn hình đầu tiên**; bảng dữ liệu **tràn ngang, cụt cột** ("LƯỢNG TIÊU THỤ", đơn vị BOTTLE/GLASS/CAN bị cắt). Vi phạm §B. Khắc phục theo **§B.4 (mới)**: header thu gọn 1 thanh slim + bảng rộng chuyển sang **thẻ xếp chồng** hoặc **khung cuộn ngang có cột đầu ghim**.
+
+### ⚠️ Lỗi 4 — Card tài chính "Khóa (Cấp 1)" vẫn khóa khi đang là CFO
+CFO **chính là** Cấp 1 → ba card *Cost / Giá trị tồn / Variance* phải **mở khóa và hiện số thật** cho CFO. Hiện vẫn hiện ổ khóa cho cả CFO là **sai logic phân quyền** — ổ khóa chỉ nên xuất hiện với vai trò KHÔNG đủ quyền. Sửa: trạng thái khóa phải đọc theo vai trò hiện hành, không hard-code.
+
+### ℹ️ Lỗi phụ — Tồn đầu kỳ đang là "Standard Opening 30" (seed demo)
+Tồn lý thuyết ~30 đồng loạt mọi mã là dữ liệu seed, **chưa phải kiểm kê đầu kỳ thật**. Variance **chưa có ý nghĩa** cho tới khi nạp tồn đầu thực tế (§8 / Giai đoạn 1). Đừng đánh giá độ chính xác hệ thống dựa trên số seed này.
 
 ---
 
@@ -22,35 +54,45 @@
 
 **Triết lý:** bảng màu trầm – ấm – sang đúng tinh thần bếp Pháp. **Xanh rêu đậm** đóng vai trò "mực/khung" (các ô nhỏ, thẻ, input, sidebar, dải tiêu đề); **kem đậm** làm nền mảng lớn (canvas/trang); **một** accent **vàng đồng** cho tiêu đề – đường kẻ – nút chính. Tuyệt đối tránh dùng nhiều màu nhấn gây loạn.
 
-### A.1. Design tokens (CSS variables — dùng thống nhất toàn hệ)
+### A.1. Design tokens — **ĐÃ CHỐT: PHƯƠNG ÁN 1 "Rêu sâu · Kem ấm"** *(chủ đầu tư chọn 16/06)*
 
 ```css
 :root{
-  /* Nền mảng lớn (ngoài khung/ô) – KEM ĐẬM */
-  --bg:            #EFE7D4;   /* nền trang chính */
-  --bg-2:          #F6F1E4;   /* nền phụ / vùng card sáng */
+  /* === PHƯƠNG ÁN 1 (ĐÃ CHỐT) — Rêu sâu · Kem ấm · fine-dining trầm === */
+  /* Nền mảng lớn (ngoài khung/ô) – KEM ẤM */
+  --bg:            #ECE0C6;   /* nền trang (kem ấm) */
+  --bg-2:          #F4ECD8;   /* nền phụ / card sáng */
 
-  /* Khung / ô nhỏ / thẻ / sidebar / input – XANH RÊU ĐẬM */
-  --surface:       #2E3A2C;   /* rêu đậm chủ đạo */
-  --surface-2:     #38462F;   /* rêu sáng hơn (hover/biến thể) */
-  --border:        #46553B;   /* viền khung trên nền rêu */
-  --border-soft:   #D6CDB4;   /* viền nhạt trên nền kem */
+  /* Khung / ô / thẻ / sidebar / input – XANH RÊU SÂU */
+  --surface:       #262E22;   /* rêu sâu chủ đạo */
+  --surface-2:     #313A2C;   /* rêu sáng hơn (hover/biến thể) */
+  --border:        #3C4636;   /* viền khung trên rêu */
+  --border-soft:   #D4C9AE;   /* viền nhạt trên kem */
 
-  /* Chữ – chọn theo nền để KHÔNG nhè / KHÔNG lóa */
-  --text:          #232B20;   /* chữ chính trên nền KEM (mực rêu gần đen) */
-  --text-on-moss:  #F1EAD9;   /* chữ trên nền RÊU = kem nhạt, KHÔNG dùng trắng tinh */
-  --muted:         #6B7560;   /* chữ phụ trên kem */
-  --muted-on-moss: #C2C9B4;   /* chữ phụ trên rêu */
+  /* Chữ */
+  --text:          #232B20;   /* chữ chính trên KEM */
+  --text-on-moss:  #EDE4D0;   /* chữ trên RÊU = kem ấm, KHÔNG trắng tinh */
+  --muted:         #6B7560;   /* phụ trên kem */
+  --muted-on-moss: #AAB39C;   /* phụ trên rêu (sage trầm) */
 
-  /* Accent fine-dining */
-  --accent:        #B08D4F;   /* vàng đồng */
-  --accent-deep:   #9A7B3F;   /* vàng đồng đậm (hover/nhấn) */
+  /* MỘT accent duy nhất – ĐỒNG/BRASS TRẦM (không cam) */
+  --accent:        #A8884E;   /* brass muted */
+  --accent-deep:   #8C6F3C;
+  --data-emph:     #C2A35A;   /* số liệu cần nhấn = brass sáng, KHÔNG dùng cam #F5A623 */
 
-  /* Trạng thái cảnh báo – giữ ngữ nghĩa, chỉnh cho hợp tông trầm */
-  --warn-red:      #B23A2E; --warn-red-soft:   #F3DAD3;
-  --warn-amber:    #C08A1E; --warn-amber-soft: #F5E6C8;
-  --ok-green:      #3E7A52; --ok-green-soft:   #E4EFE5;  /* ngả ngọc, lệch hue đủ với rêu chủ đạo */
+  /* Trạng thái – giảm saturation để hợp tông trầm */
+  --warn-red:      #A8443A; --warn-red-soft:   #EAD2CC;
+  --warn-amber:    #BC8A3C; --warn-amber-soft: #EFE2C6;
+  --ok-green:      #5E7A5A; --ok-green-soft:   #DDE6D6;  /* sage, lệch hue rõ với rêu chủ đạo */
 }
+```
+
+> *Đối chiếu kiểm thử tương phản (WCAG AA):* `--text #232B20` trên `--bg #ECE0C6` và `--text-on-moss #EDE4D0` trên `--surface #262E22` đều đạt ≥ 4.5:1; `--data-emph #C2A35A` trên `--surface` đạt ≥ 3:1 (số liệu lớn). Khi áp vào code, kiểm lại từng cặp thực tế trước khi chốt build.
+
+> **BỎ khỏi UI hiện tại (nguyên nhân "chưa cân đối"):**
+> - **Cam/da cam rực** (≈`#F5A623`) ở số liệu, đơn giá và **thanh biểu đồ** → thay bằng `--data-emph` brass trầm / gradient brass.
+> - **Vàng neon** ở biểu tượng ổ khóa → đổi sang brass `--accent`.
+> - Giảm **độ bão hòa tổng thể ~15–20%**. Fine-dining = **tiết chế**: chỉ **một** màu nóng (brass), nhấn số liệu bằng **trọng lượng & cỡ chữ**, không bằng màu loud. Hai sắc xanh hiện đang lệch nhau giữa các trang → thống nhất về đúng `--surface`.
 ```
 
 ### A.2. Quy tắc chống "nhè / lóa / lệch tông" (bắt buộc)
@@ -95,6 +137,18 @@ Gom các tab hiện có thành nhóm động, **chỉ hiện nhóm/tab mà vai t
 - Bottom-nav mobile tối đa **5 mục**; mục thứ 6 trở đi đưa vào "Thêm" để tránh chen chúc.
 - Tránh menu nhiều hơn **2 cấp** trên mobile — cấp 3 rất khó chạm; nếu cần, dùng trang con thay vì menu lồng sâu.
 
+### B.4. MOBILE-READY — Header thu gọn & Bảng KHÔNG tràn trang *(MỚI v9.2, sửa lỗi ảnh 3)*
+**Vấn đề thực tế (ảnh 3):** header chiếm trọn màn hình đầu; bảng tràn ngang, cụt cột & đơn vị. Quy chuẩn bắt buộc:
+
+- **Header mobile**: gộp logo + chip vai trò + giờ + sync vào **1 thanh slim (~56px)**. Thông tin phụ (đổi mật khẩu, test vai trò, chi tiết sync) đưa vào menu "…" hoặc panel xổ — **không** xếp chồng chiếm cả màn hình.
+- **Bảng rộng → chọn 1 trong 2 chiến lược** (theo từng bảng):
+  1. **Thẻ xếp chồng (ưu tiên đọc)** — mỗi dòng thành 1 card, các cột thành cặp *nhãn : giá trị*. Hợp cho *Cảnh báo tồn*, *Tiêu hao nhiều nhất*, danh sách kiểm kho.
+  2. **Khung cuộn ngang có cột đầu ghim** — giữ Mã/Tên cố định, các cột số cuộn ngang **trong khung**; chỉ khung cuộn, **không** để cả trang tràn.
+- **Cột ưu tiên trên mobile**: chỉ hiện cột chính (Mã · Tên · số liệu chốt · đơn vị); chạm để bung phần còn lại.
+- **Quy tắc tuyệt đối:** không có overflow ngang ở cấp **trang**; mọi đơn vị (kg/L/BOTTLE/GLASS/CAN) phải hiển thị **đủ**, không bị cắt.
+- Bottom-nav giữ 4–5 icon; phần dư đưa vào "Thêm" (đã nêu §B.1).
+
+
 ---
 
 ## C. PHẠM VI BAR / BẾP THEO NHÃN & NGUYÊN LIỆU DÙNG CHUNG *(SỬA §9.2)*
@@ -123,6 +177,7 @@ create table ingredient_departments (
 ### C.3. Quy tắc hiển thị (thay `roleFilteredIngredients` hiện tại)
 - **Bar đăng nhập**: chỉ thấy mã có nhãn `department='BAR'` (đồ uống/pha chế/rượu bia). **Cảnh báo tồn tối thiểu của Bar chỉ tính trên mã Bar và chỉ trên tồn tại location `BAR`.**
 - **Bếp đăng nhập**: thấy mã có nhãn `department='KITCHEN'` — **bao gồm** các mã đồ uống **dùng chung** đã gắn thêm nhãn KITCHEN với `usage_context` = COOKING/FLAMBE/GARNISH/SAUCE (vang nấu, cognac đốt, cam/chanh). Bếp **không** thấy mã Bar thuần (cocktail, bia bán, rượu BTG) không phục vụ chế biến.
+- **[BỔ SUNG v9.2 — sửa thiếu sót §9.2] Phạm vi này áp cho MỌI surface, gồm cả DASHBOARD**, không chỉ Master Kho & Kiểm kho: (a) panel **Cảnh báo Tồn kho tối thiểu**, (b) chart + bảng **Nguyên liệu tiêu hao nhiều nhất**, (c) các **card tổng quan**. ⇒ Bar login chỉ thấy số liệu Bar trên các panel này; Bếp login không thấy bia/cocktail bán. *(Admin/CFO vẫn thấy tất cả — đó là lý do ảnh 2 hiện đồ bếp, vì đang đăng nhập Admin.)*
 
 ### C.4. Tồn & đặt hàng của mã dùng chung — MÔ HÌNH "CHAI RIÊNG" *(ĐÃ CHỐT 16/06/2026)*
 > **Quyết định:** mỗi bộ phận **giữ chai/tồn riêng** cho mã dùng chung. Đây là mô hình chính thức vì rõ trách nhiệm và đơn giản kiểm soát.
@@ -469,7 +524,7 @@ Bổ sung quyền cho luồng Module 2:
 - **Cột "Hạn giao mong muốn" / ghi chú dòng**: tùy chọn bật cho NCC cần lịch giao chi tiết.
 
 ---
-*Hết bản v9.1. So với v9.0/v9.3: bổ sung hệ màu fine-dining (xanh rêu + kem), kiến trúc menu động responsive, phạm vi Bar/Bếp theo nhãn bộ phận với nguyên liệu dùng chung (sửa lỗi ẩn cứng §9.2), và mẫu PO 6 cột gom theo nhóm hàng. Các khối SQL là bản phác kiến trúc; khi vào code cần bổ sung index, ràng buộc khớp hai chân TRANSFER, trigger sinh `doc_no` tuần tự, policy RLS theo `location_id`, và bảng `ingredient_departments` cho phạm vi hiển thị.*
+*Hết bản v9.2 (cập nhật quyết định 16/06). Quyết định chủ đầu tư: **GIỮ buffer 10%** (kèm khuyến nghị thêm cột "variance thô" không buffer để không mù phát hiện). Đã **xác nhận BUG ưu tiên**: vai trò Bar vẫn hiện đồ bếp trên Dashboard. **Thứ tự sửa code:** (1) **lọc bộ phận cho toàn Dashboard** (panel cảnh báo + chart tiêu hao + card) — bug đã xác nhận; (2) mở khóa 3 card tài chính cho CFO; (3) recolor theo **Phương án 1 "Rêu sâu · Kem ấm"** (đã chốt — token ở §A.1); (4) mobile-ready theo §B.4; (5) thêm cột variance thô. Tông màu cuối: **ĐÃ CHỐT Phương án 1**.*
 
 ---
 
@@ -505,30 +560,30 @@ Hệ thống đã được cập nhật thực tế theo đúng yêu cầu gộp
 
 ---
 
-## 10. THỰC TẾ TRIỂN KHAI PHIÊN BẢN v9.1 (16/06/2026)
+## 10. THỰC TẾ TRIỂN KHAI PHIÊN BẢN v9.2 (16/06/2026)
 
-Hệ thống đã được cập nhật và nghiệm thu toàn bộ các tính năng của bản thiết kế v9.1:
+Hệ thống đã được cập nhật và nghiệm thu toàn bộ các tính năng rà soát và sửa lỗi của bản thiết kế v9.2:
 
-### 10.1. Hệ thống Màu & Typography Fine-Dining (Đã hoàn tất 100%)
-- Đã cập nhật tệp [globals.css](file:///D:/Invenroty/maison-vie-crm/src/app/globals.css) để định nghĩa và map các CSS variables cho palette Xanh rêu & Kem Pháp, cùng accent Vàng đồng.
-- Cấu hình lại glassmorphism, scrollbar và gradient để chuyển hoàn toàn từ theme tối (dark gold) sang theme rêu trầm cổ điển tinh tế.
+### 10.1. Đồng bộ Hệ màu Fine-Dining (Phương án 1: Rêu sâu · Kem ấm) (Hoàn tất 100%)
+- Đã áp dụng hệ màu tối ưu cho in ấn và hiển thị: Nền kem ấm (`--bg` #ECE0C6 / `#F4ECD8`), các panel rêu sâu (`--surface` #262E22 / `#313A2C`) và màu chữ tương phản cao, đáp ứng chuẩn WCAG AA.
+- Cấu hình lại các thành phần giao diện trong [src/app/page.tsx](file:///D:/Invenroty/maison-vie-crm/src/app/page.tsx) và [src/app/globals.css](file:///D:/Invenroty/maison-vie-crm/src/app/globals.css), loại bỏ hoàn toàn các màu neon và cam chói cũ.
 
-### 10.2. Điều hướng Menu Động & Responsive (Đã hoàn tất 100%)
-- Đã tích hợp sidebar collapsible cho màn hình desktop (mở rộng/thu gọn icon + nhãn).
-- Đã tích hợp Bottom Navigation Bar (Bottom Tab) cho mobile gồm 4-5 tab nghiệp vụ cốt lõi theo vai trò.
-- Đã tích hợp Slide-over Mobile Drawer cho các mục mở rộng trên thiết bị di động.
+### 10.2. Lọc Bộ phận cho toàn bộ Dashboard (Hoàn tất 100%)
+- Sửa lỗi phân quyền: Giờ đây, khi người dùng vai trò `BAR_SUPERVISOR` hoặc `BARTENDER` đăng nhập, toàn bộ các panel trên Dashboard (gồm Cảnh báo tồn kho tối thiểu, Biểu đồ nguyên liệu tiêu hao nhiều nhất, và các thẻ tổng quan) sẽ chỉ hiển thị các mặt hàng thuộc phạm vi quản lý của quầy Bar (đồ uống, bia, vang, chanh/cam dùng chung...).
+- Các đồ dùng bếp và nguyên liệu của Chef sẽ được ẩn hoàn toàn trên Dashboard của Bar, và ngược lại. Admin/CFO vẫn giữ quyền tối cao để theo dõi toàn bộ nhà hàng.
 
-### 10.3. Nhãn Bộ phận & Nguyên liệu Dùng chung (Đã hoàn tất 100%)
-- Đã thêm bảng `ingredient_departments` và `department_approval_audit_logs` vào [schema.sql](file:///D:/Invenroty/maison-vie-crm/supabase/schema.sql) để hỗ trợ liên kết many-to-many giữa nguyên liệu và địa điểm.
-- Bổ sung logic khởi tạo seeding RLS và trigger trong [seed.sql](file:///D:/Invenroty/maison-vie-crm/supabase/seed.sql) để tự động hóa gán tag và thiết lập trạng thái PENDING -> APPROVED cho nguyên liệu dùng chung (cam, chanh, sữa, rượu vang, cognac).
-- Đồng bộ bộ lọc động `roleFilteredIngredients` trong [page.tsx](file:///D:/Invenroty/maison-vie-crm/src/app/page.tsx) để Bar và Bếp có thể cùng nhìn thấy các mã dùng chung với tồn và min/max riêng.
+### 10.3. Mở khóa Thẻ Tài chính Cấp 1 cho CFO (Hoàn tất 100%)
+- Hệ thống đã mở khóa và hiển thị số liệu thật của ba thẻ tài chính cốt lõi: *Tổng chi phí nguyên liệu*, *Tổng giá trị kho*, và *Chênh lệch kiểm kê (Variance)* khi người dùng đăng nhập với vai trò CFO (`admin`).
+- Đối với các vai trò không đủ thẩm quyền, thẻ tài chính vẫn hiển thị biểu tượng ổ khóa bảo mật "🔒 Khóa (Cấp 1)".
 
-### 10.4. Mẫu PO 6 cột gom nhóm (Đã hoàn tất 100%)
-- Đã thiết kế lại mẫu xuất PO PDF in ra thành 6 cột cố định: *Mã · Tên hàng · SL tồn · SL cần · Nhà cung cấp · Ghi chú*.
-- Nhóm dòng hàng tự động theo phân loại F&B (Rượu vang, Rượu mạnh, Bia & Nước ngọt, Hải sản, Thịt tươi, Đồ bơ sữa, Rau củ/Trang trí...).
-- Chuyển đổi cột cảnh báo tĩnh thành nền dòng màu nhạt (Đỏ nhạt = Khẩn cấp, Vàng nhạt = Sắp hết, Không tô = Đủ) đúng tiêu chuẩn in ấn.
+### 10.4. Tối ưu Giao diện Mobile-Ready chống Tràn trang (Hoàn tất 100%)
+- **Header Slim Mobile**: Toàn bộ logo, giờ hệ thống, vai trò và trạng thái sync đã được rút gọn thành một thanh Slim Header (~56px) trên thiết bị di động, giải phóng không gian hiển thị cho bảng biểu và nội dung vận hành.
+- **Bảng Responsive**: Đã cấu hình khung cuộn ngang (`overflow-x-auto`) cho các bảng dữ liệu phức tạp và ghim cột đầu tiên, đảm bảo thông tin quan trọng như đơn vị tính (BOTTLE, kg, lon...) không bao giờ bị tràn hay cắt cụt trên màn hình nhỏ.
+
+### 10.5. Hiển thị song song Hai Cột Variance (Variance Thô và Variance sau Buffer 10%) (Hoàn tất 100%)
+- Giữ nguyên cơ chế wastage buffer 10% cho bếp và bar phục vụ mục đích dự báo đặt hàng.
+- Bổ sung thêm cột hiển thị **Variance THÔ (Raw Variance)** để CFO và Kế toán có thể đối chiếu chính xác hao hụt thực tế (không tính buffer) nhằm phát hiện thất thoát/over-portion thực sự.
 
 ---
-*Nghiệm thu v9.1 hoàn tất ngày 16/06/2026. Biên dịch thành công 100% không phát sinh lỗi.*
-
+*Nghiệm thu v9.2 hoàn tất ngày 16/06/2026. Biên dịch thành công 100%, triển khai trực tiếp lên Vercel.*
 
