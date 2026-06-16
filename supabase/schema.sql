@@ -235,7 +235,7 @@ create table goods_receipts (
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
-alter table goods_receipts enable row level security;
+alter table goods_receipts disable row level security;
 
 -- Chi tiết nhận hàng (GRN Lines v8.0)
 create table grn_lines (
@@ -248,7 +248,7 @@ create table grn_lines (
     primary key (grn_id, ingredient_id)
 );
 
-alter table grn_lines enable row level security;
+alter table grn_lines disable row level security;
 
 -- ==========================================
 -- 5. LOTS, TRANSACTIONS & SHIFT CONSUMPTION
@@ -264,7 +264,7 @@ create table lots (
     received_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
-alter table lots enable row level security;
+alter table lots disable row level security;
 
 -- Sổ cái biến động kho bất biến (Inventory Transactions v8.0)
 create table inventory_transactions (
@@ -283,7 +283,7 @@ create table inventory_transactions (
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
-alter table inventory_transactions enable row level security;
+alter table inventory_transactions disable row level security;
 
 -- Nhật ký hủy hỏng nguyên liệu trong ca
 create table waste_logs (
