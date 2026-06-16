@@ -1037,7 +1037,7 @@ export default function Home() {
     };
   }, [salesData, consumptionData, roleFilteredIngredients, actualStocks, transactions]);
 
-  const canViewFinancials = ['admin', 'BAR_SUPERVISOR', 'restaurant_manager', 'senior_accountant'].includes(userRole);
+  const canViewFinancials = userRole === 'admin';
 
   // Load categories dynamically for filter options
   const categories = useMemo(() => {
@@ -2710,7 +2710,7 @@ export default function Home() {
           {/* 3. Global Stats Grid */}
           <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             
-            {(userRole === 'admin' || userRole === 'senior_accountant') && (
+            {userRole === 'admin' && (
               <div className="glass-panel rounded-md p-5 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-accent-gold/5 rounded-full blur-2xl"></div>
                 <div className="flex items-center justify-between text-gray-400 mb-2">
