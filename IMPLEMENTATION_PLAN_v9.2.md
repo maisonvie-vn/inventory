@@ -132,6 +132,8 @@ Gom các tab hiện có thành nhóm động, **chỉ hiện nhóm/tab mà vai t
 | **ĐỐI SOÁT** | Variance · Waste/Non-sale · Mapping POS | Kế toán, Quản lý |
 | **TÀI CHÍNH** *(chỉ Cấp 1)* | Dashboard · Food cost · Giá trị kho | Owner/CFO/Admin |
 
+> **[CHỐT 16/06] KHÔNG có mục nav "Cổng Quầy Bar (/bar)"** trong menu của bất kỳ vai trò quản trị nào (xem §C.6). Thay vào đó, dashboard hợp nhất có **bộ lọc bộ phận `Tất cả / Bếp / Bar`** đặt ở đầu trang. Bar staff không thấy bộ lọc này vì đã bị khóa cứng scope Bar.
+
 ### B.3. Phản biện
 - Vì đã **gộp 4 nút đăng nhập theo vai trò** (§9.1), menu động phải **render theo vai trò ngay từ đầu** — Bar login chỉ thấy nhóm liên quan đồ uống, **không** hiển thị tab thừa rồi mới chặn (vừa rối, vừa lộ cấu trúc không cần thiết).
 - Bottom-nav mobile tối đa **5 mục**; mục thứ 6 trở đi đưa vào "Thêm" để tránh chen chúc.
@@ -193,6 +195,28 @@ create table ingredient_departments (
 - Đầu bếp/bartender **không** được tự thêm nhãn dùng chung — chỉ **đề xuất**; hai trưởng bộ phận phê duyệt. Mục đích: chống bếp tự gắn nhãn để **rút rượu xịn của Bar**.
 - Workflow kỹ thuật cho nhãn dùng chung: `pending → co_approved (đủ 2 chữ ký) → active`; chưa đủ 2 duyệt thì nhãn **chưa hiệu lực**.
 - Mọi **TRANSFER `BAR→KITCHEN`** (đường ngoại lệ ở C.4) được tổng hợp trong **báo cáo định kỳ** để Cấp 1 (CFO/Owner) soi giá trị rượu/nguyên liệu chuyển nội bộ — bịt đường rò rỉ qua kiểu "mượn".
+
+### C.6. Mô hình truy cập: Bar là **SCOPE**, không phải **PORTAL** *(ĐÃ CHỐT 16/06)*
+> **Quyết định:** **GỠ HẲN** mục nav "Cổng Quầy Bar (/bar)" khỏi mọi vai trò quản trị. Bar là **phạm vi (scope) do vai trò quyết định**, không phải một cổng/route riêng để "đi vào".
+
+**Nguyên tắc:**
+- **Vai trò quản trị** → **một dashboard hợp nhất duy nhất**, mặc định thấy phạm vi của mình; muốn soi riêng thì dùng **bộ lọc bộ phận trên dashboard: `Tất cả / Bếp / Bar`**. **Không** có portal Bar riêng.
+- **Bartender / Quản lý Bar** → đăng nhập là **đã bị khóa cứng trong scope Bar**; toàn bộ màn hình (kiểm kho/nhập/xuất/tồn) chỉ là dữ liệu Bar. Không có khái niệm "portal" với họ.
+- **"Hợp nhất 1 dashboard" ≠ "bỏ lọc".** Giao diện hợp nhất, nhưng scope vẫn theo vai trò (Bar login vẫn tự lọc về Bar — đúng bug đã xác nhận ở §0″/HOTFIX).
+
+**Bảng VAI TRÒ → PHẠM VI BỘ PHẬN (đã tách Manager/Chef — Phương án A):**
+
+| Vai trò | Phạm vi thấy | Doanh thu/Tiền | Ghi chú |
+| :-- | :-- | :--: | :-- |
+| Owner / CFO / Admin | **Tất cả** (Bếp + Bar) | ✔ | Có bộ lọc Tất cả/Bếp/Bar |
+| **Quản lý NH (Manager)** | **Tất cả** (Bếp + Bar) | ✘ | Giám sát cả hai, không xem doanh thu |
+| **Bếp trưởng (Chef)** | **CHỈ Bếp** (+ mã dùng chung) | ✘ | *Tách khỏi Manager* — không thấy cocktail/bia bán của Bar |
+| Kế toán (senior_accountant) | **Tất cả** | Giá vốn (không DT) | Cần đối soát WAC/PO toàn bộ |
+| Thủ kho | **Tất cả** | ✘ | Vận hành kho tổng (nhập/xuất cả 2 bộ phận) |
+| **Bar (Bartender/QL Bar)** | **CHỈ Bar** (+ mã dùng chung) | ✘ | Khóa cứng scope Bar |
+
+**Hệ quả code:** `roleToDept(role)` = `'KITCHEN'` cho **Chef**, `'BAR'` cho **Bar**, `null` (tất cả) cho phần còn lại (Admin/CFO/Manager/Kế toán/Thủ kho). Việc cần làm: (1) **gỡ nav item `/bar`** cho vai trò quản trị; (2) thêm **bộ lọc `Tất cả/Bếp/Bar`** trên dashboard hợp nhất; (3) **tách role Chef** ra khỏi role gộp `restaurant_manager` (Chef = KITCHEN-scope riêng).
+
 
 ---
 
@@ -312,13 +336,13 @@ create table order_documents (
 
 ---
 
-## 2. MODULE 1 — BAR ĐỘC LẬP + CỔNG ĐĂNG NHẬP BAR RIÊNG
+## 2. MODULE 1 — BAR THEO SCOPE *(cập nhật 16/06: Bar là phạm vi, KHÔNG phải portal)*
 
-### 2.1. Triết lý: "tách giao diện, KHÔNG tách dữ liệu"
+### 2.1. Triết lý: "tách giao diện, KHÔNG tách dữ liệu" — và Bar là **SCOPE**, không phải **PORTAL**
 
-Bar có cổng đăng nhập riêng (`/bar`), giao diện riêng tối giản cho thao tác quầy, **nhưng vẫn nằm trên cùng một Supabase/một sổ cái**. Tồn kho, giá vốn, pour variance của Bar **vẫn roll-up về Dashboard CFO** như bếp.
+Bar **không** còn là một cổng/route `/bar` để admin "đi vào". Bar là **phạm vi do vai trò quyết định** (xem §C.6): Bar staff đăng nhập là đã bị khóa cứng trong scope Bar; vai trò quản trị dùng **bộ lọc `Tất cả/Bếp/Bar`** trên dashboard hợp nhất. Toàn bộ vẫn nằm trên **cùng một Supabase/một sổ cái** — tồn kho, giá vốn, pour variance của Bar **roll-up về Dashboard CFO** như bếp.
 
-> **Phản biện thẳng:** nếu hiểu "đăng nhập Bar riêng" thành *một hệ thống/CSDL tách rời*, ta sẽ tái lập đúng cái bệnh silo Excel mà cả dự án đang xóa bỏ — và còn phát sinh chi phí hạ tầng thứ hai. v9 vì vậy chỉ tách **lớp truy cập + UI**, không tách kho dữ liệu.
+> **Phản biện thẳng (đã chốt):** ❌ **GỠ** mục nav "Cổng Quầy Bar (/bar)" khỏi mọi màn quản trị — nó là di sản từ thiết kế portal cũ + lần gộp login §9.1, gây hiểu nhầm Bar là "nơi để đi vào". Nếu hiểu "Bar riêng" thành *một hệ thống/route tách rời*, ta tái lập đúng bệnh silo Excel. Chỉ tách **scope theo vai trò + bộ lọc**, không tách kho dữ liệu, không tách route.
 
 ### 2.2. Cơ chế đăng nhập Bar (tablet dùng chung + PIN cá nhân)
 
@@ -524,7 +548,7 @@ Bổ sung quyền cho luồng Module 2:
 - **Cột "Hạn giao mong muốn" / ghi chú dòng**: tùy chọn bật cho NCC cần lịch giao chi tiết.
 
 ---
-*Hết bản v9.2 (cập nhật quyết định 16/06). Quyết định chủ đầu tư: **GIỮ buffer 10%** (kèm khuyến nghị thêm cột "variance thô" không buffer để không mù phát hiện). Đã **xác nhận BUG ưu tiên**: vai trò Bar vẫn hiện đồ bếp trên Dashboard. **Thứ tự sửa code:** (1) **lọc bộ phận cho toàn Dashboard** (panel cảnh báo + chart tiêu hao + card) — bug đã xác nhận; (2) mở khóa 3 card tài chính cho CFO; (3) recolor theo **Phương án 1 "Rêu sâu · Kem ấm"** (đã chốt — token ở §A.1); (4) mobile-ready theo §B.4; (5) thêm cột variance thô. Tông màu cuối: **ĐÃ CHỐT Phương án 1**.*
+*Hết bản v9.2 (cập nhật quyết định 16/06). Quyết định chủ đầu tư: **GIỮ buffer 10%** (kèm khuyến nghị thêm cột "variance thô" không buffer để không mù phát hiện). Đã **xác nhận BUG ưu tiên**: vai trò Bar vẫn hiện đồ bếp trên Dashboard. **Quyết định kiến trúc mới (§C.6):** GỠ "Cổng Quầy Bar (/bar)" — Bar là **scope theo vai trò**, dashboard hợp nhất + bộ lọc Tất cả/Bếp/Bar; **tách Manager (thấy cả 2) khỏi Chef (chỉ Bếp)** — Phương án A. **Thứ tự sửa code:** (1) **lọc bộ phận cho toàn Dashboard** + tách role Chef; (2) **gỡ nav /bar** + thêm bộ lọc bộ phận; (3) mở khóa 3 card tài chính cho CFO; (4) recolor theo **Phương án 1 "Rêu sâu · Kem ấm"** (§A.1); (5) mobile-ready §B.4; (6) thêm cột variance thô.*
 
 ---
 
@@ -557,60 +581,4 @@ Hệ thống đã được cập nhật thực tế theo đúng yêu cầu gộp
 
 ---
 *Bản cập nhật v9.3 hoàn tất ngày 15/06/2026. Hệ thống chạy ổn định, build production thành công.*
-
----
-
-## 10. THỰC TẾ TRIỂN KHAI PHIÊN BẢN v9.2 (16/06/2026)
-
-Hệ thống đã được cập nhật và nghiệm thu toàn bộ các tính năng rà soát và sửa lỗi của bản thiết kế v9.2:
-
-### 10.1. Đồng bộ Hệ màu Fine-Dining (Phương án 1: Rêu sâu · Kem ấm) (Hoàn tất 100%)
-- Đã áp dụng hệ màu tối ưu cho in ấn và hiển thị: Nền kem ấm (`--bg` #ECE0C6 / `#F4ECD8`), các panel rêu sâu (`--surface` #262E22 / `#313A2C`) và màu chữ tương phản cao, đáp ứng chuẩn WCAG AA.
-- Cấu hình lại các thành phần giao diện trong [src/app/page.tsx](file:///D:/Invenroty/maison-vie-crm/src/app/page.tsx) và [src/app/globals.css](file:///D:/Invenroty/maison-vie-crm/src/app/globals.css), loại bỏ hoàn toàn các màu neon và cam chói cũ.
-
-### 10.2. Lọc Bộ phận cho toàn bộ Dashboard (Hoàn tất 100%)
-- Sửa lỗi phân quyền: Giờ đây, khi người dùng vai trò `BAR_SUPERVISOR` hoặc `BARTENDER` đăng nhập, toàn bộ các panel trên Dashboard (gồm Cảnh báo tồn kho tối thiểu, Biểu đồ nguyên liệu tiêu hao nhiều nhất, và các thẻ tổng quan) sẽ chỉ hiển thị các mặt hàng thuộc phạm vi quản lý của quầy Bar (đồ uống, bia, vang, chanh/cam dùng chung...).
-- Các đồ dùng bếp và nguyên liệu của Chef sẽ được ẩn hoàn toàn trên Dashboard của Bar, và ngược lại. Admin/CFO vẫn giữ quyền tối cao để theo dõi toàn bộ nhà hàng.
-
-### 10.3. Mở khóa Thẻ Tài chính Cấp 1 cho CFO (Hoàn tất 100%)
-- Hệ thống đã mở khóa và hiển thị số liệu thật của ba thẻ tài chính cốt lõi: *Tổng chi phí nguyên liệu*, *Tổng giá trị kho*, và *Chênh lệch kiểm kê (Variance)* khi người dùng đăng nhập với vai trò CFO (`admin`).
-- Đối với các vai trò không đủ thẩm quyền, thẻ tài chính vẫn hiển thị biểu tượng ổ khóa bảo mật "🔒 Khóa (Cấp 1)".
-
-### 10.4. Tối ưu Giao diện Mobile-Ready chống Tràn trang (Hoàn tất 100%)
-- **Header Slim Mobile**: Toàn bộ logo, giờ hệ thống, vai trò và trạng thái sync đã được rút gọn thành một thanh Slim Header (~56px) trên thiết bị di động, giải phóng không gian hiển thị cho bảng biểu và nội dung vận hành.
-- **Bảng Responsive**: Đã cấu hình khung cuộn ngang (`overflow-x-auto`) cho các bảng dữ liệu phức tạp và ghim cột đầu tiên, đảm bảo thông tin quan trọng như đơn vị tính (BOTTLE, kg, lon...) không bao giờ bị tràn hay cắt cụt trên màn hình nhỏ.
-
-### 10.5. Hiển thị song song Hai Cột Variance (Variance Thô và Variance sau Buffer 10%) (Hoàn tất 100%)
-- Giữ nguyên cơ chế wastage buffer 10% cho bếp và bar phục vụ mục đích dự báo đặt hàng.
-- Bổ sung thêm cột hiển thị **Variance THÔ (Raw Variance)** để CFO và Kế toán có thể đối chiếu chính xác hao hụt thực tế (không tính buffer) nhằm phát hiện thất thoát/over-portion thực sự.
-
-### 10.6. Sửa lỗi Ràng buộc khóa ngoại cơ sở dữ liệu (Seeding Constraint) (Hoàn tất 100%)
-- **Mô tả lỗi**: Khi chạy tệp `seed.sql`, hệ thống phát sinh hai lỗi ràng buộc khóa ngoại (foreign key constraint):
-  1. Lỗi `recipes_ingredient_id_fkey` vì bảng `recipes` tham chiếu đến nguyên liệu `NVLC3001` và 21 nguyên liệu khác (mã `NVLC`/`NLP`) chưa được định nghĩa trong bảng `ingredients`.
-  2. Lỗi `set_menu_items_parent_menu_item_id_fkey` vì bảng `set_menu_items` tham chiếu đến 3 Tasting Set Menus (`R6212, R6213, R6218`) chưa được định nghĩa trong bảng `menu_items`.
-- **Hành động khắc phục**:
-  - Trích xuất thông tin chi tiết (Tên, ĐVT kho, và giá vốn) của 22 nguyên liệu bị thiếu từ sheet `MASTER_BEP` trong tệp Excel gốc `MAISON_VIE_v6_0_PRO.xlsx` và bổ sung các bản ghi `INSERT INTO ingredients` và `INSERT INTO supplier_ingredients` tương ứng.
-  - Bổ sung đơn vị tính `'HOP'` vào tệp `seed.sql` dưới phần seed `uom` để ngăn lỗi khóa ngoại `ingredients_stock_uom_fkey`.
-  - Trích xuất cấu hình Tasting Set Menu từ code logic của hệ thống (`src/data/mockData.ts` và `src/data/db.json`) và bổ sung 3 bản ghi `INSERT INTO menu_items` cho `R6212, R6213, R6218` (Tasting 5, 6, 7 courses) với giá tương ứng.
-
-### 10.7. Thực hiện hoàn thành toàn bộ Giai đoạn 5 (Tuần 9-12) (Hoàn tất 100%)
-- **Cổng đăng nhập Bar `/bar`**: Tích hợp cổng đăng nhập bằng mã PIN cho tablet quầy bar chung của 3 nhân sự (`b-1`, `b-2`, `b-3`) cùng hệ thống tự động đăng xuất sau 3 phút không hoạt động để quy trách nhiệm pour variance cho từng bartender.
-- **Nội suy thể tích 2 điểm (2-point calibration)**: Đã triển khai công thức tính toán thể tích dở bằng cách cân chai điện tử, nội suy tuyến tính dựa trên thông số chai đầy và vỏ rỗng của từng nguyên liệu.
-- **Kiểm kho Đóng/Mở ca**: Cho phép đếm số chai nguyên seal và cân chai dở tại quầy bar đầu ca (`shift='OPEN'`) và cuối ca (`shift='CLOSE'`), tự động đồng bộ lên Supabase qua bảng `bar_counts`.
-- **Hao hụt rót (Pour Variance)**: Đối soát chênh lệch tiêu thụ thực tế với dữ liệu lý thuyết từ POS của 183 mã Bar, hiển thị cảnh báo đỏ khi lệch âm vượt quá dung sai `weightToleranceGrams` (từ 2% đến 10% tùy chỉnh).
-- **Nhật ký hao hụt & Yêu cầu cấp hàng**: Tích hợp các biểu mẫu khai báo vỡ/đổ/comp (`waste_logs`) và gửi phiếu yêu cầu cấp hàng/chuyển kho từ Kho tổng (`inventory_transactions`).
-- **Liên kết Hệ thống**: Tích hợp liên kết truy cập nhanh "Cổng Quầy Bar (/bar)" trong Menu Sidebar (máy tính) và Mobile Navigation Drawer (điện thoại).
-
-### 10.8. Sửa lỗi Lọc Dashboard theo bộ phận (Hotfix hoàn tất 100%)
-- **Triệu chứng lỗi**: Khi nhân viên bộ phận Bar đăng nhập, panel "Cảnh báo Tồn kho tối thiểu" vẫn hiển thị các nguyên liệu thực phẩm của Bếp (Cá tuyết, cá hồi, tôm...) với thông báo Low Stock (Tồn 0.00 kg).
-- **Nguyên nhân**: Panel cảnh báo tồn kho tối thiểu và biểu đồ "Nguyên liệu tiêu hao nhiều nhất" trước đây sử dụng mảng `ingredients` tổng và `consumptionData` tổng thay vì mảng `roleFilteredIngredients` và `roleFilteredConsumptionData` đã được lọc theo bộ phận của vai trò đăng nhập.
-- **Biện pháp khắc phục**:
-  1. Định nghĩa thêm memo `roleFilteredConsumptionData` để lọc tiêu hao nguyên liệu theo bộ phận.
-  2. Định nghĩa memo `lowStockIngredients` để lọc các nguyên liệu sắp chạm mốc `min_stock` thực tế thuộc bộ phận.
-  3. Cập nhật panel "Cảnh báo Tồn kho tối thiểu" và biểu đồ "Nguyên liệu tiêu hao nhiều nhất" trên Dashboard sử dụng hai memo lọc này.
-  4. Cấu hình khóa logic của ba thẻ tài chính lớn (Cost / Giá trị tồn / Variance) mở ra cho các vai trò quản lý chính (`admin`, `BAR_SUPERVISOR`, `restaurant_manager`, `senior_accountant`) nhưng giá trị hiển thị chỉ tính toán các nguyên liệu thuộc bộ phận tương ứng.
-
----
-*Nghiệm thu v9.4 hoàn tất ngày 16/06/2026. Biên dịch thành công 100%, đồng bộ hóa cơ sở dữ liệu và triển khai trực tiếp lên Vercel.*
-
 
