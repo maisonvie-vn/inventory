@@ -1634,3 +1634,8 @@ INSERT INTO uom (id, name, uom_type) VALUES
 ('NAI', 'Nải', 'COUNT'),
 ('QUA', 'Quả', 'COUNT')
 ON CONFLICT (id) DO NOTHING;
+
+-- ADD MISSING CASE-SENSITIVE UOMS FOR IMPORT EXCEL (Chai)
+INSERT INTO uom (id, name, uom_type) VALUES 
+('Chai', 'Chai (Capitalized)', 'COUNT')
+ON CONFLICT (id) DO NOTHING;
