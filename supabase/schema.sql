@@ -680,35 +680,49 @@ create table if not exists order_documents (
 alter table order_documents enable row level security;
 
 -- Setup RLS Policies for new items
+drop policy if exists "Allow select locations for all staff" on locations;
 create policy "Allow select locations for all staff" on locations for select to authenticated using (true);
+
+drop policy if exists "Allow select calibration for all staff" on bar_bottle_calibration;
 create policy "Allow select calibration for all staff" on bar_bottle_calibration for select to authenticated using (true);
+
+drop policy if exists "Allow select bar_counts for all staff" on bar_counts;
 create policy "Allow select bar_counts for all staff" on bar_counts for select to authenticated using (true);
+
+drop policy if exists "Allow select daily_stock_movement for all staff" on daily_stock_movement;
 create policy "Allow select daily_stock_movement for all staff" on daily_stock_movement for select to authenticated using (true);
+
+drop policy if exists "Allow select order_documents for all staff" on order_documents;
 create policy "Allow select order_documents for all staff" on order_documents for select to authenticated using (true);
 
 -- Write policies for bar_bottle_calibration
+drop policy if exists "Allow write calibration for authorized staff" on bar_bottle_calibration;
 create policy "Allow write calibration for authorized staff"
 on bar_bottle_calibration for all to authenticated
 using (get_current_user_role() in ('BAR_SUPERVISOR', 'admin', 'senior_accountant', 'restaurant_manager'))
 with check (get_current_user_role() in ('BAR_SUPERVISOR', 'admin', 'senior_accountant', 'restaurant_manager'));
 
 -- Write policies for bar_counts
+drop policy if exists "Allow insert bar_counts for bartender, supervisor and admin" on bar_counts;
 create policy "Allow insert bar_counts for bartender, supervisor and admin"
 on bar_counts for insert to authenticated
 with check (get_current_user_role() in ('BARTENDER', 'BAR_SUPERVISOR', 'admin'));
 
+drop policy if exists "Allow update/delete bar_counts for supervisor and admin" on bar_counts;
 create policy "Allow update/delete bar_counts for supervisor and admin"
 on bar_counts for update to authenticated
 using (get_current_user_role() in ('BAR_SUPERVISOR', 'admin'))
 with check (get_current_user_role() in ('BAR_SUPERVISOR', 'admin'));
 
 -- Write policies for daily_stock_movement
+drop policy if exists "Allow manage daily_stock_movement for authorized roles" on daily_stock_movement;
 create policy "Allow manage daily_stock_movement for authorized roles"
 on daily_stock_movement for all to authenticated
 using (get_current_user_role() in ('BAR_SUPERVISOR', 'admin', 'senior_accountant', 'junior_accountant', 'head_chef', 'restaurant_manager'))
 with check (get_current_user_role() in ('BAR_SUPERVISOR', 'admin', 'senior_accountant', 'junior_accountant', 'head_chef', 'restaurant_manager'));
 
 -- Write policies for order_documents
+drop policy if exists "Allow manage order_documents for authorized roles" on order_documents;
 create policy "Allow manage order_documents for authorized roles"
 on order_documents for all to authenticated
 using (get_current_user_role() in ('BAR_SUPERVISOR', 'admin', 'senior_accountant', 'restaurant_manager'))
@@ -729,7 +743,10 @@ create table ingredient_departments (
 alter table ingredient_departments enable row level security;
 
 -- Setup RLS Policies for ingredient_departments
+drop policy if exists "Allow select departments for all staff" on ingredient_departments;
 create policy "Allow select departments for all staff" on ingredient_departments for select to authenticated using (true);
+
+drop policy if exists "Allow manage departments for admin and senior roles" on ingredient_departments;
 create policy "Allow manage departments for admin and senior roles"
 on ingredient_departments for all to authenticated
 using (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant', 'head_chef'))
@@ -750,7 +767,10 @@ create table department_approval_audit_logs (
 
 alter table department_approval_audit_logs enable row level security;
 
+drop policy if exists "Allow select audit logs for all staff" on department_approval_audit_logs;
 create policy "Allow select audit logs for all staff" on department_approval_audit_logs for select to authenticated using (true);
+
+drop policy if exists "Allow manage audit logs for chef, bar and admin" on department_approval_audit_logs;
 create policy "Allow manage audit logs for chef, bar and admin"
 on department_approval_audit_logs for all to authenticated
 using (get_current_user_role() in ('admin', 'restaurant_manager', 'BAR_SUPERVISOR', 'head_chef'))

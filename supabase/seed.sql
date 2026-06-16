@@ -1407,7 +1407,7 @@ BEGIN
         -- check if it is bar category
         is_bar := r.purchase_category_id IN (
             SELECT id FROM purchase_categories 
-            WHERE lower(id) LIKE '%wine%' OR lower(id) LIKE '%alcohol%' OR lower(id) LIKE '%beverage%'
+            WHERE lower(code) LIKE '%wine%' OR lower(code) LIKE '%alcohol%' OR lower(code) LIKE '%beverage%'
         );
         
         -- check if it is a bottle stock item
