@@ -1031,6 +1031,7 @@ INSERT INTO stock_take_lines (take_id, ingredient_id, qty_physical, qty_theoreti
 INSERT INTO inventory_transactions (ingredient_id, txn_type, qty, unit_cost, ref_table, ref_id, business_date, status, location_id) VALUES ((SELECT id FROM ingredients WHERE code = 'NLP60053' LIMIT 1), 'IMPORT', 0.0, 30000.0, 'stock_take_lines', '90000000-0000-0000-0000-000000000001', '2026-06-01', 'approved', 'MAIN_STORE');
 
 COMMIT;
+
 -- ADD MISSING INGREDIENTS AND UOMS FOR IMPORT EXCEL 01/06 - 14/06
 INSERT INTO uom (id, name, uom_type) VALUES 
 ('CHAI', 'Chai (Excel)', 'COUNT'),
@@ -1039,12 +1040,13 @@ INSERT INTO uom (id, name, uom_type) VALUES
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO ingredients (
-  id, code, ten_vi, name_en, stock_uom, recipe_uom, 
+  id, code, nom_fr, ten_vi, name_en, stock_uom, recipe_uom, 
   stock_to_recipe_factor, purchase_category_id, 
   wac_price, standard_price, is_beverage, is_active
 ) VALUES 
 (
   'V9006', 'V9006', 
+  'Kaiken Ultra Malbec',
   'Kaiken « Ultra » Malbec (Malbec · Uco Valley, Mendoza — Argentina)', 
   'Kaiken Ultra Malbec', 
   'CHAI', 'CHAI', 1, 
@@ -1053,6 +1055,7 @@ INSERT INTO ingredients (
 ),
 (
   'NLP6002', 'NLP6002', 
+  'Ingrédient de cuisine',
   'Nguyên liệu chế biến bếp', 
   'Kitchen processing ingredient', 
   'KG', 'g', 1000, 
@@ -1061,6 +1064,7 @@ INSERT INTO ingredients (
 ),
 (
   'NLP60048', 'NLP60048', 
+  'Raisins verts sans pépins',
   'Nho xanh ko hạt', 
   'Green seedless grapes', 
   'KG', 'g', 1000, 
