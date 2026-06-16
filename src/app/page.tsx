@@ -41,6 +41,8 @@ import {
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation' | 'purchasing'>('dashboard');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [recipeType, setRecipeType] = useState<'alc' | 'deg'>('alc');
@@ -951,24 +953,62 @@ export default function Home() {
     };
   }, [salesData, consumptionData, ingredients, actualStocks, transactions]);
 
+  // Department mapping for many-to-many relationship (v9.1)
+  const ingredientDepartments = useMemo(() => {
+    const mapping: Record<string, string[]> = {};
+    
+    ingredients.forEach(ing => {
+      const departments: string[] = [];
+      const categoryLower = (ing.category || '').toLowerCase();
+      const nameLower = (ing.vi_name || '').toLowerCase();
+      
+      const isBarCategory = ['wine', 'alcohol', 'beverage'].includes(categoryLower) || 
+                            ing.id === 'ING-070' || ing.id === 'ING-071' || ing.id === 'ING-072' ||
+                            nameLower.includes('vang') || nameLower.includes('bia') ||
+                            ing.stock_uom === 'BOTTLE';
+                            
+      // Default department assignments
+      if (isBarCategory) {
+        departments.push('BAR');
+      } else {
+        departments.push('KITCHEN');
+      }
+      
+      // Shared ingredients (used in both kitchen and bar)
+      // Vang đỏ, vang trắng, cognac, cam, chanh, sữa tươi, đường...
+      const isShared = ing.id === 'ING-070' || ing.id === 'ING-071' || ing.id === 'ING-072' || // Rượu vang, mạnh
+                       nameLower.includes('cognac') || nameLower.includes('rum') || nameLower.includes('vodka') ||
+                       nameLower.includes('chanh') || nameLower.includes('cam') || nameLower.includes('dưa hấu') ||
+                       nameLower.includes('xoài') || nameLower.includes('bưởi') || nameLower.includes('dứa') ||
+                       nameLower.includes('sữa tươi') || nameLower.includes('đường') || nameLower.includes('sữa đặc') ||
+                       ing.id === 'NLP60032' || ing.id === 'NLP60033' || ing.id === 'NLP3016' || ing.id === 'NLP3021';
+                       
+      if (isShared) {
+        if (!departments.includes('BAR')) departments.push('BAR');
+        if (!departments.includes('KITCHEN')) departments.push('KITCHEN');
+      }
+      
+      mapping[ing.id] = departments;
+    });
+    
+    return mapping;
+  }, [ingredients]);
+
   // Categories list
-  // v9.0 Role-based ingredient filtering (Bar vs Kitchen isolation)
+  // v9.1 Department-based many-to-many ingredient filtering (Bar/Kitchen department tag + Shared items)
   const roleFilteredIngredients = useMemo(() => {
     return ingredients.filter(ing => {
-      const isBarItem = ['Wine', 'Alcohol', 'beverage', 'Beverage'].includes(ing.category) || 
-                        ing.id === 'ING-070' || ing.id === 'ING-071' || ing.id === 'ING-072' ||
-                        ing.vi_name.toLowerCase().includes('vang') || ing.vi_name.toLowerCase().includes('bia') ||
-                        ing.stock_uom === 'BOTTLE';
+      const depts = ingredientDepartments[ing.id] || ['KITCHEN'];
       
       if (userRole === 'admin') {
         return true; // CFO/Owner/Admin sees everything
       } else if (userRole === 'BAR_SUPERVISOR' || userRole === 'BARTENDER') {
-        return isBarItem; // Bar role sees only Bar items
+        return depts.includes('BAR'); // Bar role sees items belonging to BAR department
       } else {
-        return !isBarItem; // Kitchen roles see only Kitchen items
+        return depts.includes('KITCHEN'); // Kitchen roles see items belonging to KITCHEN department
       }
     });
-  }, [ingredients, userRole]);
+  }, [ingredients, userRole, ingredientDepartments]);
 
   // Load categories dynamically for filter options
   const categories = useMemo(() => {
@@ -998,19 +1038,19 @@ export default function Home() {
                             ing.fr_name.toLowerCase().includes(stockCountSearch.toLowerCase());
       
       if (userRole === 'admin') {
-        const isBarItem = ['Wine', 'Alcohol', 'Beverage'].includes(ing.category) || ing.stock_uom === 'BOTTLE';
+        const depts = ingredientDepartments[ing.id] || ['KITCHEN'];
         let matchesFilter = true;
         if (stockCountFilter === 'BAR') {
-          matchesFilter = isBarItem;
+          matchesFilter = depts.includes('BAR');
         } else if (stockCountFilter === 'KITCHEN') {
-          matchesFilter = !isBarItem;
+          matchesFilter = depts.includes('KITCHEN');
         }
         return matchesSearch && matchesFilter;
       }
       
       return matchesSearch;
     });
-  }, [roleFilteredIngredients, stockCountFilter, stockCountSearch, userRole]);
+  }, [roleFilteredIngredients, stockCountFilter, stockCountSearch, userRole, ingredientDepartments]);
 
   // Filtered recipes
   const filteredRecipes = useMemo(() => {
@@ -1640,13 +1680,51 @@ export default function Home() {
     alert(`Đã xác nhận trạng thái ${type === 'IMPORT' ? 'Đã Nhập hàng' : 'Đã Xuất tiêu hao'} cho địa điểm ${locId}.`);
   };
 
-  // v9.0 PO Approve & PDF Export Handler
+  // v9.1 PO Approve & PDF Export Handler (Grouped by Category, 6 fixed columns, warning bg-colors)
   const handleApproveAndPrintPO = (doc: any) => {
     const hash = 'SHA256-' + Math.random().toString(36).substring(2, 10).toUpperCase() + Math.random().toString(36).substring(2, 10).toUpperCase();
     
     // Update document status
     setOrderDocuments(prev => prev.map(d => d.id === doc.id ? { ...d, status: 'APPROVED', content_hash: hash } : d));
     
+    const getItemGroup = (ingId: string) => {
+      const ing = ingredients.find(i => i.id === ingId);
+      if (!ing) return 'Khác';
+      const cat = ing.category || '';
+      const name = (ing.vi_name || '').toLowerCase();
+      
+      if (ingId === 'ING-070' || ingId === 'ING-071' || name.includes('vang')) return 'Rượu vang';
+      if (ingId === 'ING-072' || name.includes('cognac') || name.includes('whisky') || name.includes('vodka') || name.includes('rum') || name.includes('tequila') || ['alcohol', 'wine'].includes(cat.toLowerCase())) {
+        if (name.includes('vang')) return 'Rượu vang';
+        return 'Rượu mạnh';
+      }
+      if (name.includes('bia') || name.includes('coke') || name.includes('soda') || name.includes('tonic') || name.includes('sprite') || name.includes('fanta') || name.includes('nước ngọt') || name.includes('syrup') || name.includes('siro') || name.includes('trà') || name.includes('cafe') || name.includes('cà phê') || name.includes('perrier') || name.includes('evian')) return 'Bia & Nước ngọt';
+      if (cat === 'Seafood' || name.includes('cá') || name.includes('hàu') || name.includes('sò') || name.includes('tôm')) return 'Hải sản';
+      if (cat === 'Meat' || name.includes('thịt') || name.includes('bò') || name.includes('trâu') || name.includes('vịt') || name.includes('cừu') || name.includes('gà')) return 'Thịt tươi';
+      if (name.includes('bơ') || name.includes('sữa') || name.includes('phô mai') || name.includes('cream') || name.includes('cheese')) return 'Đồ bơ sữa';
+      if (cat === 'Vegetable' || cat === 'Herb' || cat === 'Fruit' || name.includes('rau') || name.includes('nấm') || name.includes('chanh') || name.includes('cam') || name.includes('bưởi') || name.includes('dưa') || name.includes('xoài')) return 'Rau củ/Trang trí';
+      return cat || 'Khác';
+    };
+
+    const groupedItems: Record<string, any[]> = {};
+    doc.items.forEach((item: any) => {
+      const group = getItemGroup(item.ingId);
+      if (!groupedItems[group]) {
+        groupedItems[group] = [];
+      }
+      groupedItems[group].push(item);
+    });
+
+    const rowClass = (warning: string) => {
+      if (warning.includes('CRITICAL') || warning.includes('đỏ') || warning.includes('Khẩn cấp')) {
+        return 'class="row-critical"';
+      }
+      if (warning.includes('LOW') || warning.includes('vàng') || warning.includes('Sắp hết')) {
+        return 'class="row-low"';
+      }
+      return '';
+    };
+
     // Trigger styled Neoclassical print popup layout
     const printWindow = window.open('', '_blank');
     if (printWindow) {
@@ -1656,25 +1734,28 @@ export default function Home() {
             <title>Phiếu Đặt Hàng - ${doc.doc_no}</title>
             <style>
               body { font-family: 'Times New Roman', serif; background-color: #fff; color: #000; padding: 40px; }
-              .header { text-align: center; border-bottom: 2px solid #b59410; padding-bottom: 10px; margin-bottom: 30px; }
-              .title { font-size: 22px; font-weight: bold; letter-spacing: 2px; margin: 0; color: #7a6300; }
-              .subtitle { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin: 5px 0 0 0; color: #555; }
+              .header { text-align: center; border-bottom: 2px solid #B08D4F; padding-bottom: 10px; margin-bottom: 30px; }
+              .title { font-size: 26px; font-weight: bold; letter-spacing: 2px; margin: 0; color: #2E3A2C; font-family: 'Cormorant Garamond', serif; }
+              .subtitle { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin: 5px 0 0 0; color: #6B7560; }
               .meta-table { width: 100%; margin-bottom: 30px; font-size: 13px; }
               .meta-table td { padding: 4px; vertical-align: top; }
-              .warn-box { border: 1px solid #b59410; padding: 10px; margin-bottom: 20px; font-size: 11px; display: flex; gap: 15px; }
+              .warn-box { border: 1px solid #B08D4F; padding: 10px; margin-bottom: 20px; font-size: 11px; display: flex; gap: 15px; background: #F6F1E4; }
               .data-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 12px; }
-              .data-table th, .data-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-              .data-table th { background-color: #f5f5f5; font-weight: bold; }
+              .data-table th, .data-table td { border: 1px solid #D6CDB4; padding: 8px; text-align: left; }
+              .data-table th { background-color: #2E3A2C; color: #F1EAD9; font-weight: bold; font-family: 'Cormorant Garamond', serif; }
+              .group-header-row { background-color: #F6F1E4; color: #2E3A2C; font-weight: bold; font-size: 13px; }
+              .row-critical { background-color: #F3DAD3 !important; }
+              .row-low { background-color: #F5E6C8 !important; }
               .footer-sigs { width: 100%; margin-top: 50px; text-align: center; font-size: 13px; }
               .footer-sigs td { width: 33%; height: 100px; vertical-align: top; }
-              .hash-info { margin-top: 60px; border-top: 1px solid #eee; padding-top: 10px; font-family: monospace; font-size: 10px; color: #666; text-align: right; }
+              .hash-info { margin-top: 60px; border-top: 1px solid #D6CDB4; padding-top: 10px; font-family: monospace; font-size: 10px; color: #6B7560; text-align: right; }
             </style>
           </head>
           <body>
             <div class="header">
               <h1 class="title">MAISON VIE</h1>
               <p class="subtitle">Hệ thống CRM/ERP Inventory & Finance</p>
-              <h2 style="font-size: 16px; margin: 15px 0 0 0; text-decoration: underline;">PHIẾU ĐỀ XUẤT ĐẶT HÀNG / PURCHASE ORDER</h2>
+              <h2 style="font-size: 16px; margin: 15px 0 0 0; text-decoration: underline; color: #2E3A2C;">PHIẾU ĐỀ XUẤT ĐẶT HÀNG / PURCHASE ORDER</h2>
             </div>
             
             <table class="meta-table">
@@ -1689,35 +1770,38 @@ export default function Home() {
             </table>
 
             <div class="warn-box">
-              <span>Chú giải cảnh báo:</span>
-              <span>🔴 KHẨN CẤP (Tồn &le; An toàn)</span>
-              <span>🟡 SẮP HẾT (Tồn &le; Tối thiểu)</span>
-              <span>🟢 ĐỦ TỒN (Không đặt)</span>
+              <span>Chú giải cảnh báo (Nền dòng):</span>
+              <span style="background: #F3DAD3; padding: 2px 6px; border: 1px solid #b23a2e;">🔴 KHẨN CẤP (Tồn &le; An toàn)</span>
+              <span style="background: #F5E6C8; padding: 2px 6px; border: 1px solid #c08a1e;">🟡 SẮP HẾT (Tồn &le; Tối thiểu)</span>
+              <span style="padding: 2px 6px;">🟢 ĐỦ TỒN (Không tô)</span>
             </div>
 
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>STT</th>
-                  <th>Mã NVL</th>
-                  <th>Tên nguyên liệu</th>
-                  <th>Tồn vật lý</th>
-                  <th>ĐVT</th>
-                  <th>Cảnh báo</th>
-                  <th>SL Đặt đề xuất</th>
+                  <th>Mã</th>
+                  <th>Tên hàng</th>
+                  <th>SL tồn</th>
+                  <th>SL cần</th>
+                  <th>Nhà cung cấp</th>
+                  <th>Ghi chú</th>
                 </tr>
               </thead>
               <tbody>
-                ${doc.items.map((it: any, idx: number) => `
-                  <tr>
-                    <td>${idx + 1}</td>
-                    <td>${it.ingId}</td>
-                    <td>${it.name}</td>
-                    <td>${it.onHand}</td>
-                    <td>${it.unit}</td>
-                    <td>${it.warning}</td>
-                    <td><strong>${it.slDat}</strong></td>
+                ${Object.entries(groupedItems).map(([groupName, items]) => `
+                  <tr class="group-header-row">
+                    <td colspan="6" style="padding: 10px 8px;">📊 Nhóm: ${groupName}</td>
                   </tr>
+                  ${items.map((it: any) => `
+                    <tr ${rowClass(it.warning || '')}>
+                      <td>${it.ingId}</td>
+                      <td>${it.name}</td>
+                      <td>${it.onHand} ${it.unit || ''}</td>
+                      <td><strong>${it.slDat}</strong> ${it.unit || ''}</td>
+                      <td>${doc.supplier_name || '—'}</td>
+                      <td>${it.note || '—'}</td>
+                    </tr>
+                  `).join('')}
                 `).join('')}
               </tbody>
             </table>
@@ -2223,17 +2307,17 @@ export default function Home() {
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#090d16] text-gray-100 selection:bg-amber-500 selection:text-black justify-center items-center p-6 relative overflow-hidden">
+      <div className="min-h-screen flex flex-col bg-bg-main text-text-dark selection:bg-accent-gold selection:text-text-light justify-center items-center p-6 relative overflow-hidden">
         {/* Decorative background glow */}
         <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-[#d4af37]/5 rounded-full blur-[10rem] pointer-events-none"></div>
         <div className="absolute bottom-1/4 right-1/4 w-[35rem] h-[35rem] bg-blue-500/5 rounded-full blur-[10rem] pointer-events-none"></div>
 
-        <div className="w-full max-w-md bg-[#0c1220]/80 border border-amber-500/30 rounded-md p-8 flex flex-col gap-6 shadow-2xl backdrop-blur-md relative z-10">
+        <div className="w-full max-w-md bg-moss-dark border border-border-moss rounded-md p-8 flex flex-col gap-6 shadow-2xl relative z-10 text-text-light">
           <div className="flex flex-col items-center gap-3 text-center">
             <div className="relative w-12 h-12 border border-amber-500/60 flex items-center justify-center rounded-sm rotate-45 bg-[#090d16] mb-2">
-              <span className="text-amber-500 font-serif font-semibold text-2xl rotate-[-45deg] scale-90">MV</span>
+              <span className="text-accent-gold font-serif font-semibold text-2xl rotate-[-45deg] scale-90">MV</span>
             </div>
-            <h2 className="text-2xl font-semibold tracking-widest text-[#d4af37] font-serif">MAISON VIE</h2>
+            <h2 className="text-2xl font-semibold tracking-widest text-accent-gold font-serif">MAISON VIE</h2>
             <p className="text-[10px] tracking-[0.2em] text-gray-400 font-sans uppercase">Hệ thống CRM/ERP Inventory & Finance</p>
           </div>
 
@@ -2246,7 +2330,7 @@ export default function Home() {
                 value={authEmail}
                 onChange={(e) => setAuthEmail(e.target.value)}
                 placeholder="ceo@maisonvie.vn"
-                className="bg-[#090d16] border border-amber-500/20 rounded-sm p-3 text-xs text-gray-200 focus:outline-none focus:border-amber-500 font-sans"
+                className="bg-moss-light border border-border-moss rounded-sm p-3 text-xs text-text-light placeholder-text-muted-light focus:outline-none focus:border-accent-gold font-sans"
               />
             </div>
 
@@ -2258,7 +2342,7 @@ export default function Home() {
                 value={authPassword}
                 onChange={(e) => setAuthPassword(e.target.value)}
                 placeholder="••••••••"
-                className="bg-[#090d16] border border-amber-500/20 rounded-sm p-3 text-xs text-gray-200 focus:outline-none focus:border-amber-500 font-sans"
+                className="bg-moss-light border border-border-moss rounded-sm p-3 text-xs text-text-light placeholder-text-muted-light focus:outline-none focus:border-accent-gold font-sans"
               />
             </div>
 
@@ -2269,15 +2353,15 @@ export default function Home() {
             <button 
               type="submit"
               disabled={isAuthLoading}
-              className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs py-3 rounded-sm transition-all shadow-md active:scale-95 cursor-pointer mt-2 flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-xs py-3 rounded-sm transition-all shadow-md active:scale-95 cursor-pointer mt-2 flex items-center justify-center gap-2"
             >
               {isAuthLoading ? 'ĐANG ĐĂNG NHẬP...' : 'ĐĂNG NHẬP HỆ THỐNG'}
             </button>
           </form>
 
           {/* Sandbox login helper info */}
-          <div className="border-t border-amber-500/10 pt-4 flex flex-col gap-3">
-            <div className="flex items-center gap-1.5 text-amber-500/80">
+          <div className="border-t border-border-cream pt-4 flex flex-col gap-3">
+            <div className="flex items-center gap-1.5 text-accent-gold/80">
               <AlertTriangle size={14} />
               <span className="text-[10px] uppercase font-bold tracking-wider">Local Sandbox Mode Enabled</span>
             </div>
@@ -2287,25 +2371,25 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-2 text-[9px] font-sans">
               <button 
                 onClick={() => { setAuthEmail('ceo@maisonvie.vn'); setAuthPassword('sandbox'); setSandboxRoleOverride('admin'); }}
-                className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
+                className="border border-border-moss hover:border-accent-gold bg-moss-light p-2 text-left rounded text-text-light text-[10px]"
               >
                 💼 Owner / CFO / Admin
               </button>
               <button 
                 onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('restaurant_manager'); }}
-                className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
+                className="border border-border-moss hover:border-accent-gold bg-moss-light p-2 text-left rounded text-text-light text-[10px]"
               >
                 👨‍🍳 Chef / Manager / Thủ Kho
               </button>
               <button 
                 onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('senior_accountant'); }}
-                className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
+                className="border border-border-moss hover:border-accent-gold bg-moss-light p-2 text-left rounded text-text-light text-[10px]"
               >
                 📊 SousChef / Kế toán
               </button>
               <button 
                 onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('BAR_SUPERVISOR'); }}
-                className="border border-gray-800 hover:border-amber-500/30 bg-[#090d16] p-2 text-left rounded text-gray-300 text-[10px]"
+                className="border border-border-moss hover:border-accent-gold bg-moss-light p-2 text-left rounded text-text-light text-[10px]"
               >
                 🍸 Bar
               </button>
@@ -2317,23 +2401,32 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#090d16] text-gray-100 selection:bg-amber-500 selection:text-black">
+    <div className="min-h-screen flex flex-col bg-bg-main text-text-dark selection:bg-accent-gold selection:text-text-light">
       {/* 1. Header (High-End French Neoclassical Styling) */}
-      <header className="border-b border-amber-500/20 bg-[#0c1220]/80 backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-border-moss bg-moss-dark sticky top-0 z-50 text-text-light">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 border border-amber-500/50 flex items-center justify-center rounded-sm rotate-45 bg-[#090d16]">
-              <span className="text-amber-500 font-serif font-semibold text-lg rotate-[-45deg] scale-90">MV</span>
+            {/* Hamburger menu for mobile */}
+            <button 
+              onClick={() => setIsMobileDrawerOpen(!isMobileDrawerOpen)}
+              className="lg:hidden text-accent-gold p-1 focus:outline-none"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <div className="relative w-10 h-10 border border-border-moss flex items-center justify-center rounded-sm rotate-45 bg-moss-light">
+              <span className="text-accent-gold font-serif font-semibold text-lg rotate-[-45deg] scale-90">MV</span>
             </div>
             <div>
-              <h1 className="text-2xl font-semibold tracking-widest text-[#d4af37]">MAISON VIE</h1>
-              <p className="text-[10px] tracking-[0.2em] text-gray-400 font-sans uppercase">Inventory CRM & Finance Controller</p>
+              <h1 className="text-2xl font-semibold tracking-widest text-accent-gold">MAISON VIE</h1>
+              <p className="text-[10px] tracking-[0.2em] text-text-light/60 font-sans uppercase">Inventory CRM & Finance Controller</p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-4">
             {/* User Profile Info & Log Out */}
-            <div className="flex items-center gap-2 bg-[#0c1220] border border-amber-500/20 px-3 py-1.5 rounded-sm">
+            <div className="flex items-center gap-2 bg-moss-light border border-border-moss px-3 py-1.5 rounded-sm">
               <span className="text-[10px] text-gray-400 font-sans uppercase">Đăng nhập:</span>
               <span className="text-xs font-semibold text-gray-200">{currentUser.name || currentUser.email}</span>
               <button 
@@ -2344,7 +2437,7 @@ export default function Home() {
                   setConfirmPassword('');
                   setShowPasswordModal(true);
                 }}
-                className="text-[10px] text-amber-400 hover:text-amber-300 underline cursor-pointer ml-2 font-sans uppercase font-bold"
+                className="text-[10px] text-accent-gold hover:text-text-light underline cursor-pointer ml-2 font-sans uppercase font-bold"
               >
                 Đổi mật khẩu
               </button>
@@ -2358,7 +2451,7 @@ export default function Home() {
             </div>
 
             {/* Simulated Time & WAC Control */}
-            <div className="flex items-center gap-2 bg-[#0c1220] border border-amber-500/20 px-3 py-1.5 rounded-sm">
+            <div className="flex items-center gap-2 bg-moss-light border border-border-moss px-3 py-1.5 rounded-sm">
               <span className="text-[10px] text-gray-400 font-sans uppercase">Giờ hệ thống:</span>
               <select 
                 value={simulatedTime}
@@ -2371,7 +2464,7 @@ export default function Home() {
                     setIsWacLocked(false);
                   }
                 }}
-                className="bg-transparent border-none text-xs font-mono text-amber-500 focus:outline-none cursor-pointer font-bold"
+                className="bg-transparent border-none text-xs font-mono text-accent-gold focus:outline-none cursor-pointer font-bold"
               >
                 <option value="08:00" className="bg-[#090d16] text-gray-300">08:00 (Nhập kho)</option>
                 <option value="12:00" className="bg-[#090d16] text-gray-300">12:00 (Trưa)</option>
@@ -2384,12 +2477,12 @@ export default function Home() {
 
             {/* Role Switcher - Chỉ hiển thị cho Admin hoặc khi chạy Local Sandbox để test phân quyền */}
             {(!isSupabaseConfigured() || userRole === 'admin') && (
-              <div className="flex items-center gap-2 bg-[#0c1220] border border-amber-500/20 px-3 py-1.5 rounded-sm">
+              <div className="flex items-center gap-2 bg-moss-light border border-border-moss px-3 py-1.5 rounded-sm">
                 <span className="text-[10px] text-gray-400 font-sans uppercase">Test vai trò:</span>
                 <select 
                   value={userRole}
                   onChange={(e) => setUserRole(e.target.value as any)}
-                  className="bg-transparent border-none text-xs text-[#d4af37] focus:outline-none cursor-pointer font-semibold"
+                  className="bg-transparent border-none text-xs text-accent-gold focus:outline-none cursor-pointer font-semibold"
                 >
                   <option value="admin" className="bg-[#090d16] text-gray-300">Owner/CFO/Admin</option>
                   <option value="restaurant_manager" className="bg-[#090d16] text-gray-300">Chef/Manager/Thủ Kho</option>
@@ -2408,24 +2501,45 @@ export default function Home() {
       </header>
 
       {/* 2. Main Container */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-6 py-8 flex flex-col lg:flex-row gap-8">
+      <div className="flex-1 max-w-7xl w-full mx-auto px-6 py-8 pb-24 lg:pb-8 flex flex-col lg:flex-row gap-8">
         
-        {/* Sidebar Nav */}
-        <aside className="w-full lg:w-64 flex flex-col gap-3">
-          <div className="text-xs font-semibold uppercase tracking-wider text-gray-400 px-3 py-1 font-sans">
-            Phân hệ Quản trị (Modules)
+        {/* Sidebar Nav (Desktop Collapsible) */}
+        <aside className={`hidden lg:flex flex-col gap-3 transition-all duration-300 ${isSidebarCollapsed ? 'w-16' : 'w-64'}`}>
+          <div className="flex items-center justify-between px-3 py-1 border-b border-border-cream/10">
+            {!isSidebarCollapsed && (
+              <span className="text-xs font-semibold uppercase tracking-wider text-text-dark/60 font-sans">
+                Phân hệ Quản trị
+              </span>
+            )}
+            <button 
+              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+              className="text-text-dark/60 hover:text-accent-gold p-1 rounded hover:bg-moss-light/10 ml-auto"
+              title={isSidebarCollapsed ? "Mở rộng" : "Thu gọn"}
+            >
+              {isSidebarCollapsed ? (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              )}
+            </button>
           </div>
+
           {hasTabAccess(userRole, 'dashboard') && (
             <button 
               onClick={() => setActiveTab('dashboard')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
                 activeTab === 'dashboard' 
-                  ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-medium' 
-                  : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-[#141a29]/50'
+                  ? 'bg-moss-dark text-text-light font-medium border-border-moss' 
+                  : 'border-transparent text-text-dark/70 hover:text-text-light hover:bg-moss-dark'
               }`}
+              title="Báo cáo Tổng quan"
             >
-              <LayoutDashboard size={18} />
-              <span>Báo cáo Tổng quan</span>
+              <LayoutDashboard size={18} className={activeTab === 'dashboard' ? 'text-accent-gold' : ''} />
+              {!isSidebarCollapsed && <span>Báo cáo Tổng quan</span>}
             </button>
           )}
           
@@ -2434,12 +2548,13 @@ export default function Home() {
               onClick={() => setActiveTab('sales')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
                 activeTab === 'sales' 
-                  ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-medium' 
-                  : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-[#141a29]/50'
+                  ? 'bg-moss-dark text-text-light font-medium border-border-moss' 
+                  : 'border-transparent text-text-dark/70 hover:text-text-light hover:bg-moss-dark'
               }`}
+              title="Doanh số & POS Import"
             >
-              <UploadCloud size={18} />
-              <span>Doanh số & POS Import</span>
+              <UploadCloud size={18} className={activeTab === 'sales' ? 'text-accent-gold' : ''} />
+              {!isSidebarCollapsed && <span>Doanh số & POS Import</span>}
             </button>
           )}
 
@@ -2448,12 +2563,13 @@ export default function Home() {
               onClick={() => setActiveTab('inventory')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
                 activeTab === 'inventory' 
-                  ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-medium' 
-                  : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-[#141a29]/50'
+                  ? 'bg-moss-dark text-text-light font-medium border-border-moss' 
+                  : 'border-transparent text-text-dark/70 hover:text-text-light hover:bg-moss-dark'
               }`}
+              title="Bảng Master Kho (101)"
             >
-              <Package size={18} />
-              <span>Bảng Master Kho (101)</span>
+              <Package size={18} className={activeTab === 'inventory' ? 'text-accent-gold' : ''} />
+              {!isSidebarCollapsed && <span>Bảng Master Kho (101)</span>}
             </button>
           )}
 
@@ -2462,12 +2578,13 @@ export default function Home() {
               onClick={() => setActiveTab('recipes')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
                 activeTab === 'recipes' 
-                  ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-medium' 
-                  : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-[#141a29]/50'
+                  ? 'bg-moss-dark text-text-light font-medium border-border-moss' 
+                  : 'border-transparent text-text-dark/70 hover:text-text-light hover:bg-moss-dark'
               }`}
+              title="Định mức công thức (Recipes)"
             >
-              <BookOpen size={18} />
-              <span>Định mức công thức (Recipes)</span>
+              <BookOpen size={18} className={activeTab === 'recipes' ? 'text-accent-gold' : ''} />
+              {!isSidebarCollapsed && <span>Định mức công thức</span>}
             </button>
           )}
 
@@ -2476,12 +2593,13 @@ export default function Home() {
               onClick={() => setActiveTab('stockcount')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
                 activeTab === 'stockcount' 
-                  ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-medium' 
-                  : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-[#141a29]/50'
+                  ? 'bg-moss-dark text-text-light font-medium border-border-moss' 
+                  : 'border-transparent text-text-dark/70 hover:text-text-light hover:bg-moss-dark'
               }`}
+              title="Kiểm kho & Tính Variance"
             >
-              <CheckSquare size={18} />
-              <span>Kiểm kho & Tính Variance</span>
+              <CheckSquare size={18} className={activeTab === 'stockcount' ? 'text-accent-gold' : ''} />
+              {!isSidebarCollapsed && <span>Kiểm kho & Tính Variance</span>}
             </button>
           )}
 
@@ -2490,12 +2608,13 @@ export default function Home() {
               onClick={() => setActiveTab('subrecipes')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
                 activeTab === 'subrecipes' 
-                  ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-medium' 
-                  : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-[#141a29]/50'
+                  ? 'bg-moss-dark text-text-light font-medium border-border-moss' 
+                  : 'border-transparent text-text-dark/70 hover:text-text-light hover:bg-moss-dark'
               }`}
+              title="Sản xuất Bán thành phẩm"
             >
-              <Cpu size={18} />
-              <span>Sản xuất Bán thành phẩm</span>
+              <Cpu size={18} className={activeTab === 'subrecipes' ? 'text-accent-gold' : ''} />
+              {!isSidebarCollapsed && <span>Sản xuất BTP</span>}
             </button>
           )}
 
@@ -2504,12 +2623,13 @@ export default function Home() {
               onClick={() => setActiveTab('reconciliation')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
                 activeTab === 'reconciliation' 
-                  ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-medium' 
-                  : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-[#141a29]/50'
+                  ? 'bg-moss-dark text-text-light font-medium border-border-moss' 
+                  : 'border-transparent text-text-dark/70 hover:text-text-light hover:bg-moss-dark'
               }`}
+              title="Đối soát Song song & Yield"
             >
-              <TrendingUp size={18} />
-              <span>Đối soát Song song & Yield</span>
+              <TrendingUp size={18} className={activeTab === 'reconciliation' ? 'text-accent-gold' : ''} />
+              {!isSidebarCollapsed && <span>Đối soát Song song & Yield</span>}
             </button>
           )}
 
@@ -2518,22 +2638,23 @@ export default function Home() {
               onClick={() => setActiveTab('purchasing')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
                 activeTab === 'purchasing' 
-                  ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-medium' 
-                  : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-[#141a29]/50'
+                  ? 'bg-moss-dark text-text-light font-medium border-border-moss' 
+                  : 'border-transparent text-text-dark/70 hover:text-text-light hover:bg-moss-dark'
               }`}
+              title="Mua hàng & Nhập kho (GRN)"
             >
-              <DollarSign size={18} />
-              <span>Mua hàng & Nhập kho (GRN)</span>
+              <DollarSign size={18} className={activeTab === 'purchasing' ? 'text-accent-gold' : ''} />
+              {!isSidebarCollapsed && <span>Mua hàng & Nhập kho</span>}
             </button>
           )}
 
-
-          {/* Quick Info Box */}
-          <div className="mt-8 glass-panel rounded-md p-4 border-amber-500/10 text-[11px] text-gray-400 leading-relaxed font-sans">
-            <h4 className="text-amber-500 font-serif font-semibold text-xs mb-2 tracking-wider">THÔNG TIN HỆ THỐNG</h4>
-            <p className="mb-2"><strong>Mô hình trừ kho:</strong> Tồn Lý Thuyết = Tồn Đầu + Tổng Nhập - Xuất Định Mức (Gross Weight * Doanh số POS).</p>
-            <p><strong>Wastage Buffer:</strong> Công thức bếp tự cộng thêm 10% để bù hao phí thao tác thực tế.</p>
-          </div>
+          {!isSidebarCollapsed && (
+            <div className="mt-8 glass-panel rounded-md p-4 border-border-cream text-[11px] text-text-light/60 leading-relaxed font-sans bg-moss-dark">
+              <h4 className="text-accent-gold font-serif font-semibold text-xs mb-2 tracking-wider">THÔNG TIN HỆ THỐNG</h4>
+              <p className="mb-2"><strong>Mô hình trừ kho:</strong> Tồn Lý Thuyết = Tồn Đầu + Tổng Nhập - Xuất Định Mức (Gross Weight * Doanh số POS).</p>
+              <p><strong>Wastage Buffer:</strong> Công thức bếp tự cộng thêm 10% để bù hao phí thao tác thực tế.</p>
+            </div>
+          )}
         </aside>
 
         {/* Content Area */}
@@ -2544,10 +2665,10 @@ export default function Home() {
             
             {userRole === 'admin' && (
               <div className="glass-panel rounded-md p-5 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl"></div>
+                <div className="absolute top-0 right-0 w-24 h-24 bg-accent-gold/5 rounded-full blur-2xl"></div>
                 <div className="flex items-center justify-between text-gray-400 mb-2">
                   <span className="text-xs uppercase tracking-wider font-sans">Tổng Doanh thu POS</span>
-                  <DollarSign size={16} className="text-amber-500" />
+                  <DollarSign size={16} className="text-accent-gold" />
                 </div>
                 <div className="text-2xl font-bold text-gray-100">
                   {metrics.salesRevenue.toLocaleString()} đ
@@ -2559,24 +2680,24 @@ export default function Home() {
             )}
 
             <div className="glass-panel rounded-md p-5 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl"></div>
+              <div className="absolute top-0 right-0 w-24 h-24 bg-accent-gold/5 rounded-full blur-2xl"></div>
               <div className="flex items-center justify-between text-gray-400 mb-2">
                 <span className="text-xs uppercase tracking-wider font-sans">Chi phí Tiêu hao (Cost)</span>
-                <TrendingUp size={16} className="text-amber-500" />
+                <TrendingUp size={16} className="text-accent-gold" />
               </div>
               <div className="text-2xl font-bold text-gray-100">
                 {userRole === 'admin' ? `${metrics.ingredientCost.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
               </div>
               <div className="text-[10px] text-gray-400 mt-1">
-                Food Cost lý thuyết: <span className="text-amber-500 font-semibold">{userRole === 'admin' ? `${metrics.foodCostPct.toFixed(1)}%` : '🔒 Chỉ CFO'}</span>
+                Food Cost lý thuyết: <span className="text-accent-gold font-semibold">{userRole === 'admin' ? `${metrics.foodCostPct.toFixed(1)}%` : '🔒 Chỉ CFO'}</span>
               </div>
             </div>
 
             <div className="glass-panel rounded-md p-5 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl"></div>
+              <div className="absolute top-0 right-0 w-24 h-24 bg-accent-gold/5 rounded-full blur-2xl"></div>
               <div className="flex items-center justify-between text-gray-400 mb-2">
                 <span className="text-xs uppercase tracking-wider font-sans">Giá trị Tồn kho Ước tính</span>
-                <Package size={16} className="text-amber-500" />
+                <Package size={16} className="text-accent-gold" />
               </div>
               <div className="text-2xl font-bold text-gray-100">
                 {userRole === 'admin' ? `${metrics.inventoryValue.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
@@ -2585,10 +2706,10 @@ export default function Home() {
             </div>
 
             <div className="glass-panel rounded-md p-5 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl"></div>
+              <div className="absolute top-0 right-0 w-24 h-24 bg-accent-gold/5 rounded-full blur-2xl"></div>
               <div className="flex items-center justify-between text-gray-400 mb-2">
                 <span className="text-xs uppercase tracking-wider font-sans">Lệch kho (Variance)</span>
-                <AlertTriangle size={16} className={metrics.varianceCost < 0 ? "text-rose-500 animate-pulse" : "text-[#d4af37]"} />
+                <AlertTriangle size={16} className={metrics.varianceCost < 0 ? "text-rose-500 animate-pulse" : "text-accent-gold"} />
               </div>
               <div className={`text-2xl font-bold ${userRole === 'admin' ? (metrics.varianceCost < 0 ? "text-rose-400" : "text-emerald-400") : "text-gray-400"}`}>
                 {userRole === 'admin' ? `${metrics.varianceCost > 0 ? "+" : ""}${metrics.varianceCost.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
@@ -2608,12 +2729,12 @@ export default function Home() {
                 {/* Simulated Consumption list */}
                 <div className="glass-panel rounded-md p-6 lg:col-span-2 flex flex-col gap-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-[#d4af37] font-serif">Nguyên liệu tiêu hao nhiều nhất (01/06 - 13/06)</h3>
+                    <h3 className="text-xl font-semibold text-accent-gold font-serif">Nguyên liệu tiêu hao nhiều nhất (01/06 - 13/06)</h3>
                     <p className="text-[11px] text-gray-400">Đã bao gồm tỷ lệ hao hụt Yield % và 10% bù bếp</p>
                   </div>
                   
                   {/* Custom SVG Bar Chart */}
-                  <div className="h-44 w-full bg-[#0c1220]/50 rounded border border-amber-500/5 p-4 flex items-end justify-between gap-2">
+                  <div className="h-44 w-full bg-moss-dark/50 rounded border border-border-moss p-4 flex items-end justify-between gap-2">
                     {consumptionData.slice(0, 8).map((item, idx) => {
                       const maxVal = Math.max(...consumptionData.slice(0, 8).map(c => c.totalCost));
                       const barHeight = maxVal > 0 ? (item.totalCost / maxVal) * 100 : 0;
@@ -2621,7 +2742,7 @@ export default function Home() {
                         <div key={item.id} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
                           <div className="w-full flex items-end justify-center h-28 relative">
                             {/* Hover cost value */}
-                            <span className="absolute -top-6 text-[9px] text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1.5 py-0.5 rounded border border-amber-500/30 whitespace-nowrap">
+                            <span className="absolute -top-6 text-[9px] text-accent-gold opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1.5 py-0.5 rounded border border-border-cream whitespace-nowrap">
                               {Math.round(item.totalCost).toLocaleString()}đ
                             </span>
                             <div 
@@ -2629,7 +2750,7 @@ export default function Home() {
                               className="w-4 sm:w-6 bg-gradient-to-t from-amber-600 via-amber-400 to-[#f3e5ab] rounded-t-sm transition-all duration-500 hover:shadow-lg hover:shadow-amber-500/20 group-hover:scale-x-110"
                             ></div>
                           </div>
-                          <span className="text-[9px] text-gray-400 group-hover:text-amber-300 w-12 text-center truncate">{item.name}</span>
+                          <span className="text-[9px] text-gray-400 group-hover:text-text-light w-12 text-center truncate">{item.name}</span>
                         </div>
                       );
                     })}
@@ -2637,7 +2758,7 @@ export default function Home() {
 
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs text-left text-gray-300">
-                      <thead className="bg-[#0c1220] uppercase text-gray-400 border-b border-amber-500/10">
+                      <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                         <tr>
                           <th className="px-4 py-2">Mã</th>
                           <th className="px-4 py-2">Tên Nguyên Liệu</th>
@@ -2648,8 +2769,8 @@ export default function Home() {
                       </thead>
                       <tbody className="divide-y divide-amber-500/5">
                         {consumptionData.slice(0, 6).map((item) => (
-                          <tr key={item.id} className="hover:bg-[#141a29]/30">
-                            <td className="px-4 py-2 font-mono text-amber-500/70">{item.id}</td>
+                          <tr key={item.id} className="hover:bg-moss-light/30">
+                            <td className="px-4 py-2 font-mono text-accent-gold/70">{item.id}</td>
                             <td className="px-4 py-2 font-medium">{item.name}</td>
                             <td className="px-4 py-2 text-right">{item.qty.toFixed(3)} {item.unit}</td>
                             <td className="px-4 py-2 text-right">{item.unitPrice.toLocaleString()} đ</td>
@@ -2664,7 +2785,7 @@ export default function Home() {
                 {/* Live Warnings and Alerts */}
                 <div className="glass-panel rounded-md p-6 flex flex-col gap-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-[#d4af37] font-serif">Cảnh báo Tồn kho tối thiểu</h3>
+                    <h3 className="text-xl font-semibold text-accent-gold font-serif">Cảnh báo Tồn kho tối thiểu</h3>
                     <p className="text-[11px] text-gray-400">Nguyên liệu sắp chạm mốc cần đặt hàng</p>
                   </div>
                   
@@ -2675,11 +2796,11 @@ export default function Home() {
                       
                       return (
                         <div key={ing.id} className={`p-3 rounded border flex flex-col gap-1 transition-all ${
-                          isLow ? 'bg-amber-500/5 border-amber-500/20' : 'bg-[#141a29]/30 border-gray-800'
+                          isLow ? 'bg-accent-gold/5 border-border-cream' : 'bg-moss-light/30 border-gray-800'
                         }`}>
                           <div className="flex items-center justify-between">
                             <span className="font-medium text-xs text-gray-200">{ing.vi_name}</span>
-                            {isLow && <span className="flex items-center gap-1 text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded uppercase font-semibold">Low Stock</span>}
+                            {isLow && <span className="flex items-center gap-1 text-[9px] bg-accent-gold/10 text-accent-gold border border-border-cream px-1.5 py-0.5 rounded uppercase font-semibold">Low Stock</span>}
                           </div>
                           <div className="flex justify-between items-center text-[10px] text-gray-400 font-mono mt-1">
                             <span>Mã: {ing.id}</span>
@@ -2697,21 +2818,21 @@ export default function Home() {
           {/* TAB 2: SALES & IMPORT */}
           {activeTab === 'sales' && (
             <div className="glass-panel rounded-md p-6 flex flex-col gap-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-amber-500/10 pb-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border-cream pb-4">
                 <div>
-                  <h3 className="text-xl font-semibold text-[#d4af37] font-serif">Doanh số POS cuối ngày</h3>
+                  <h3 className="text-xl font-semibold text-accent-gold font-serif">Doanh số POS cuối ngày</h3>
                   <p className="text-xs text-gray-400">Tải lên file Excel POS (ví dụ: `BH ngày 1-13.06.2026.xls`) để khấu trừ tồn kho lý thuyết.</p>
                 </div>
                 
                 <div className="flex flex-wrap items-center gap-3">
                   <button 
                     onClick={downloadPOSTemplate}
-                    className="flex items-center gap-1.5 border border-amber-500/30 hover:bg-amber-500/5 text-amber-500 font-semibold text-xs px-3.5 py-2.5 rounded-sm transition-all shadow-md active:scale-95"
+                    className="flex items-center gap-1.5 border border-border-cream hover:bg-accent-gold/5 text-accent-gold font-semibold text-xs px-3.5 py-2.5 rounded-sm transition-all shadow-md active:scale-95"
                   >
                     <Download size={14} />
                     <span>Tải file mẫu POS</span>
                   </button>
-                  <label className="flex items-center gap-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-semibold text-xs px-4 py-2.5 rounded-sm transition-all shadow-md active:scale-95 cursor-pointer">
+                  <label className="flex items-center gap-2 bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-semibold text-xs px-4 py-2.5 rounded-sm transition-all shadow-md active:scale-95 cursor-pointer">
                     {isImporting ? <RefreshCw size={14} className="animate-spin" /> : <UploadCloud size={14} />}
                     <span>{isImporting ? "Đang xử lý..." : "Tải lên doanh số POS (.xls/.xlsx)"}</span>
                     <input 
@@ -2734,26 +2855,26 @@ export default function Home() {
 
               {/* POS mapping table summary */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-2">
-                <div className="p-4 bg-[#0c1220]/50 rounded border border-amber-500/5 flex flex-col">
+                <div className="p-4 bg-moss-light rounded border border-border-moss flex flex-col">
                   <span className="text-[10px] text-gray-400 uppercase tracking-wider">Cơ cấu bia</span>
                   <span className="text-lg font-bold text-gray-200 mt-1">Đã phân tách</span>
                   <span className="text-[10px] text-emerald-400 mt-1">B5001 (Heineken), B5002 (Tiger) riêng biệt</span>
                 </div>
-                <div className="p-4 bg-[#0c1220]/50 rounded border border-amber-500/5 flex flex-col">
+                <div className="p-4 bg-moss-light rounded border border-border-moss flex flex-col">
                   <span className="text-[10px] text-gray-400 uppercase tracking-wider">Set Menu Phân rã (BOM)</span>
                   <span className="text-lg font-bold text-gray-200 mt-1">Cấu hình sẵn</span>
                   <span className="text-[10px] text-emerald-400 mt-1">Tự trừ cá/thịt theo portion Tasting (~67%)</span>
                 </div>
-                <div className="p-4 bg-[#0c1220]/50 rounded border border-amber-500/5 flex flex-col">
+                <div className="p-4 bg-moss-light rounded border border-border-moss flex flex-col">
                   <span className="text-[10px] text-gray-400 uppercase tracking-wider">Trạng thái cấu hình</span>
                   <span className="text-lg font-bold text-gray-200 mt-1">Đồng bộ</span>
-                  <span className="text-[10px] text-amber-500 mt-1">100% mã POS đã map với Recipe ID</span>
+                  <span className="text-[10px] text-accent-gold mt-1">100% mã POS đã map với Recipe ID</span>
                 </div>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-xs text-left text-gray-300">
-                  <thead className="bg-[#0c1220] uppercase text-gray-400 border-b border-amber-500/10">
+                  <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                     <tr>
                       <th className="px-4 py-3">Mã POS</th>
                       <th className="px-4 py-3">Tên món trên POS</th>
@@ -2767,8 +2888,8 @@ export default function Home() {
                     {salesData.slice(0, 15).map((sale, i) => {
                       const mapInfo = POS_MAPPING[sale.code];
                       return (
-                        <tr key={i} className="hover:bg-[#141a29]/30">
-                          <td className="px-4 py-3 font-mono text-amber-500/70">{sale.code}</td>
+                        <tr key={i} className="hover:bg-moss-light/30">
+                          <td className="px-4 py-3 font-mono text-accent-gold/70">{sale.code}</td>
                           <td className="px-4 py-3 font-medium text-gray-100">{sale.name}</td>
                           <td className="px-4 py-3 text-right">{sale.price.toLocaleString()} đ</td>
                           <td className="px-4 py-3 text-right font-mono font-semibold">{sale.qty}</td>
@@ -2794,21 +2915,21 @@ export default function Home() {
           {/* TAB 3: INVENTORY MASTER */}
           {activeTab === 'inventory' && (
             <div className="glass-panel rounded-md p-6 flex flex-col gap-6">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-amber-500/10 pb-4">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border-cream pb-4">
                 <div>
-                  <h3 className="text-xl font-semibold text-[#d4af37] font-serif">Bảng Master Kho nguyên liệu ({ingredients.length} mã)</h3>
+                  <h3 className="text-xl font-semibold text-accent-gold font-serif">Bảng Master Kho nguyên liệu ({ingredients.length} mã)</h3>
                   <p className="text-xs text-gray-400">Danh mục nguyên liệu và giá vốn. Bạn có thể chuẩn hóa nhanh bằng cách tải file Excel lên.</p>
                 </div>
                 
                 <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
                   <button 
                     onClick={downloadIngredientsTemplate}
-                    className="flex items-center gap-1.5 border border-amber-500/30 hover:bg-amber-500/5 text-amber-500 font-semibold text-xs px-3.5 py-2.5 rounded-sm transition-all shadow-md active:scale-95"
+                    className="flex items-center gap-1.5 border border-border-cream hover:bg-accent-gold/5 text-accent-gold font-semibold text-xs px-3.5 py-2.5 rounded-sm transition-all shadow-md active:scale-95"
                   >
                     <Download size={14} />
                     <span>Tải file mẫu NVL</span>
                   </button>
-                  <label className="flex items-center gap-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-semibold text-xs px-4 py-2.5 rounded-sm transition-all shadow-md active:scale-95 cursor-pointer">
+                  <label className="flex items-center gap-2 bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-semibold text-xs px-4 py-2.5 rounded-sm transition-all shadow-md active:scale-95 cursor-pointer">
                     <UploadCloud size={14} />
                     <span>Tải lên danh mục NVL</span>
                     <input 
@@ -2823,17 +2944,17 @@ export default function Home() {
 
               {/* BẢNG ĐIỀU KHIỂN MÔ PHỎNG VẬN HÀNH DÀNH CHO ADMIN & KẾ TOÁN KHO CẤP CAO */}
               {(userRole === 'admin' || userRole === 'senior_accountant' || userRole === 'head_chef') && (
-                <div className="p-4 bg-[#0c1220]/60 border border-amber-500/20 rounded-md flex flex-col gap-4 font-sans">
-                  <div className="flex items-center justify-between border-b border-amber-500/10 pb-2">
+                <div className="p-4 bg-moss-light border border-border-moss rounded-md flex flex-col gap-4 font-sans">
+                  <div className="flex items-center justify-between border-b border-border-cream pb-2">
                     <div className="flex items-center gap-2">
                       <span className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse"></span>
-                      <h4 className="text-xs uppercase tracking-wider text-amber-400 font-bold">ERP Operations Simulation (Mô phỏng Vận hành)</h4>
+                      <h4 className="text-xs uppercase tracking-wider text-accent-gold font-bold">ERP Operations Simulation (Mô phỏng Vận hành)</h4>
                     </div>
-                    <span className="text-[10px] text-gray-400">Thời gian mô phỏng: <strong className="text-amber-500">{simulatedTime}</strong></span>
+                    <span className="text-[10px] text-gray-400">Thời gian mô phỏng: <strong className="text-accent-gold">{simulatedTime}</strong></span>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-2 p-3 bg-[#090d16]/80 border border-amber-500/5 rounded">
+                    <div className="flex flex-col gap-2 p-3 bg-moss-light border border-border-moss rounded">
                       <span className="text-xs font-semibold text-gray-200">1. Chốt giá Moving WAC (18:30)</span>
                       <p className="text-[10px] text-gray-400 leading-relaxed">
                         Đúng 18h30, hệ thống tự động khóa sổ nhập kho và tính toán giá vốn Bình quan gia quyền lũy tiến (WAC) cho tất cả nguyên liệu dựa trên hóa đơn trong ngày.
@@ -2841,7 +2962,7 @@ export default function Home() {
                       <div className="mt-2 flex items-center gap-2">
                         <button 
                           onClick={handleRunWacSimulation}
-                          className="bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 text-[11px] font-semibold px-3 py-1.5 rounded-sm transition-all"
+                          className="bg-accent-gold/10 hover:bg-accent-gold/20 border border-border-cream text-accent-gold text-[11px] font-semibold px-3 py-1.5 rounded-sm transition-all"
                         >
                           Chạy chốt Moving WAC
                         </button>
@@ -2853,7 +2974,7 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col gap-2 p-3 bg-[#090d16]/80 border border-amber-500/5 rounded">
+                    <div className="flex flex-col gap-2 p-3 bg-moss-light border border-border-moss rounded">
                       <span className="text-xs font-semibold text-gray-200">2. Đơn đặt hàng tự động Auto-PO (22:40)</span>
                       <p className="text-[10px] text-gray-400 leading-relaxed">
                         Vào lúc 22h40 (sau khi trừ kho bán hàng), hệ thống tự động gom nhóm nguyên liệu có tồn &lt; 15 (min-stock) và tự sinh các file Excel đơn đặt hàng riêng biệt.
@@ -2861,7 +2982,7 @@ export default function Home() {
                       <div className="mt-2 flex items-center gap-2">
                         <button 
                           onClick={handleRunAutoPOSimulation}
-                          className="bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 text-[11px] font-semibold px-3 py-1.5 rounded-sm transition-all"
+                          className="bg-accent-gold/10 hover:bg-accent-gold/20 border border-border-cream text-accent-gold text-[11px] font-semibold px-3 py-1.5 rounded-sm transition-all"
                         >
                           Chạy Auto-PO
                         </button>
@@ -2870,14 +2991,14 @@ export default function Home() {
                   </div>
 
                   {generatedPOs.length > 0 && (
-                    <div className="border-t border-amber-500/10 pt-3 flex flex-col gap-2">
+                    <div className="border-t border-border-cream pt-3 flex flex-col gap-2">
                       <span className="text-xs font-semibold text-gray-300">Danh sách File Đơn hàng Auto-PO đã sẵn sàng:</span>
                       <div className="flex flex-wrap gap-2">
                         {generatedPOs.map((po, i) => (
                           <button
                             key={i}
                             onClick={() => downloadGeneratedPOExcel(po)}
-                            className="flex items-center gap-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-[10px] px-3 py-1.5 rounded transition-all"
+                            className="flex items-center gap-2 bg-accent-gold/10 hover:bg-accent-gold/20 border border-border-cream text-text-light text-[10px] px-3 py-1.5 rounded transition-all"
                           >
                             <Download size={12} />
                             <span>{po.fileName} ({po.items.length} món)</span>
@@ -2892,15 +3013,15 @@ export default function Home() {
               {/* PHÂN HỆ CHUYỂN KHO NỘI BỘ (INTERNAL TRANSFER) & CHỐT SỔ (DAILY CLOSE) (MỚI v9.0) */}
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 {/* 1. Chuyển kho nội bộ */}
-                <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans">
-                  <h4 className="text-xs font-bold uppercase text-amber-400 border-b border-amber-500/5 pb-2">Chuyển kho nội bộ (Internal Transfer)</h4>
+                <div className="p-5 bg-moss-light rounded border border-border-moss flex flex-col gap-4 font-sans">
+                  <h4 className="text-xs font-bold uppercase text-accent-gold border-b border-border-moss pb-2">Chuyển kho nội bộ (Internal Transfer)</h4>
                   <form onSubmit={handleInternalTransferSubmit} className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1.5">
                       <label className="text-[10px] uppercase text-gray-400 font-semibold">Chọn nguyên liệu chuyển</label>
                       <select
                         value={internalTransferIngId}
                         onChange={(e) => setInternalTransferIngId(e.target.value)}
-                        className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full"
+                        className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full"
                         required
                       >
                         <option value="">-- Chọn nguyên liệu --</option>
@@ -2916,7 +3037,7 @@ export default function Home() {
                         <select
                           value={internalTransferSrc}
                           onChange={(e) => setInternalTransferSrc(e.target.value)}
-                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full"
+                          className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full"
                         >
                           <option value="MAIN_STORE">Kho tổng</option>
                           <option value="KITCHEN">Bếp</option>
@@ -2929,7 +3050,7 @@ export default function Home() {
                         <select
                           value={internalTransferDest}
                           onChange={(e) => setInternalTransferDest(e.target.value)}
-                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full"
+                          className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full"
                         >
                           <option value="KITCHEN">Bếp</option>
                           <option value="BAR">Quầy Bar</option>
@@ -2946,7 +3067,7 @@ export default function Home() {
                           placeholder="SL..."
                           value={internalTransferQty}
                           onChange={(e) => setInternalTransferQty(e.target.value)}
-                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono w-full"
+                          className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold font-mono w-full"
                         />
                       </div>
                     </div>
@@ -2958,7 +3079,7 @@ export default function Home() {
                         placeholder="VD: Cấp rượu vang cho quầy bar..."
                         value={internalTransferNote}
                         onChange={(e) => setInternalTransferNote(e.target.value)}
-                        className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 w-full"
+                        className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full"
                       />
                     </div>
 
@@ -2970,7 +3091,7 @@ export default function Home() {
 
                     <button
                       type="submit"
-                      className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs py-3 rounded shadow transition-all active:scale-95 uppercase tracking-wider"
+                      className="bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-xs py-3 rounded shadow transition-all active:scale-95 uppercase tracking-wider"
                     >
                       Xác nhận Chuyển kho
                     </button>
@@ -2978,18 +3099,18 @@ export default function Home() {
                 </div>
 
                 {/* 2. Cổng xác nhận chốt tồn */}
-                <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans justify-between">
+                <div className="p-5 bg-moss-light rounded border border-border-moss flex flex-col gap-4 font-sans justify-between">
                   <div>
-                    <h4 className="text-xs font-bold uppercase text-amber-400 border-b border-amber-500/5 pb-2 mb-3">Xác nhận vận động kho & Chốt tồn cuối ngày</h4>
+                    <h4 className="text-xs font-bold uppercase text-accent-gold border-b border-border-moss pb-2 mb-3">Xác nhận vận động kho & Chốt tồn cuối ngày</h4>
                     <div className="flex flex-col gap-3.5">
                       {locations.map(loc => {
                         const statusData = dailyMovements[loc.id] || { importsConfirmed: false, issuesConfirmed: false, status: 'OPEN' };
                         return (
-                          <div key={loc.id} className="bg-[#090d16]/70 border border-amber-500/5 rounded p-3.5 flex justify-between items-center gap-4">
+                          <div key={loc.id} className="bg-moss-light border border-border-moss rounded p-3.5 flex justify-between items-center gap-4">
                             <div className="flex flex-col gap-1">
-                              <span className="text-xs font-bold text-amber-500">{loc.name}</span>
+                              <span className="text-xs font-bold text-accent-gold">{loc.name}</span>
                               <span className="text-[10px] text-gray-400">
-                                Trạng thái ca: <strong className={statusData.status === 'CLOSED' ? 'text-emerald-400' : 'text-amber-400'}>{statusData.status}</strong>
+                                Trạng thái ca: <strong className={statusData.status === 'CLOSED' ? 'text-emerald-400' : 'text-accent-gold'}>{statusData.status}</strong>
                               </span>
                             </div>
                             
@@ -2998,7 +3119,7 @@ export default function Home() {
                                 disabled={statusData.importsConfirmed}
                                 onClick={() => handleConfirmDailyMovement(loc.id, 'IMPORT')}
                                 className={`px-2.5 py-1.5 rounded text-[10px] font-bold transition-all ${
-                                  statusData.importsConfirmed ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20'
+                                  statusData.importsConfirmed ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-accent-gold/10 text-accent-gold border border-border-cream hover:bg-accent-gold/20'
                                 }`}
                               >
                                 {statusData.importsConfirmed ? '✓ ĐÃ NHẬP' : 'XÁC NHẬN NHẬP'}
@@ -3008,7 +3129,7 @@ export default function Home() {
                                 disabled={statusData.issuesConfirmed}
                                 onClick={() => handleConfirmDailyMovement(loc.id, 'ISSUE')}
                                 className={`px-2.5 py-1.5 rounded text-[10px] font-bold transition-all ${
-                                  statusData.issuesConfirmed ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20'
+                                  statusData.issuesConfirmed ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-accent-gold/10 text-accent-gold border border-border-cream hover:bg-accent-gold/20'
                                 }`}
                               >
                                 {statusData.issuesConfirmed ? '✓ ĐÃ XUẤT' : 'XÁC NHẬN XUẤT'}
@@ -3020,7 +3141,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <p className="text-[10px] text-gray-500 italic leading-relaxed pt-2 border-t border-amber-500/5 mt-2">
+                  <p className="text-[10px] text-gray-500 italic leading-relaxed pt-2 border-t border-border-moss mt-2">
                     *Chỉ khi cả "Đã Nhập" và "Đã Xuất" được xác thực, hệ thống mới khóa sổ và ghi nhận closing_snapshot của ngày.
                   </p>
                 </div>
@@ -3036,14 +3157,14 @@ export default function Home() {
                       placeholder="Tìm mã / tên..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="bg-[#0c1220]/60 border border-amber-500/10 text-xs px-9 py-2.5 rounded-sm focus:outline-none focus:border-amber-500/50 w-full"
+                      className="bg-moss-light border border-border-moss text-xs text-text-light px-9 py-2.5 rounded-sm focus:outline-none focus:border-accent-gold w-full"
                     />
                   </div>
 
                   <select 
                     value={categoryFilter} 
                     onChange={(e) => setCategoryFilter(e.target.value)}
-                    className="bg-[#0c1220]/60 border border-amber-500/10 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-amber-500/50 text-gray-200"
+                    className="bg-moss-light border border-border-moss text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-accent-gold text-text-light"
                   >
                     <option value="ALL">Tất cả danh mục (All)</option>
                     {categories.map((cat, i) => (
@@ -3055,7 +3176,7 @@ export default function Home() {
 
               <div className="overflow-x-auto">
                 <table className="w-full text-xs text-left text-gray-300">
-                  <thead className="bg-[#0c1220] uppercase text-gray-400 border-b border-amber-500/10">
+                  <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                     <tr>
                       <th className="px-4 py-3">Mã NVL</th>
                       <th className="px-4 py-3">Tên tiếng Việt</th>
@@ -3068,13 +3189,13 @@ export default function Home() {
                   </thead>
                   <tbody className="divide-y divide-amber-500/5">
                     {filteredIngredients.map((ing) => (
-                      <tr key={ing.id} className="hover:bg-[#141a29]/30">
-                        <td className="px-4 py-3 font-mono text-amber-500/70 font-semibold">{ing.id}</td>
+                      <tr key={ing.id} className="hover:bg-moss-light/30">
+                        <td className="px-4 py-3 font-mono text-accent-gold/70 font-semibold">{ing.id}</td>
                         <td className="px-4 py-3 font-medium text-gray-100">{ing.vi_name}</td>
                         <td className="px-4 py-3 text-gray-400 italic">{ing.fr_name}</td>
                         <td className="px-4 py-3 text-gray-400">{ing.category}</td>
                         <td className="px-4 py-3 text-center text-gray-300 font-medium">{ing.unit}</td>
-                        <td className="px-4 py-3 text-right font-mono font-semibold text-amber-500/80">{ing.price.toLocaleString()} đ</td>
+                        <td className="px-4 py-3 text-right font-mono font-semibold text-accent-gold/80">{ing.price.toLocaleString()} đ</td>
                         <td className="px-4 py-3 text-center font-mono text-gray-300">{(ing.yield_rate * 100).toFixed(0)}%</td>
                       </tr>
                     ))}
@@ -3090,20 +3211,20 @@ export default function Home() {
               
               {/* Recipe List */}
               <div className="glass-panel rounded-md p-6 flex flex-col gap-4 xl:col-span-1">
-                <div className="border-b border-amber-500/10 pb-4 flex flex-col gap-3">
+                <div className="border-b border-border-cream pb-4 flex flex-col gap-3">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-lg font-semibold text-[#d4af37] font-serif">Định mức món ăn ({Object.keys(recipes).length})</h3>
+                    <h3 className="text-lg font-semibold text-accent-gold font-serif">Định mức món ăn ({Object.keys(recipes).length})</h3>
                   </div>
                   
                   <div className="flex gap-2">
                     <button 
                       onClick={downloadRecipesTemplate}
-                      className="flex-1 flex items-center justify-center gap-1 border border-amber-500/30 hover:bg-amber-500/5 text-amber-500 font-semibold text-[10px] py-1.5 rounded transition-all"
+                      className="flex-1 flex items-center justify-center gap-1 border border-border-cream hover:bg-accent-gold/5 text-accent-gold font-semibold text-[10px] py-1.5 rounded transition-all"
                     >
                       <Download size={12} />
                       <span>Mẫu Excel</span>
                     </button>
-                    <label className="flex-1 flex items-center justify-center gap-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 font-semibold text-[10px] py-1.5 rounded transition-all cursor-pointer text-center text-wrap justify-items-center">
+                    <label className="flex-1 flex items-center justify-center gap-1 bg-accent-gold/20 hover:bg-amber-500/30 text-accent-gold font-semibold text-[10px] py-1.5 rounded transition-all cursor-pointer text-center text-wrap justify-items-center">
                       <UploadCloud size={12} className="inline mr-1" />
                       <span>Tải định lượng</span>
                       <input 
@@ -3116,11 +3237,11 @@ export default function Home() {
                   </div>
                   
                   {/* À La Carte vs Tasting Portions Toggle */}
-                  <div className="flex gap-2 mt-4 bg-[#0c1220]/60 p-1 rounded border border-amber-500/10">
+                  <div className="flex gap-2 mt-4 bg-moss-light p-1 rounded border border-border-moss">
                     <button 
                       onClick={() => setRecipeType('alc')}
                       className={`flex-1 text-center py-1.5 text-[11px] rounded transition-all uppercase font-semibold ${
-                        recipeType === 'alc' ? 'bg-amber-500/15 text-amber-400' : 'text-gray-400 hover:text-gray-200'
+                        recipeType === 'alc' ? 'bg-accent-gold/15 text-accent-gold' : 'text-gray-400 hover:text-gray-200'
                       }`}
                     >
                       À La Carte (Portion Đầy đủ)
@@ -3128,7 +3249,7 @@ export default function Home() {
                     <button 
                       onClick={() => setRecipeType('deg')}
                       className={`flex-1 text-center py-1.5 text-[11px] rounded transition-all uppercase font-semibold ${
-                        recipeType === 'deg' ? 'bg-amber-500/15 text-amber-400' : 'text-gray-400 hover:text-gray-200'
+                        recipeType === 'deg' ? 'bg-accent-gold/15 text-accent-gold' : 'text-gray-400 hover:text-gray-200'
                       }`}
                     >
                       Dégustation (Portion Tasting)
@@ -3142,7 +3263,7 @@ export default function Home() {
                       placeholder="Tìm kiếm công thức..."
                       value={searchRecipe}
                       onChange={(e) => setSearchRecipe(e.target.value)}
-                      className="bg-[#0c1220]/60 border border-amber-500/10 text-xs px-9 py-2.5 rounded-sm focus:outline-none focus:border-amber-500/50 w-full"
+                      className="bg-moss-light border border-border-moss text-xs text-text-light px-9 py-2.5 rounded-sm focus:outline-none focus:border-accent-gold w-full"
                     />
                   </div>
                 </div>
@@ -3157,8 +3278,8 @@ export default function Home() {
                         onClick={() => setSelectedRecipe(displayCode)}
                         className={`w-full p-3 text-left rounded border flex items-center justify-between transition-all ${
                           isSelected 
-                            ? 'bg-amber-500/5 border-amber-500/40 text-amber-400' 
-                            : 'bg-[#141a29]/30 border-gray-800 text-gray-300 hover:bg-[#141a29]/60 hover:text-gray-100'
+                            ? 'bg-accent-gold/5 border-border-moss text-accent-gold' 
+                            : 'bg-moss-light/30 border-gray-800 text-gray-300 hover:bg-moss-light/60 hover:text-gray-100'
                         }`}
                       >
                         <div className="flex flex-col gap-1 min-w-0 pr-2">
@@ -3169,7 +3290,7 @@ export default function Home() {
                             <span>{r.course}</span>
                           </div>
                         </div>
-                        <ChevronRight size={14} className={isSelected ? 'text-amber-400' : 'text-gray-500'} />
+                        <ChevronRight size={14} className={isSelected ? 'text-accent-gold' : 'text-gray-500'} />
                       </button>
                     );
                   })}
@@ -3180,15 +3301,15 @@ export default function Home() {
               <div className="glass-panel rounded-md p-6 xl:col-span-2 flex flex-col gap-6">
                 {activeRecipeDetails ? (
                   <>
-                    <div className="border-b border-amber-500/10 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="border-b border-border-cream pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs text-amber-500/70 border border-amber-500/20 px-2 py-0.5 rounded uppercase font-semibold">
+                          <span className="font-mono text-xs text-accent-gold/70 border border-border-cream px-2 py-0.5 rounded uppercase font-semibold">
                             {activeRecipeDetails.code}
                           </span>
                           <span className="text-xs text-gray-400">• {activeRecipeDetails.course}</span>
                         </div>
-                        <h2 className="text-2xl font-semibold text-[#d4af37] font-serif mt-1">{activeRecipeDetails.name}</h2>
+                        <h2 className="text-2xl font-semibold text-accent-gold font-serif mt-1">{activeRecipeDetails.name}</h2>
                       </div>
                       
                       {activeRecipeDetails.price > 0 && (
@@ -3201,10 +3322,10 @@ export default function Home() {
 
                     {/* Ingredients Table */}
                     <div>
-                      <h3 className="text-lg font-serif font-semibold text-[#d4af37] mb-3">Định lượng & Giá vốn thành phần (Yield & Loss applied)</h3>
+                      <h3 className="text-lg font-serif font-semibold text-accent-gold mb-3">Định lượng & Giá vốn thành phần (Yield & Loss applied)</h3>
                       <div className="overflow-x-auto">
                         <table className="w-full text-xs text-left text-gray-300">
-                          <thead className="bg-[#0c1220] uppercase text-gray-400 border-b border-amber-500/10">
+                          <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                             <tr>
                               <th className="px-4 py-2">Mã NVL</th>
                               <th className="px-4 py-2">Tên tiếng Việt</th>
@@ -3219,14 +3340,14 @@ export default function Home() {
                             {activeRecipeDetails.ingredients.map((ing, i) => {
                               const details = ingredients.find(x => x.id === ing.ing_id);
                               return (
-                                <tr key={i} className="hover:bg-[#141a29]/30">
-                                  <td className="px-4 py-2 font-mono text-amber-500/70">{ing.ing_id}</td>
+                                <tr key={i} className="hover:bg-moss-light/30">
+                                  <td className="px-4 py-2 font-mono text-accent-gold/70">{ing.ing_id}</td>
                                   <td className="px-4 py-2 font-medium">{details?.vi_name || "Bán thành phẩm"}</td>
                                   <td className="px-4 py-2 text-right">{ing.qty_net.toFixed(3)} {ing.unit}</td>
                                   <td className="px-4 py-2 text-center font-mono">{(ing.yield_pct * 100).toFixed(0)}%</td>
                                   <td className="px-4 py-2 text-right font-mono font-semibold text-gray-200">{ing.qty_eff.toFixed(3)} {ing.unit}</td>
                                   <td className="px-4 py-2 text-right">{ing.unit_price.toLocaleString()} đ</td>
-                                  <td className="px-4 py-2 text-right font-mono font-semibold text-amber-500/80">{Math.round(ing.line_cost).toLocaleString()} đ</td>
+                                  <td className="px-4 py-2 text-right font-mono font-semibold text-accent-gold/80">{Math.round(ing.line_cost).toLocaleString()} đ</td>
                                 </tr>
                               );
                             })}
@@ -3235,7 +3356,7 @@ export default function Home() {
                       </div>
 
                       {/* Wastage calculation box */}
-                      <div className="mt-4 p-4 bg-[#0c1220]/40 rounded border border-amber-500/10 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs font-sans">
+                      <div className="mt-4 p-4 bg-moss-light rounded border border-border-moss flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs font-sans">
                         <div className="text-gray-400">
                           <p>• Chi phí nguyên liệu thực tế: <strong className="text-gray-200">
                             {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0)).toLocaleString()} đ
@@ -3246,7 +3367,7 @@ export default function Home() {
                         </div>
                         <div className="text-right border-t md:border-t-0 border-amber-500/15 pt-2 md:pt-0">
                           <span className="text-[10px] text-gray-400 uppercase tracking-wider block">Tổng Giá vốn đĩa (Food Cost)</span>
-                          <span className="text-xl font-bold text-amber-400">
+                          <span className="text-xl font-bold text-accent-gold">
                             {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0) * 1.1).toLocaleString()} đ
                           </span>
                         </div>
@@ -3256,11 +3377,11 @@ export default function Home() {
                     {/* Step-by-Step Method */}
                     {activeRecipeDetails.method && activeRecipeDetails.method.length > 0 && (
                       <div>
-                        <h3 className="text-lg font-serif font-semibold text-[#d4af37] mb-2 border-b border-amber-500/5 pb-1">Quy trình sơ chế & Phục vụ (Cooking Method)</h3>
+                        <h3 className="text-lg font-serif font-semibold text-accent-gold mb-2 border-b border-border-moss pb-1">Quy trình sơ chế & Phục vụ (Cooking Method)</h3>
                         <div className="flex flex-col gap-2 font-sans text-xs text-gray-300">
                           {activeRecipeDetails.method.map((step) => (
                             <div key={step.step} className="flex gap-3 items-start">
-                              <span className="font-serif font-bold text-amber-500">{step.step}.</span>
+                              <span className="font-serif font-bold text-accent-gold">{step.step}.</span>
                               <p className="flex-1 leading-relaxed">{step.description}</p>
                             </div>
                           ))}
@@ -3270,8 +3391,8 @@ export default function Home() {
 
                     {/* Notes */}
                     {activeRecipeDetails.notes && (
-                      <div className="bg-[#141a29]/30 rounded border border-gray-800 p-4 font-sans text-xs leading-relaxed text-gray-400">
-                        <strong className="text-amber-500 block mb-1">Ghi chú của Chef (Chef&apos;s Notes):</strong>
+                      <div className="bg-moss-light rounded border border-border-moss p-4 font-sans text-xs leading-relaxed text-text-muted-light">
+                        <strong className="text-accent-gold block mb-1">Ghi chú của Chef (Chef&apos;s Notes):</strong>
                         <p className="italic">{activeRecipeDetails.notes}</p>
                       </div>
                     )}
@@ -3289,21 +3410,21 @@ export default function Home() {
           {/* TAB 5: STOCK TAKE */}
           {activeTab === 'stockcount' && (
             <div className="glass-panel rounded-md p-6 flex flex-col gap-6">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-amber-500/10 pb-4">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border-cream pb-4">
                 <div>
-                  <h3 className="text-xl font-semibold text-[#d4af37] font-serif">Báo cáo Kiểm kho & Tính Variance</h3>
+                  <h3 className="text-xl font-semibold text-accent-gold font-serif">Báo cáo Kiểm kho & Tính Variance</h3>
                   <p className="text-xs text-gray-400">Nhập hoặc tải lên file Excel kiểm kho để tính chênh lệch tồn kho thực tế.</p>
                 </div>
                 
                 <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
                   <button 
                     onClick={downloadStockTakeTemplate}
-                    className="flex items-center gap-1.5 border border-amber-500/30 hover:bg-amber-500/5 text-amber-500 font-semibold text-xs px-3.5 py-2.5 rounded-sm transition-all shadow-md active:scale-95"
+                    className="flex items-center gap-1.5 border border-border-cream hover:bg-accent-gold/5 text-accent-gold font-semibold text-xs px-3.5 py-2.5 rounded-sm transition-all shadow-md active:scale-95"
                   >
                     <Download size={14} />
                     <span>Tải file mẫu Kiểm kho</span>
                   </button>
-                  <label className="flex items-center gap-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-semibold text-xs px-4 py-2.5 rounded-sm transition-all shadow-md active:scale-95 cursor-pointer">
+                  <label className="flex items-center gap-2 bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-semibold text-xs px-4 py-2.5 rounded-sm transition-all shadow-md active:scale-95 cursor-pointer">
                     <UploadCloud size={14} />
                     <span>Tải lên kết quả Kiểm kho</span>
                     <input 
@@ -3314,7 +3435,7 @@ export default function Home() {
                     />
                   </label>
                   {/* Search box for Stock Count */}
-                  <div className="relative flex items-center bg-[#090d16] border border-amber-500/20 rounded px-2.5 w-full md:w-60">
+                  <div className="relative flex items-center bg-[#090d16] border border-border-cream rounded px-2.5 w-full md:w-60">
                     <Search className="w-3.5 h-3.5 text-gray-500 mr-2" />
                     <input 
                       type="text" 
@@ -3326,13 +3447,13 @@ export default function Home() {
                   </div>
 
                   {userRole === 'admin' && (
-                    <div className="flex items-center gap-1.5 bg-[#0c1220]/60 p-1.5 rounded border border-amber-500/10 text-xs font-sans">
+                    <div className="flex items-center gap-1.5 bg-moss-dark/60 p-1.5 rounded border border-border-cream text-xs font-sans">
                       <span className="text-gray-400 px-2 font-sans">Loại kho lọc:</span>
                       <button 
                         type="button"
                         onClick={() => setStockCountFilter('ALL')}
                         className={`px-3 py-1 rounded font-bold uppercase text-[9px] transition-all active:scale-95 ${
-                          stockCountFilter === 'ALL' ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40' : 'bg-transparent text-gray-400 hover:text-gray-200'
+                          stockCountFilter === 'ALL' ? 'bg-amber-500/25 text-text-light border border-border-moss' : 'bg-transparent text-gray-400 hover:text-gray-200'
                         }`}
                       >
                         Tất cả
@@ -3341,7 +3462,7 @@ export default function Home() {
                         type="button"
                         onClick={() => setStockCountFilter('KITCHEN')}
                         className={`px-3 py-1 rounded font-bold uppercase text-[9px] transition-all active:scale-95 ${
-                          stockCountFilter === 'KITCHEN' ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40' : 'bg-transparent text-gray-400 hover:text-gray-200'
+                          stockCountFilter === 'KITCHEN' ? 'bg-amber-500/25 text-text-light border border-border-moss' : 'bg-transparent text-gray-400 hover:text-gray-200'
                         }`}
                       >
                         Kho Bếp
@@ -3350,7 +3471,7 @@ export default function Home() {
                         type="button"
                         onClick={() => setStockCountFilter('BAR')}
                         className={`px-3 py-1 rounded font-bold uppercase text-[9px] transition-all active:scale-95 ${
-                          stockCountFilter === 'BAR' ? 'bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/40 font-bold' : 'bg-transparent text-gray-400 hover:text-gray-200'
+                          stockCountFilter === 'BAR' ? 'bg-[#d4af37]/20 text-accent-gold border border-[#d4af37]/40 font-bold' : 'bg-transparent text-gray-400 hover:text-gray-200'
                         }`}
                       >
                         Kho Bar (Rượu)
@@ -3360,8 +3481,8 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="bg-amber-500/5 border border-amber-500/10 p-4 rounded text-xs leading-relaxed font-sans text-gray-400">
-                <strong className="text-amber-500 block mb-1">HƯỚNG DẪN KIỂM KHO:</strong>
+              <div className="bg-accent-gold/5 border border-border-cream p-4 rounded text-xs leading-relaxed font-sans text-gray-400">
+                <strong className="text-accent-gold block mb-1">HƯỚNG DẪN KIỂM KHO:</strong>
                 <p>1. Nhập số lượng cân đếm thực tế của nguyên liệu vào ô **Tồn thực tế**.</p>
                 <p>2. CRM sẽ tự động so khớp với **Tồn lý thuyết** (= Standard Opening 30 - Tiêu hao định mức).</p>
                 <p>3. **Chênh lệch (Variance)** âm (màu đỏ) đại diện cho phần hao hụt ngoài định mức (lãng phí, thất thoát hoặc hư hỏng).</p>
@@ -3369,7 +3490,7 @@ export default function Home() {
 
               <div className="overflow-x-auto">
                 <table className="w-full text-xs text-left text-gray-300">
-                  <thead className="bg-[#0c1220] uppercase text-gray-400 border-b border-amber-500/10">
+                  <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                     <tr>
                       <th className="px-4 py-3">Mã</th>
                       <th className="px-4 py-3">Tên Nguyên Liệu</th>
@@ -3392,16 +3513,16 @@ export default function Home() {
                       const varianceCost = variance * ing.price;
 
                       return (
-                        <tr key={ing.id} className="hover:bg-[#141a29]/30">
-                          <td className="px-4 py-3 font-mono text-amber-500/70">{ing.id}</td>
+                        <tr key={ing.id} className="hover:bg-moss-light/30">
+                          <td className="px-4 py-3 font-mono text-accent-gold/70">{ing.id}</td>
                           <td className="px-4 py-3 font-medium text-gray-100">
                             {ing.vi_name}
                             {['Wine', 'Alcohol', 'Beverage'].includes(ing.category) && (
-                              <span className="ml-2 bg-[#d4af37]/10 border border-[#d4af37]/30 text-[#d4af37] px-1.5 py-0.5 rounded text-[9px] font-sans font-semibold">BAR</span>
+                              <span className="ml-2 bg-[#d4af37]/10 border border-[#d4af37]/30 text-accent-gold px-1.5 py-0.5 rounded text-[9px] font-sans font-semibold">BAR</span>
                             )}
                           </td>
                           <td className="px-4 py-3 text-right">{ing.price.toLocaleString()} đ</td>
-                          <td className="px-4 py-3 text-right font-mono text-amber-500">{consumed.toFixed(3)} {ing.unit}</td>
+                          <td className="px-4 py-3 text-right font-mono text-accent-gold">{consumed.toFixed(3)} {ing.unit}</td>
                           <td className="px-4 py-3 text-right font-mono text-gray-400">{theoretical.toFixed(3)} {ing.unit}</td>
                           <td className="px-4 py-3 text-center flex items-center justify-center gap-2">
                             <input 
@@ -3414,13 +3535,13 @@ export default function Home() {
                                   [ing.id]: e.target.value
                                 });
                               }}
-                              className="bg-[#090d16] border border-amber-500/20 rounded-sm text-center text-xs w-20 py-1 font-mono text-gray-100 focus:outline-none focus:border-amber-500"
+                              className="bg-moss-light border border-border-moss rounded-sm text-center text-xs w-20 py-1 font-mono text-text-light focus:outline-none focus:border-accent-gold"
                             />
                             {['Wine', 'Alcohol', 'Beverage', 'BOTTLE'].includes(ing.category) || ing.stock_uom === 'BOTTLE' ? (
                               <button
                                 onClick={() => handleOpenWeighModal(ing)}
                                 title="Cân chai dở bằng cân điện tử"
-                                className="bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 px-2 py-1 rounded text-[10px] font-semibold flex items-center gap-1 active:scale-95 transition-all"
+                                className="bg-accent-gold/10 hover:bg-accent-gold/20 border border-border-cream text-accent-gold px-2 py-1 rounded text-[10px] font-semibold flex items-center gap-1 active:scale-95 transition-all"
                               >
                                 <span>⚖️ Cân</span>
                               </button>
@@ -3433,7 +3554,7 @@ export default function Home() {
                                 ? 'text-gray-400'
                                 : (variance < 0 && (theoretical > 0 ? (Math.abs(variance) / theoretical * 100) : 0) > (ing.tolerance_percent || 5.0))
                                   ? 'text-rose-400 bg-rose-500/5 border border-rose-500/20 px-1 rounded' 
-                                  : 'text-amber-300/80'
+                                  : 'text-text-light/80'
                           }`}>
                             {isNaN(actualVal) 
                               ? "Chưa kiểm" 
@@ -3449,7 +3570,7 @@ export default function Home() {
                                 ? 'text-gray-400'
                                 : (varianceCost < 0 && (theoretical > 0 ? (Math.abs(variance) / theoretical * 100) : 0) > (ing.tolerance_percent || 5.0))
                                   ? 'text-rose-400 font-bold' 
-                                  : 'text-amber-300/80'
+                                  : 'text-text-light/80'
                           }`}>
                             {isNaN(actualVal) ? "—" : `${varianceCost > 0 ? "+" : ""}${Math.round(varianceCost).toLocaleString()} đ`}
                           </td>
@@ -3465,16 +3586,16 @@ export default function Home() {
           {/* TAB 6: SUB-RECIPES PRODUCTION */}
           {activeTab === 'subrecipes' && (
             <div className="glass-panel rounded-md p-6 flex flex-col gap-6">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-amber-500/10 pb-4">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border-cream pb-4">
                 <div>
-                  <h3 className="text-xl font-semibold text-[#d4af37] font-serif font-sans">Sản xuất Bán thành phẩm (Sub-recipes)</h3>
+                  <h3 className="text-xl font-semibold text-accent-gold font-serif font-sans">Sản xuất Bán thành phẩm (Sub-recipes)</h3>
                   <p className="text-xs text-gray-400">Ghi nhận sản xuất nước sốt, nước dùng cốt. Hệ thống tự động trừ kho nguyên liệu thô tương ứng.</p>
                 </div>
                 
                 <div className="flex items-center gap-3">
                   <button 
                     onClick={downloadSubRecipeTemplate}
-                    className="flex items-center gap-1.5 border border-amber-500/30 hover:bg-amber-500/5 text-amber-500 font-semibold text-xs px-4 py-2.5 rounded-sm transition-all shadow-md active:scale-95"
+                    className="flex items-center gap-1.5 border border-border-cream hover:bg-accent-gold/5 text-accent-gold font-semibold text-xs px-4 py-2.5 rounded-sm transition-all shadow-md active:scale-95"
                   >
                     <Download size={14} />
                     <span>Mẫu Excel Sản xuất</span>
@@ -3492,8 +3613,8 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Form to log production */}
-                <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 lg:col-span-1">
-                  <h4 className="text-sm font-semibold text-amber-400 uppercase tracking-wider font-serif font-sans">Khai báo sản xuất thủ công</h4>
+                <div className="p-5 bg-moss-dark/50 rounded border border-border-cream flex flex-col gap-4 lg:col-span-1">
+                  <h4 className="text-sm font-semibold text-accent-gold uppercase tracking-wider font-serif font-sans">Khai báo sản xuất thủ công</h4>
                   
                   <form onSubmit={handleLogSubRecipeCooking} className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1.5 font-sans">
@@ -3501,7 +3622,7 @@ export default function Home() {
                       <select 
                         value={selectedSubRecipe}
                         onChange={(e) => setSelectedSubRecipe(e.target.value)}
-                        className="bg-[#090d16] border border-amber-500/20 rounded text-xs p-2.5 text-gray-200 focus:outline-none focus:border-amber-500"
+                        className="bg-[#090d16] border border-border-cream rounded text-xs p-2.5 text-gray-200 focus:outline-none focus:border-amber-500"
                       >
                         {Object.entries(SUB_RECIPE_FORMULAS).map(([id, formula]) => (
                           <option key={id} value={id}>{formula.name} ({formula.unit})</option>
@@ -3516,13 +3637,13 @@ export default function Home() {
                         step="any"
                         value={cookedQty}
                         onChange={(e) => setCookedQty(e.target.value)}
-                        className="bg-[#090d16] border border-amber-500/20 rounded text-xs p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono"
+                        className="bg-[#090d16] border border-border-cream rounded text-xs p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono"
                       />
                     </div>
 
                     <button 
                       type="submit"
-                      className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs py-2.5 rounded-sm transition-all shadow-md active:scale-95"
+                      className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-xs py-2.5 rounded-sm transition-all shadow-md active:scale-95"
                     >
                       <Cpu size={14} />
                       <span>Ghi nhận & Khấu trừ kho</span>
@@ -3530,9 +3651,9 @@ export default function Home() {
                   </form>
 
                   {/* Excel Upload Option */}
-                  <div className="border-t border-amber-500/10 pt-4 mt-2 flex flex-col gap-2 font-sans">
+                  <div className="border-t border-border-cream pt-4 mt-2 flex flex-col gap-2 font-sans">
                     <span className="text-[10px] text-gray-400 font-sans">Hoặc tải lên phiếu sản xuất hàng loạt:</span>
-                    <label className="w-full flex items-center justify-center gap-2 border border-dashed border-amber-500/30 hover:border-amber-500/50 hover:bg-amber-500/5 text-amber-400 font-semibold text-xs py-2.5 rounded-sm transition-all cursor-pointer text-center font-sans">
+                    <label className="w-full flex items-center justify-center gap-2 border border-dashed border-border-cream hover:border-border-moss0 hover:bg-accent-gold/5 text-accent-gold font-semibold text-xs py-2.5 rounded-sm transition-all cursor-pointer text-center font-sans">
                       <UploadCloud size={14} />
                       <span>Tải file sản xuất (.xls/.xlsx)</span>
                       <input 
@@ -3644,14 +3765,14 @@ export default function Home() {
                 <div className="lg:col-span-2 flex flex-col gap-6 font-sans">
                   
                   {/* Current selected formula ingredients preview */}
-                  <div className="p-5 bg-[#0c1220]/30 rounded border border-amber-500/5">
-                    <h4 className="text-sm font-semibold text-[#d4af37] font-serif mb-3 font-sans">
+                  <div className="p-5 bg-moss-dark/30 rounded border border-border-moss">
+                    <h4 className="text-sm font-semibold text-accent-gold font-serif mb-3 font-sans">
                       Định lượng thành phần của: <span className="text-gray-100 font-sans">{SUB_RECIPE_FORMULAS[selectedSubRecipe]?.name}</span>
                     </h4>
                     
                     <div className="overflow-x-auto">
                       <table className="w-full text-xs text-left text-gray-300 font-sans">
-                        <thead className="bg-[#0c1220] uppercase text-gray-400 border-b border-amber-500/10 font-sans">
+                        <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss font-sans">
                           <tr>
                             <th className="px-4 py-2">Mã nguyên liệu thô</th>
                             <th className="px-4 py-2">Tên nguyên liệu thô</th>
@@ -3666,11 +3787,11 @@ export default function Home() {
                             const currentStock = getTheoreticalStock(ing.ing_id);
                             const totalDeduction = ing.qty * (parseFloat(cookedQty) || 0);
                             return (
-                              <tr key={ing.ing_id} className="hover:bg-[#141a29]/30 font-sans">
-                                <td className="px-4 py-2 font-mono text-amber-500/70">{ing.ing_id}</td>
+                              <tr key={ing.ing_id} className="hover:bg-moss-light/30 font-sans">
+                                <td className="px-4 py-2 font-mono text-accent-gold/70">{ing.ing_id}</td>
                                 <td className="px-4 py-2 font-medium">{detail?.vi_name || 'Chưa rõ'}</td>
                                 <td className="px-4 py-2 text-right font-mono">{ing.qty} {detail?.unit || 'kg'}</td>
-                                <td className="px-4 py-2 text-right font-mono text-amber-400 font-semibold">{totalDeduction.toFixed(3)} {detail?.unit || 'kg'}</td>
+                                <td className="px-4 py-2 text-right font-mono text-accent-gold font-semibold">{totalDeduction.toFixed(3)} {detail?.unit || 'kg'}</td>
                                 <td className={`px-4 py-2 text-right font-mono ${currentStock < totalDeduction ? 'text-rose-400 font-bold' : 'text-gray-400'}`}>
                                   {currentStock.toFixed(3)} {detail?.unit || 'kg'} {currentStock < totalDeduction && '(Thiếu hụt!)'}
                                 </td>
@@ -3683,12 +3804,12 @@ export default function Home() {
                   </div>
 
                   {/* Production logs (list of recently cooked transactions) */}
-                  <div className="p-5 bg-[#0c1220]/30 rounded border border-amber-500/5 font-sans">
-                    <h4 className="text-sm font-semibold text-[#d4af37] font-serif mb-3 font-sans">Nhật ký sản xuất gần đây</h4>
+                  <div className="p-5 bg-moss-light rounded border border-border-moss font-sans">
+                    <h4 className="text-sm font-semibold text-accent-gold font-serif mb-3 font-sans">Nhật ký sản xuất gần đây</h4>
                     
                     <div className="overflow-x-auto max-h-56 font-sans">
                       <table className="w-full text-xs text-left text-gray-300 font-sans">
-                        <thead className="bg-[#0c1220] uppercase text-gray-400 border-b border-amber-500/10 font-sans">
+                        <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss font-sans">
                           <tr>
                             <th className="px-4 py-2 font-sans">Thời gian</th>
                             <th className="px-4 py-2 font-sans">Mã NVL / BTP</th>
@@ -3701,11 +3822,11 @@ export default function Home() {
                           {transactions.filter(t => t.id.startsWith('sr-')).slice(-8).reverse().map((t) => {
                             const detail = ingredients.find(i => i.id === t.ingredientId);
                             return (
-                              <tr key={t.id} className="hover:bg-[#141a29]/30 font-sans">
+                              <tr key={t.id} className="hover:bg-moss-light/30 font-sans">
                                 <td className="px-4 py-2 text-gray-400 text-[10px]">{t.date}</td>
-                                <td className="px-4 py-2 font-semibold text-amber-500/80">{t.ingredientId}</td>
+                                <td className="px-4 py-2 font-semibold text-accent-gold/80">{t.ingredientId}</td>
                                 <td className="px-4 py-2">
-                                  <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase ${t.type === 'import' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'}`}>
+                                  <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase ${t.type === 'import' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-accent-gold/10 text-accent-gold'}`}>
                                     {t.type === 'import' ? 'NHẬP BTP' : 'TRỪ THÔ'}
                                   </span>
                                 </td>
@@ -3734,14 +3855,14 @@ export default function Home() {
 
           {activeTab === 'reconciliation' && (
             <div className="glass-panel rounded-md p-6 flex flex-col gap-6">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-amber-500/10 pb-4">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border-cream pb-4">
                 <div>
-                  <h3 className="text-xl font-semibold text-[#d4af37] font-serif">Vận hành Song song & Hiệu chỉnh (Parallel Run & Yield Calibration)</h3>
+                  <h3 className="text-xl font-semibold text-accent-gold font-serif">Vận hành Song song & Hiệu chỉnh (Parallel Run & Yield Calibration)</h3>
                   <p className="text-xs text-gray-400">Giai đoạn 5 (Tuần 9 - Tuần 10): Chạy song song Excel cũ, đối soát chênh lệch hao hụt, chốt kiểm thử Supabase RLS.</p>
                 </div>
                 
                 <div className="flex items-center gap-3">
-                  <span className="text-xs bg-[#0c1220] border border-amber-500/20 px-3 py-1.5 text-amber-500 font-semibold font-mono rounded">
+                  <span className="text-xs bg-moss-dark border border-border-cream px-3 py-1.5 text-accent-gold font-semibold font-mono rounded">
                     MỐC 90 NGÀY: TUẦN 9 - 10
                   </span>
                 </div>
@@ -3755,7 +3876,7 @@ export default function Home() {
               )}
 
               {calibSuccessMsg && (
-                <div className="bg-amber-500/10 border border-amber-500/20 text-amber-400 p-4 rounded text-xs flex items-center gap-2 font-sans">
+                <div className="bg-accent-gold/10 border border-border-cream text-accent-gold p-4 rounded text-xs flex items-center gap-2 font-sans">
                   <CheckCircle size={16} />
                   <span>{calibSuccessMsg}</span>
                 </div>
@@ -3764,10 +3885,10 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
                 {/* 1. Parallel Running & Excel Upload */}
-                <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans">
+                <div className="p-5 bg-moss-light rounded border border-border-moss flex flex-col gap-4 font-sans">
                   <div className="flex justify-between items-center">
-                    <h4 className="text-sm font-semibold text-amber-400 uppercase tracking-wider font-serif">1. Bảng Đối soát Excel Cũ vs. CRM Mới</h4>
-                    <span className="px-2 py-0.5 rounded text-[9px] bg-amber-500/10 text-amber-400 font-semibold uppercase">Song Song</span>
+                    <h4 className="text-sm font-semibold text-accent-gold uppercase tracking-wider font-serif">1. Bảng Đối soát Excel Cũ vs. CRM Mới</h4>
+                    <span className="px-2 py-0.5 rounded text-[9px] bg-accent-gold/10 text-accent-gold font-semibold uppercase">Song Song</span>
                   </div>
 
                   <p className="text-xs text-gray-400 leading-relaxed">
@@ -3775,7 +3896,7 @@ export default function Home() {
                   </p>
 
                   <div className="flex flex-col gap-3">
-                    <label className="w-full flex items-center justify-center gap-2 border border-dashed border-amber-500/30 hover:border-amber-500/50 hover:bg-amber-500/5 text-amber-400 font-semibold text-xs py-3 rounded-sm transition-all cursor-pointer text-center">
+                    <label className="w-full flex items-center justify-center gap-2 border border-dashed border-border-cream hover:border-border-moss0 hover:bg-accent-gold/5 text-accent-gold font-semibold text-xs py-3 rounded-sm transition-all cursor-pointer text-center">
                       <UploadCloud size={16} />
                       <span>Tải file Excel Xuất Kho Cũ (.xls/.xlsx)</span>
                       <input 
@@ -3794,7 +3915,7 @@ export default function Home() {
 
                   <div className="overflow-x-auto mt-2">
                     <table className="w-full text-[11px] text-left text-gray-300">
-                      <thead className="bg-[#0c1220] uppercase text-gray-400 border-b border-amber-500/10">
+                      <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                         <tr>
                           <th className="px-3 py-2">Mã NVL</th>
                           <th className="px-3 py-2">Tên Nguyên Liệu</th>
@@ -3806,8 +3927,8 @@ export default function Home() {
                       </thead>
                       <tbody className="divide-y divide-amber-500/5 font-mono">
                         {parallelVarianceList.map((item) => (
-                          <tr key={item.code} className="hover:bg-[#141a29]/30">
-                            <td className="px-3 py-2.5 text-amber-500/80">{item.code}</td>
+                          <tr key={item.code} className="hover:bg-moss-light/30">
+                            <td className="px-3 py-2.5 text-accent-gold/80">{item.code}</td>
                             <td className="px-3 py-2.5 font-sans font-medium">{item.name}</td>
                             <td className="px-3 py-2.5 text-right">{item.excelQty.toFixed(2)} kg</td>
                             <td className="px-3 py-2.5 text-right text-gray-200">{item.crmQty.toFixed(2)} kg</td>
@@ -3819,16 +3940,16 @@ export default function Home() {
                     </table>
                   </div>
 
-                  <div className="bg-[#090d16] p-3 rounded text-[10px] text-gray-400 border border-amber-500/5 leading-relaxed font-sans">
-                    <strong className="text-amber-500 font-serif block mb-1">NHẬN XÉT CỦA CFO (v8.0):</strong>
+                  <div className="bg-[#090d16] p-3 rounded text-[10px] text-gray-400 border border-border-moss leading-relaxed font-sans">
+                    <strong className="text-accent-gold font-serif block mb-1">NHẬN XÉT CỦA CFO (v8.0):</strong>
                     Sau khi BỎ hệ số hao hụt ảo 1.10 ở bản v8.0, số liệu xuất bán lý thuyết của CRM và Excel đã <strong>khớp nhau 100%</strong> ở các mặt hàng tiêu chuẩn. Riêng thịt trâu Wellington (ING-011) lệch đúng bằng lượng 1.5kg từ <strong>Waste Log hủy hỏng thực tế</strong> đã được Bếp phó khai báo và Admin duyệt trong ca. Việc bỏ hệ số giúp phát hiện chính xác thất thoát.
                   </div>
                 </div>
 
                 {/* 2. Yield Rate Calibration Tool */}
-                <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans">
+                <div className="p-5 bg-moss-light rounded border border-border-moss flex flex-col gap-4 font-sans">
                   <div className="flex justify-between items-center">
-                    <h4 className="text-sm font-semibold text-amber-400 uppercase tracking-wider font-serif">2. Công cụ Hiệu chỉnh Yield Rate Bếp</h4>
+                    <h4 className="text-sm font-semibold text-accent-gold uppercase tracking-wider font-serif">2. Công cụ Hiệu chỉnh Yield Rate Bếp</h4>
                     <span className="px-2 py-0.5 rounded text-[9px] bg-blue-500/15 text-blue-400 border border-blue-500/20 font-semibold uppercase">Calibrate</span>
                   </div>
 
@@ -3838,7 +3959,7 @@ export default function Home() {
 
                   <div className="overflow-x-auto mt-2">
                     <table className="w-full text-xs text-left text-gray-300">
-                      <thead className="bg-[#0c1220] uppercase text-gray-400 border-b border-amber-500/10">
+                      <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                         <tr>
                           <th className="px-3 py-2">Tên Nguyên Liệu</th>
                           <th className="px-3 py-2 text-right">Yield Định Mức</th>
@@ -3858,12 +3979,12 @@ export default function Home() {
                           const dbIng = ingredients.find(i => i.id === row.id);
                           const currentYield = dbIng ? dbIng.yield_rate : row.current;
                           return (
-                            <tr key={row.id} className="hover:bg-[#141a29]/30">
+                            <tr key={row.id} className="hover:bg-moss-light/30">
                               <td className="px-3 py-2.5 font-sans font-medium">
                                 <div className="font-semibold text-gray-200">{row.name}</div>
                                 <div className="text-[10px] text-gray-500 font-mono">{row.id}</div>
                               </td>
-                              <td className="px-3 py-2.5 text-right font-bold text-amber-500">{currentYield}%</td>
+                              <td className="px-3 py-2.5 text-right font-bold text-accent-gold">{currentYield}%</td>
                               <td className="px-3 py-2.5 text-right">{row.theory.toFixed(2)} kg</td>
                               <td className="px-3 py-2.5 text-right text-gray-100">{row.actual.toFixed(2)} kg</td>
                               <td className="px-3 py-2.5 text-right text-emerald-400 font-bold">{row.calculated}%</td>
@@ -3874,7 +3995,7 @@ export default function Home() {
                                   className={`px-2 py-1 rounded text-[10px] font-sans font-bold transition-all ${
                                     currentYield === row.calculated
                                       ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-transparent'
-                                      : 'bg-gradient-to-r from-amber-600 to-amber-500 text-[#090d16] hover:from-amber-500 hover:to-[#f3e5ab] cursor-pointer shadow-md'
+                                      : 'bg-gradient-to-r from-accent-gold to-accent-deep text-[#090d16] hover:from-accent-deep hover:to-accent-gold cursor-pointer shadow-md'
                                   }`}
                                 >
                                   {currentYield === row.calculated ? 'Đã đồng bộ' : 'Đồng bộ'}
@@ -3887,7 +4008,7 @@ export default function Home() {
                     </table>
                   </div>
 
-                  <div className="bg-[#090d16] p-3 rounded text-[10px] text-gray-400 border border-amber-500/5 leading-relaxed font-sans">
+                  <div className="bg-[#090d16] p-3 rounded text-[10px] text-gray-400 border border-border-moss leading-relaxed font-sans">
                     <strong className="text-blue-400 font-serif block mb-1">CƠ CHẾ HIỆU CHỈNH:</strong>
                     Tỷ lệ Yield Rate thực tế của Bếp được tính toán bằng cách đối chiếu lượng xuất lý thuyết sạch (Net) chia cho tổng hao hụt vật lý đo được qua kiểm kho định kỳ. Khi bấm <strong>Đồng bộ</strong>, hệ thống tự động ghi đè tỷ lệ mới vào Master dữ liệu giúp các mẻ tính sau 22h30 đạt độ chính xác tiệm cận 100%.
                   </div>
@@ -3896,17 +4017,17 @@ export default function Home() {
               </div>
 
               {/* 3. Supabase RLS & High Load Simulation */}
-              <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans mt-4">
-                <div className="flex justify-between items-center border-b border-amber-500/10 pb-2">
+              <div className="p-5 bg-moss-light rounded border border-border-moss flex flex-col gap-4 font-sans mt-4">
+                <div className="flex justify-between items-center border-b border-border-cream pb-2">
                   <div>
-                    <h4 className="text-sm font-semibold text-amber-400 uppercase tracking-wider font-serif">3. Kiểm thử Bảo mật Supabase RLS & Độ trễ tải cao điểm</h4>
+                    <h4 className="text-sm font-semibold text-accent-gold uppercase tracking-wider font-serif">3. Kiểm thử Bảo mật Supabase RLS & Độ trễ tải cao điểm</h4>
                     <p className="text-[11px] text-gray-400 mt-0.5">Mô phỏng 1000 requests/giây để kiểm tra chính sách bảo mật dòng Row Level Security (RLS) của Supabase.</p>
                   </div>
                   
                   <button
                     onClick={runRlsSecurityAudit}
                     disabled={rlsAuditStatus === 'running'}
-                    className="flex items-center gap-1.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs px-4 py-2.5 rounded shadow cursor-pointer transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-1.5 bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-xs px-4 py-2.5 rounded shadow cursor-pointer transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <RefreshCw size={14} className={rlsAuditStatus === 'running' ? 'animate-spin' : ''} />
                     <span>{rlsAuditStatus === 'running' ? 'ĐANG AUDIT...' : 'BẮT ĐẦU CHẠY KIỂM THỬ'}</span>
@@ -3915,7 +4036,7 @@ export default function Home() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
                   <div className="md:col-span-1 flex flex-col gap-3 font-sans">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-500">Các Chính Sách RLS Đang Active</span>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-accent-gold">Các Chính Sách RLS Đang Active</span>
                     <div className="flex flex-col gap-2 text-[11px] font-sans">
                       <div className="flex items-center justify-between p-2 bg-[#090d16] rounded border border-emerald-500/20">
                         <span>🛡️ profiles: Chỉ xem chính mình</span>
@@ -3937,12 +4058,12 @@ export default function Home() {
                   </div>
 
                   <div className="md:col-span-2 flex flex-col gap-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-500">Console Logs (Supabase Audit Output)</span>
-                    <div className="bg-[#090d16] border border-amber-500/20 rounded p-4 h-52 overflow-y-auto font-mono text-[11px] text-gray-300 flex flex-col gap-1.5 shadow-inner">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-accent-gold">Console Logs (Supabase Audit Output)</span>
+                    <div className="bg-[#090d16] border border-border-cream rounded p-4 h-52 overflow-y-auto font-mono text-[11px] text-gray-300 flex flex-col gap-1.5 shadow-inner">
                       {rlsAuditLogs.map((log, idx) => (
                         <div key={idx} className={`${
                           log.includes('[PASS]') ? 'text-emerald-400' : 
-                          log.includes('🔒') ? 'text-amber-400/90' : 
+                          log.includes('🔒') ? 'text-accent-gold/90' : 
                           log.includes('[STABLE]') || log.includes('[COMPLETED]') ? 'text-cyan-400 font-bold' : 
                           'text-gray-300'
                         }`}>
@@ -3965,9 +4086,9 @@ export default function Home() {
           {activeTab === 'purchasing' && (
             <div className="flex flex-col gap-6">
               <div className="glass-panel rounded-md p-6 flex flex-col gap-6">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-amber-500/10 pb-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border-cream pb-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-[#d4af37] font-serif">Nghiệp vụ Mua hàng & Nhập kho (PO / GRN)</h3>
+                    <h3 className="text-xl font-semibold text-accent-gold font-serif">Nghiệp vụ Mua hàng & Nhập kho (PO / GRN)</h3>
                     <p className="text-xs text-gray-400 font-sans">Kiểm soát đơn đặt hàng PO, lập phiếu nhận hàng GRN và phân bổ Landed Cost tự động cập nhật WAC.</p>
                   </div>
                 </div>
@@ -3976,8 +4097,8 @@ export default function Home() {
                   {/* Cột trái: Nhập kho (GRN) & Tiêu thụ ngoài bán hàng (Non-Sale) */}
                   <div className="lg:col-span-5 flex flex-col gap-6">
                     {/* Lập phiếu nhận hàng (Goods Receipt) */}
-                    <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans">
-                      <h4 className="text-xs font-bold uppercase text-amber-400 border-b border-amber-500/5 pb-2">Lập phiếu nhận hàng (Goods Receipt)</h4>
+                    <div className="p-5 bg-moss-light rounded border border-border-moss flex flex-col gap-4 font-sans">
+                      <h4 className="text-xs font-bold uppercase text-accent-gold border-b border-border-moss pb-2">Lập phiếu nhận hàng (Goods Receipt)</h4>
                       
                       <form onSubmit={handleCreateGrn} className="flex flex-col gap-4">
                         <div className="flex flex-col gap-1.5">
@@ -3985,7 +4106,7 @@ export default function Home() {
                           <select
                             value={selectedPoForGrn}
                             onChange={(e) => handleSelectPo(e.target.value)}
-                            className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
+                            className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
                             required
                           >
                             <option value="">-- Chọn đơn đặt hàng đang mở --</option>
@@ -4003,7 +4124,7 @@ export default function Home() {
                             placeholder="VD: INV-ANNAM-9988"
                             value={grnInvoiceNo}
                             onChange={(e) => setGrnInvoiceNo(e.target.value)}
-                            className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none"
+                            className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-100 focus:outline-none"
                           />
                         </div>
 
@@ -4015,7 +4136,7 @@ export default function Home() {
                               placeholder="0"
                               value={grnDuty}
                               onChange={(e) => setGrnDuty(e.target.value)}
-                              className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none"
+                              className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-100 focus:outline-none"
                             />
                           </div>
                           <div className="flex flex-col gap-1.5">
@@ -4025,17 +4146,17 @@ export default function Home() {
                               placeholder="0"
                               value={grnFreight}
                               onChange={(e) => setGrnFreight(e.target.value)}
-                              className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none"
+                              className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-100 focus:outline-none"
                             />
                           </div>
                         </div>
 
                         {grnLines.length > 0 && (
-                          <div className="border-t border-amber-500/10 pt-3 flex flex-col gap-2">
+                          <div className="border-t border-border-cream pt-3 flex flex-col gap-2">
                             <label className="text-[10px] uppercase text-gray-400 font-semibold">5. Số lượng nhận thực tế</label>
                             <div className="flex flex-col gap-2.5 max-h-48 overflow-y-auto">
                               {grnLines.map((line, idx) => (
-                                <div key={line.ingredientId} className="flex justify-between items-center bg-[#090d16]/70 p-2 rounded border border-amber-500/5">
+                                <div key={line.ingredientId} className="flex justify-between items-center bg-[#090d16]/70 p-2 rounded border border-border-moss">
                                   <div className="flex flex-col gap-0.5">
                                     <span className="text-xs text-gray-200 font-semibold">{line.name}</span>
                                     <span className="text-[10px] text-gray-500">Mã PO: {line.qtyOrdered} {line.unit} @ {line.unitPriceFx.toLocaleString()}đ</span>
@@ -4049,7 +4170,7 @@ export default function Home() {
                                       updated[idx] = { ...line, qtyReceived: parseFloat(e.target.value) || 0 };
                                       setGrnLines(updated);
                                     }}
-                                    className="bg-[#090d16] border border-amber-500/30 rounded text-center text-xs w-16 py-1 font-mono text-gray-100 focus:outline-none focus:border-amber-500"
+                                    className="bg-[#090d16] border border-border-cream rounded text-center text-xs w-16 py-1 font-mono text-gray-100 focus:outline-none focus:border-amber-500"
                                   />
                                 </div>
                               ))}
@@ -4060,7 +4181,7 @@ export default function Home() {
                         <button
                           type="submit"
                           disabled={grnLines.length === 0}
-                          className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs py-3 rounded shadow mt-2 transition-all active:scale-95 disabled:opacity-50"
+                          className="bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-xs py-3 rounded shadow mt-2 transition-all active:scale-95 disabled:opacity-50"
                         >
                           Gửi duyệt Phiếu nhận hàng (GRN)
                         </button>
@@ -4068,15 +4189,15 @@ export default function Home() {
                     </div>
 
                     {/* Khai báo Tiêu thụ Ngoài Bán Hàng (Non-Sale Consumption) (Giai đoạn 2) */}
-                    <div className="p-5 bg-[#0c1220]/50 rounded border border-amber-500/10 flex flex-col gap-4 font-sans">
-                      <h4 className="text-xs font-bold uppercase text-amber-400 border-b border-amber-500/5 pb-2">Khai báo Tiêu thụ Ngoài Bán Hàng (Non-Sale)</h4>
+                    <div className="p-5 bg-moss-light rounded border border-border-moss flex flex-col gap-4 font-sans">
+                      <h4 className="text-xs font-bold uppercase text-accent-gold border-b border-border-moss pb-2">Khai báo Tiêu thụ Ngoài Bán Hàng (Non-Sale)</h4>
                       <form onSubmit={handleLogNonSaleConsumption} className="flex flex-col gap-4">
                         <div className="flex flex-col gap-1.5">
                            <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">1. Chọn nguyên liệu</label>
                            <select
                              value={nonSaleIngId}
                              onChange={(e) => setNonSaleIngId(e.target.value)}
-                             className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
+                             className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
                              required
                            >
                              <option value="">-- Chọn nguyên liệu tiêu hao --</option>
@@ -4096,7 +4217,7 @@ export default function Home() {
                               placeholder="Số lượng..."
                               value={nonSaleQty}
                               onChange={(e) => setNonSaleQty(e.target.value)}
-                              className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono"
+                              className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono"
                             />
                           </div>
                           <div className="flex flex-col gap-1.5">
@@ -4104,7 +4225,7 @@ export default function Home() {
                             <select
                               value={nonSaleType}
                               onChange={(e) => setNonSaleType(e.target.value)}
-                              className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
+                              className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
                             >
                               <option value="STAFF_MEAL">Cơm nhân viên (Staff meal)</option>
                               <option value="COMP">Tặng món khách (Comp food)</option>
@@ -4126,13 +4247,13 @@ export default function Home() {
                             placeholder="Lý do chi tiết..."
                             value={nonSaleNote}
                             onChange={(e) => setNonSaleNote(e.target.value)}
-                            className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500"
+                            className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500"
                           />
                         </div>
 
                         <button
                           type="submit"
-                          className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs py-3 rounded shadow transition-all active:scale-95 font-sans"
+                          className="bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-xs py-3 rounded shadow transition-all active:scale-95 font-sans"
                         >
                           Ghi nhận Tiêu hao Ngoài bán hàng
                         </button>
@@ -4143,19 +4264,19 @@ export default function Home() {
                   {/* Cột phải: Danh sách PO & GRN */}
                   <div className="lg:col-span-7 flex flex-col gap-6">
                     {/* Hạng mục mới v9.0: Bản nháp phiếu đặt hàng (DRAFT POs) & PDF Export */}
-                    <div className="p-5 bg-[#0c1220]/40 rounded border border-amber-500/20 flex flex-col gap-3 font-sans">
-                      <h4 className="text-xs font-bold uppercase text-amber-400 flex justify-between items-center border-b border-amber-500/5 pb-2">
+                    <div className="p-5 bg-moss-dark/40 rounded border border-border-cream flex flex-col gap-3 font-sans">
+                      <h4 className="text-xs font-bold uppercase text-accent-gold flex justify-between items-center border-b border-border-moss pb-2">
                         <span>Bản nháp đặt hàng & Duyệt PO PDF (Order Documents)</span>
                         <span className="text-[10px] text-gray-400">({orderDocuments.length} bản ghi)</span>
                       </h4>
                       <div className="flex flex-col gap-3.5 max-h-60 overflow-y-auto pr-1">
                         {orderDocuments.map(doc => (
-                          <div key={doc.id} className="bg-[#090d16]/70 p-3 rounded border border-amber-500/10 flex flex-col gap-2.5 text-xs">
+                          <div key={doc.id} className="bg-moss-light p-3 rounded border border-border-moss flex flex-col gap-2.5 text-xs">
                             <div className="flex justify-between items-center">
                               <div className="flex items-center gap-2">
-                                <span className="font-mono text-amber-400 font-bold text-sm">{doc.doc_no}</span>
+                                <span className="font-mono text-accent-gold font-bold text-sm">{doc.doc_no}</span>
                                 <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase ${
-                                  doc.status === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'
+                                  doc.status === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-accent-gold/10 text-accent-gold'
                                 }`}>
                                   {doc.status}
                                 </span>
@@ -4168,20 +4289,20 @@ export default function Home() {
                             </div>
                             
                             {/* Dòng hàng chi tiết tóm tắt */}
-                            <div className="bg-[#070b12] p-2 rounded border border-amber-500/5 flex flex-col gap-1 text-[11px]">
+                            <div className="bg-moss-dark p-2 rounded border border-border-moss flex flex-col gap-1 text-[11px]">
                               {doc.items.map((it: any, i: number) => (
                                 <div key={i} className="flex justify-between">
                                   <span className="text-gray-300 font-medium">{it.name}</span>
-                                  <span className="text-gray-400 font-mono">Đặt: <strong className="text-amber-400">{it.slDat} {it.unit}</strong> (Tồn: {it.onHand}) - {it.warning}</span>
+                                  <span className="text-gray-400 font-mono">Đặt: <strong className="text-accent-gold">{it.slDat} {it.unit}</strong> (Tồn: {it.onHand}) - {it.warning}</span>
                                 </div>
                               ))}
                             </div>
 
                             {/* Nút phê duyệt & In PDF */}
-                            <div className="flex justify-end gap-2 border-t border-amber-500/5 pt-2">
+                            <div className="flex justify-end gap-2 border-t border-border-moss pt-2">
                               <button
                                 onClick={() => handleApproveAndPrintPO(doc)}
-                                className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-[10px] px-3.5 py-1.5 rounded shadow active:scale-95 transition-all flex items-center gap-1"
+                                className="bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-[10px] px-3.5 py-1.5 rounded shadow active:scale-95 transition-all flex items-center gap-1"
                               >
                                 <FileText size={12} />
                                 <span>{doc.status === 'APPROVED' ? 'IN LẠI PDF' : 'DUYỆT & XUẤT PO PDF'}</span>
@@ -4196,18 +4317,18 @@ export default function Home() {
                     </div>
 
                     {/* Danh sách Đơn đặt hàng PO */}
-                    <div className="p-5 bg-[#0c1220]/30 rounded border border-amber-500/10 flex flex-col gap-3 font-sans">
-                      <h4 className="text-xs font-bold uppercase text-amber-400 flex justify-between items-center border-b border-amber-500/5 pb-2">
+                    <div className="p-5 bg-moss-dark/30 rounded border border-border-cream flex flex-col gap-3 font-sans">
+                      <h4 className="text-xs font-bold uppercase text-accent-gold flex justify-between items-center border-b border-border-moss pb-2">
                         <span>Đơn đặt hàng đang theo dõi (POs)</span>
                         <span className="text-[10px] text-gray-400">({purchaseOrders.length} đơn)</span>
                       </h4>
                       <div className="flex flex-col gap-2.5 max-h-48 overflow-y-auto pr-1">
                         {purchaseOrders.map(po => (
-                          <div key={po.id} className="bg-[#090d16]/50 p-3 rounded border border-amber-500/5 flex justify-between items-center text-xs">
+                          <div key={po.id} className="bg-moss-light p-3 rounded border border-border-moss flex justify-between items-center text-xs">
                             <div className="flex flex-col gap-1">
                               <div className="flex items-center gap-2">
-                                <span className="font-mono text-amber-500 font-semibold">{po.poNumber}</span>
-                                <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold font-sans uppercase ${po.status === 'OPEN' ? 'bg-amber-500/10 text-amber-400' : 'bg-emerald-500/10 text-emerald-400'}`}>
+                                <span className="font-mono text-accent-gold font-semibold">{po.poNumber}</span>
+                                <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold font-sans uppercase ${po.status === 'OPEN' ? 'bg-accent-gold/10 text-accent-gold' : 'bg-emerald-500/10 text-emerald-400'}`}>
                                   {po.status}
                                 </span>
                               </div>
@@ -4224,20 +4345,20 @@ export default function Home() {
                     </div>
 
                     {/* Danh sách Phiếu nhập kho GRN */}
-                    <div className="p-5 bg-[#0c1220]/30 rounded border border-amber-500/10 flex flex-col gap-3 font-sans">
-                      <h4 className="text-xs font-bold uppercase text-amber-400 flex justify-between items-center border-b border-amber-500/5 pb-2">
+                    <div className="p-5 bg-moss-dark/30 rounded border border-border-cream flex flex-col gap-3 font-sans">
+                      <h4 className="text-xs font-bold uppercase text-accent-gold flex justify-between items-center border-b border-border-moss pb-2">
                         <span>Phiếu nhận hàng & Landed Cost (GRNs)</span>
                         <span className="text-[10px] text-gray-400">({goodsReceipts.length} phiếu)</span>
                       </h4>
                       <div className="flex flex-col gap-3 max-h-72 overflow-y-auto pr-1">
                         {goodsReceipts.map(grn => (
-                          <div key={grn.id} className="bg-[#090d16]/50 p-4 rounded border border-amber-500/5 flex flex-col gap-3 text-xs">
+                          <div key={grn.id} className="bg-moss-light p-4 rounded border border-border-moss flex flex-col gap-3 text-xs">
                             <div className="flex justify-between items-start">
                               <div className="flex flex-col gap-0.5">
                                 <div className="flex items-center gap-2">
                                   <span className="font-semibold text-gray-100">Hóa đơn: {grn.invoiceNo}</span>
                                   <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase ${
-                                    grn.status === 'approved' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                                    grn.status === 'approved' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-accent-gold/10 text-accent-gold border border-border-cream'
                                   }`}>
                                     {grn.status === 'approved' ? 'Đã duyệt' : 'Chờ duyệt'}
                                   </span>
@@ -4250,13 +4371,13 @@ export default function Home() {
                                 <span className="text-gray-400 text-[10px]">{grn.supplierName}</span>
                               </div>
                               <div className="text-right">
-                                <span className="block font-semibold text-amber-400 font-mono">{grn.invoiceAmount.toLocaleString()} đ</span>
+                                <span className="block font-semibold text-accent-gold font-mono">{grn.invoiceAmount.toLocaleString()} đ</span>
                                 <span className="text-[9px] text-gray-500 font-mono font-sans">Cước: {grn.freight.toLocaleString()}đ • Thuế: {grn.duty.toLocaleString()}đ</span>
                               </div>
                             </div>
 
                             {/* Dòng hàng nhận */}
-                            <div className="bg-[#070b12] p-2.5 rounded border border-amber-500/5 flex flex-col gap-1.5">
+                            <div className="bg-moss-dark p-2.5 rounded border border-border-moss flex flex-col gap-1.5">
                               <span className="text-[9px] uppercase tracking-wider text-gray-500 font-bold font-sans">Đối soát 3-Way Match & Landed Cost:</span>
                               <div className="flex flex-col gap-1 divide-y divide-amber-500/5">
                                 {grn.lines.map((line: any, i: number) => (
@@ -4264,7 +4385,7 @@ export default function Home() {
                                     <span className="text-gray-300 font-medium">{line.name || line.ingredientId}</span>
                                     <div className="flex gap-4 font-mono text-gray-400">
                                       <span>Nhận: {line.qtyReceived} • Giá gốc: {line.unitPriceFx.toLocaleString()}đ</span>
-                                      <span className="text-amber-300">Landed Cost: {line.landedUnitCost.toLocaleString()}đ</span>
+                                      <span className="text-text-light">Landed Cost: {line.landedUnitCost.toLocaleString()}đ</span>
                                     </div>
                                   </div>
                                 ))}
@@ -4273,7 +4394,7 @@ export default function Home() {
 
                             {/* Phê duyệt bởi Kế toán trưởng / Admin (Cấp 1 & 4) */}
                             {grn.status === 'pending' && (userRole === 'admin' || userRole === 'senior_accountant') && (
-                              <div className="flex justify-end pt-1 border-t border-amber-500/5">
+                              <div className="flex justify-end pt-1 border-t border-border-moss">
                                 <button
                                   onClick={() => handleApproveGrn(grn.id)}
                                   className="bg-emerald-600 hover:bg-emerald-500 text-gray-100 text-[10px] font-bold px-3 py-1.5 rounded shadow active:scale-95 transition-all font-sans"
@@ -4288,8 +4409,8 @@ export default function Home() {
                     </div>
 
                     {/* Lịch sử tiêu thụ ngoài bán hàng (Non-Sale Logs) (Giai đoạn 2) */}
-                    <div className="p-5 bg-[#0c1220]/30 rounded border border-amber-500/10 flex flex-col gap-3 font-sans">
-                      <h4 className="text-xs font-bold uppercase text-amber-400 flex justify-between items-center border-b border-amber-500/5 pb-2">
+                    <div className="p-5 bg-moss-dark/30 rounded border border-border-cream flex flex-col gap-3 font-sans">
+                      <h4 className="text-xs font-bold uppercase text-accent-gold flex justify-between items-center border-b border-border-moss pb-2">
                         <span>Lịch sử tiêu thụ ngoài bán hàng (Non-Sale Logs)</span>
                         <span className="text-[10px] text-gray-400">
                           ({transactions.filter(t => t.note.includes('Tiêu thụ ngoài bán hàng')).length} giao dịch)
@@ -4303,10 +4424,10 @@ export default function Home() {
                           .map(t => {
                             const ingDetail = ingredients.find(i => i.id === t.ingredientId);
                             return (
-                              <div key={t.id} className="bg-[#090d16]/50 p-3 rounded border border-amber-500/5 flex justify-between items-center text-xs">
+                              <div key={t.id} className="bg-moss-light p-3 rounded border border-border-moss flex justify-between items-center text-xs">
                                 <div className="flex flex-col gap-1">
                                   <div className="flex items-center gap-2 font-sans">
-                                    <span className="font-mono text-amber-500 font-semibold">{t.ingredientId}</span>
+                                    <span className="font-mono text-accent-gold font-semibold">{t.ingredientId}</span>
                                     <span className="text-gray-300 font-medium">{ingDetail?.vi_name || 'Nguyên liệu'}</span>
                                   </div>
                                   <span className="text-[10px] text-gray-400 leading-tight font-sans">{t.note}</span>
@@ -4334,11 +4455,11 @@ export default function Home() {
       </div>
 
       {/* 5. Footer */}
-      <footer className="border-t border-amber-500/10 bg-[#0c1220] py-6 text-center text-xs text-gray-400 font-sans mt-auto">
+      <footer className="border-t border-border-cream bg-moss-dark py-6 text-center text-xs text-gray-400 font-sans mt-auto">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© 2026 Maison Vie. Hệ thống CRM/ERP Inventory đã chuẩn hóa cấu trúc dữ liệu phẳng.</p>
           <div className="flex gap-4">
-            <span className="text-[10px] text-[#d4af37] font-semibold">SUPABASE</span>
+            <span className="text-[10px] text-accent-gold font-semibold">SUPABASE</span>
             <span className="text-[10px] text-gray-500">|</span>
             <span className="text-[10px] text-gray-400">VERCEL</span>
             <span className="text-[10px] text-gray-500">|</span>
@@ -4349,31 +4470,31 @@ export default function Home() {
 
       {showMappingModal && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0c1220] border border-amber-500/30 w-full max-w-5xl rounded-md p-6 flex flex-col gap-6 shadow-2xl relative">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/5 rounded-full blur-3xl"></div>
+          <div className="bg-moss-dark border border-border-moss w-full max-w-5xl rounded-md p-6 flex flex-col gap-6 shadow-2xl relative text-text-light">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-accent-gold/5 rounded-full blur-3xl"></div>
             
-            <div className="flex justify-between items-center border-b border-amber-500/20 pb-4">
+            <div className="flex justify-between items-center border-b border-border-cream pb-4">
               <div>
-                <h3 className="text-xl font-semibold text-[#d4af37] font-serif">MÀN HÌNH MAPPING TRUNG GIAN & XÁC NHẬN GHI SỔ</h3>
+                <h3 className="text-xl font-semibold text-accent-gold font-serif">MÀN HÌNH MAPPING TRUNG GIAN & XÁC NHẬN GHI SỔ</h3>
                 <p className="text-xs text-gray-400 mt-1">Rà soát và đồng bộ mã hàng POS với cơ sở dữ liệu định lượng (Recipes).</p>
               </div>
               <div className="flex items-center gap-3">
-                <div className="bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded flex items-center gap-2">
+                <div className="bg-accent-gold/10 border border-border-cream px-3 py-1.5 rounded flex items-center gap-2">
                   <span className="w-2 h-2 bg-amber-500 rounded-full animate-ping"></span>
-                  <span className="text-xs font-mono font-bold text-amber-400">Chốt tự động sau: {mappingCountdown}s</span>
+                  <span className="text-xs font-mono font-bold text-accent-gold">Chốt tự động sau: {mappingCountdown}s</span>
                 </div>
                 <button 
                   onClick={handleConfirmMapping}
-                  className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs px-4 py-2.5 rounded shadow active:scale-95"
+                  className="bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-xs px-4 py-2.5 rounded shadow active:scale-95"
                 >
                   Xác nhận chốt sổ ngay
                 </button>
               </div>
             </div>
 
-            <div className="overflow-y-auto max-h-[400px] border border-amber-500/10 rounded">
+            <div className="overflow-y-auto max-h-[400px] border border-border-cream rounded">
               <table className="w-full text-xs text-left text-gray-300">
-                <thead className="bg-[#0c1220] sticky top-0 uppercase text-gray-400 border-b border-amber-500/10">
+                <thead className="bg-moss-dark sticky top-0 uppercase text-gray-400 border-b border-border-cream">
                   <tr>
                     <th className="px-4 py-3">Mã POS</th>
                     <th className="px-4 py-3">Tên hàng trên POS</th>
@@ -4386,8 +4507,8 @@ export default function Home() {
                 </thead>
                 <tbody className="divide-y divide-amber-500/5 font-sans">
                   {mappingItems.map((item, idx) => (
-                    <tr key={idx} className="hover:bg-[#141a29]/30">
-                      <td className="px-4 py-3 font-mono text-amber-500/70 font-semibold">{item.code}</td>
+                    <tr key={idx} className="hover:bg-moss-light/30">
+                      <td className="px-4 py-3 font-mono text-accent-gold/70 font-semibold">{item.code}</td>
                       <td className="px-4 py-3 font-medium text-gray-100">{item.name}</td>
                       <td className="px-4 py-3 text-center">
                         {item.status === 'matched' ? (
@@ -4395,7 +4516,7 @@ export default function Home() {
                             🟢 Khớp 100%
                           </span>
                         ) : item.status === 'suggested' ? (
-                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold uppercase">
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] bg-accent-gold/10 text-accent-gold border border-border-cream font-semibold uppercase">
                             🟡 Gợi ý
                           </span>
                         ) : (
@@ -4419,7 +4540,7 @@ export default function Home() {
                             };
                             setMappingItems(updated);
                           }}
-                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded px-2 py-1 text-gray-200 focus:outline-none focus:border-amber-500 font-mono w-44"
+                          className="bg-[#090d16] border border-border-cream text-xs rounded px-2 py-1 text-gray-200 focus:outline-none focus:border-amber-500 font-mono w-44"
                         >
                           <option value="IGNORE">❌ Bỏ qua kho (Ignore)</option>
                           {Object.keys(recipes).map(code => (
@@ -4435,7 +4556,7 @@ export default function Home() {
               </table>
             </div>
 
-            <div className="flex justify-between items-center text-xs text-gray-400 border-t border-amber-500/10 pt-4">
+            <div className="flex justify-between items-center text-xs text-gray-400 border-t border-border-cream pt-4">
               <p>• Mã màu xanh lá 🟢 sẽ được chốt tự động. Các mã màu vàng 🟡 đã được dự đoán dựa trên khoảng cách ký tự.</p>
               <div className="flex gap-3">
                 <button 
@@ -4446,7 +4567,7 @@ export default function Home() {
                 </button>
                 <button 
                   onClick={handleConfirmMapping}
-                  className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs px-5 py-2 rounded shadow"
+                  className="bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-xs px-5 py-2 rounded shadow"
                 >
                   Xác nhận ghi sổ & Trừ kho
                 </button>
@@ -4459,11 +4580,11 @@ export default function Home() {
       {/* Change Password Modal */}
       {showPasswordModal && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0c1220] border border-amber-500/30 w-full max-w-md rounded-md p-6 flex flex-col gap-5 shadow-2xl relative font-sans">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl"></div>
+          <div className="bg-moss-dark border border-border-moss w-full max-w-md rounded-md p-6 flex flex-col gap-5 shadow-2xl relative font-sans text-text-light">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-accent-gold/5 rounded-full blur-2xl"></div>
             
-            <div className="border-b border-amber-500/20 pb-3">
-              <h3 className="text-lg font-semibold text-[#d4af37] font-serif">ĐỔI MẬT KHẨU TÀI KHẢN</h3>
+            <div className="border-b border-border-cream pb-3">
+              <h3 className="text-lg font-semibold text-accent-gold font-serif">ĐỔI MẬT KHẨU TÀI KHẢN</h3>
               <p className="text-[11px] text-gray-400 mt-1">Đặt lại mật khẩu bảo mật cho tài khoản đang đăng nhập.</p>
             </div>
 
@@ -4488,7 +4609,7 @@ export default function Home() {
                   placeholder="Tối thiểu 6 ký tự..." 
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500"
+                  className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500"
                 />
               </div>
 
@@ -4500,11 +4621,11 @@ export default function Home() {
                   placeholder="Nhập lại mật khẩu mới..." 
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500"
+                  className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 border-t border-amber-500/10 pt-4 mt-2">
+              <div className="flex justify-end gap-3 border-t border-border-cream pt-4 mt-2">
                 <button 
                   type="button"
                   onClick={() => setShowPasswordModal(false)}
@@ -4516,7 +4637,7 @@ export default function Home() {
                 <button 
                   type="submit"
                   disabled={isPasswordLoading}
-                  className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs px-5 py-2 rounded shadow flex items-center gap-1.5"
+                  className="bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-xs px-5 py-2 rounded shadow flex items-center gap-1.5"
                 >
                   {isPasswordLoading ? "Đang xử lý..." : "Cập nhật mật khẩu"}
                 </button>
@@ -4529,18 +4650,18 @@ export default function Home() {
       {/* 4.G. Cân rượu Bar dùng cân điện tử (Scale Weighing Modal) */}
       {showWeighModal && weighIngredient && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0c1220] border border-amber-500/30 w-full max-w-md rounded-md p-6 flex flex-col gap-5 shadow-2xl relative font-sans">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl"></div>
+          <div className="bg-moss-dark border border-border-moss w-full max-w-md rounded-md p-6 flex flex-col gap-5 shadow-2xl relative font-sans text-text-light">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-accent-gold/5 rounded-full blur-2xl"></div>
             
-            <div className="border-b border-amber-500/20 pb-3">
-              <h3 className="text-lg font-semibold text-[#d4af37] font-serif">⚖️ PHÂN HỆ KIỂM BAR - CÂN CHAI MỞ</h3>
+            <div className="border-b border-border-cream pb-3">
+              <h3 className="text-lg font-semibold text-accent-gold font-serif">⚖️ PHÂN HỆ KIỂM BAR - CÂN CHAI MỞ</h3>
               <p className="text-[11px] text-gray-400 mt-1">Sử dụng cân điện tử để cân đo lượng rượu còn lại trong chai dở của Bar.</p>
             </div>
 
-            <div className="bg-[#090d16]/80 p-3.5 rounded border border-amber-500/10 flex flex-col gap-1.5 text-xs text-gray-300">
+            <div className="bg-moss-light p-3.5 rounded border border-border-moss flex flex-col gap-1.5 text-xs text-text-light">
               <p><strong>Nguyên liệu kiểm:</strong> <span className="text-gray-100 font-semibold">{weighIngredient.vi_name}</span></p>
-              <p><strong>Mã hàng:</strong> <span className="font-mono text-amber-500/80">{weighIngredient.id}</span></p>
-              <p><strong>Quy cách:</strong> 1 chai = <span className="font-semibold text-amber-400">{(weighIngredient as any).stock_to_recipe_factor || 750} ML</span></p>
+              <p><strong>Mã hàng:</strong> <span className="font-mono text-accent-gold/80">{weighIngredient.id}</span></p>
+              <p><strong>Quy cách:</strong> 1 chai = <span className="font-semibold text-accent-gold">{(weighIngredient as any).stock_to_recipe_factor || 750} ML</span></p>
             </div>
 
             <div className="flex flex-col gap-4">
@@ -4551,7 +4672,7 @@ export default function Home() {
                   min="0"
                   value={weighFullBottles}
                   onChange={(e) => setWeighFullBottles(parseInt(e.target.value) || 0)}
-                  className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono w-full"
+                  className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold font-mono w-full"
                 />
               </div>
 
@@ -4563,7 +4684,7 @@ export default function Home() {
                     placeholder="VD: 850"
                     value={weighScaleGrams}
                     onChange={(e) => setWeighScaleGrams(e.target.value)}
-                    className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono"
+                    className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono"
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
@@ -4572,7 +4693,7 @@ export default function Home() {
                     type="number" 
                     value={weighTareGrams}
                     onChange={(e) => setWeighTareGrams(parseInt(e.target.value) || 450)}
-                    className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono"
+                    className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono"
                   />
                 </div>
               </div>
@@ -4593,12 +4714,12 @@ export default function Home() {
                           step="0.01"
                           value={weighDensity}
                           onChange={(e) => setWeighDensity(parseFloat(e.target.value) || 1.0)}
-                          className="bg-[#090d16] border border-amber-500/20 text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-mono w-full"
+                          className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold font-mono w-full"
                         />
                       </div>
                     )}
 
-                    <div className="bg-amber-500/5 border border-amber-500/10 p-3 rounded flex flex-col gap-2 font-mono text-[11px]">
+                    <div className="bg-accent-gold/5 border border-border-cream p-3 rounded flex flex-col gap-2 font-mono text-[11px]">
                       <div className="flex justify-between">
                         <span className="text-gray-400 font-sans">Thể tích chai dở ML:</span>
                         <span className="text-gray-200 font-bold">
@@ -4611,9 +4732,9 @@ export default function Home() {
                           {openStock.toFixed(3)} chai
                         </span>
                       </div>
-                      <div className="flex justify-between border-t border-amber-500/10 pt-2 text-xs">
-                        <span className="text-amber-500 font-serif font-bold">TỔNG TỒN THỰC TẾ:</span>
-                        <span className="text-amber-400 font-bold">
+                      <div className="flex justify-between border-t border-border-cream pt-2 text-xs">
+                        <span className="text-accent-gold font-serif font-bold">TỔNG TỒN THỰC TẾ:</span>
+                        <span className="text-accent-gold font-bold">
                           {totalQty.toFixed(3)} BOTTLE
                         </span>
                       </div>
@@ -4622,7 +4743,7 @@ export default function Home() {
                 );
               })()}
 
-              <div className="flex justify-end gap-3 border-t border-amber-500/10 pt-4 mt-2">
+              <div className="flex justify-end gap-3 border-t border-border-cream pt-4 mt-2">
                 <button 
                   type="button"
                   onClick={() => setShowWeighModal(false)}
@@ -4633,11 +4754,177 @@ export default function Home() {
                 <button 
                   type="button"
                   onClick={handleSaveWeighedStock}
-                  className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-[#f3e5ab] text-[#090d16] font-bold text-xs px-5 py-2 rounded shadow font-sans"
+                  className="bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-xs px-5 py-2 rounded shadow font-sans"
                 >
                   Lưu kết quả cân
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Mobile Bottom Navigation Tab Bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-moss-dark border-t border-border-moss text-text-light z-40 flex items-center justify-around py-2">
+        {hasTabAccess(userRole, 'dashboard') && (
+          <button 
+            onClick={() => setActiveTab('dashboard')}
+            className={`flex flex-col items-center gap-1 ${activeTab === 'dashboard' ? 'text-accent-gold' : 'text-text-light/60'}`}
+          >
+            <LayoutDashboard size={20} />
+            <span className="text-[9px]">Tổng quan</span>
+          </button>
+        )}
+        {hasTabAccess(userRole, 'inventory') && (
+          <button 
+            onClick={() => setActiveTab('inventory')}
+            className={`flex flex-col items-center gap-1 ${activeTab === 'inventory' ? 'text-accent-gold' : 'text-text-light/60'}`}
+          >
+            <Package size={20} />
+            <span className="text-[9px]">Master Kho</span>
+          </button>
+        )}
+        {hasTabAccess(userRole, 'stockcount') && (
+          <button 
+            onClick={() => setActiveTab('stockcount')}
+            className={`flex flex-col items-center gap-1 ${activeTab === 'stockcount' ? 'text-accent-gold' : 'text-text-light/60'}`}
+          >
+            <CheckSquare size={20} />
+            <span className="text-[9px]">Kiểm kho</span>
+          </button>
+        )}
+        {hasTabAccess(userRole, 'purchasing') && (
+          <button 
+            onClick={() => setActiveTab('purchasing')}
+            className={`flex flex-col items-center gap-1 ${activeTab === 'purchasing' ? 'text-accent-gold' : 'text-text-light/60'}`}
+          >
+            <DollarSign size={20} />
+            <span className="text-[9px]">Mua hàng</span>
+          </button>
+        )}
+        <button 
+          onClick={() => setIsMobileDrawerOpen(true)}
+          className="flex flex-col items-center gap-1 text-text-light/60"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <span className="text-[9px]">Thêm</span>
+        </button>
+      </div>
+
+      {/* Mobile Drawer (Slide-over) */}
+      {isMobileDrawerOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setIsMobileDrawerOpen(false)}
+          ></div>
+          <div className="relative flex flex-col w-64 max-w-xs bg-moss-dark border-r border-border-moss text-text-light h-full p-6 shadow-2xl z-10">
+            <div className="flex items-center justify-between border-b border-border-moss pb-4 mb-4">
+              <span className="font-serif font-semibold text-lg text-accent-gold">Danh mục Phân hệ</span>
+              <button 
+                onClick={() => setIsMobileDrawerOpen(false)}
+                className="text-text-light/80 hover:text-accent-gold focus:outline-none"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="flex flex-col gap-2 overflow-y-auto">
+              {hasTabAccess(userRole, 'dashboard') && (
+                <button 
+                  onClick={() => { setActiveTab('dashboard'); setIsMobileDrawerOpen(false); }}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                    activeTab === 'dashboard' ? 'bg-moss-light border-accent-gold text-accent-gold' : 'border-transparent text-text-light/80'
+                  }`}
+                >
+                  <LayoutDashboard size={18} />
+                  <span>Báo cáo Tổng quan</span>
+                </button>
+              )}
+              {hasTabAccess(userRole, 'sales') && (
+                <button 
+                  onClick={() => { setActiveTab('sales'); setIsMobileDrawerOpen(false); }}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                    activeTab === 'sales' ? 'bg-moss-light border-accent-gold text-accent-gold' : 'border-transparent text-text-light/80'
+                  }`}
+                >
+                  <UploadCloud size={18} />
+                  <span>Doanh số & POS Import</span>
+                </button>
+              )}
+              {hasTabAccess(userRole, 'inventory') && (
+                <button 
+                  onClick={() => { setActiveTab('inventory'); setIsMobileDrawerOpen(false); }}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                    activeTab === 'inventory' ? 'bg-moss-light border-accent-gold text-accent-gold' : 'border-transparent text-text-light/80'
+                  }`}
+                >
+                  <Package size={18} />
+                  <span>Bảng Master Kho (101)</span>
+                </button>
+              )}
+              {hasTabAccess(userRole, 'recipes') && (
+                <button 
+                  onClick={() => { setActiveTab('recipes'); setIsMobileDrawerOpen(false); }}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                    activeTab === 'recipes' ? 'bg-moss-light border-accent-gold text-accent-gold' : 'border-transparent text-text-light/80'
+                  }`}
+                >
+                  <BookOpen size={18} />
+                  <span>Định mức công thức (Recipes)</span>
+                </button>
+              )}
+              {hasTabAccess(userRole, 'stockcount') && (
+                <button 
+                  onClick={() => { setActiveTab('stockcount'); setIsMobileDrawerOpen(false); }}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                    activeTab === 'stockcount' ? 'bg-moss-light border-accent-gold text-accent-gold' : 'border-transparent text-text-light/80'
+                  }`}
+                >
+                  <CheckSquare size={18} />
+                  <span>Kiểm kho & Tính Variance</span>
+                </button>
+              )}
+              {hasTabAccess(userRole, 'subrecipes') && (
+                <button 
+                  onClick={() => { setActiveTab('subrecipes'); setIsMobileDrawerOpen(false); }}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                    activeTab === 'subrecipes' ? 'bg-moss-light border-accent-gold text-accent-gold' : 'border-transparent text-text-light/80'
+                  }`}
+                >
+                  <Cpu size={18} />
+                  <span>Sản xuất Bán thành phẩm</span>
+                </button>
+              )}
+              {hasTabAccess(userRole, 'reconciliation') && (
+                <button 
+                  onClick={() => { setActiveTab('reconciliation'); setIsMobileDrawerOpen(false); }}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                    activeTab === 'reconciliation' ? 'bg-moss-light border-accent-gold text-accent-gold' : 'border-transparent text-text-light/80'
+                  }`}
+                >
+                  <TrendingUp size={18} />
+                  <span>Đối soát Song song & Yield</span>
+                </button>
+              )}
+              {hasTabAccess(userRole, 'purchasing') && (
+                <button 
+                  onClick={() => { setActiveTab('purchasing'); setIsMobileDrawerOpen(false); }}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                    activeTab === 'purchasing' ? 'bg-moss-light border-accent-gold text-accent-gold' : 'border-transparent text-text-light/80'
+                  }`}
+                >
+                  <DollarSign size={18} />
+                  <span>Mua hàng & Nhập kho (GRN)</span>
+                </button>
+              )}
+            </div>
+            <div className="mt-auto border-t border-border-moss pt-4 text-[10px] text-text-muted-light leading-relaxed">
+              <p>Maison Vie CRM v9.1</p>
+              <p>Vai trò: {userRole}</p>
             </div>
           </div>
         </div>

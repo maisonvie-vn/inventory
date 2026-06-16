@@ -717,4 +717,46 @@ with check (get_current_user_role() in ('BAR_SUPERVISOR', 'admin', 'senior_accou
 -- Grant select on new views
 grant select on table v_stock_on_hand to authenticated;
 
+-- NHÃN BỘ PHẬN cho từng nguyên liệu (MỚI v9.1)
+create table ingredient_departments (
+  ingredient_id uuid references ingredients(id) on delete cascade,
+  department    text references locations(id) on delete cascade,   -- 'BAR' | 'KITCHEN'
+  usage_context text,        -- 'BEVERAGE','COOKING','FLAMBE','GARNISH','SAUCE'
+  is_primary    boolean default false,  -- bộ phận "chủ" mã
+  primary key (ingredient_id, department)
+);
+
+alter table ingredient_departments enable row level security;
+
+-- Setup RLS Policies for ingredient_departments
+create policy "Allow select departments for all staff" on ingredient_departments for select to authenticated using (true);
+create policy "Allow manage departments for admin and senior roles"
+on ingredient_departments for all to authenticated
+using (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant', 'head_chef'))
+with check (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant', 'head_chef'));
+
+-- Audit log schema for ingredient_departments (giao diện phê duyệt dùng chung)
+create table department_approval_audit_logs (
+  id uuid primary key default gen_random_uuid(),
+  ingredient_id uuid references ingredients(id) on delete cascade,
+  action_type text not null, -- 'ADD_TAG', 'REMOVE_TAG'
+  department text not null,
+  usage_context text,
+  approved_by_chef uuid references profiles(id),
+  approved_by_bar uuid references profiles(id),
+  status text default 'PENDING', -- 'PENDING', 'APPROVED', 'REJECTED'
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table department_approval_audit_logs enable row level security;
+
+create policy "Allow select audit logs for all staff" on department_approval_audit_logs for select to authenticated using (true);
+create policy "Allow manage audit logs for chef, bar and admin"
+on department_approval_audit_logs for all to authenticated
+using (get_current_user_role() in ('admin', 'restaurant_manager', 'BAR_SUPERVISOR', 'head_chef'))
+with check (get_current_user_role() in ('admin', 'restaurant_manager', 'BAR_SUPERVISOR', 'head_chef'));
+
+grant select on table ingredient_departments to authenticated;
+grant select on table department_approval_audit_logs to authenticated;
+
 

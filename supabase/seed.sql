@@ -1338,4 +1338,59 @@ INSERT INTO set_menu_items (parent_menu_item_id, child_menu_item_id, portion_rat
 INSERT INTO set_menu_items (parent_menu_item_id, child_menu_item_id, portion_ratio) VALUES ('R6218', 'R-021', 0.70) ON CONFLICT (parent_menu_item_id, child_menu_item_id) DO NOTHING;
 INSERT INTO set_menu_items (parent_menu_item_id, child_menu_item_id, portion_ratio) VALUES ('R6218', 'R-023', 0.70) ON CONFLICT (parent_menu_item_id, child_menu_item_id) DO NOTHING;
 
+-- Seed ingredient_departments automatically using dynamic SQL
+DO $$
+DECLARE
+    r RECORD;
+    is_bar BOOLEAN;
+    is_shared BOOLEAN;
+BEGIN
+    FOR r IN SELECT id, code, ten_vi, purchase_category_id FROM ingredients LOOP
+        -- check if it is bar category
+        is_bar := r.purchase_category_id IN (
+            SELECT id FROM purchase_categories 
+            WHERE lower(id) LIKE '%wine%' OR lower(id) LIKE '%alcohol%' OR lower(id) LIKE '%beverage%'
+        );
+        
+        -- check if it is a bottle stock item
+        IF NOT is_bar THEN
+            is_bar := EXISTS (
+                SELECT 1 FROM ingredients WHERE id = r.id AND stock_uom = 'BOTTLE'
+            );
+        END IF;
+
+        -- check if it is shared (vang nấu, cognac, cam, chanh, sữa, đường...)
+        is_shared := r.id IN (
+            's0000000-0000-0000-0000-000000000070', -- Vang trắng
+            's0000000-0000-0000-0000-000000000071', -- Vang đỏ
+            's0000000-0000-0000-0000-000000000072'  -- Cognac VSOP
+        ) OR lower(r.ten_vi) LIKE '%cam%' 
+          OR lower(r.ten_vi) LIKE '%chanh%' 
+          OR lower(r.ten_vi) LIKE '%xoài%' 
+          OR lower(r.ten_vi) LIKE '%dưa hấu%' 
+          OR lower(r.ten_vi) LIKE '%sữa tươi%' 
+          OR lower(r.ten_vi) LIKE '%sữa đặc%' 
+          OR lower(r.ten_vi) LIKE '%đường%'
+          OR r.code IN ('NLP60032', 'NLP60033', 'NLP3016', 'NLP3021');
+
+        IF is_shared THEN
+            INSERT INTO ingredient_departments (ingredient_id, department, usage_context, is_primary)
+            VALUES (r.id, 'BAR', 'BEVERAGE', NOT is_bar)
+            ON CONFLICT DO NOTHING;
+            
+            INSERT INTO ingredient_departments (ingredient_id, department, usage_context, is_primary)
+            VALUES (r.id, 'KITCHEN', 'COOKING', is_bar)
+            ON CONFLICT DO NOTHING;
+        ELSIF is_bar THEN
+            INSERT INTO ingredient_departments (ingredient_id, department, usage_context, is_primary)
+            VALUES (r.id, 'BAR', 'BEVERAGE', true)
+            ON CONFLICT DO NOTHING;
+        ELSE
+            INSERT INTO ingredient_departments (ingredient_id, department, usage_context, is_primary)
+            VALUES (r.id, 'KITCHEN', 'COOKING', true)
+            ON CONFLICT DO NOTHING;
+        END IF;
+    END LOOP;
+END $$;
+
 COMMIT;
