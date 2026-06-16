@@ -2805,7 +2805,7 @@ export default function Home() {
         </aside>
 
         {/* Content Area */}
-        <main className="flex-1 flex flex-col gap-6">
+        <main className="flex-1 min-w-0 flex flex-col gap-6">
 
           {/* 3. Global Stats Grid */}
           <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -2880,27 +2880,29 @@ export default function Home() {
                     <p className="text-[11px] text-gray-400">Đã bao gồm tỷ lệ hao hụt Yield % và 10% bù bếp</p>
                   </div>
                   
-                  {/* Custom SVG Bar Chart */}
-                  <div className="h-44 w-full bg-moss-dark/50 rounded border border-border-moss p-4 flex items-end justify-between gap-2">
-                    {roleFilteredConsumptionData.slice(0, 8).map((item, idx) => {
-                      const maxVal = Math.max(...roleFilteredConsumptionData.slice(0, 8).map(c => c.totalCost));
-                      const barHeight = maxVal > 0 ? (item.totalCost / maxVal) * 100 : 0;
-                      return (
-                        <div key={item.id} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
-                          <div className="w-full flex items-end justify-center h-28 relative">
-                            {/* Hover cost value */}
-                            <span className="absolute -top-6 text-[9px] text-accent-gold opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1.5 py-0.5 rounded border border-border-cream whitespace-nowrap">
-                              {Math.round(item.totalCost).toLocaleString()}đ
-                            </span>
-                            <div 
-                              style={{ height: `${Math.max(5, barHeight)}%` }}
-                              className="w-4 sm:w-6 bg-gradient-to-t from-amber-600 via-amber-400 to-[#f3e5ab] rounded-t-sm transition-all duration-500 hover:shadow-lg hover:shadow-amber-500/20 group-hover:scale-x-110"
-                            ></div>
+                  {/* Custom SVG Bar Chart (Scrollable on mobile) */}
+                  <div className="overflow-x-auto overflow-y-hidden max-w-full pb-2">
+                    <div className="h-44 min-w-[500px] lg:min-w-0 w-full bg-moss-dark/50 rounded border border-border-moss p-4 flex items-end justify-between gap-2">
+                      {roleFilteredConsumptionData.slice(0, 8).map((item, idx) => {
+                        const maxVal = Math.max(...roleFilteredConsumptionData.slice(0, 8).map(c => c.totalCost));
+                        const barHeight = maxVal > 0 ? (item.totalCost / maxVal) * 100 : 0;
+                        return (
+                          <div key={item.id} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
+                            <div className="w-full flex items-end justify-center h-28 relative">
+                              {/* Hover cost value */}
+                              <span className="absolute -top-6 text-[9px] text-accent-gold opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1.5 py-0.5 rounded border border-border-cream whitespace-nowrap">
+                                {Math.round(item.totalCost).toLocaleString()}đ
+                              </span>
+                              <div 
+                                style={{ height: `${Math.max(5, barHeight)}%` }}
+                                className="w-4 sm:w-6 bg-gradient-to-t from-amber-600 via-amber-400 to-[#f3e5ab] rounded-t-sm transition-all duration-500 hover:shadow-lg hover:shadow-amber-500/20 group-hover:scale-x-110"
+                              ></div>
+                            </div>
+                            <span className="text-[9px] text-gray-400 group-hover:text-text-light w-12 text-center truncate">{item.name}</span>
                           </div>
-                          <span className="text-[9px] text-gray-400 group-hover:text-text-light w-12 text-center truncate">{item.name}</span>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
 
                   <div className="overflow-x-auto">
