@@ -3,18 +3,26 @@
 BEGIN;
 
 INSERT INTO uom (id, name, uom_type) VALUES 
-('kg', 'Kilogram', 'WEIGHT'),
+('KG', 'Kilogram (uppercase)', 'WEIGHT'),
+('kg', 'Kilogram (lowercase)', 'WEIGHT'),
 ('g', 'Gram', 'WEIGHT'),
+('gram', 'Gram (lowercase word)', 'WEIGHT'),
+('Gram', 'Gram (capitalized)', 'WEIGHT'),
 ('L', 'Lít', 'VOLUME'),
+('l', 'Lít (lowercase)', 'VOLUME'),
 ('ML', 'Millilít', 'VOLUME'),
+('ml', 'Millilít (lowercase)', 'VOLUME'),
 ('BOTTLE', 'Chai', 'COUNT'),
+('Bottle', 'Chai (lowercase)', 'COUNT'),
+('CASE', 'Thùng', 'COUNT'),
+('pc', 'Quả/Củ/Cái', 'COUNT'),
 ('CAN', 'Lon', 'COUNT'),
 ('GLASS', 'Ly', 'COUNT'),
+('PACK', 'Gói/Bao', 'COUNT'),
+('BOX', 'Hộp', 'COUNT'),
 ('GOI', 'Gói', 'COUNT'),
 ('HOP', 'Hộp', 'COUNT'),
-('BAG', 'Túi', 'COUNT'),
-('pc', 'Quả/Củ/Cái', 'COUNT'),
-('CASE', 'Thùng', 'COUNT')
+('BAG', 'Túi', 'COUNT')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO ingredients (id, code, nom_fr, ten_vi, name_en, purchase_category_id, stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, tolerance_percent, wac_price, standard_price, yield_rate, min_stock, max_stock, safety_stock, is_import, track_lot, is_beverage, auto_po_group, is_active) VALUES ('V8003', 'V8003', 'LE BONHEUR (Cabernet Sauvignon) Stellenbosch', 'LE BONHEUR (Cabernet Sauvignon) Stellenbosch', 'LE BONHEUR (Cabernet Sauvignon) Stellenbosch', (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1), 'BOTTLE', 'ML', 750, 450, 2.0, 592000.0, 592000.0, 100.0, 0.0, 0.0, 0.0, false, false, true, 'AUTO_PO', true) ON CONFLICT (code) DO NOTHING;
