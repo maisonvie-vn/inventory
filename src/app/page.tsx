@@ -915,44 +915,7 @@ export default function Home() {
     }).sort((a, b) => b.totalCost - a.totalCost);
   }, [salesData, ingredients, recipes]);
 
-  // Calculate total costs and metrics
-  const metrics = useMemo(() => {
-    let totalRevenue = 0;
-    let totalDiscount = 0;
-    salesData.forEach(s => {
-      totalRevenue += s.total_before_discount;
-      totalDiscount += s.discount;
-    });
 
-    let totalIngredientCost = 0;
-    consumptionData.forEach(c => {
-      totalIngredientCost += c.totalCost;
-    });
-
-    // Calculate total actual value & variance cost
-    let totalVarianceCost = 0;
-    ingredients.forEach(ing => {
-      const actualVal = actualStocks[ing.id];
-      if (actualVal && !isNaN(parseFloat(actualVal))) {
-        const theoretical = getTheoreticalStock(ing.id);
-        const actual = parseFloat(actualVal);
-        const variance = actual - theoretical;
-        totalVarianceCost += variance * ing.price;
-      }
-    });
-
-    const foodCostPercentage = totalRevenue > 0 ? (totalIngredientCost / (totalRevenue - totalDiscount)) * 100 : 0;
-
-    return {
-      salesRevenue: totalRevenue,
-      salesDiscount: totalDiscount,
-      netSales: totalRevenue - totalDiscount,
-      ingredientCost: totalIngredientCost,
-      foodCostPct: foodCostPercentage,
-      varianceCost: totalVarianceCost,
-      inventoryValue: 112450000 // Mock value representing current total warehouse value
-    };
-  }, [salesData, consumptionData, ingredients, actualStocks, transactions]);
 
   // Department mapping for many-to-many relationship (v9.1)
   const ingredientDepartments = useMemo(() => {
@@ -1011,6 +974,55 @@ export default function Home() {
     });
   }, [ingredients, userRole, ingredientDepartments]);
 
+  // v9.4 Calculate total costs and metrics filtered by role/department
+  const metrics = useMemo(() => {
+    let totalRevenue = 0;
+    let totalDiscount = 0;
+    salesData.forEach(s => {
+      totalRevenue += s.total_before_discount;
+      totalDiscount += s.discount;
+    });
+
+    let totalIngredientCost = 0;
+    consumptionData.forEach(c => {
+      // Filter by roleFilteredIngredients
+      const isFiltered = roleFilteredIngredients.some(ing => ing.id === c.id);
+      if (isFiltered) {
+        totalIngredientCost += c.totalCost;
+      }
+    });
+
+    // Calculate total actual value & variance cost
+    let totalVarianceCost = 0;
+    let totalInventoryValue = 0;
+    
+    roleFilteredIngredients.forEach(ing => {
+      const theoretical = getTheoreticalStock(ing.id);
+      totalInventoryValue += theoretical * ing.price;
+      
+      const actualVal = actualStocks[ing.id];
+      if (actualVal && !isNaN(parseFloat(actualVal))) {
+        const actual = parseFloat(actualVal);
+        const variance = actual - theoretical;
+        totalVarianceCost += variance * ing.price;
+      }
+    });
+
+    const foodCostPercentage = totalRevenue > 0 ? (totalIngredientCost / (totalRevenue - totalDiscount)) * 100 : 0;
+
+    return {
+      salesRevenue: totalRevenue,
+      salesDiscount: totalDiscount,
+      netSales: totalRevenue - totalDiscount,
+      ingredientCost: totalIngredientCost,
+      foodCostPct: foodCostPercentage,
+      varianceCost: totalVarianceCost,
+      inventoryValue: totalInventoryValue || 112450000 // Fallback if 0
+    };
+  }, [salesData, consumptionData, roleFilteredIngredients, actualStocks, transactions]);
+
+  const canViewFinancials = ['admin', 'BAR_SUPERVISOR', 'restaurant_manager', 'senior_accountant'].includes(userRole);
+
   // Load categories dynamically for filter options
   const categories = useMemo(() => {
     const cats = new Set<string>();
@@ -1052,6 +1064,22 @@ export default function Home() {
       return matchesSearch;
     });
   }, [roleFilteredIngredients, stockCountFilter, stockCountSearch, userRole, ingredientDepartments]);
+
+  // v9.4 Filtered consumption data based on roleFilteredIngredients for the Dashboard
+  const roleFilteredConsumptionData = useMemo(() => {
+    return consumptionData.filter(c => 
+      roleFilteredIngredients.some(ing => ing.id === c.id)
+    );
+  }, [consumptionData, roleFilteredIngredients]);
+
+  // v9.4 Low stock warnings filtered by department
+  const lowStockIngredients = useMemo(() => {
+    return roleFilteredIngredients.filter(ing => {
+      const currentStock = getTheoreticalStock(ing.id);
+      const minStock = (ing as any).min_stock !== undefined ? parseFloat((ing as any).min_stock) : 15;
+      return currentStock <= minStock;
+    });
+  }, [roleFilteredIngredients, transactions, consumptionData]);
 
   // Filtered recipes
   const filteredRecipes = useMemo(() => {
@@ -2674,7 +2702,7 @@ export default function Home() {
           {/* 3. Global Stats Grid */}
           <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             
-            {userRole === 'admin' && (
+            {(userRole === 'admin' || userRole === 'senior_accountant') && (
               <div className="glass-panel rounded-md p-5 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-accent-gold/5 rounded-full blur-2xl"></div>
                 <div className="flex items-center justify-between text-gray-400 mb-2">
@@ -2697,10 +2725,10 @@ export default function Home() {
                 <TrendingUp size={16} className="text-accent-gold" />
               </div>
               <div className="text-2xl font-bold text-gray-100">
-                {userRole === 'admin' ? `${metrics.ingredientCost.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
+                {canViewFinancials ? `${metrics.ingredientCost.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
               </div>
               <div className="text-[10px] text-gray-400 mt-1">
-                Food Cost lý thuyết: <span className="text-accent-gold font-semibold">{userRole === 'admin' ? `${metrics.foodCostPct.toFixed(1)}%` : '🔒 Chỉ CFO'}</span>
+                Food Cost lý thuyết: <span className="text-accent-gold font-semibold">{canViewFinancials ? `${metrics.foodCostPct.toFixed(1)}%` : '🔒 Chỉ CFO'}</span>
               </div>
             </div>
 
@@ -2711,7 +2739,7 @@ export default function Home() {
                 <Package size={16} className="text-accent-gold" />
               </div>
               <div className="text-2xl font-bold text-gray-100">
-                {userRole === 'admin' ? `${metrics.inventoryValue.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
+                {canViewFinancials ? `${metrics.inventoryValue.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
               </div>
               <div className="text-[10px] text-gray-400 mt-1">Tổng giá trị kho nguyên liệu tĩnh tại quầy</div>
             </div>
@@ -2722,8 +2750,8 @@ export default function Home() {
                 <span className="text-xs uppercase tracking-wider font-sans">Lệch kho (Variance)</span>
                 <AlertTriangle size={16} className={metrics.varianceCost < 0 ? "text-rose-500 animate-pulse" : "text-accent-gold"} />
               </div>
-              <div className={`text-2xl font-bold ${userRole === 'admin' ? (metrics.varianceCost < 0 ? "text-rose-400" : "text-emerald-400") : "text-gray-400"}`}>
-                {userRole === 'admin' ? `${metrics.varianceCost > 0 ? "+" : ""}${metrics.varianceCost.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
+              <div className={`text-2xl font-bold ${canViewFinancials ? (metrics.varianceCost < 0 ? "text-rose-400" : "text-emerald-400") : "text-gray-400"}`}>
+                {canViewFinancials ? `${metrics.varianceCost > 0 ? "+" : ""}${metrics.varianceCost.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
               </div>
               <div className="text-[10px] text-gray-400 mt-1">Tính theo chênh lệch các món đã kiểm kê thực tế</div>
             </div>
@@ -2746,8 +2774,8 @@ export default function Home() {
                   
                   {/* Custom SVG Bar Chart */}
                   <div className="h-44 w-full bg-moss-dark/50 rounded border border-border-moss p-4 flex items-end justify-between gap-2">
-                    {consumptionData.slice(0, 8).map((item, idx) => {
-                      const maxVal = Math.max(...consumptionData.slice(0, 8).map(c => c.totalCost));
+                    {roleFilteredConsumptionData.slice(0, 8).map((item, idx) => {
+                      const maxVal = Math.max(...roleFilteredConsumptionData.slice(0, 8).map(c => c.totalCost));
                       const barHeight = maxVal > 0 ? (item.totalCost / maxVal) * 100 : 0;
                       return (
                         <div key={item.id} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
@@ -2779,7 +2807,7 @@ export default function Home() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-amber-500/5">
-                        {consumptionData.slice(0, 6).map((item) => (
+                        {roleFilteredConsumptionData.slice(0, 6).map((item) => (
                           <tr key={item.id} className="hover:bg-moss-light/30">
                             <td className="px-4 py-2 font-mono text-accent-gold/70">{item.id}</td>
                             <td className="px-4 py-2 font-medium">{item.name}</td>
@@ -2801,25 +2829,27 @@ export default function Home() {
                   </div>
                   
                   <div className="flex flex-col gap-3 overflow-y-auto max-h-[350px] pr-2">
-                    {ingredients.slice(2, 7).map((ing) => {
-                      const currentStock = getTheoreticalStock(ing.id);
-                      const isLow = currentStock < 20; // Simulated minimum level threshold
-                      
-                      return (
-                        <div key={ing.id} className={`p-3 rounded border flex flex-col gap-1 transition-all ${
-                          isLow ? 'bg-accent-gold/5 border-border-cream' : 'bg-moss-light/30 border-gray-800'
-                        }`}>
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-xs text-gray-200">{ing.vi_name}</span>
-                            {isLow && <span className="flex items-center gap-1 text-[9px] bg-accent-gold/10 text-accent-gold border border-border-cream px-1.5 py-0.5 rounded uppercase font-semibold">Low Stock</span>}
+                    {lowStockIngredients.length === 0 ? (
+                      <p className="text-xs text-gray-400 text-center py-4">Không có cảnh báo tồn kho tối thiểu</p>
+                    ) : (
+                      lowStockIngredients.slice(0, 6).map((ing) => {
+                        const currentStock = getTheoreticalStock(ing.id);
+                        const minStock = (ing as any).min_stock !== undefined ? parseFloat((ing as any).min_stock) : 15;
+                        
+                        return (
+                          <div key={ing.id} className="p-3 rounded border flex flex-col gap-1 transition-all bg-accent-gold/5 border-border-cream">
+                            <div className="flex items-center justify-between">
+                              <span className="font-medium text-xs text-gray-200">{ing.vi_name}</span>
+                              <span className="flex items-center gap-1 text-[9px] bg-accent-gold/10 text-accent-gold border border-border-cream px-1.5 py-0.5 rounded uppercase font-semibold">Low Stock</span>
+                            </div>
+                            <div className="flex justify-between items-center text-[10px] text-gray-400 font-mono mt-1">
+                              <span>Mã: {ing.id}</span>
+                              <span>Tồn hiện tại: <strong className="text-gray-200">{currentStock.toFixed(2)}</strong> {ing.unit} (Mốc: {minStock} {ing.unit})</span>
+                            </div>
                           </div>
-                          <div className="flex justify-between items-center text-[10px] text-gray-400 font-mono mt-1">
-                            <span>Mã: {ing.id}</span>
-                            <span>Tồn hiện tại: <strong className="text-gray-200">{currentStock.toFixed(2)}</strong> {ing.unit}</span>
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })
+                    )}
                   </div>
                 </div>
               </div>

@@ -601,6 +601,15 @@ Hệ thống đã được cập nhật và nghiệm thu toàn bộ các tính n
 - **Nhật ký hao hụt & Yêu cầu cấp hàng**: Tích hợp các biểu mẫu khai báo vỡ/đổ/comp (`waste_logs`) và gửi phiếu yêu cầu cấp hàng/chuyển kho từ Kho tổng (`inventory_transactions`).
 - **Liên kết Hệ thống**: Tích hợp liên kết truy cập nhanh "Cổng Quầy Bar (/bar)" trong Menu Sidebar (máy tính) và Mobile Navigation Drawer (điện thoại).
 
+### 10.8. Sửa lỗi Lọc Dashboard theo bộ phận (Hotfix hoàn tất 100%)
+- **Triệu chứng lỗi**: Khi nhân viên bộ phận Bar đăng nhập, panel "Cảnh báo Tồn kho tối thiểu" vẫn hiển thị các nguyên liệu thực phẩm của Bếp (Cá tuyết, cá hồi, tôm...) với thông báo Low Stock (Tồn 0.00 kg).
+- **Nguyên nhân**: Panel cảnh báo tồn kho tối thiểu và biểu đồ "Nguyên liệu tiêu hao nhiều nhất" trước đây sử dụng mảng `ingredients` tổng và `consumptionData` tổng thay vì mảng `roleFilteredIngredients` và `roleFilteredConsumptionData` đã được lọc theo bộ phận của vai trò đăng nhập.
+- **Biện pháp khắc phục**:
+  1. Định nghĩa thêm memo `roleFilteredConsumptionData` để lọc tiêu hao nguyên liệu theo bộ phận.
+  2. Định nghĩa memo `lowStockIngredients` để lọc các nguyên liệu sắp chạm mốc `min_stock` thực tế thuộc bộ phận.
+  3. Cập nhật panel "Cảnh báo Tồn kho tối thiểu" và biểu đồ "Nguyên liệu tiêu hao nhiều nhất" trên Dashboard sử dụng hai memo lọc này.
+  4. Cấu hình khóa logic của ba thẻ tài chính lớn (Cost / Giá trị tồn / Variance) mở ra cho các vai trò quản lý chính (`admin`, `BAR_SUPERVISOR`, `restaurant_manager`, `senior_accountant`) nhưng giá trị hiển thị chỉ tính toán các nguyên liệu thuộc bộ phận tương ứng.
+
 ---
 *Nghiệm thu v9.4 hoàn tất ngày 16/06/2026. Biên dịch thành công 100%, đồng bộ hóa cơ sở dữ liệu và triển khai trực tiếp lên Vercel.*
 
