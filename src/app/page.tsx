@@ -2395,9 +2395,23 @@ export default function Home() {
         let headerRowIdx = -1;
         for (let i = 0; i < data.length; i++) {
           const row = data[i] as any[];
-          if (row && (row.includes('Ngày nhập (Date)') || row.includes('Ngày nhập') || row.includes('Date'))) {
-            headerRowIdx = i;
-            break;
+          if (row && row.some(cell => {
+            if (!cell) return false;
+            const str = String(cell).toLowerCase();
+            return str.includes('ngày') || str.includes('date') || str.includes('hóa đơn') || str.includes('invoice');
+          })) {
+            let matches = 0;
+            row.forEach(cell => {
+              if (!cell) return;
+              const str = String(cell).toLowerCase();
+              if (str.includes('ngày') || str.includes('date') || str.includes('hóa đơn') || str.includes('invoice') || str.includes('mã nvl') || str.includes('số lượng') || str.includes('đơn giá')) {
+                matches++;
+              }
+            });
+            if (matches >= 3) {
+              headerRowIdx = i;
+              break;
+            }
           }
         }
 
@@ -2410,15 +2424,15 @@ export default function Home() {
         const headers = data[headerRowIdx] as string[];
         const rows = data.slice(headerRowIdx + 1) as any[][];
 
-        const idxDate = headers.findIndex(h => h && h.toLowerCase().includes('ngày'));
-        const idxInvoice = headers.findIndex(h => h && h.toLowerCase().includes('hóa đơn'));
-        const idxSupplier = headers.findIndex(h => h && h.toLowerCase().includes('nhà cung cấp'));
-        const idxIngCode = headers.findIndex(h => h && h.toLowerCase().includes('mã nvl'));
-        const idxQty = headers.findIndex(h => h && h.toLowerCase().includes('số lượng'));
-        const idxUom = headers.findIndex(h => h && h.toLowerCase().includes('đơn vị'));
-        const idxPrice = headers.findIndex(h => h && h.toLowerCase().includes('đơn giá'));
-        const idxFreight = headers.findIndex(h => h && h.toLowerCase().includes('cước'));
-        const idxDuty = headers.findIndex(h => h && h.toLowerCase().includes('thuế'));
+        const idxDate = headers.findIndex(h => h && (h.toLowerCase().includes('ngày') || h.toLowerCase().includes('date')));
+        const idxInvoice = headers.findIndex(h => h && (h.toLowerCase().includes('hóa đơn') || h.toLowerCase().includes('invoice')));
+        const idxSupplier = headers.findIndex(h => h && (h.toLowerCase().includes('nhà cung cấp') || h.toLowerCase().includes('supplier')));
+        const idxIngCode = headers.findIndex(h => h && (h.toLowerCase().includes('mã nvl') || h.toLowerCase().includes('mã nguyên liệu') || h.toLowerCase().includes('code')));
+        const idxQty = headers.findIndex(h => h && (h.toLowerCase().includes('số lượng') || h.toLowerCase().includes('qty') || h.toLowerCase().includes('lượng')));
+        const idxUom = headers.findIndex(h => h && (h.toLowerCase().includes('đơn vị') || h.toLowerCase().includes('đvt') || h.toLowerCase().includes('uom')));
+        const idxPrice = headers.findIndex(h => h && (h.toLowerCase().includes('đơn giá') || h.toLowerCase().includes('price') || h.toLowerCase().includes('giá')));
+        const idxFreight = headers.findIndex(h => h && (h.toLowerCase().includes('cước') || h.toLowerCase().includes('vận chuyển') || h.toLowerCase().includes('freight')));
+        const idxDuty = headers.findIndex(h => h && (h.toLowerCase().includes('thuế') || h.toLowerCase().includes('duty') || h.toLowerCase().includes('tax')));
 
         if (idxDate === -1 || idxInvoice === -1 || idxIngCode === -1 || idxQty === -1 || idxPrice === -1) {
           alert('File Excel thiếu các cột bắt buộc: Ngày nhập, Số hóa đơn, Mã NVL, Số lượng, Đơn giá.');
@@ -2427,30 +2441,57 @@ export default function Home() {
         }
 
         const invoicesMap: { [key: string]: any } = {};
+        const errorsList: string[] = [];
+        const skippedItems: string[] = [];
 
         for (const row of rows) {
           if (!row || row.length === 0) continue;
           
           const rawInvoice = row[idxInvoice];
-          if (!rawInvoice) continue;
-          const invoiceNo = String(rawInvoice).trim();
+          const invoiceNo = rawInvoice !== undefined && rawInvoice !== null ? String(rawInvoice).trim() : '';
+          if (!invoiceNo) continue;
           
           const rawDate = row[idxDate];
           if (!rawDate) continue;
           
-          let dateStr = String(rawDate).trim();
-          if (dateStr.includes('/')) {
-            const parts = dateStr.split('/');
-            if (parts.length === 3) {
+          let dateStr = '';
+          if (rawDate instanceof Date) {
+            const yyyy = rawDate.getFullYear();
+            const mm = String(rawDate.getMonth() + 1).padStart(2, '0');
+            const dd = String(rawDate.getDate()).padStart(2, '0');
+            dateStr = `${yyyy}-${mm}-${dd}`;
+          } else if (typeof rawDate === 'number') {
+            const date = new Date(Math.round((rawDate - 25569) * 86400 * 1000));
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            dateStr = `${yyyy}-${mm}-${dd}`;
+          } else {
+            const rawStr = String(rawDate).trim();
+            if (/^\d{4}-\d{2}-\d{2}$/.test(rawStr)) {
+              dateStr = rawStr;
+            } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(rawStr)) {
+              const parts = rawStr.split('/');
               const day = parts[0].padStart(2, '0');
               const month = parts[1].padStart(2, '0');
               const year = parts[2];
               dateStr = `${year}-${month}-${day}`;
+            } else {
+              const parsed = new Date(rawStr);
+              if (!isNaN(parsed.getTime())) {
+                const yyyy = parsed.getFullYear();
+                const mm = String(parsed.getMonth() + 1).padStart(2, '0');
+                const dd = String(parsed.getDate()).padStart(2, '0');
+                dateStr = `${yyyy}-${mm}-${dd}`;
+              } else {
+                dateStr = new Date().toISOString().split('T')[0];
+              }
             }
           }
 
           const supplierName = idxSupplier !== -1 ? String(row[idxSupplier] || 'Nhà cung cấp').trim() : 'Nhà cung cấp';
-          const ingCode = String(row[idxIngCode]).trim();
+          const rawIng = row[idxIngCode];
+          const ingCode = rawIng !== undefined && rawIng !== null ? String(rawIng).trim() : '';
           const qtyVal = parseFloat(row[idxQty]) || 0;
           const priceVal = parseFloat(row[idxPrice]) || 0;
           const freightVal = idxFreight !== -1 ? parseFloat(row[idxFreight]) || 0 : 0;
@@ -2505,7 +2546,7 @@ export default function Home() {
             totalRawValue += item.qtyReceived * item.unitPriceFx;
           }
 
-          let supplierId = '90000000-0000-0000-0000-000000000001';
+          let supplierId: string | null = null;
           const matchedSup = supabaseSuppliers.find(s => 
             s.name.toLowerCase().trim() === inv.supplierName.toLowerCase().trim() ||
             s.name.toLowerCase().includes(inv.supplierName.toLowerCase())
@@ -2517,6 +2558,8 @@ export default function Home() {
               supplierId = '90000000-0000-0000-0000-000000000003';
             } else if (inv.supplierName.toLowerCase().includes('hải yến') || inv.supplierName.toLowerCase().includes('rau')) {
               supplierId = '90000000-0000-0000-0000-000000000002';
+            } else if (supabaseSuppliers.length > 0) {
+              supplierId = supabaseSuppliers[0].id;
             }
           }
 
@@ -2555,6 +2598,8 @@ export default function Home() {
             lines: finalLines
           };
 
+          let successfullyInsertedLines: any[] = [];
+
           if (isSupabaseConfigured()) {
             const { error: errHeader } = await supabase
               .from('goods_receipts')
@@ -2572,11 +2617,12 @@ export default function Home() {
 
             if (errHeader) {
               console.error("Header insert failed for " + inv.invoiceNo, errHeader);
+              errorsList.push(`Hóa đơn ${inv.invoiceNo}: Lỗi lưu hóa đơn (${errHeader.message || 'Lỗi DB'})`);
               continue;
             }
 
             for (const line of finalLines) {
-              let dbIngredientId = line.ingredientId;
+              let dbIngredientId = '';
               const { data: ingData } = await supabase
                 .from('ingredients')
                 .select('id, code, is_beverage, purchase_categories(code)')
@@ -2588,6 +2634,23 @@ export default function Home() {
                 dbIngredientId = ingData[0].id;
                 const catCode = (ingData[0].purchase_categories as any)?.code || (ingData[0].purchase_categories as any)?.[0]?.code || '';
                 isBar = ['ALCOHOL', 'BEVERAGE'].includes(catCode) || ingData[0].is_beverage || isBar;
+              } else {
+                const { data: ingDataById } = await supabase
+                  .from('ingredients')
+                  .select('id, code, is_beverage, purchase_categories(code)')
+                  .eq('id', line.ingredientId)
+                  .limit(1);
+                if (ingDataById && ingDataById.length > 0) {
+                  dbIngredientId = ingDataById[0].id;
+                  const catCode = (ingDataById[0].purchase_categories as any)?.code || (ingDataById[0].purchase_categories as any)?.[0]?.code || '';
+                  isBar = ['ALCOHOL', 'BEVERAGE'].includes(catCode) || ingDataById[0].is_beverage || isBar;
+                }
+              }
+
+              if (!dbIngredientId) {
+                console.warn(`Ingredient not found in database: ${line.ingredientId}. Skipping this item.`);
+                skippedItems.push(`${line.ingredientId} (Mặt hàng không tồn tại)`);
+                continue;
               }
 
               const { error: errLine } = await supabase
@@ -2603,6 +2666,7 @@ export default function Home() {
 
               if (errLine) {
                 console.error("Line insert failed for " + line.ingredientId, errLine);
+                errorsList.push(`Hóa đơn ${inv.invoiceNo}: Lỗi lưu mặt hàng ${line.ingredientId} (${errLine.message || 'Lỗi DB'})`);
                 continue;
               }
 
@@ -2625,26 +2689,39 @@ export default function Home() {
 
               if (errTx) {
                 console.error("Transaction insert failed for " + line.ingredientId, errTx);
+                errorsList.push(`Hóa đơn ${inv.invoiceNo}: Lỗi tăng kho cho ${line.ingredientId} (${errTx.message || 'Lỗi DB'})`);
               }
+
+              successfullyInsertedLines.push({
+                ...line,
+                ingredientId: dbIngredientId
+              });
             }
+          } else {
+            successfullyInsertedLines = [...finalLines];
           }
 
-          for (const line of finalLines) {
-            newTransList.push({
-              id: `grn-tx-imported-${Date.now()}-${line.ingredientId}`,
-              ingredientId: line.ingredientId,
-              type: 'import' as const,
-              qty: line.qtyReceived,
-              unit_price: line.landedUnitCost,
-              status: 'approved' as const,
-              date: inv.date,
-              note: `Nhập kho từ Excel GRN: ${inv.invoiceNo} (Landed Cost)`
+          if (successfullyInsertedLines.length > 0) {
+            for (const line of successfullyInsertedLines) {
+              newTransList.push({
+                id: `grn-tx-imported-${Date.now()}-${line.ingredientId}`,
+                ingredientId: line.ingredientId,
+                type: 'import' as const,
+                qty: line.qtyReceived,
+                unit_price: line.landedUnitCost,
+                status: 'approved' as const,
+                date: inv.date,
+                note: `Nhập kho từ Excel GRN: ${inv.invoiceNo} (Landed Cost)`
+              });
+              lineCount++;
+            }
+
+            newGrns.push({
+              ...grnRecord,
+              lines: successfullyInsertedLines
             });
-            lineCount++;
+            importCount++;
           }
-
-          newGrns.push(grnRecord);
-          importCount++;
         }
 
         setGoodsReceipts(prev => [...newGrns, ...prev]);
@@ -2675,7 +2752,15 @@ export default function Home() {
         });
         setIngredients(updatedIngredients);
 
-        alert(`Nhập kho thành công!\n- Đã thêm ${importCount} Hóa đơn Nhập kho (GRN) từ 01/06 đến 14/06/2026.\n- Tổng số ${lineCount} mặt hàng đã được nhập kho và cập nhật giá vốn WAC.`);
+        let resultMsg = `Nhập kho hoàn tất!\n- Đã thêm thành công ${importCount}/${invoiceKeys.length} Hóa đơn Nhập kho (GRN) từ 01/06 đến 14/06/2026.\n- Tổng số ${lineCount} mặt hàng đã được nhập kho và cập nhật giá vốn WAC.`;
+        if (skippedItems.length > 0) {
+          resultMsg += `\n\n⚠️ Đã bỏ qua ${skippedItems.length} mặt hàng không tồn tại trong danh mục NVL:\n- ${skippedItems.join('\n- ')}`;
+        }
+        if (errorsList.length > 0) {
+          resultMsg += `\n\n❌ Gặp lỗi tại ${errorsList.length} thao tác:\n- ${errorsList.slice(0, 5).join('\n- ')}`;
+          if (errorsList.length > 5) resultMsg += `\n... và ${errorsList.length - 5} lỗi khác.`;
+        }
+        alert(resultMsg);
       } catch (err) {
         alert('Lỗi nhập kho từ file Excel: ' + (err as Error).message);
       } finally {
