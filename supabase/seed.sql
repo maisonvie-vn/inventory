@@ -1626,3 +1626,11 @@ INSERT INTO ingredients (
   150000.0, 150000.0, false, true
 )
 ON CONFLICT (id) DO NOTHING;
+
+-- ADD MISSING UOMS FOR IMPORT EXCEL 01/06 - 14/06 (LON, LY, NAI, QUA)
+INSERT INTO uom (id, name, uom_type) VALUES 
+('LON', 'Lon', 'COUNT'),
+('LY', 'Ly', 'COUNT'),
+('NAI', 'Nải', 'COUNT'),
+('QUA', 'Quả', 'COUNT')
+ON CONFLICT (id) DO NOTHING;
