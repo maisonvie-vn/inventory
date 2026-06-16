@@ -62,11 +62,11 @@ export default function Home() {
 
   // Purchasing & Goods Receipts states
   const [purchaseOrders, setPurchaseOrders] = useState<any[]>([
-    { id: 'po-1', poNumber: 'PO-20260615-ANNA', supplierName: 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)', supplierId: 's0000000-0000-0000-0000-000000000001', expectedDate: '2026-06-16', status: 'OPEN', source: 'AUTO_PO', items: [
+    { id: 'po-1', poNumber: 'PO-20260615-ANNA', supplierName: 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)', supplierId: '90000000-0000-0000-0000-000000000001', expectedDate: '2026-06-16', status: 'OPEN', source: 'AUTO_PO', items: [
       { ingId: 'ING-003', name: 'Cá tuyết đen đông lạnh', qtyOrdered: 5, unit: 'kg', price: 1400000 },
       { ingId: 'ING-093', name: 'Thịt bò Ribeye Angus US', qtyOrdered: 10, unit: 'kg', price: 890000 }
     ]},
-    { id: 'po-2', poNumber: 'PO-20260615-DALO', supplierName: 'Tổng kho Rượu vang Đa Lộc', supplierId: 's0000000-0000-0000-0000-000000000003', expectedDate: '2026-06-17', status: 'OPEN', source: 'AUTO_PO', items: [
+    { id: 'po-2', poNumber: 'PO-20260615-DALO', supplierName: 'Tổng kho Rượu vang Đa Lộc', supplierId: '90000000-0000-0000-0000-000000000003', expectedDate: '2026-06-17', status: 'OPEN', source: 'AUTO_PO', items: [
       { ingId: 'ING-070', name: 'Vang trắng khô', qtyOrdered: 12, unit: 'BOTTLE', price: 86000 },
       { ingId: 'ING-071', name: 'Vang đỏ đậm', qtyOrdered: 18, unit: 'BOTTLE', price: 86000 }
     ]}
