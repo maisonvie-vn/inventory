@@ -585,12 +585,13 @@ Hệ thống đã được cập nhật và nghiệm thu toàn bộ các tính n
 - Bổ sung thêm cột hiển thị **Variance THÔ (Raw Variance)** để CFO và Kế toán có thể đối chiếu chính xác hao hụt thực tế (không tính buffer) nhằm phát hiện thất thoát/over-portion thực sự.
 
 ### 10.6. Sửa lỗi Ràng buộc khóa ngoại cơ sở dữ liệu (Seeding Constraint) (Hoàn tất 100%)
-- **Mô tả lỗi**: Khi chạy tệp `seed.sql`, hệ thống báo lỗi `recipes_ingredient_id_fkey` vì bảng `recipes` tham chiếu đến nguyên liệu `NVLC3001` và 21 nguyên liệu khác (mã `NVLC`/`NLP`) từ menu món ăn nhưng các nguyên liệu này chưa được định nghĩa trong bảng `ingredients`.
+- **Mô tả lỗi**: Khi chạy tệp `seed.sql`, hệ thống phát sinh hai lỗi ràng buộc khóa ngoại (foreign key constraint):
+  1. Lỗi `recipes_ingredient_id_fkey` vì bảng `recipes` tham chiếu đến nguyên liệu `NVLC3001` và 21 nguyên liệu khác (mã `NVLC`/`NLP`) chưa được định nghĩa trong bảng `ingredients`.
+  2. Lỗi `set_menu_items_parent_menu_item_id_fkey` vì bảng `set_menu_items` tham chiếu đến 3 Tasting Set Menus (`R6212, R6213, R6218`) chưa được định nghĩa trong bảng `menu_items`.
 - **Hành động khắc phục**:
-  - Trích xuất thông tin chi tiết (Tên, ĐVT kho, và giá vốn) của 22 nguyên liệu bị thiếu này từ sheet `MASTER_BEP` trong tệp Excel gốc `MAISON_VIE_v6_0_PRO.xlsx`.
+  - Trích xuất thông tin chi tiết (Tên, ĐVT kho, và giá vốn) của 22 nguyên liệu bị thiếu từ sheet `MASTER_BEP` trong tệp Excel gốc `MAISON_VIE_v6_0_PRO.xlsx` và bổ sung các bản ghi `INSERT INTO ingredients` và `INSERT INTO supplier_ingredients` tương ứng.
   - Bổ sung đơn vị tính `'HOP'` vào tệp `seed.sql` dưới phần seed `uom` để ngăn lỗi khóa ngoại `ingredients_stock_uom_fkey`.
-  - Tạo các câu lệnh `INSERT INTO ingredients` bổ sung cho 22 nguyên liệu này, cấu hình tỷ lệ quy đổi (ví dụ: Escargot hộp 800g có factor = 800, các loại thịt/hải sản theo `kg` có factor = 1000 về `g`).
-  - Tạo các liên kết nhà cung cấp mặc định trong `supplier_ingredients` (trỏ về Công ty Cổ phần Thực phẩm An Nam - `90000000-0000-0000-0000-000000000001`).
+  - Trích xuất cấu hình Tasting Set Menu từ code logic của hệ thống (`src/data/mockData.ts` và `src/data/db.json`) và bổ sung 3 bản ghi `INSERT INTO menu_items` cho `R6212, R6213, R6218` (Tasting 5, 6, 7 courses) với giá tương ứng.
 
 ---
 *Nghiệm thu v9.2 hoàn tất ngày 16/06/2026. Biên dịch thành công 100%, đồng bộ hóa cơ sở dữ liệu và triển khai trực tiếp lên Vercel.*
