@@ -19,15 +19,15 @@ INSERT INTO purchase_categories (id, code, name, is_active) VALUES ('efd070f6-3c
 
 -- 2. Seed UoMs
 INSERT INTO uom (id, name, uom_type) VALUES 
-INSERT INTO uom (id, name, uom_type) VALUES ('CAN', 'Lon', 'COUNT') ON CONFLICT (id) DO NOTHING;
-INSERT INTO uom (id, name, uom_type) VALUES ('GLASS', 'Ly', 'COUNT') ON CONFLICT (id) DO NOTHING;
 ('KG', 'Kilogram', 'WEIGHT'),
 ('g', 'Gram', 'WEIGHT'),
 ('L', 'Lít', 'VOLUME'),
 ('ML', 'Millilít', 'VOLUME'),
 ('BOTTLE', 'Chai', 'COUNT'),
 ('CASE', 'Thùng', 'COUNT'),
-('pc', 'Quả/Củ/Cái', 'COUNT')
+('pc', 'Quả/Củ/Cái', 'COUNT'),
+('CAN', 'Lon', 'COUNT'),
+('GLASS', 'Ly', 'COUNT')
 ON CONFLICT (id) DO NOTHING;
 
 -- 3. Seed UoM Conversions
