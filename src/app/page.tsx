@@ -540,6 +540,8 @@ export default function Home() {
         else if (role === 'foh_supervisor') name = 'Giám sát Sảnh';
         else if (role === 'sous_chef') name = 'Bếp phó';
         else if (role === 'junior_accountant') name = 'Thủ kho / Kế toán phụ';
+        else if (role === 'BAR_SUPERVISOR') name = 'Trưởng Bar / Giám sát';
+        else if (role === 'BARTENDER') name = 'Nhân viên Bar (Bartender)';
       } else {
         if (authEmail.includes('manager')) {
           role = 'restaurant_manager';
@@ -559,6 +561,12 @@ export default function Home() {
         } else if (authEmail.includes('junior') || authEmail.includes('store')) {
           role = 'junior_accountant';
           name = 'Thủ kho / Kế toán phụ';
+        } else if (authEmail.includes('bar') && authEmail.includes('supervisor')) {
+          role = 'BAR_SUPERVISOR';
+          name = 'Trưởng Bar / Giám sát';
+        } else if (authEmail.includes('bar') || authEmail.includes('bartender')) {
+          role = 'BARTENDER';
+          name = 'Nhân viên Bar (Bartender)';
         }
       }
 
@@ -609,6 +617,8 @@ export default function Home() {
         else if (role === 'foh_supervisor') name = 'Giám sát Sảnh';
         else if (role === 'sous_chef') name = 'Bếp phó';
         else if (role === 'junior_accountant') name = 'Thủ kho / Kế toán phụ';
+        else if (role === 'BAR_SUPERVISOR') name = 'Trưởng Bar / Giám sát';
+        else if (role === 'BARTENDER') name = 'Nhân viên Bar (Bartender)';
       } else {
         if (authEmail.includes('manager')) {
           role = 'restaurant_manager';
@@ -628,6 +638,12 @@ export default function Home() {
         } else if (authEmail.includes('junior') || authEmail.includes('store')) {
           role = 'junior_accountant';
           name = 'Thủ kho / Kế toán phụ';
+        } else if (authEmail.includes('bar') && authEmail.includes('supervisor')) {
+          role = 'BAR_SUPERVISOR';
+          name = 'Trưởng Bar / Giám sát';
+        } else if (authEmail.includes('bar') || authEmail.includes('bartender')) {
+          role = 'BARTENDER';
+          name = 'Nhân viên Bar (Bartender)';
         }
       }
 
