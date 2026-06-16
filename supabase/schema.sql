@@ -533,17 +533,10 @@ with check (get_current_user_role() in ('admin', 'senior_accountant'));
 create policy "Allow select transactions for all staff"
 on inventory_transactions for select to authenticated using (true);
 
-create policy "Allow insert transactions for authorized staff"
-on inventory_transactions for insert to authenticated
-with check (
-    (get_current_user_role() = 'junior_accountant' and txn_type = 'IMPORT') or -- Thủ kho chỉ tạo phiếu pending
-    (get_current_user_role() in ('admin', 'senior_accountant', 'head_chef', 'restaurant_manager') and (ref_table is not null or txn_type in ('IMPORT', 'STOCK_TAKE_ADJ', 'REVERSAL')))
-);
-
-create policy "Allow approve/update transactions for senior accountant and admin"
-on inventory_transactions for update to authenticated
-using (get_current_user_role() in ('admin', 'senior_accountant'))
-with check (get_current_user_role() in ('admin', 'senior_accountant'));
+create policy "Allow manage transactions for all authenticated users"
+on inventory_transactions for all to authenticated
+using (true)
+with check (true);
 
 -- 8.4. Policy cho bảng Waste Logs (Hủy hỏng)
 create policy "Allow select waste_logs for all staff"
@@ -567,36 +560,36 @@ on purchase_orders for all to authenticated
 using (get_current_user_role() in ('admin', 'senior_accountant'));
 
 -- 8.6. Policy cho bảng Goods Receipts (Nhận hàng)
-create policy "Allow select GRN for accountants, managers, admin"
+create policy "Allow select GRN for all authenticated users"
 on goods_receipts for select to authenticated
-using (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant', 'restaurant_manager', 'head_chef'));
+using (true);
 
-create policy "Allow insert GRN for all authorized staff"
+create policy "Allow insert GRN for all authenticated users"
 on goods_receipts for insert to authenticated
-with check (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant', 'restaurant_manager', 'head_chef'));
+with check (true);
 
-create policy "Allow update/approve GRN for senior roles"
+create policy "Allow update/approve GRN for all authenticated users"
 on goods_receipts for update to authenticated
-using (get_current_user_role() in ('admin', 'senior_accountant', 'restaurant_manager'))
-with check (get_current_user_role() in ('admin', 'senior_accountant', 'restaurant_manager'));
+using (true)
+with check (true);
 
 -- 8.7. Policy cho bảng Grn Lines (Chi tiết nhận hàng)
 create policy "Allow select grn_lines for all staff"
 on grn_lines for select to authenticated using (true);
 
-create policy "Allow manage grn_lines for authorized staff"
+create policy "Allow manage grn_lines for all authenticated users"
 on grn_lines for all to authenticated
-using (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant', 'restaurant_manager', 'head_chef'))
-with check (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant', 'restaurant_manager', 'head_chef'));
+using (true)
+with check (true);
 
 -- 8.8. Policy cho bảng Lots (Lô hàng)
 create policy "Allow select lots for all staff"
 on lots for select to authenticated using (true);
 
-create policy "Allow manage lots for authorized staff"
+create policy "Allow manage lots for all authenticated users"
 on lots for all to authenticated
-using (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant', 'restaurant_manager', 'head_chef'))
-with check (get_current_user_role() in ('admin', 'senior_accountant', 'junior_accountant', 'restaurant_manager', 'head_chef'));
+using (true)
+with check (true);
 
 -- Thu hồi quyền trực tiếp trên các bảng gốc khỏi người dùng thông thường để bắt buộc qua VIEW bảo mật
 revoke select on table ingredients, inventory_transactions from public, authenticated;
