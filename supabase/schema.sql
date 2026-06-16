@@ -530,11 +530,11 @@ using (get_current_user_role() in ('admin', 'senior_accountant'))
 with check (get_current_user_role() in ('admin', 'senior_accountant'));
 
 -- 8.3. Policy cho bảng Inventory Transactions (Biến động kho)
-create policy "Allow select transactions for all staff"
-on inventory_transactions for select to authenticated using (true);
+create policy "Allow select transactions for all users"
+on inventory_transactions for select using (true);
 
-create policy "Allow manage transactions for all authenticated users"
-on inventory_transactions for all to authenticated
+create policy "Allow manage transactions for all users"
+on inventory_transactions for all
 using (true)
 with check (true);
 
@@ -560,34 +560,34 @@ on purchase_orders for all to authenticated
 using (get_current_user_role() in ('admin', 'senior_accountant'));
 
 -- 8.6. Policy cho bảng Goods Receipts (Nhận hàng)
-create policy "Allow select GRN for all authenticated users"
-on goods_receipts for select to authenticated
+create policy "Allow select GRN for all users"
+on goods_receipts for select
 using (true);
 
-create policy "Allow insert GRN for all authenticated users"
-on goods_receipts for insert to authenticated
+create policy "Allow insert GRN for all users"
+on goods_receipts for insert
 with check (true);
 
-create policy "Allow update/approve GRN for all authenticated users"
-on goods_receipts for update to authenticated
+create policy "Allow update/approve GRN for all users"
+on goods_receipts for update
 using (true)
 with check (true);
 
 -- 8.7. Policy cho bảng Grn Lines (Chi tiết nhận hàng)
-create policy "Allow select grn_lines for all staff"
-on grn_lines for select to authenticated using (true);
+create policy "Allow select grn_lines for all users"
+on grn_lines for select using (true);
 
-create policy "Allow manage grn_lines for all authenticated users"
-on grn_lines for all to authenticated
+create policy "Allow manage grn_lines for all users"
+on grn_lines for all
 using (true)
 with check (true);
 
 -- 8.8. Policy cho bảng Lots (Lô hàng)
-create policy "Allow select lots for all staff"
-on lots for select to authenticated using (true);
+create policy "Allow select lots for all users"
+on lots for select using (true);
 
-create policy "Allow manage lots for all authenticated users"
-on lots for all to authenticated
+create policy "Allow manage lots for all users"
+on lots for all
 using (true)
 with check (true);
 
