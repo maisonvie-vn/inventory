@@ -2953,6 +2953,11 @@ export default function Home() {
             <div className="flex items-center gap-2 bg-moss-light border border-border-moss px-3 py-1.5 rounded-sm">
               <span className="text-[10px] text-gray-400 font-sans uppercase">Đăng nhập:</span>
               <span className="text-xs font-semibold text-gray-200">{currentUser.name || currentUser.email}</span>
+              {isSupabaseConfigured() && (
+                <span className="text-[9px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded-sm ml-1" title="Supabase Database Reference ID">
+                  DB ID: {process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0] || 'Unknown'}
+                </span>
+              )}
               <button 
                 onClick={() => {
                   setPasswordError('');
@@ -3064,7 +3069,16 @@ export default function Home() {
         {isMobileMetaOpen && (
           <div className="lg:hidden bg-moss-light border-t border-border-moss p-4 flex flex-col gap-3 text-xs text-text-light">
             <div className="flex items-center justify-between">
-              <span>Đăng nhập: <strong>{currentUser.name || currentUser.email}</strong></span>
+              <div className="flex flex-col gap-1">
+                <span>Đăng nhập: <strong>{currentUser.name || currentUser.email}</strong></span>
+                {isSupabaseConfigured() && (
+                  <div className="mt-0.5">
+                    <span className="text-[9px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1 py-0.5 rounded-sm" title="Supabase Database Reference ID">
+                      DB ID: {process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0] || 'Unknown'}
+                    </span>
+                  </div>
+                )}
+              </div>
               <div className="flex gap-2">
                 <button 
                   onClick={() => {
