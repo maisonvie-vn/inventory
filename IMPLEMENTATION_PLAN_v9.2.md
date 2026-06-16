@@ -217,6 +217,39 @@ create table ingredient_departments (
 
 **Hệ quả code:** `roleToDept(role)` = `'KITCHEN'` cho **Chef**, `'BAR'` cho **Bar**, `null` (tất cả) cho phần còn lại (Admin/CFO/Manager/Kế toán/Thủ kho). Việc cần làm: (1) **gỡ nav item `/bar`** cho vai trò quản trị; (2) thêm **bộ lọc `Tất cả/Bếp/Bar`** trên dashboard hợp nhất; (3) **tách role Chef** ra khỏi role gộp `restaurant_manager` (Chef = KITCHEN-scope riêng).
 
+### C.6.1. HAI MẶT CỦA BAR: vận hành (Bar staff) vs báo cáo (quản trị) *(làm rõ 16/06)*
+> **Gỡ mục nav "Cổng Quầy Bar (/bar)"** (như ảnh). Bar không xuất hiện như một "nơi để đi vào" ở bất kỳ đâu. Thay vào đó Bar có **hai mặt** tùy người đăng nhập:
+
+**① Ở khu BAR (Bartender / Quản lý Bar) → TÍCH HỢP HẾT vào màn của họ.**
+Đăng nhập là vào thẳng workspace Bar đã lọc sẵn, gồm **đầy đủ thao tác vận hành**: Master kho Bar · Kiểm kho & Cân · Nhập/Xuất/Chuyển kho · Cảnh báo tồn Bar · Tạo/Duyệt phiếu đặt Bar · Waste/Non-sale (vỡ/đổ/comp) · Pour variance. Đây là **toàn bộ** giao diện của họ — không có khái niệm "portal", không thấy gì của Bếp.
+
+**② Ở khu QUẢN TRỊ / GIÁM SÁT (Admin/CFO/Manager) → Bar mặc định là BÁO CÁO; có đường ADMIN-WRITE khi cần.**
+Mặc định người quản trị **xem báo cáo** Bar (read-only/tổng hợp): tồn Bar theo nhóm (Vang/Mạnh/Bia-NN), tiêu hao Bar, beverage cost, variance & **pour variance**, cảnh báo tồn Bar, lịch sử phiếu đặt Bar — truy cập qua **bộ lọc `Bar`** hoặc tab **"Báo cáo Bar"**. **Nhưng khi cần** (bartender nghỉ, nạp tồn đầu kỳ, sửa sai, cập nhật giá hàng loạt), quản trị **được phép GHI** vào kho Bar qua **đường admin-write có kiểm soát — xem §C.6.2**.
+
+| | Bar staff (vận hành) | Quản trị |
+| :-- | :-- | :-- |
+| Bản chất | Workspace thao tác, tích hợp hết | Báo cáo + admin-write khi cần |
+| Làm được gì | Nhập/xuất/kiểm kho/đặt hàng/khai waste | Xem & phân tích; **ghi được vào Bar** (§C.6.2) |
+| Vào bằng | Đăng nhập = mặc định scope Bar | Bộ lọc `Bar` / tab "Báo cáo Bar" |
+| Thấy Bếp? | Không | Có (toàn bộ, vì là quản trị) |
+
+### C.6.2. ADMIN-WRITE vào kho Bar từ khu quản trị *(ĐÃ CHỐT 16/06)*
+> **Vì sao có:** §C.6.1 từng ghi "quản trị read-only với Bar" là **quá cứng**. Thực tế quản lý cần nhập thay khi bartender nghỉ, nạp tồn đầu kỳ, sửa sai, cập nhật giá hàng loạt.
+
+**Ai được ghi:** **Tổng quản lý + Quản lý + Thủ kho** = được admin-write (đều có audit). **Giám sát FOH (thuần) = chỉ xem.** CFO/Owner đương nhiên được.
+
+**Hai cơ chế ghi (đều bắt buộc chọn `location = BAR` trước khi nạp):**
+- **Nhập từ file (hàng loạt):** upload Excel Bar (kiểm kho/nhập hàng) từ khu quản trị → qua đúng pipeline (mapping học được, **chống trùng `file_hash`**, 3-way match nếu nhập hàng). Giao dịch gắn `created_by = người ghi`, `source='ADMIN_IMPORT'`.
+- **Nhập/sửa tay (từng mã):** là **bút toán điều chỉnh** (`STOCK_TAKE_ADJ`/reversal), **không** sửa lịch sử (sổ cái bất biến §1.2).
+
+**Quy tắc xung đột — ĐÃ CHỐT: cho GHI ĐÈ ngay, KHÔNG hỏi lý do.**
+Khi Bar staff đã "chốt đã nhập/đã xuất" trong ngày mà quản trị muốn ghi đè → **cho ghi đè tức thì, không bật popup hỏi lý do** (để không kẹt vận hành). Hệ thống tự reversal bản cũ + ghi bản mới.
+
+> ⚠️ **Lằn ranh phải giữ (phản biện thẳng):** "không hỏi lý do" **≠ "không để lại vết".** Mọi lần admin-write/ghi đè vào Bar **vẫn TỰ ĐỘNG ghi** `audit_log`: **ai · lúc nào · giá trị cũ → mới**, và nổi lên **báo cáo "Can thiệp admin vào kho Bar"** gửi Cấp 1 (CFO/Owner). Đây là điều **không thương lượng** — vì Bar là khu thất thoát cao nhất; bỏ luôn cả dấu vết thì pour variance/variance mất hết tác dụng. Đánh đổi bạn đang chọn: CFO thấy *có* can thiệp nhưng **không thấy lý do** → khi số liệu bất thường, CFO phải tự hỏi người ghi. Đây là trade-off hợp lệ, miễn dấu vết còn nguyên.
+
+**Trách nhiệm variance:** giao dịch do admin nhập được đánh dấu `source='ADMIN_*'` → báo cáo variance phân biệt rõ "số do admin nhập" vs "số do bar staff đếm", **không đổ oan bartender** khi sau đó lệch.
+
+
 
 ---
 
@@ -495,11 +528,11 @@ Bổ sung quyền cho luồng Module 2:
 
 ## 8. CẬP NHẬT KẾ HOẠCH 90 NGÀY (CHÈN 2 MODULE MỚI)
 
-- **Giai đoạn 1 (Tuần 1–2):** thêm khai báo `locations` (Kho tổng/Bếp/Bar) ngay khi nạp tồn đầu kỳ — đếm tồn đầu kỳ **theo từng địa điểm**.
-- **Giai đoạn 3 (Tuần 5–6):** dựng luồng **Nhập/Xuất/Tồn cuối ngày** + engine cảnh báo + **xuất PDF nháp** (chưa gửi NCC) để chạy thử.
-- **Giai đoạn 4 (Tuần 7–8):** hợp nhất Auto-PO ↔ PDF (DRAFT→APPROVED→SENT); cấu hình deadline/watchdog cho cổng xác nhận.
-- **Giai đoạn 5 (Tuần 9–12, chạy song song):** bật **cổng đăng nhập Bar `/bar`** + hiệu chuẩn cân 2 điểm + đếm mở/đóng ca; theo dõi pour variance theo từng bartender; tinh chỉnh dung sai cân.
-- **Giai đoạn 6 (Tuần 13–14):** SOP video bổ sung 2 vai trò Bar; hướng dẫn quy trình xuất & duyệt PDF đặt hàng.
+- [x] **Giai đoạn 1 (Tuần 1–2):** **[ĐÃ HOÀN THÀNH]** thêm khai báo `locations` (Kho tổng/Bếp/Bar) ngay khi nạp tồn đầu kỳ — đếm tồn đầu kỳ **theo từng địa điểm**.
+- [x] **Giai đoạn 3 (Tuần 5–6):** **[ĐÃ HOÀN THÀNH]** dựng luồng **Nhập/Xuất/Tồn cuối ngày** + engine cảnh báo + **xuất PDF nháp** (chưa gửi NCC) để chạy thử.
+- [x] **Giai đoạn 4 (Tuần 7–8):** **[ĐÃ HOÀN THÀNH]** hợp nhất Auto-PO ↔ PDF (DRAFT→APPROVED→SENT); cấu hình deadline/watchdog cho cổng xác nhận.
+- [x] **Giai đoạn 5 (Tuần 9–12, chạy song song):** **[ĐÃ HOÀN THÀNH]** bật **cổng đăng nhập Bar `/bar`** + hiệu chuẩn cân 2 điểm + đếm mở/đóng ca; theo dõi pour variance theo từng bartender; tinh chỉnh dung sai cân.
+- [ ] **Giai đoạn 6 (Tuần 13–14):** **[ĐANG THỰC HIỆN]** SOP video bổ sung 2 vai trò Bar; hướng dẫn quy trình xuất & duyệt PDF đặt hàng.
 
 ---
 
