@@ -732,7 +732,7 @@ with check (get_current_user_role() in ('BAR_SUPERVISOR', 'admin', 'senior_accou
 grant select on table v_stock_on_hand to authenticated;
 
 -- NHÃN BỘ PHẬN cho từng nguyên liệu (MỚI v9.1)
-create table ingredient_departments (
+create table if not exists ingredient_departments (
   ingredient_id varchar(50) references ingredients(id) on delete cascade,
   department    text references locations(id) on delete cascade,   -- 'BAR' | 'KITCHEN'
   usage_context text,        -- 'BEVERAGE','COOKING','FLAMBE','GARNISH','SAUCE'
@@ -753,7 +753,7 @@ using (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accoun
 with check (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant', 'head_chef'));
 
 -- Audit log schema for ingredient_departments (giao diện phê duyệt dùng chung)
-create table department_approval_audit_logs (
+create table if not exists department_approval_audit_logs (
   id uuid primary key default gen_random_uuid(),
   ingredient_id varchar(50) references ingredients(id) on delete cascade,
   action_type text not null, -- 'ADD_TAG', 'REMOVE_TAG'
