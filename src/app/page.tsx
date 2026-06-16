@@ -2351,6 +2351,341 @@ export default function Home() {
     reader.readAsBinaryString(file);
   };
 
+  const downloadGrnTemplate = () => {
+    const headers = [[
+      'Ngày nhập (Date)', 
+      'Số hóa đơn (Invoice No)', 
+      'Nhà cung cấp (Supplier)', 
+      'Mã NVL (Ingredient Code)', 
+      'Tên NVL (Ingredient Name)', 
+      'Số lượng (Qty Received)', 
+      'Đơn vị (UoM)', 
+      'Đơn giá (Unit Price)', 
+      'Chi phí vận chuyển (Freight)', 
+      'Thuế (Duty)'
+    ]];
+    const sampleData = [
+      ['2026-06-02', 'INV-0602-AN', 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)', 'ING-003', 'Cá tuyết đen đông lạnh', 12, 'kg', 1400000, 400000, 800000],
+      ['2026-06-02', 'INV-0602-AN', 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)', 'ING-010', 'Bò Wagyu MBS 6-7', 5, 'kg', 2350000, 400000, 800000],
+      ['2026-06-05', 'INV-0605-DL', 'Tổng kho Rượu vang Đa Lộc', 'V8003', 'LE BONHEUR (Cabernet Sauvignon) Stellenbosch', 24, 'BOTTLE', 592000, 150000, 0],
+      ['2026-06-05', 'INV-0605-DL', 'Tổng kho Rượu vang Đa Lộc', 'V8004', 'LE BONHEUR, THE EAGLE\'S LAIR (Chardonnay) Stellenbosch', 12, 'BOTTLE', 514000, 150000, 0],
+      ['2026-06-08', 'INV-0608-HY', 'Nhà cung cấp Rau sạch Đà Lạt Hải Yến', 'ING-024', 'Rau xanh Đà Lạt', 60, 'kg', 40000, 80000, 0],
+      ['2026-06-08', 'INV-0608-HY', 'Nhà cung cấp Rau sạch Đà Lạt Hải Yến', 'ING-025', 'Nấm Tam Đảo', 10, 'kg', 350000, 80000, 0],
+      ['2026-06-12', 'INV-0612-AN', 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)', 'ING-093', 'Thịt bò Ribeye Angus US', 15, 'kg', 890000, 200000, 500000]
+    ];
+    const ws = XLSX.utils.aoa_to_sheet([...headers, ...sampleData]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Purchasing_Template');
+    XLSX.writeFile(wb, 'Maison_Vie_Nhap_Kho_0106_1406.xlsx');
+  };
+
+  const handleImportGrnExcel = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsImporting(true);
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      try {
+        const bstr = evt.target?.result;
+        const wb = XLSX.read(bstr, { type: 'binary' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const data = XLSX.utils.sheet_to_json<any[]>(ws, { header: 1 });
+
+        let headerRowIdx = -1;
+        for (let i = 0; i < data.length; i++) {
+          const row = data[i] as any[];
+          if (row && (row.includes('Ngày nhập (Date)') || row.includes('Ngày nhập') || row.includes('Date'))) {
+            headerRowIdx = i;
+            break;
+          }
+        }
+
+        if (headerRowIdx === -1) {
+          alert('Không tìm thấy cột tiêu đề thích hợp trong file Excel. Vui lòng sử dụng file template chuẩn.');
+          setIsImporting(false);
+          return;
+        }
+
+        const headers = data[headerRowIdx] as string[];
+        const rows = data.slice(headerRowIdx + 1) as any[][];
+
+        const idxDate = headers.findIndex(h => h && h.toLowerCase().includes('ngày'));
+        const idxInvoice = headers.findIndex(h => h && h.toLowerCase().includes('hóa đơn'));
+        const idxSupplier = headers.findIndex(h => h && h.toLowerCase().includes('nhà cung cấp'));
+        const idxIngCode = headers.findIndex(h => h && h.toLowerCase().includes('mã nvl'));
+        const idxQty = headers.findIndex(h => h && h.toLowerCase().includes('số lượng'));
+        const idxUom = headers.findIndex(h => h && h.toLowerCase().includes('đơn vị'));
+        const idxPrice = headers.findIndex(h => h && h.toLowerCase().includes('đơn giá'));
+        const idxFreight = headers.findIndex(h => h && h.toLowerCase().includes('cước'));
+        const idxDuty = headers.findIndex(h => h && h.toLowerCase().includes('thuế'));
+
+        if (idxDate === -1 || idxInvoice === -1 || idxIngCode === -1 || idxQty === -1 || idxPrice === -1) {
+          alert('File Excel thiếu các cột bắt buộc: Ngày nhập, Số hóa đơn, Mã NVL, Số lượng, Đơn giá.');
+          setIsImporting(false);
+          return;
+        }
+
+        const invoicesMap: { [key: string]: any } = {};
+
+        for (const row of rows) {
+          if (!row || row.length === 0) continue;
+          
+          const rawInvoice = row[idxInvoice];
+          if (!rawInvoice) continue;
+          const invoiceNo = String(rawInvoice).trim();
+          
+          const rawDate = row[idxDate];
+          if (!rawDate) continue;
+          
+          let dateStr = String(rawDate).trim();
+          if (dateStr.includes('/')) {
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+              const day = parts[0].padStart(2, '0');
+              const month = parts[1].padStart(2, '0');
+              const year = parts[2];
+              dateStr = `${year}-${month}-${day}`;
+            }
+          }
+
+          const supplierName = idxSupplier !== -1 ? String(row[idxSupplier] || 'Nhà cung cấp').trim() : 'Nhà cung cấp';
+          const ingCode = String(row[idxIngCode]).trim();
+          const qtyVal = parseFloat(row[idxQty]) || 0;
+          const priceVal = parseFloat(row[idxPrice]) || 0;
+          const freightVal = idxFreight !== -1 ? parseFloat(row[idxFreight]) || 0 : 0;
+          const dutyVal = idxDuty !== -1 ? parseFloat(row[idxDuty]) || 0 : 0;
+          const uomVal = idxUom !== -1 ? String(row[idxUom] || 'kg').trim() : 'kg';
+
+          if (qtyVal <= 0 || !ingCode) continue;
+
+          if (!invoicesMap[invoiceNo]) {
+            invoicesMap[invoiceNo] = {
+              invoiceNo,
+              date: dateStr,
+              supplierName,
+              freight: freightVal,
+              duty: dutyVal,
+              items: []
+            };
+          }
+
+          invoicesMap[invoiceNo].items.push({
+            ingCode,
+            qtyReceived: qtyVal,
+            purchaseUom: uomVal,
+            unitPriceFx: priceVal
+          });
+        }
+
+        const invoiceKeys = Object.keys(invoicesMap);
+        if (invoiceKeys.length === 0) {
+          alert('Không tìm thấy dữ liệu hóa đơn hợp lệ nào trong file Excel.');
+          setIsImporting(false);
+          return;
+        }
+
+        let importCount = 0;
+        let lineCount = 0;
+        const newGrns: any[] = [];
+        const newTransList: any[] = [];
+        
+        let supabaseSuppliers: any[] = [];
+        if (isSupabaseConfigured()) {
+          const { data: supData } = await supabase.from('suppliers').select('id, name');
+          if (supData) supabaseSuppliers = supData;
+        }
+
+        for (const invKey of invoiceKeys) {
+          const inv = invoicesMap[invKey];
+          const grnId = crypto.randomUUID ? crypto.randomUUID() : 'grn-' + Math.random().toString(36).substring(2, 15);
+          
+          let totalRawValue = 0;
+          for (const item of inv.items) {
+            totalRawValue += item.qtyReceived * item.unitPriceFx;
+          }
+
+          let supplierId = '90000000-0000-0000-0000-000000000001';
+          const matchedSup = supabaseSuppliers.find(s => 
+            s.name.toLowerCase().trim() === inv.supplierName.toLowerCase().trim() ||
+            s.name.toLowerCase().includes(inv.supplierName.toLowerCase())
+          );
+          if (matchedSup) {
+            supplierId = matchedSup.id;
+          } else {
+            if (inv.supplierName.toLowerCase().includes('đà lộc')) {
+              supplierId = '90000000-0000-0000-0000-000000000003';
+            } else if (inv.supplierName.toLowerCase().includes('hải yến') || inv.supplierName.toLowerCase().includes('rau')) {
+              supplierId = '90000000-0000-0000-0000-000000000002';
+            }
+          }
+
+          const finalLines = inv.items.map((item: any) => {
+            const lineRawValue = item.qtyReceived * item.unitPriceFx;
+            const ratio = totalRawValue > 0 ? (lineRawValue / totalRawValue) : 0;
+            const allocatedFreight = inv.freight * ratio;
+            const allocatedDuty = inv.duty * ratio;
+            const landedUnitCost = item.qtyReceived > 0 
+              ? Math.round((lineRawValue + allocatedFreight + allocatedDuty) / item.qtyReceived) 
+              : item.unitPriceFx;
+
+            return {
+              ingredientId: item.ingCode,
+              name: item.ingCode,
+              qtyReceived: item.qtyReceived,
+              purchaseUom: item.purchaseUom,
+              unitPriceFx: item.unitPriceFx,
+              landedUnitCost
+            };
+          });
+
+          const grnRecord = {
+            id: grnId,
+            poId: null,
+            poNumber: '',
+            supplierName: inv.supplierName,
+            invoiceNo: inv.invoiceNo,
+            invoiceAmount: totalRawValue + inv.freight + inv.duty,
+            fxRate: 1.0,
+            duty: inv.duty,
+            freight: inv.freight,
+            status: 'approved',
+            matchStatus: 'APPROVED',
+            date: inv.date,
+            lines: finalLines
+          };
+
+          if (isSupabaseConfigured()) {
+            const { error: errHeader } = await supabase
+              .from('goods_receipts')
+              .insert({
+                id: grnId,
+                supplier_id: supplierId,
+                invoice_no: inv.invoiceNo,
+                invoice_amount: grnRecord.invoiceAmount,
+                freight: inv.freight,
+                duty: inv.duty,
+                status: 'approved',
+                match_status: 'APPROVED',
+                business_date: inv.date
+              });
+
+            if (errHeader) {
+              console.error("Header insert failed for " + inv.invoiceNo, errHeader);
+              continue;
+            }
+
+            for (const line of finalLines) {
+              let dbIngredientId = line.ingredientId;
+              const { data: ingData } = await supabase
+                .from('ingredients')
+                .select('id, code, is_beverage, purchase_categories(code)')
+                .eq('code', line.ingredientId)
+                .limit(1);
+
+              let isBar = line.ingredientId.startsWith('V') || line.ingredientId.startsWith('B') || line.ingredientId.startsWith('M');
+              if (ingData && ingData.length > 0) {
+                dbIngredientId = ingData[0].id;
+                const catCode = (ingData[0].purchase_categories as any)?.code || (ingData[0].purchase_categories as any)?.[0]?.code || '';
+                isBar = ['ALCOHOL', 'BEVERAGE'].includes(catCode) || ingData[0].is_beverage || isBar;
+              }
+
+              const { error: errLine } = await supabase
+                .from('grn_lines')
+                .insert({
+                  grn_id: grnId,
+                  ingredient_id: dbIngredientId,
+                  qty_received: line.qtyReceived,
+                  purchase_uom: line.purchaseUom,
+                  unit_price_fx: line.unitPriceFx,
+                  landed_unit_cost: line.landedUnitCost
+                });
+
+              if (errLine) {
+                console.error("Line insert failed for " + line.ingredientId, errLine);
+                continue;
+              }
+
+              const isShared = ["NLP60032", "NLP60033", "NLP3016", "NLP3021"].includes(line.ingredientId);
+              const locationId = isBar || isShared ? 'BAR' : 'MAIN_STORE';
+
+              const { error: errTx } = await supabase
+                .from('inventory_transactions')
+                .insert({
+                  ingredient_id: dbIngredientId,
+                  txn_type: 'IMPORT',
+                  qty: line.qtyReceived,
+                  unit_cost: line.landedUnitCost,
+                  ref_table: 'grn_lines',
+                  ref_id: grnId,
+                  business_date: inv.date,
+                  status: 'approved',
+                  location_id: locationId
+                });
+
+              if (errTx) {
+                console.error("Transaction insert failed for " + line.ingredientId, errTx);
+              }
+            }
+          }
+
+          for (const line of finalLines) {
+            newTransList.push({
+              id: `grn-tx-imported-${Date.now()}-${line.ingredientId}`,
+              ingredientId: line.ingredientId,
+              type: 'import' as const,
+              qty: line.qtyReceived,
+              unit_price: line.landedUnitCost,
+              status: 'approved' as const,
+              date: inv.date,
+              note: `Nhập kho từ Excel GRN: ${inv.invoiceNo} (Landed Cost)`
+            });
+            lineCount++;
+          }
+
+          newGrns.push(grnRecord);
+          importCount++;
+        }
+
+        setGoodsReceipts(prev => [...newGrns, ...prev]);
+        setTransactions(prev => [...newTransList, ...prev]);
+
+        const updatedIngredients = ingredients.map(ing => {
+          let totalImportQty = 0;
+          let totalImportValue = 0;
+
+          for (const grn of newGrns) {
+            const grnLine = grn.lines.find((l: any) => l.ingredientId === ing.id);
+            if (grnLine) {
+              totalImportQty += grnLine.qtyReceived;
+              totalImportValue += grnLine.qtyReceived * grnLine.landedUnitCost;
+            }
+          }
+
+          if (totalImportQty > 0) {
+            const currentQty = getTheoreticalStock(ing.id);
+            const adjustedQty = Math.max(currentQty, 0);
+            const newWac = (adjustedQty * ing.price + totalImportValue) / (adjustedQty + totalImportQty);
+            return {
+              ...ing,
+              price: Math.round(newWac)
+            };
+          }
+          return ing;
+        });
+        setIngredients(updatedIngredients);
+
+        alert(`Nhập kho thành công!\n- Đã thêm ${importCount} Hóa đơn Nhập kho (GRN) từ 01/06 đến 14/06/2026.\n- Tổng số ${lineCount} mặt hàng đã được nhập kho và cập nhật giá vốn WAC.`);
+      } catch (err) {
+        alert('Lỗi nhập kho từ file Excel: ' + (err as Error).message);
+      } finally {
+        setIsImporting(false);
+        if (e.target) e.target.value = '';
+      }
+    };
+    reader.readAsBinaryString(file);
+  };
+
   if (!currentUser) {
     return (
       <div className="min-h-screen flex flex-col bg-bg-main text-text-dark selection:bg-accent-gold selection:text-text-light justify-center items-center p-6 relative overflow-hidden">
@@ -4237,10 +4572,29 @@ export default function Home() {
           {activeTab === 'purchasing' && (
             <div className="flex flex-col gap-6">
               <div className="glass-panel rounded-md p-6 flex flex-col gap-6">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border-cream pb-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border-cream pb-4 w-full">
                   <div>
                     <h3 className="text-xl font-semibold text-accent-gold font-serif">Nghiệp vụ Mua hàng & Nhập kho (PO / GRN)</h3>
                     <p className="text-xs text-gray-400 font-sans">Kiểm soát đơn đặt hàng PO, lập phiếu nhận hàng GRN và phân bổ Landed Cost tự động cập nhật WAC.</p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button 
+                      onClick={downloadGrnTemplate}
+                      className="flex items-center gap-1.5 border border-border-cream hover:bg-accent-gold/5 text-accent-gold font-semibold text-xs px-3.5 py-2.5 rounded-sm transition-all shadow-md active:scale-95"
+                    >
+                      <Download size={14} />
+                      <span>Tải file mẫu Nhập kho (.xlsx)</span>
+                    </button>
+                    <label className="flex items-center gap-1.5 bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-semibold text-xs px-4 py-2.5 rounded-sm transition-all shadow-md active:scale-95 cursor-pointer">
+                      <UploadCloud size={14} />
+                      <span>Tải lên dữ liệu Nhập kho</span>
+                      <input 
+                        type="file" 
+                        accept=".xls,.xlsx" 
+                        onChange={handleImportGrnExcel} 
+                        className="hidden" 
+                      />
+                    </label>
                   </div>
                 </div>
 
