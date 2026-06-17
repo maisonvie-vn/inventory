@@ -443,7 +443,7 @@ export default function BarPortal() {
   // LOGIN SCREEN
   if (!activeUser) {
     return (
-      <div className="min-h-screen bg-[#EFE7D4] flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-bg-main flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-md bg-[#2E3A2C] rounded-2xl border border-[#46553B] shadow-2xl overflow-hidden p-6 text-[#F1EAD9]">
           <div className="text-center mb-6">
             <h1 className="text-3xl font-bold text-center gold-text-gradient mb-1">MAISON VIE</h1>
@@ -534,7 +534,7 @@ export default function BarPortal() {
 
   // PORTAL MAIN SCREEN
   return (
-    <div className="min-h-screen bg-[#EFE7D4] flex flex-col text-[#232B20]">
+    <div className="min-h-screen bg-bg-main flex flex-col text-text-dark">
       {/* Header */}
       <header className="bg-[#2E3A2C] border-b border-[#46553B] p-4 text-[#F1EAD9] sticky top-0 z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between">

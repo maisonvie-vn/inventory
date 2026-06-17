@@ -1,119 +1,274 @@
-# KẾ HOẠCH TRIỂN KHAI HỆ THỐNG CRM/ERP INVENTORY - MAISON VIE (BẢN CẬP NHẬT)
+# KẾ HOẠCH TRIỂN KHAI TÍCH HỢP HỆ THỐNG POS-INVEN (STOCKY) VÀO MAISON VIE CRM/INVENTORY (V2.0)
+### (Hợp nhất toàn bộ phân hệ: Store · People · User Management · Product · Adjustment · Purchases · Sales & Return · Transfer · Damages · HRM · Accounting · Settings)
 
-> **Vai trò**: Giám đốc Vận hành (COO) / Giám đốc Tài chính (CFO) / Kiến trúc sư Dữ liệu Full-Stack
-> **Dự án**: Hệ thống CRM/ERP Quản lý Kho & Định mức tự động hóa cao cấp cho nhà hàng Pháp Maison Vie.
-> **Hạ tầng**: Supabase (PostgreSQL / Auth / RLS) + Vercel (Next.js / React) + GitHub.
-
----
-
-## 1. PHÂN TÍCH EXCEL & THIẾT KẾ CƠ SỞ DỮ LIỆU PHẲNG
-
-Sau khi quét toàn bộ các sheet dữ liệu (`MASTER_BEP`, `MASTER_BAR`, `RECIPE_BEP`, `RECIPE_BAR`, và 12 sheet tháng `T01` - `T12`) trong file [MAISON_VIE_v6_0_PRO.xlsx](file:///d:/Invenroty/MAISON_VIE_v6_0_PRO.xlsx), chúng tôi đã loại bỏ hoàn toàn các lỗi thiết kế xếp chồng bảng (Anti-pattern) của Excel cũ để đưa lên cơ sở dữ liệu phẳng trên Supabase.
-
-Cấu trúc database chuẩn được chia thành các bảng độc lập liên kết chặt chẽ bằng khóa ngoại:
-*   [profiles](file:///d:/Invenroty/maison-vie-crm/supabase/schema.sql#L19-L33): Lưu trữ thông tin người dùng và phân quyền ma trận 7 cấp.
-*   [purchase_categories](file:///d:/Invenroty/maison-vie-crm/supabase/schema.sql#L39-L46): Danh mục thu mua để xuất PO (Thịt, Rượu, Rau củ quả...).
-*   [ingredients](file:///d:/Invenroty/maison-vie-crm/supabase/schema.sql#L48-L64): Master nguyên vật liệu với các trường `wac_price` (giá vốn trung bình gia quyền), `min_stock`, `max_stock`, `auto_po_group` ('AUTO_PO' hoặc 'MANUAL_REQUISITION').
-*   [menu_items](file:///d:/Invenroty/maison-vie-crm/supabase/schema.sql#L66-L72): Danh mục món ăn POS, bao gồm cờ `is_set_menu` cho combo/tasting menu.
-*   [set_menu_items](file:///d:/Invenroty/maison-vie-crm/supabase/schema.sql#L74-L81): Phân rã Set Menu để trừ kho con theo tỷ lệ portion.
-*   [recipes](file:///d:/Invenroty/maison-vie-crm/supabase/schema.sql#L83-L92): Định mức công thức (BOM) liên kết món ăn với nguyên liệu thô (Net, Yield %, Eff).
-*   [inventory_transactions](file:///d:/Invenroty/maison-vie-crm/supabase/schema.sql#L94-L110): Giao dịch kho real-time (import, consumption, stock_take, waste).
-*   [waste_logs](file:///d:/Invenroty/maison-vie-crm/supabase/schema.sql#L112-L121): Nhật ký hủy hỏng trong ca do Bếp phó nhập.
-*   [sales_imports](file:///d:/Invenroty/maison-vie-crm/supabase/schema.sql#L123-L131): Doanh số POS cuối ngày chờ phân rã và trừ kho.
+> **Vai trò biên soạn**: Kiến trúc sư Dữ liệu Full-Stack / Kế toán trưởng hệ thống
+> **Hạ tầng mục tiêu**: Supabase (PostgreSQL / RLS / pg_cron / Storage) + Vercel (Next.js / React) + GitHub (private repository).
+> **Nguyên tắc cốt lõi**: *"Database-centric, serverless-thin"* — giữ nguyên tính bảo mật RLS và tốc độ tải trang, giảm thiểu chi phí vận hành hạ tầng bằng cách render client-side và tích hợp toàn bộ nghiệp vụ chạy tự động trong PostgreSQL qua pg_cron.
 
 ---
 
-## 2. MA TRẬN BẢO MẬT & PHÂN QUYỀN 7 CẤP (SUPABASE RLS)
+## 1. PHÂN TÍCH KHẢ THI & BẢN ĐỒ TÍCH HỢP HỆ THỐNG (INTEGRATION MAP)
 
-Hệ thống được bảo mật bằng cơ chế Row Level Security (RLS) của Supabase, phân quyền chặt chẽ dòng dữ liệu dựa trên vai trò nhân sự:
+Hoàn toàn có thể tích hợp tất cả các module riêng biệt của Stocky vào hệ thống Next.js + Supabase hiện tại của Maison Vie. Dưới đây là bản đồ thiết kế kỹ thuật chi tiết cho từng phân hệ:
 
-| Cấp | Nhóm Quyền (Role) | SELECT | INSERT | UPDATE | DELETE | Mục Đích Vận Hành & Quyền Hạn |
-| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
-| **Cấp 1** | **Admin (CFO / Owner)** | Tất cả | Tất cả | Tất cả | Tất cả | Xem Dashboard tài chính tối cao (giá trị kho VND, Food Cost % real-time, chênh lệch hao hụt tiền). |
-| **Cấp 2** | **Quản lý Nhà hàng** | Tất cả | Giao dịch | Giao dịch | Không | Quản lý vận hành kho, duyệt phiếu hủy hỏng (`waste`) giá trị lớn. Không xem được số liệu tài chính CFO. |
-| **Cấp 3** | **Bếp trưởng (Head Chef)** | Tất cả | Định mức | Định mức | Không | Sửa định mức món ăn (`recipes`) và tỷ lệ hao hụt (`yield_rate`). Chỉ xem số liệu tiêu thụ bếp. |
-| **Cấp 4** | **Kế toán kho cấp cao** | Tất cả | PO, WAC | PO, WAC | Không | Duyệt màn hình mapping POS, đối soát giá vốn WAC lũy tiến, xuất file Auto-PO gửi nhà cung cấp. |
-| **Cấp 5** | **Giám sát Sảnh (FOH)** | Menu, POS | Không | Không | Không | Đối chiếu lỗi mã POS cuối ngày. Không được can thiệp vào nguyên liệu hay giá cả. |
-| **Cấp 6** | **Bếp phó (Sous Chef)** | Khai báo | Waste, PO | Không | Không | Tạo phiếu Manual PO Requisition (hàng chợ) và nhập Nhật ký hủy hỏng (`waste_logs`) ngay khi xảy ra sự cố trong ca. |
-| **Cấp 7** | **Thủ kho / Kế toán phụ** | Xem | Hóa đơn | Không | Không | Nhập hóa đơn mua lẻ phát sinh dọc đường. Phiếu nằm ở trạng thái `pending`, không tác động lên kho cho đến khi Cấp 4 duyệt. |
-
----
-
-## 3. LOGIC NGHIỆP VỤ ĐẶC THÙ VẬN HÀNH
-
-Hệ thống áp dụng 4 mốc thời gian và thuật toán tự động hóa cốt lõi để đảm bảo độ chính xác của kho:
-
-### A. Chốt giá vốn bình quan gia quyền lũy tiến (Moving WAC) lúc 18h30
-*   **Mục đích**: Tính toán lại giá trị hàng tồn kho và thiết lập giá vốn mới cho các giao dịch trong tương lai mà không làm thay đổi lịch sử các giao dịch trước 18h30.
-*   **Hàm cơ sở dữ liệu**: [calculate_moving_wac](file:///d:/Invenroty/maison-vie-crm/supabase/functions.sql#L7-L50)
-*   **Thuật toán**:
-    $$\text{New WAC} = \frac{\text{Giá trị tồn đầu ngày} + \text{Giá trị hàng nhập trước 18h30}}{\text{Số lượng tồn đầu ngày} + \text{Số lượng nhập trước 18h30}}$$
-*   Sau khi chạy hàm chốt giá, giá trị `wac_price` trong bảng `ingredients` sẽ được cập nhật. Tất cả giao dịch xuất kho lý thuyết lúc 22h30 sẽ áp theo mức giá vốn mới này.
-
-### B. Trừ kho tự động & Phân rã Set Menu lúc 22h30
-*   **Mục đích**: Tự động khấu trừ tồn kho lý thuyết dựa trên doanh số POS kết hợp với nhật ký hủy hỏng trong ca.
-*   **Hàm cơ sở dữ liệu**: [process_daily_consumption](file:///d:/Invenroty/maison-vie-crm/supabase/functions.sql#L56-L126)
-*   **Thuật toán**:
-    1.  **Phân rã Set/Tasting Menu**: Đối với các món combo (như Tasting 5 món), hệ thống đọc bảng `set_menu_items`, phân tách thành món đơn lẻ và tự động thu nhỏ định lượng thô theo `portion_ratio` (ví dụ: nhân với 70%).
-    2.  **Khấu trừ thô (Gross Weight)**: Lượng trừ kho = Lượng tịnh (`qty_net`) / (`yield_rate` / 100) * Doanh số * 1.10 (bao gồm 10% bù hao phí bếp tiêu chuẩn).
-    3.  **Cộng gộp Hủy hỏng**: Gom toàn bộ `waste_logs` của ngày (đã được duyệt) để trừ thêm vào kho lý thuyết.
-
-### C. Lọc và tự động xuất file đơn đặt hàng (Auto-PO) lúc 22h40
-*   **Mục đích**: Hợp lý hóa chuỗi cung ứng, tự động tạo PO riêng lẻ theo từng nhà cung cấp để Purchasing tải về lúc 7h00 sáng hôm sau.
-*   **Hàm cơ sở dữ liệu**: [generate_auto_po](file:///d:/Invenroty/maison-vie-crm/supabase/functions.sql#L132-L210)
-*   **Thuật toán**:
-    *   Lọc tất cả các NVL thuộc nhóm `auto_po_group = 'AUTO_PO'` có lượng tồn lý thuyết hiện tại nhỏ hơn mức tối thiểu (`min_stock`).
-    *   Công thức đặt hàng:
-        $$\text{Số lượng đặt} = \text{max\_stock} - \text{Tồn lý thuyết hiện tại}$$
-    *   Gom nhóm theo `purchase_categories` để xuất thành các đơn đặt hàng độc lập (PO_Thịt, PO_RượuVang, PO_RauCủĐồKhô). Các mặt hàng chợ tự mua lẻ sẽ được bỏ qua và chuyển sang danh mục đề xuất mua tay (`MANUAL_REQUISITION`).
-
-### D. Màn hình Mapping Trung gian 30 Giây
-*   Khi Kế toán tải file Excel doanh thu POS hoặc Phiếu nhập hàng lên hệ thống, một cửa sổ popup đè màn hình (Modal) xuất hiện đếm ngược 30 giây:
-    *   Mã khớp 100%: Hiển thị trạng thái màu xanh lá 🟢.
-    *   Mã lệch hoặc khớp mờ: Chạy thuật toán so khớp khoảng cách chuỗi (Levenshtein) để dự đoán mã tương thích, hiển thị màu vàng 🟡 kèm độ chính xác (ví dụ: "Angus Ribeye - Khớp 92%").
-    *   Kế toán có quyền sửa tay hoặc bấm **Chốt ghi sổ** lập tức để hệ thống ghi nhận vào lịch sử giao dịch.
+```mermaid
+graph TD
+    User([Nhân viên / Admin]) -->|Next.js UI| WebApp[Maison Vie Next.js App]
+    WebApp -->|Xử lý Excel/PDF tại Client| ClientEngine[SheetJS / pdfmake]
+    
+    subgraph Supabase Backend
+        direction TB
+        WebApp -->|Supabase Auth / Client| DB[(PostgreSQL)]
+        DB -->|Triggers tự động| Ledger[(Sổ cái Giao dịch Kho)]
+        DB -->|Bút toán kế toán kép| Accounting[Chart of Accounts / Journal Entries]
+        DB -->|pg_cron định kỳ| DailyJobs[Chốt WAC / Trừ kho POS / Auto-PO / Tính khấu hao]
+    end
+    
+    ClientEngine -->|Đồng bộ trực tiếp| DB
+    DB -->|RLS Policies| ViewOps[v_inventory_ops]
+    DB -->|RLS Policies| ViewCost[v_inventory_cost]
+    DB -->|RLS Policies| ViewFinance[v_inventory_finance]
+```
 
 ---
 
-## 4. KẾ HOẠCH HÀNH ĐỘNG 90 NGÀY (90-DAY ACTION PLAN)
+## 2. THIẾT KẾ KỸ THUẬT CHI TIẾT CHO CÁC PHÂN HỆ CỦA STOCKY
 
-Kế hoạch chia làm 6 giai đoạn với mốc chốt chặn cụ thể để đảm bảo bàn giao thành công và giải phóng hoàn toàn chủ nhà hàng:
+### 2.1. Phân hệ Store & Quản lý Địa điểm
+* **Mô tả**: Quản lý kho tổng, kho bếp, kho quầy Bar, và cửa hàng online (Online Store).
+* **Giải pháp Supabase**:
+  * Đã có bảng `locations` ('MAIN_STORE', 'KITCHEN', 'BAR').
+  * Bổ sung bảng `online_store_settings` để cấu hình: Cho phép bán quá hạn (overselling), ẩn hàng hết kho, hoặc bật/tắt toàn bộ cửa hàng online.
+* **Database Schema**:
+  ```sql
+  CREATE TABLE IF NOT EXISTS online_store_settings (
+    id serial PRIMARY KEY,
+    is_active boolean DEFAULT true NOT NULL,
+    allow_overselling boolean DEFAULT false NOT NULL,
+    hide_out_of_stock boolean DEFAULT true NOT NULL,
+    stripe_public_key text,
+    stripe_secret_key text,
+    updated_at timestamp with time zone DEFAULT now()
+  );
+  ```
 
-### Giai đoạn 1: Thiết lập cấu trúc & Pilot nhóm giá trị cao (Tuần 1 - Tuần 2)
-*   **Hành động**:
-    1. Triển khai schema database phẳng và RLS lên Supabase.
-    2. Chạy thử nghiệm nhỏ (Pilot Run) đối với nhóm nguyên liệu có giá trị cao nhất: **Thịt bò nhập khẩu & Cá tuyết/Cá hồi** (5 mã hàng từ tab `MASTER_BEP` bao gồm: `ING-011` Trâu VN, `ING-093` Ribeye Angus US, `ING-003` Cá tuyết đen, `ING-007` Cá hồi Na Uy).
-    3. Test chất lượng đọc file Excel POS thực tế của 13 ngày đầu tháng 6 tại máy chủ Vercel.
+### 2.2. Phân hệ People (Đối tác & Khách hàng)
+* **Mô tả**: Quản lý Nhà cung cấp (Suppliers), Khách hàng (Customers), và Kỹ thuật viên (Technicians - bảo trì máy móc).
+* **Giải pháp Supabase**:
+  * Đã có bảng `suppliers` và `supplier_ingredients`.
+  * Bổ sung bảng `customers` (để quản lý công nợ, điểm tích lũy, hạn mức nợ) và bảng `technicians`.
+* **Database Schema**:
+  ```sql
+  CREATE TABLE IF NOT EXISTS customers (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    name text NOT NULL,
+    phone text NOT NULL UNIQUE,
+    email text,
+    address text,
+    credit_limit numeric(15, 2) DEFAULT 0.00, -- Hạn mức nợ
+    opening_balance numeric(15, 2) DEFAULT 0.00, -- Nợ đầu kỳ
+    loyalty_points integer DEFAULT 0 NOT NULL, -- Điểm tích lũy
+    custom_fields jsonb DEFAULT '{}'::jsonb, -- Các trường tùy chỉnh thêm
+    is_active boolean DEFAULT true NOT NULL,
+    created_at timestamp with time zone DEFAULT now()
+  );
 
-### Giai đoạn 2: Đấu nối phân hệ khóa sổ WAC & Waste Log ca (Tuần 3 - Tuần 4)
-*   **Hành động**:
-    1. Hoàn thiện giao diện tạo Waste Log cho Bếp phó trên máy tính bảng.
-    2. Kiểm thử độ chính xác của hàm tính giá WAC lũy tiến lúc 18h30.
-    3. Đào tạo kế toán phụ nhập dữ liệu hóa đơn mua lẻ dưới dạng phiếu `pending` chờ duyệt.
+  CREATE TABLE IF NOT EXISTS technicians (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    profile_id uuid REFERENCES profiles(id) ON DELETE SET NULL,
+    specialty text, -- Chuyên môn (ví dụ: Điện lạnh, Thiết bị bếp)
+    is_active boolean DEFAULT true NOT NULL
+  );
+  ```
 
-### Giai đoạn 3: Tích hợp phân rã Tasting Menu & Trừ kho tự động (Tuần 5 - Tuần 6)
-*   **Hành động**:
-    1. Đưa logic phân rã 70% portion Tasting Menu vào vận hành thực tế.
-    2. Theo dõi chênh lệch vật lý (Variance) sau mỗi ca tối đối với nhóm Beef & Fish.
-    3. Cấu hình tự động gửi cảnh báo thất thoát tiền mặt bằng email về tài khoản Admin nếu lệch âm vượt mức 5%.
+### 2.3. Phân hệ User Management & Login Device Control
+* **Mô tả**: Phân quyền nhân viên, giới hạn kho truy cập, giám sát phiên làm việc (Login Sessions) và lịch sử đăng nhập.
+* **Giải pháp Supabase**:
+  * Đăng nhập thiết bị tại quầy bằng tài khoản chung, bartender thao tác bằng **PIN cá nhân** để quy trách nhiệm cụ thể.
+  * Bảng `user_locations` liên kết tài khoản với kho được phép thao tác.
+* **Database Schema**:
+  ```sql
+  CREATE TABLE IF NOT EXISTS user_locations (
+    profile_id uuid REFERENCES profiles(id) ON DELETE CASCADE,
+    location_id text REFERENCES locations(id) ON DELETE CASCADE,
+    PRIMARY KEY (profile_id, location_id)
+  );
 
-### Giai đoạn 4: Hoàn thiện Auto-PO & Phân nhóm nhà cung cấp (Tuần 7 - Tuần 8)
-*   **Hành động**:
-    1. Thiết lập các thông số tồn kho tối thiểu (`min_stock`) và tối đa (`max_stock`) cho toàn bộ 347 mã hàng bếp và bar.
-    2. Cấu hình xuất tự động các PO theo file Excel chuyên biệt lúc 22h40 gửi vào hòm thư nội bộ của Purchasing.
-    3. Triển khai màn hình Mapping trung gian 30 giây giúp giảm 80% thời gian khớp dữ liệu thủ công.
+  CREATE TABLE IF NOT EXISTS login_activity (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    profile_id uuid REFERENCES profiles(id) ON DELETE CASCADE,
+    ip_address text,
+    user_agent text,
+    device_info text,
+    login_at timestamp with time zone DEFAULT now() NOT NULL
+  );
+  ```
 
-### Giai đoạn 5: Vận hành song song & Chỉnh sửa lỗi phát sinh (Tuần 9 - Tuần 10)
-*   **Hành động**:
-    1. Chạy song song cả hai hệ thống Excel cũ và CRM mới.
-    2. Đối soát chênh lệch tổng số liệu cuối tuần để hiệu chỉnh tỷ lệ Yield Rate thực tế của bếp.
-    3. Kiểm tra tính ổn định của hệ thống RLS Supabase dưới áp lực truy cập ca cao điểm.
+### 2.4. Phân hệ Product (Import, Update, Opening Stock, Count Stock)
+* **Mô tả**: Import Excel nguyên vật liệu (chỉ thêm mới hoặc chỉ cập nhật giá vốn/đơn giá), nạp tồn kho đầu kỳ và giao diện đếm kho (Count Stock).
+* **Giải pháp Next.js/Supabase**:
+  * **Import Excel**: Xử lý hoàn toàn ở client bằng **SheetJS**. Trình duyệt đọc file, kiểm tra mã sản phẩm:
+    * Chế độ *Import Products*: Chèn `ON CONFLICT (code) DO NOTHING` vào bảng `ingredients`.
+    * Chế độ *Import (Update Only)*: Chạy lệnh `UPDATE ingredients SET wac_price = ..., standard_price = ... WHERE code = ...`.
+  * **Count Stock (Kiểm kho)**: Đã có bảng `stock_takes` và `stock_take_lines`. Thêm bộ lọc danh mục (Category Filter) để nhân viên đếm theo nhóm (Ví dụ: Chỉ kiểm kho Rượu hoặc chỉ kiểm kho Rau củ).
 
-### Giai đoạn 6: Đóng gói tài liệu, Video SOP & Bàn giao (Tuần 11 - Tuần 12)
-*   **Hành động**:
-    1. Quay video hướng dẫn thao tác (SOP Video) chi tiết cho từng vai trò nhân sự:
-        *   *Kế toán*: Cách tải file POS, đối soát mapping, chốt WAC 18h30.
-        *   *Thủ kho/Bếp phó*: Cách kiểm kho trên mobile, nhập waste trong ca.
-        *   *CFO/Owner*: Cách đọc Dashboard tài chính tối cao.
-    2. Đóng gói mã nguồn lên kho lưu trữ GitHub riêng tư của Maison Vie.
-    3. Bàn giao chìa khóa hạ tầng Supabase/Vercel cho chủ nhà hàng, chính thức dừng vận hành file Excel cũ.
+### 2.5. Phân hệ Adjustment (Điều chỉnh kho)
+* **Mô tả**: Ghi nhận các đợt cân đối kho đột xuất do sai lệch hoặc lỗi nhập liệu từ Admin mà không qua quy trình mua hàng.
+* **Giải pháp Supabase**:
+  * Bút toán điều chỉnh sẽ được ghi nhận vào bảng `stock_adjustments` và sinh giao dịch `STOCK_TAKE_ADJ` trong sổ cái.
+* **Database Schema**:
+  ```sql
+  CREATE TABLE IF NOT EXISTS stock_adjustments (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    adjustment_no text UNIQUE NOT NULL,
+    location_id text REFERENCES locations(id) NOT NULL,
+    reason text NOT NULL,
+    created_by uuid REFERENCES profiles(id),
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS stock_adjustment_lines (
+    adjustment_id uuid REFERENCES stock_adjustments(id) ON DELETE CASCADE,
+    ingredient_id varchar(50) REFERENCES ingredients(id) ON DELETE CASCADE,
+    qty_adjusted numeric(12, 4) NOT NULL, -- Số lượng điều chỉnh (Dương = Tăng, Âm = Giảm)
+    PRIMARY KEY (adjustment_id, ingredient_id)
+  );
+  ```
+
+### 2.6. Phân hệ Purchases & Label Printing
+* **Mô tả**: Đơn đặt hàng (PO), nhập kho (GRN) từ file Excel, và in mã vạch (Barcode/Label) trực tiếp từ hóa đơn mua hàng.
+* **Giải pháp Next.js/Supabase**:
+  * Đã có bảng `purchase_orders`, `po_lines`, `goods_receipts` và `grn_lines`.
+  * Bổ sung tính năng sinh và in Barcode dạng nhãn dán (Sticker) trực tiếp trên Next.js sử dụng thư viện `@node-js/barcode` hoặc `react-to-print` từ thông tin của phiếu nhận hàng (GRN).
+
+### 2.7. Phân hệ Sales & Sales Return
+* **Mô tả**: Sinh hóa đơn bán hàng trực tiếp (dành cho tiệc lớn, catering) và quản lý hàng trả lại (Sales Return).
+* **Giải pháp Supabase**:
+  * Đã có bảng `sales_imports` để import dữ liệu từ POS của nhà hàng.
+  * Bổ sung bảng `sales` và `sale_returns` để quản lý các hóa đơn bán hàng thủ công không qua máy POS.
+* **Database Schema**:
+  ```sql
+  CREATE TABLE IF NOT EXISTS sales (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    invoice_no text UNIQUE NOT NULL,
+    customer_id uuid REFERENCES customers(id),
+    location_id text REFERENCES locations(id) NOT NULL,
+    subtotal numeric(15, 2) NOT NULL,
+    tax_percent numeric(5, 2) DEFAULT 10.00 NOT NULL,
+    discount_amount numeric(15, 2) DEFAULT 0.00 NOT NULL,
+    total_amount numeric(15, 2) NOT NULL,
+    payment_method text NOT NULL, -- 'CASH', 'CARD', 'TRANSFER', 'MULTIPLE'
+    created_by uuid REFERENCES profiles(id),
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS sale_items (
+    sale_id uuid REFERENCES sales(id) ON DELETE CASCADE,
+    ingredient_id varchar(50) REFERENCES ingredients(id) NOT NULL,
+    qty_sold numeric(12, 4) NOT NULL,
+    unit_price numeric(15, 2) NOT NULL,
+    PRIMARY KEY (sale_id, ingredient_id)
+  );
+
+  CREATE TABLE IF NOT EXISTS sale_returns (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    return_no text UNIQUE NOT NULL,
+    sale_id uuid REFERENCES sales(id) ON DELETE SET NULL,
+    customer_id uuid REFERENCES customers(id),
+    total_refund numeric(15, 2) NOT NULL,
+    created_by uuid REFERENCES profiles(id),
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+  );
+  ```
+
+### 2.8. Phân hệ Transfer (Chuyển kho nội bộ có Duyệt)
+* **Mô tả**: Chuyển nguyên vật liệu giữa các kho (Ví dụ: Kho tổng $\rightarrow$ Bếp, Kho tổng $\rightarrow$ Bar).
+* **Giải pháp Supabase**:
+  * Đã có thuộc tính `transfer_id` trong giao dịch kho.
+  * Bổ sung bảng quản lý quy trình chuyển kho `stock_transfers` để bắt buộc qua bước duyệt của Quản lý hoặc Thủ kho trước khi trừ kho nguồn và tăng kho đích.
+* **Database Schema**:
+  ```sql
+  CREATE TABLE IF NOT EXISTS stock_transfers (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    transfer_no text UNIQUE NOT NULL,
+    from_location_id text REFERENCES locations(id) NOT NULL,
+    to_location_id text REFERENCES locations(id) NOT NULL,
+    status text DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED')),
+    approved_by uuid REFERENCES profiles(id),
+    created_by uuid REFERENCES profiles(id),
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS stock_transfer_lines (
+    transfer_id uuid REFERENCES stock_transfers(id) ON DELETE CASCADE,
+    ingredient_id varchar(50) REFERENCES ingredients(id) ON DELETE CASCADE,
+    qty_transfer numeric(12, 4) NOT NULL,
+    PRIMARY KEY (transfer_id, ingredient_id)
+  );
+  ```
+
+### 2.9. Phân hệ Damages (Quản lý hàng Hỏng/Hao hụt bếp)
+* **Mô tả**: Ghi nhận hao hụt, vỡ hỏng nguyên vật liệu trong ca làm việc.
+* **Giải pháp Supabase**:
+  * Đã có bảng `waste_logs` cho Bếp và Bar. Bổ sung RLS tự động duyệt nếu giá trị hao hụt dưới 200,000đ; nếu lớn hơn phải chờ Quản lý duyệt.
+
+### 2.10. Phân hệ HRM & Quản lý Ca (Attendance / Payroll)
+* **Mô tả**: Theo dõi ca làm việc, giờ công của nhân viên tại quầy bếp/bar, tính lương cơ bản.
+* **Giải pháp Supabase**:
+  * Tận dụng máy tính bảng dùng chung tại quầy. Nhân viên nhập mã PIN cá nhân để chấm công (Clock-in / Clock-out).
+* **Database Schema**:
+  ```sql
+  CREATE TABLE IF NOT EXISTS employee_attendance (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    profile_id uuid REFERENCES profiles(id) ON DELETE CASCADE,
+    clock_in timestamp with time zone DEFAULT now() NOT NULL,
+    clock_out timestamp with time zone,
+    total_hours numeric(5, 2),
+    business_date date NOT NULL
+  );
+  ```
+
+### 2.11. Phân hệ Accounting (Hệ thống Kế toán Kép CoA & Journal)
+* **Mô tả**: Hệ thống tài khoản, Bút toán kép tự động sinh từ giao dịch nhập/xuất kho.
+* **Giải pháp Supabase**:
+  * Triển khai trigger tự động trên bảng `inventory_transactions` để sinh bút toán ghi nợ/có (Debit/Credit) vào hệ thống tài khoản tương ứng, đảm bảo dữ liệu kế toán luôn khớp với thực tế kho.
+
+### 2.12. Phân hệ Settings (Email, SMS, Custom SMS, Currency, Login Management)
+* **Mô tả**: Cấu hình hệ thống động từ Admin Panel.
+* **Giải pháp Supabase**:
+  * Tạo bảng `system_settings` để lưu cấu hình: Tên nhà hàng, VAT mặc định, đơn vị tiền tệ chính, cấu hình API Email (Resend) và SMS (Termii/Custom).
+* **Database Schema**:
+  ```sql
+  CREATE TABLE IF NOT EXISTS system_settings (
+    id serial PRIMARY KEY,
+    restaurant_name text NOT NULL,
+    default_vat numeric(5, 2) DEFAULT 10.00 NOT NULL,
+    base_currency text DEFAULT 'VND' NOT NULL,
+    email_api_key text, -- API Key của Resend/Sendgrid
+    email_from text,
+    sms_api_key text,
+    sms_sender_id text,
+    sms_gateway_url text, -- Cho phép custom gateway
+    updated_at timestamp with time zone DEFAULT now()
+  );
+  ```
+
+---
+
+## 3. LỘ TRÌNH TRIỂN KHAI PHÁT TRIỂN (ROADMAP)
+
+Chúng ta sẽ tiến hành triển khai theo 4 giai đoạn, tích hợp dần các tính năng của Stocky vào hệ thống Next.js / Supabase của Maison Vie:
+
+| Giai đoạn | Nội dung thực hiện | Kết quả bàn giao |
+| :--- | :--- | :--- |
+| **Giai đoạn 1** | **Database & RLS Migration** <br> Chạy các tập lệnh SQL mở rộng database trong Supabase Editor, cập nhật file `schema.sql` của dự án. | Đầy đủ cấu hình bảng mới, phân quyền RLS chặt chẽ cho từng vai trò trên Supabase. |
+| **Giai đoạn 2** | **Frontend Core Modules (Product & Adjustment)** <br> Xây dựng giao diện Next.js cho việc Import Excel (Thêm mới/Cập nhật giá), nạp Opening Stock, và giao diện kiểm kê Count Stock có bộ lọc. | Nhân viên và quản lý có thể thao tác nạp kho đầu kỳ, import giá vốn hàng loạt từ file Excel. |
+| **Giai đoạn 3** | **Transaction & Operations (Transfer, Sales & Return)** <br> Lập trình giao diện chuyển kho nội bộ có quy trình duyệt, xuất hóa đơn thủ công và tạo phiếu hư hỏng. | Hoàn thiện 100% luồng vận hành kho vật lý giữa Kho tổng $\rightarrow$ Bếp $\rightarrow$ Bar. |
+| **Giai đoạn 4** | **Financial & Integrations (Accounting & Settings)** <br> Tích hợp tự động sinh bút toán kế toán kép, tích hợp WooCommerce/QuickBooks và API gửi thông báo SMS/Email. | Hệ thống kế toán hoàn chỉnh tự động vận hành, tự báo cáo P&L và kết nối đồng bộ bên ngoài. |
+
+---
+
+## 4. QUY TRÌNH KIỂM SOÁT BẤT BIẾN DỮ LIỆU (AUDIT CONTROL)
+
+* Mọi hoạt động thêm mới hoặc cập nhật hàng loạt từ file Excel (Import) đều được ghi nhận vào bảng `audit_log` kèm theo snapshot dữ liệu trước và sau khi thay đổi (`before_data`, `after_data`).
+* Không một tài khoản nào (kể cả Admin) được quyền sửa đổi trực tiếp số lượng tồn kho trong bảng `inventory_transactions`. Mọi sửa đổi bắt buộc phải thông qua phiếu điều chỉnh kho (`stock_adjustments`) để ghi nhận giao dịch tăng/giảm rõ ràng, bảo vệ tính minh bạch tài chính tối đa cho nhà hàng fine-dining Maison Vie.

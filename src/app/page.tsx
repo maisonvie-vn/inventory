@@ -104,6 +104,12 @@ export default function Home() {
   // 7-Level RBAC Role state (expanded to 9 levels for Bar in v9.0)
   const [userRole, setUserRole] = useState<'admin' | 'restaurant_manager' | 'head_chef' | 'senior_accountant' | 'foh_supervisor' | 'sous_chef' | 'junior_accountant' | 'BAR_SUPERVISOR' | 'BARTENDER'>('admin');
 
+  // v9.3/v9.4 state additions
+  const [dashboardDeptFilter, setDashboardDeptFilter] = useState<'ALL' | 'KITCHEN' | 'BAR'>('ALL');
+  const [adminWriteBarIngId, setAdminWriteBarIngId] = useState('');
+  const [adminWriteBarQty, setAdminWriteBarQty] = useState('');
+  const [adminAuditLogs, setAdminAuditLogs] = useState<any[]>([]);
+
   // v9.0 locations & multi-location tracking
   const [locations, setLocations] = useState<any[]>([
     { id: 'MAIN_STORE', name: 'Kho tổng' },
@@ -1104,7 +1110,7 @@ export default function Home() {
     };
   }, [salesData, consumptionData, roleFilteredIngredients, actualStocks, transactions]);
 
-  const canViewFinancials = userRole === 'admin';
+  const canViewFinancials = userRole === 'admin' || userRole === 'senior_accountant';
 
   // Load categories dynamically for filter options
   const categories = useMemo(() => {
@@ -2297,6 +2303,167 @@ export default function Home() {
     XLSX.writeFile(wb, 'Maison_Vie_POS_Sales_Template.xlsx');
   };
 
+  const handleAdminWriteBarSubmit = () => {
+    if (!adminWriteBarIngId) {
+      alert('Vui lòng chọn nguyên liệu.');
+      return;
+    }
+    const newQty = parseFloat(adminWriteBarQty);
+    if (isNaN(newQty) || newQty < 0) {
+      alert('Vui lòng nhập số lượng hợp lệ.');
+      return;
+    }
+
+    const ing = ingredients.find(i => i.id === adminWriteBarIngId);
+    if (!ing) return;
+
+    const currentQty = getTheoreticalStock(adminWriteBarIngId, 'BAR');
+    const variance = newQty - currentQty;
+
+    const nowStr = new Date().toISOString().split('T')[0];
+    const newTx = {
+      id: `tx-admin-adj-${Date.now()}`,
+      ingredientId: adminWriteBarIngId,
+      type: 'stock_take' as const,
+      txn_type: 'STOCK_TAKE_ADJ',
+      qty: variance,
+      unit_price: ing.price,
+      status: 'approved' as const,
+      date: nowStr,
+      locationId: 'BAR',
+      note: `Điều chỉnh admin (ADMIN_ADJ): Tồn cũ ${currentQty} -> ${newQty}`,
+      source: 'ADMIN_ADJ',
+      created_by: currentUser?.name || 'Admin'
+    };
+
+    setTransactions(prev => [...prev, newTx]);
+
+    const newAudit = {
+      actor: currentUser?.name || 'Admin',
+      action: 'ADMIN_WRITE_BAR_ADJ',
+      ingredientId: adminWriteBarIngId,
+      vi_name: ing.vi_name,
+      before: currentQty,
+      after: newQty,
+      time: new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString(),
+      source: 'ADMIN_ADJ'
+    };
+
+    setAdminAuditLogs(prev => [newAudit, ...prev]);
+
+    // Update actual stocks
+    setActualStocks(prev => ({
+      ...prev,
+      [adminWriteBarIngId]: String(newQty)
+    }));
+
+    setAdminWriteBarQty('');
+    alert(`Đã ghi đè tồn kho Bar thành công cho ${ing.vi_name}:\nTồn cũ: ${currentQty} -> Tồn mới: ${newQty}\n(Bút toán điều chỉnh ${variance > 0 ? '+' : ''}${variance.toFixed(3)} ${ing.unit} đã được lưu vết)`);
+  };
+
+  const handleAdminWriteBarExcelImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const bstr = evt.target?.result;
+        const wb = XLSX.read(bstr, { type: 'binary' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const data = XLSX.utils.sheet_to_json<any[]>(ws, { header: 1 });
+
+        let headerRowIdx = -1;
+        for (let i = 0; i < data.length; i++) {
+          const row = data[i] as any[];
+          if (row && (row.includes('Mã NVL') || row.includes('Mã') || row.includes('M NVL'))) {
+            headerRowIdx = i;
+            break;
+          }
+        }
+
+        if (headerRowIdx === -1) {
+          alert('Không tìm thấy cột "Mã NVL" trong file Excel.');
+          return;
+        }
+
+        const headers = data[headerRowIdx] as any[];
+        const codeIdx = headers.findIndex(h => String(h).includes('Mã') || String(h).includes('M'));
+        const qtyIdx = headers.findIndex(h => String(h).includes('Tồn thực tế') || String(h).includes('Thực tế') || String(h).includes('Số lượng'));
+
+        if (codeIdx === -1 || qtyIdx === -1) {
+          alert('Cần có cột "Mã NVL" và "Tồn thực tế" trong file Excel.');
+          return;
+        }
+
+        const newTrans: any[] = [];
+        const newAudits: any[] = [];
+        const newActualStocksObj = { ...actualStocks };
+        let count = 0;
+        const nowStr = new Date().toISOString().split('T')[0];
+
+        for (let i = headerRowIdx + 1; i < data.length; i++) {
+          const row = data[i] as any[];
+          if (!row || row.length <= Math.max(codeIdx, qtyIdx)) continue;
+
+          const code = strVal(row[codeIdx]).trim();
+          const qtyStr = strVal(row[qtyIdx]).trim();
+          if (!code || qtyStr === '') continue;
+
+          const qty = parseFloat(qtyStr);
+          if (isNaN(qty)) continue;
+
+          const ing = ingredients.find(x => x.id === code);
+          if (!ing) continue;
+
+          const currentQty = getTheoreticalStock(code, 'BAR');
+          const variance = qty - currentQty;
+
+          newTrans.push({
+            id: `tx-admin-import-${Date.now()}-${code}`,
+            ingredientId: code,
+            type: 'stock_take' as const,
+            txn_type: 'STOCK_TAKE_ADJ',
+            qty: variance,
+            unit_price: ing.price,
+            status: 'approved' as const,
+            date: nowStr,
+            locationId: 'BAR',
+            note: `Admin import hàng loạt (ADMIN_IMPORT): Tồn cũ ${currentQty} -> ${qty}`,
+            source: 'ADMIN_IMPORT',
+            created_by: currentUser?.name || 'Admin'
+          });
+
+          newAudits.push({
+            actor: currentUser?.name || 'Admin',
+            action: 'ADMIN_WRITE_BAR_IMPORT',
+            ingredientId: code,
+            vi_name: ing.vi_name,
+            before: currentQty,
+            after: qty,
+            time: new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString(),
+            source: 'ADMIN_IMPORT'
+          });
+
+          newActualStocksObj[code] = String(qty);
+          count++;
+        }
+
+        if (count > 0) {
+          setTransactions(prev => [...prev, ...newTrans]);
+          setAdminAuditLogs(prev => [...newAudits, ...prev]);
+          setActualStocks(newActualStocksObj);
+          alert(`Đã import và điều chỉnh tồn kho Bar thành công cho ${count} mã hàng từ file Excel!`);
+        } else {
+          alert('Không tìm thấy bản ghi hợp lệ trong file Excel.');
+        }
+      } catch (err) {
+        alert('Lỗi nhập file: ' + (err as Error).message);
+      }
+    };
+    reader.readAsBinaryString(file);
+  };
+
   const downloadIngredientsTemplate = () => {
     const headers = [['Mã NVL', 'Tên tiếng Việt', 'Tên tiếng Pháp', 'ĐVT', 'Giá vốn chuẩn', 'Yield Rate (%)', 'Danh mục']];
     const sampleData = [
@@ -3370,6 +3537,21 @@ export default function Home() {
           {/* TAB 1: DASHBOARD */}
           {activeTab === 'dashboard' && (
             <div className="flex flex-col gap-6">
+              {/* Department Filter for Admin/Manager/Accountants (C.6) */}
+              {(userRole === 'admin' || userRole === 'restaurant_manager' || userRole === 'senior_accountant' || userRole === 'junior_accountant') && (
+                <div className="flex items-center gap-2 self-start bg-moss-light border border-border-moss px-3 py-1.5 rounded-sm">
+                  <span className="text-[10px] text-text-light/60 font-sans uppercase font-medium">Bộ phận:</span>
+                  <select
+                    value={dashboardDeptFilter}
+                    onChange={(e) => setDashboardDeptFilter(e.target.value as any)}
+                    className="bg-transparent border-none text-xs text-accent-gold focus:outline-none cursor-pointer font-semibold"
+                  >
+                    <option value="ALL" className="bg-[#042726] text-gray-300">Tất cả (Bếp & Bar)</option>
+                    <option value="KITCHEN" className="bg-[#042726] text-gray-300">Bếp</option>
+                    <option value="BAR" className="bg-[#042726] text-gray-300">Quầy Bar</option>
+                  </select>
+                </div>
+              )}
               {/* Cost of Goods Sold Chart & Top Cost Ingredients */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 

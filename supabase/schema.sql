@@ -235,7 +235,7 @@ create table goods_receipts (
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
-alter table goods_receipts disable row level security;
+alter table goods_receipts enable row level security;
 
 -- Chi tiết nhận hàng (GRN Lines v8.0)
 create table grn_lines (
@@ -248,7 +248,7 @@ create table grn_lines (
     primary key (grn_id, ingredient_id)
 );
 
-alter table grn_lines disable row level security;
+alter table grn_lines enable row level security;
 
 -- ==========================================
 -- 5. LOTS, TRANSACTIONS & SHIFT CONSUMPTION
@@ -264,7 +264,7 @@ create table lots (
     received_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
-alter table lots disable row level security;
+alter table lots enable row level security;
 
 -- Sổ cái biến động kho bất biến (Inventory Transactions v8.0)
 create table inventory_transactions (
@@ -283,7 +283,7 @@ create table inventory_transactions (
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
-alter table inventory_transactions disable row level security;
+alter table inventory_transactions enable row level security;
 
 -- Nhật ký hủy hỏng nguyên liệu trong ca
 create table waste_logs (
@@ -508,7 +508,7 @@ begin
     new.id,
     coalesce(new.raw_user_meta_data->>'username', split_part(new.email, '@', 1)),
     coalesce(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1)),
-    coalesce(new.raw_user_meta_data->>'role', 'admin') -- Mặc định là admin
+    coalesce(new.raw_user_meta_data->>'role', 'junior_accountant') -- Mặc định là junior_accountant
   )
   on conflict (id) do nothing;
   return new;
@@ -530,13 +530,13 @@ using (get_current_user_role() in ('admin', 'senior_accountant'))
 with check (get_current_user_role() in ('admin', 'senior_accountant'));
 
 -- 8.3. Policy cho bảng Inventory Transactions (Biến động kho)
-create policy "Allow select transactions for all users"
-on inventory_transactions for select using (true);
+create policy "Allow select transactions for all authenticated users"
+on inventory_transactions for select to authenticated using (true);
 
-create policy "Allow manage transactions for all users"
-on inventory_transactions for all
-using (true)
-with check (true);
+create policy "Allow manage transactions for staff"
+on inventory_transactions for all to authenticated
+using (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant', 'junior_accountant', 'head_chef', 'sous_chef', 'BAR_SUPERVISOR', 'BARTENDER'))
+with check (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant', 'junior_accountant', 'head_chef', 'sous_chef', 'BAR_SUPERVISOR', 'BARTENDER'));
 
 -- 8.4. Policy cho bảng Waste Logs (Hủy hỏng)
 create policy "Allow select waste_logs for all staff"
@@ -560,36 +560,36 @@ on purchase_orders for all to authenticated
 using (get_current_user_role() in ('admin', 'senior_accountant'));
 
 -- 8.6. Policy cho bảng Goods Receipts (Nhận hàng)
-create policy "Allow select GRN for all users"
-on goods_receipts for select
+create policy "Allow select GRN for all authenticated users"
+on goods_receipts for select to authenticated
 using (true);
 
-create policy "Allow insert GRN for all users"
-on goods_receipts for insert
-with check (true);
+create policy "Allow insert GRN for authorized roles"
+on goods_receipts for insert to authenticated
+with check (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant', 'junior_accountant'));
 
-create policy "Allow update/approve GRN for all users"
-on goods_receipts for update
-using (true)
-with check (true);
+create policy "Allow update/approve GRN for authorized roles"
+on goods_receipts for update to authenticated
+using (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant', 'junior_accountant'))
+with check (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant', 'junior_accountant'));
 
 -- 8.7. Policy cho bảng Grn Lines (Chi tiết nhận hàng)
-create policy "Allow select grn_lines for all users"
-on grn_lines for select using (true);
+create policy "Allow select grn_lines for all authenticated users"
+on grn_lines for select to authenticated using (true);
 
-create policy "Allow manage grn_lines for all users"
-on grn_lines for all
-using (true)
-with check (true);
+create policy "Allow manage grn_lines for authorized roles"
+on grn_lines for all to authenticated
+using (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant', 'junior_accountant'))
+with check (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant', 'junior_accountant'));
 
 -- 8.8. Policy cho bảng Lots (Lô hàng)
-create policy "Allow select lots for all users"
-on lots for select using (true);
+create policy "Allow select lots for all authenticated users"
+on lots for select to authenticated using (true);
 
-create policy "Allow manage lots for all users"
-on lots for all
-using (true)
-with check (true);
+create policy "Allow manage lots for authorized roles"
+on lots for all to authenticated
+using (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant', 'junior_accountant'))
+with check (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant', 'junior_accountant'));
 
 -- Thu hồi quyền trực tiếp trên các bảng gốc khỏi người dùng thông thường để bắt buộc qua VIEW bảo mật
 revoke select on table ingredients, inventory_transactions from public, authenticated;
