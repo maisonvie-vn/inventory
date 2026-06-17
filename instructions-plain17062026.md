@@ -94,3 +94,17 @@ Tài liệu này ghi lại toàn bộ các công việc nâng cấp mã nguồn,
     *   **Hộp chỉ báo Portion động:** Bổ sung Badge trạng thái nổi bật ở phần chi tiết công thức bên phải, tự động hiển thị **`À LA CARTE (ĐẦY ĐỦ)`** (màu xanh lá) hoặc **`DÉGUSTATION (TASTING)`** (màu cam) dựa trên mã công thức, giúp người dùng nhận biết ngay lập tức portion đang xem.
     *   **Xử lý Trạng thái Trống (Empty State) thông minh:** Khi người dùng lọc Dégustation cho các nhóm không hỗ trợ định lượng Tasting (như món nước của Bar vốn chỉ phục vụ À La Carte), hệ thống hiển thị thông báo hướng dẫn cụ thể thay vì để trống: *"Không có Định mức Tasting (Dégustation) cho nhóm này - Món uống Bar chỉ phục vụ phần À La Carte đầy đủ"*.
     *   **Đồng bộ sản phẩm:** Kiểm thử TypeScript thành công và đẩy các cập nhật UI/UX lên GitHub để triển khai tức thì.
+
+---
+
+## 10. Đối soát và Đồng bộ diện rộng 145 mặt hàng Đồ uống & Rượu bia
+*   **Yêu cầu:** Thực hiện đối soát chéo danh mục đồ uống và rượu bia từ các bảng Excel (`MAISON_VIE_v6_0_PRO.xlsx`, `BÁO CÁO TỒN KHO BAR T05.2026.xlsx`, `FINAL(12062026)_Maison_Vie_Recipe_Master_2026_CORRIGE.xlsx`). Đồng bộ toàn bộ các sản phẩm đã có mã và nguyên liệu trong DB nhưng chưa được đăng ký Menu Item, chưa có Recipe 1:1, hoặc chưa có ánh xạ POS trên hệ thống (giải quyết triệt để vấn đề "hàng bán chưa có công thức - unmapped sales" cho các sản phẩm bán nguyên direct).
+*   **Giải pháp đã thực hiện:**
+    *   **Đối soát và trích xuất dữ liệu:** Phát hiện **145 mặt hàng** đồ uống (rượu vang, rượu mạnh, nước ngọt, bia, cigar...) có trong danh mục kho nhưng bị thiếu cấu hình Menu Item và mapping POS. Trích xuất đơn giá vốn (Cost Price) và giá bán lẻ (Sale Price) trực tiếp từ sheet `Unit Price` của tệp tồn kho [BÁO CÁO TỒN KHO BAR T05.2026.xlsx](file:///D:/Invenroty/BÁO CÁO TỒN KHO BAR T05.2026.xlsx). Đối với các mặt hàng thiếu giá bán lẻ, hệ thống tự động áp dụng hệ số markup `2.5` lần giá vốn và làm tròn đến 10,000 VND.
+    *   **Đồng bộ cơ sở dữ liệu Supabase:** Tạo và chạy script `scratch_beverage_sync.sql` chứa **472 câu lệnh SQL** (INSERT các `menu_items`, `recipes` 1:1, `pos_alias_map`, và `ingredient_departments` liên kết bộ phận quản lý `BAR`). Kết quả chạy thực tế và chạy script kiểm tra trả về **0 thiếu sót (0 missing items/recipes/aliases)**.
+    *   **Tích hợp seed & local code:**
+        *   Tích hợp toàn bộ câu lệnh INSERT SQL vào tệp [seed.sql](file:///d:/Invenroty/maison-vie-crm/supabase/seed.sql) để đảm bảo đồng bộ môi trường local.
+        *   Cập nhật tệp cấu hình [db.json](file:///d:/Invenroty/maison-vie-crm/src/data/db.json) bổ sung 145 công thức direct 1:1.
+        *   Cập nhật [mockData.ts](file:///d:/Invenroty/maison-vie-crm/src/data/mockData.ts) (ánh xạ `POS_MAPPING` phân loại đúng `"alc"` cho rượu mã V và `"beer"` cho bia/nước ngọt/cigar/rượu mạnh).
+    *   **Cập nhật File mẫu Excel:** Ghi nhận toàn bộ 145 sản phẩm này vào tệp biểu mẫu [MAU_IMPORT_DANHMUC_1-1.xlsx](file:///D:/Invenroty/MAU_IMPORT_DANHMUC_1-1.xlsx) (sheet `DANH_MUC_1-1`) làm One Source of Truth cho danh mục direct 1:1 với cờ `DIRECT` và đơn vị viết hoa chuẩn (BOTTLE, CAN, PACK...).
+    *   **Đồng bộ GitHub:** Stage, commit và push thành công toàn bộ các thay đổi lên nhánh `main` của GitHub (commit hash `c17d9be`), kích hoạt Vercel tự động deploy bản mới.
