@@ -4106,23 +4106,28 @@ export default function Home() {
                   </div>
                   
                   {/* À La Carte vs Tasting Portions Toggle */}
-                  <div className="flex gap-2 mt-4 bg-moss-light p-1 rounded border border-border-moss">
-                    <button 
-                      onClick={() => setRecipeType('alc')}
-                      className={`flex-1 text-center py-1.5 text-[11px] rounded transition-all uppercase font-semibold ${
-                        recipeType === 'alc' ? 'bg-accent-gold/15 text-accent-gold' : 'text-gray-400 hover:text-gray-200'
-                      }`}
-                    >
-                      À La Carte (Portion Đầy đủ)
-                    </button>
-                    <button 
-                      onClick={() => setRecipeType('deg')}
-                      className={`flex-1 text-center py-1.5 text-[11px] rounded transition-all uppercase font-semibold ${
-                        recipeType === 'deg' ? 'bg-accent-gold/15 text-accent-gold' : 'text-gray-400 hover:text-gray-200'
-                      }`}
-                    >
-                      Dégustation (Portion Tasting)
-                    </button>
+                  <div className="mt-4">
+                    <span className="text-[10px] text-gray-400 uppercase tracking-wider block mb-1.5 font-semibold">
+                      Bộ lọc thực đơn (Menu Filter):
+                    </span>
+                    <div className="flex gap-2 bg-moss-light p-1 rounded border border-border-moss">
+                      <button 
+                        onClick={() => setRecipeType('alc')}
+                        className={`flex-1 text-center py-1.5 text-[11px] rounded transition-all uppercase font-semibold ${
+                          recipeType === 'alc' ? 'bg-accent-gold/15 text-accent-gold' : 'text-gray-400 hover:text-gray-200'
+                        }`}
+                      >
+                        À La Carte (Portion Đầy đủ)
+                      </button>
+                      <button 
+                        onClick={() => setRecipeType('deg')}
+                        className={`flex-1 text-center py-1.5 text-[11px] rounded transition-all uppercase font-semibold ${
+                          recipeType === 'deg' ? 'bg-accent-gold/15 text-accent-gold' : 'text-gray-400 hover:text-gray-200'
+                        }`}
+                      >
+                        Dégustation (Portion Tasting)
+                      </button>
+                    </div>
                   </div>
 
                   <div className="relative mt-3">
@@ -4175,6 +4180,13 @@ export default function Home() {
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-xs text-accent-gold/70 border border-border-cream px-2 py-0.5 rounded uppercase font-semibold">
                             {activeRecipeDetails.code}
+                          </span>
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
+                            activeRecipeDetails.code.endsWith('_DEG')
+                              ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                              : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                          }`}>
+                            {activeRecipeDetails.code.endsWith('_DEG') ? 'Dégustation (Tasting)' : 'À La Carte (Đầy đủ)'}
                           </span>
                           <span className="text-xs text-gray-400">• {activeRecipeDetails.course}</span>
                         </div>
