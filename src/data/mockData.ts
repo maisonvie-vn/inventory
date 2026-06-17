@@ -370,7 +370,8 @@ export const POS_MAPPING: Record<string, { recipe: string; type: 'alc' | 'set' |
   "V9411": { recipe: "V9411", type: "alc" }, // Gérard Bertrand « Gris Blanc » IGP, France
   "V9412": { recipe: "V9412", type: "alc" }, // Croix de Peyrassol Rosé IGP, France
   "V9504": { recipe: "V9504", type: "alc" }, // Chateau Dalat Special Cabernet Sauvignon 750ml
-  "V9508": { recipe: "V9508", type: "alc" }, // Chateau Dalat Special Sauvignon Blanc 750ml};
+  "V9508": { recipe: "V9508", type: "alc" } // Chateau Dalat Special Sauvignon Blanc 750ml
+};
 
 export const SET_MENU_DEFINITIONS: Record<string, string[]> = {
   "deg_set_5": [
