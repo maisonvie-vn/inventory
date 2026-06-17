@@ -55,6 +55,7 @@ export interface SaleRecord {
   service_charge: number;
   tax: number;
   order_type?: 'DINE_IN' | 'TAKEAWAY';
+  mapping_status?: 'MAPPED' | 'UNMAPPED' | 'RESOLVED' | 'NO_STOCK_IMPACT';
 }
 
 // Map POS codes to recipe codes
