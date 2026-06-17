@@ -21,37 +21,578 @@ VALUES ('90000000-0000-0000-0000-000000000004', 'Nhập Đầu Kỳ', '{}', 1, '
 ON CONFLICT (id) DO NOTHING;
 
 -- Missing Ingredients
+-- Ensure referenced ingredients exist
 INSERT INTO ingredients (
-  id, code, nom_fr, ten_vi, name_en, stock_uom, recipe_uom, 
-  stock_to_recipe_factor, purchase_category_id, 
-  wac_price, standard_price, is_beverage, is_active
-) VALUES 
+  id, code, nom_fr, ten_vi, name_en, purchase_category_id, stock_uom, recipe_uom, 
+  stock_to_recipe_factor, tare_weight_grams, tolerance_percent, wac_price, 
+  standard_price, yield_rate, is_beverage, is_active
+) VALUES
 (
-  'V9006', 'V9006', 
-  'Kaiken Ultra Malbec',
-  'Kaiken « Ultra » Malbec (Malbec · Uco Valley, Mendoza — Argentina)', 
-  'Kaiken Ultra Malbec', 
-  'BOTTLE', 'BOTTLE', 1, 
+  'B5001', 'B5001', 
+  'Heineken - 33cl',
+  'Heineken - 33cl', 
+  'Heineken - 33cl', 
   (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
-  638000.0, 638000.0, true, true
+  'BOTTLE', 'BOTTLE', 1, 450, 2.0, 14375.0, 
+  14375.0, 1.0, true, true
+),
+(
+  'B5004', 'B5004', 
+  'Beer 333 - 33cl',
+  'Beer 333 - 33cl', 
+  'Beer 333 - 33cl', 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  'CAN', 'CAN', 1, 450, 2.0, 9792.0, 
+  9792.0, 1.0, true, true
+),
+(
+  'B5005', 'B5005', 
+  'Saigon beer - 33cl',
+  'Saigon beer - 33cl', 
+  'Saigon beer - 33cl', 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  'BOTTLE', 'BOTTLE', 1, 450, 2.0, 10750.0, 
+  10750.0, 1.0, true, true
+),
+(
+  'B5007', 'B5007', 
+  'Sapporo draught',
+  'Sapporo draught', 
+  'Sapporo draught', 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  'GLASS', 'GLASS', 1, 450, 2.0, 16436.0, 
+  16436.0, 1.0, true, true
+),
+(
+  'B5010', 'B5010', 
+  'Hanoi - 33cl',
+  'Hanoi - 33cl', 
+  'Hanoi - 33cl', 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  'BOTTLE', 'BOTTLE', 1, 450, 2.0, 9750.0, 
+  9750.0, 1.0, true, true
+),
+(
+  'B5012', 'B5012', 
+  'Hanoi - can',
+  'Hanoi - can', 
+  'Hanoi - can', 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  'CAN', 'CAN', 1, 450, 2.0, 9833.0, 
+  9833.0, 1.0, true, true
+),
+(
+  'M6008', 'M6008', 
+  'La Vie 1,5 L',
+  'La Vie 1,5 L', 
+  'La Vie 1,5 L', 
+  (SELECT id FROM purchase_categories WHERE code = 'BEVERAGE' LIMIT 1),
+  'BOTTLE', 'BOTTLE', 1, 0, 5.0, 6666.0, 
+  6666.0, 1.0, false, true
+),
+(
+  'M6009', 'M6009', 
+  'Perrier (Sparkling water 0.33L)',
+  'Perrier (Sparkling water 0.33L)', 
+  'Perrier (Sparkling water 0.33L)', 
+  (SELECT id FROM purchase_categories WHERE code = 'BEVERAGE' LIMIT 1),
+  'BOTTLE', 'BOTTLE', 1, 0, 5.0, 32450.0, 
+  32450.0, 1.0, false, true
+),
+(
+  'M6010', 'M6010', 
+  'S.Pellegrino (Sparkling water 0.5L)',
+  'S.Pellegrino (Sparkling water 0.5L)', 
+  'S.Pellegrino (Sparkling water 0.5L)', 
+  (SELECT id FROM purchase_categories WHERE code = 'BEVERAGE' LIMIT 1),
+  'BOTTLE', 'BOTTLE', 1, 0, 5.0, 36300.0, 
+  36300.0, 1.0, false, true
+),
+(
+  'NLP1005', 'NLP1005', 
+  'Pho mát Gruyere',
+  'Pho mát Gruyere', 
+  'Pho mát Gruyere', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 651200.0, 
+  651200.0, 1.0, false, true
+),
+(
+  'NLP1007', 'NLP1007', 
+  'Camembert 250g Presiden',
+  'Camembert 250g Presiden', 
+  'Camembert 250g Presiden', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'PACK', 'PACK', 1, 0, 5.0, 167200.0, 
+  167200.0, 1.0, false, true
+),
+(
+  'NLP2003', 'NLP2003', 
+  'Cook ham - Square ham, torchon ham',
+  'Cook ham - Square ham, torchon ham', 
+  'Cook ham - Square ham, torchon ham', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 179280.0, 
+  179280.0, 1.0, false, true
+),
+(
+  'NLP2004', 'NLP2004', 
+  'Bacon',
+  'Bacon', 
+  'Bacon', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 170640.0, 
+  170640.0, 1.0, false, true
+),
+(
+  'NLP2008', 'NLP2008', 
+  'Dry sausage 300g',
+  'Dry sausage 300g', 
+  'Dry sausage 300g', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 979000.0, 
+  979000.0, 1.0, false, true
+),
+(
+  'NLP2011', 'NLP2011', 
+  'Foie gras frozen fresh',
+  'Foie gras frozen fresh', 
+  'Foie gras frozen fresh', 
+  (SELECT id FROM purchase_categories WHERE code = 'MEAT' LIMIT 1),
+  'KG', 'KG', 1, 0, 2.0, 1690000.0, 
+  1690000.0, 1.0, false, true
+),
+(
+  'NLP2014', 'NLP2014', 
+  'Smoke chicken breast',
+  'Smoke chicken breast', 
+  'Smoke chicken breast', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 313200.0, 
+  313200.0, 1.0, false, true
+),
+(
+  'NLP2021', 'NLP2021', 
+  'Egg',
+  'Egg', 
+  'Egg', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'PIECE', 'PIECE', 1, 0, 5.0, 3200.0, 
+  3200.0, 1.0, false, true
+),
+(
+  'NLP3008', 'NLP3008', 
+  'Anchor Unsalted creamy butter (4x5kg)',
+  'Anchor Unsalted creamy butter (4x5kg)', 
+  'Anchor Unsalted creamy butter (4x5kg)', 
+  (SELECT id FROM purchase_categories WHERE code = 'DAIRY' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 249736.0, 
+  249736.0, 1.0, false, true
+),
+(
+  'NLP3016', 'NLP3016', 
+  'Sữa tươi Vinamilk 1L',
+  'Sữa tươi Vinamilk 1L', 
+  'Sữa tươi Vinamilk 1L', 
+  (SELECT id FROM purchase_categories WHERE code = 'BEVERAGE' LIMIT 1),
+  'BOX', 'BOX', 1, 0, 5.0, 30925.0, 
+  30925.0, 1.0, false, true
+),
+(
+  'NLP3018', 'NLP3018', 
+  'Icing sugar',
+  'Icing sugar', 
+  'Icing sugar', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 40000.0, 
+  40000.0, 1.0, false, true
+),
+(
+  'NLP3019', 'NLP3019', 
+  'Sugar',
+  'Sugar', 
+  'Sugar', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 25000.0, 
+  25000.0, 1.0, false, true
+),
+(
+  'NLP4002', 'NLP4002', 
+  'Dark Chocolate',
+  'Dark Chocolate', 
+  'Dark Chocolate', 
+  (SELECT id FROM purchase_categories WHERE code = 'PASTRY' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 197000.0, 
+  197000.0, 1.0, false, true
+),
+(
+  'NLP50182', 'NLP50182', 
+  'Atiso đông lạnh 2.5kg',
+  'Atiso đông lạnh 2.5kg', 
+  'Atiso đông lạnh 2.5kg', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 382752.0, 
+  382752.0, 1.0, false, true
+),
+(
+  'NLP50215', 'NLP50215', 
+  'Hạt óc chó',
+  'Hạt óc chó', 
+  'Hạt óc chó', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 380000.0, 
+  380000.0, 1.0, false, true
+),
+(
+  'NLP50218', 'NLP50218', 
+  'Hạt thông',
+  'Hạt thông', 
+  'Hạt thông', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 900000.0, 
+  900000.0, 1.0, false, true
 ),
 (
   'NLP6002', 'NLP6002', 
   'Ingrédient de cuisine',
   'Nguyên liệu chế biến bếp', 
-  'Kitchen processing ingredient', 
-  'KG', 'G', 1000, 
+  'Nguyên liệu chế biến bếp', 
   (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
-  570984.7, 570984.7, false, true
+  'KG', 'G', 1000, 0, 5.0, 570984.7, 
+  570984.7, 100.0, false, true
+),
+(
+  'NLP60031', 'NLP60031', 
+  'Bưởi Năm roi',
+  'Bưởi Năm roi', 
+  'Bưởi Năm roi', 
+  (SELECT id FROM purchase_categories WHERE code = 'FRUIT' LIMIT 1),
+  'PIECE', 'PIECE', 1, 0, 10.0, 30000.0, 
+  30000.0, 1.0, false, true
+),
+(
+  'NLP60032', 'NLP60032', 
+  'Chanh',
+  'Chanh', 
+  'Chanh', 
+  (SELECT id FROM purchase_categories WHERE code = 'FRUIT' LIMIT 1),
+  'KG', 'KG', 1, 0, 10.0, 25000.0, 
+  25000.0, 1.0, false, true
+),
+(
+  'NLP60033', 'NLP60033', 
+  'Cam',
+  'Cam', 
+  'Cam', 
+  (SELECT id FROM purchase_categories WHERE code = 'FRUIT' LIMIT 1),
+  'KG', 'KG', 1, 0, 10.0, 35000.0, 
+  35000.0, 1.0, false, true
+),
+(
+  'NLP60034', 'NLP60034', 
+  'Xoài',
+  'Xoài', 
+  'Xoài', 
+  (SELECT id FROM purchase_categories WHERE code = 'FRUIT' LIMIT 1),
+  'KG', 'KG', 1, 0, 10.0, 50000.0, 
+  50000.0, 1.0, false, true
+),
+(
+  'NLP60035', 'NLP60035', 
+  'Dưa hấu',
+  'Dưa hấu', 
+  'Dưa hấu', 
+  (SELECT id FROM purchase_categories WHERE code = 'FRUIT' LIMIT 1),
+  'KG', 'KG', 1, 0, 10.0, 20000.0, 
+  20000.0, 1.0, false, true
+),
+(
+  'NLP60037', 'NLP60037', 
+  'Táo',
+  'Táo', 
+  'Táo', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 50000.0, 
+  50000.0, 1.0, false, true
+),
+(
+  'NLP60039', 'NLP60039', 
+  'Dâu tây',
+  'Dâu tây', 
+  'Dâu tây', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 100000.0, 
+  100000.0, 1.0, false, true
+),
+(
+  'NLP60040', 'NLP60040', 
+  'Bơ sáp',
+  'Bơ sáp', 
+  'Bơ sáp', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 50000.0, 
+  50000.0, 1.0, false, true
+),
+(
+  'NLP60041', 'NLP60041', 
+  'Dứa quả',
+  'Dứa quả', 
+  'Dứa quả', 
+  (SELECT id FROM purchase_categories WHERE code = 'FRUIT' LIMIT 1),
+  'PIECE', 'PIECE', 1, 0, 10.0, 14000.0, 
+  14000.0, 1.0, false, true
+),
+(
+  'NLP60043', 'NLP60043', 
+  'Thanh long trắng',
+  'Thanh long trắng', 
+  'Thanh long trắng', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 45000.0, 
+  45000.0, 1.0, false, true
+),
+(
+  'NLP60045', 'NLP60045', 
+  'Dưa vàng',
+  'Dưa vàng', 
+  'Dưa vàng', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 30000.0, 
+  30000.0, 1.0, false, true
+),
+(
+  'NLP60047', 'NLP60047', 
+  'Kiwi',
+  'Kiwi', 
+  'Kiwi', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 100000.0, 
+  100000.0, 1.0, false, true
 ),
 (
   'NLP60048', 'NLP60048', 
   'Raisins verts sans pépins',
   'Nho xanh ko hạt', 
-  'Green seedless grapes', 
-  'KG', 'G', 1000, 
+  'Nho xanh ko hạt', 
   (SELECT id FROM purchase_categories WHERE code = 'FRUIT' LIMIT 1),
-  150000.0, 150000.0, false, true
+  'KG', 'G', 1000, 0, 10.0, 150000.0, 
+  150000.0, 100.0, false, true
+),
+(
+  'NLP60053', 'NLP60053', 
+  'Chuối chín',
+  'Chuối chín', 
+  'Chuối chín', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'PIECE', 'PIECE', 1, 0, 5.0, 30000.0, 
+  30000.0, 1.0, false, true
+),
+(
+  'NLP8002', 'NLP8002', 
+  'Flour - Bột mỳ',
+  'Flour - Bột mỳ', 
+  'Flour - Bột mỳ', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 15800.0, 
+  15800.0, 1.0, false, true
+),
+(
+  'NVLC10011', 'NVLC10011', 
+  'Beef Tenderloin (Australia)',
+  'Beef Tenderloin (Australia)', 
+  'Beef Tenderloin (Australia)', 
+  (SELECT id FROM purchase_categories WHERE code = 'MEAT' LIMIT 1),
+  'KG', 'KG', 1, 0, 2.0, 609000.0, 
+  609000.0, 1.0, false, true
+),
+(
+  'NVLC10025', 'NVLC10025', 
+  'Ribeye Angus',
+  'Ribeye Angus', 
+  'Ribeye Angus', 
+  (SELECT id FROM purchase_categories WHERE code = 'MEAT' LIMIT 1),
+  'KG', 'KG', 1, 0, 2.0, 1113000.0, 
+  1113000.0, 1.0, false, true
+),
+(
+  'NVLC1003', 'NVLC1003', 
+  'Rib eye (Australia)',
+  'Rib eye (Australia)', 
+  'Rib eye (Australia)', 
+  (SELECT id FROM purchase_categories WHERE code = 'MEAT' LIMIT 1),
+  'KG', 'KG', 1, 0, 2.0, 882000.0, 
+  882000.0, 1.0, false, true
+),
+(
+  'NVLC1019', 'NVLC1019', 
+  'Beef Cheek - Má bò',
+  'Beef Cheek - Má bò', 
+  'Beef Cheek - Má bò', 
+  (SELECT id FROM purchase_categories WHERE code = 'MEAT' LIMIT 1),
+  'KG', 'KG', 1, 0, 2.0, 371280.0, 
+  371280.0, 1.0, false, true
+),
+(
+  'NVLC2001', 'NVLC2001', 
+  'Lamb rack',
+  'Lamb rack', 
+  'Lamb rack', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 835000.0, 
+  835000.0, 1.0, false, true
+),
+(
+  'NVLC3001', 'NVLC3001', 
+  'Pork shoulder',
+  'Pork shoulder', 
+  'Pork shoulder', 
+  (SELECT id FROM purchase_categories WHERE code = 'MEAT' LIMIT 1),
+  'KG', 'KG', 1, 0, 2.0, 101850.0, 
+  101850.0, 1.0, false, true
+),
+(
+  'NVLC4010', 'NVLC4010', 
+  'Chicken leg',
+  'Chicken leg', 
+  'Chicken leg', 
+  (SELECT id FROM purchase_categories WHERE code = 'MEAT' LIMIT 1),
+  'KG', 'KG', 1, 0, 2.0, 85000.0, 
+  85000.0, 1.0, false, true
+),
+(
+  'NVLC4011', 'NVLC4011', 
+  'Chicken breast',
+  'Chicken breast', 
+  'Chicken breast', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 75000.0, 
+  75000.0, 1.0, false, true
+),
+(
+  'NVLC5001', 'NVLC5001', 
+  'Salmon fillet',
+  'Salmon fillet', 
+  'Salmon fillet', 
+  (SELECT id FROM purchase_categories WHERE code = 'SEAFOOD' LIMIT 1),
+  'KG', 'KG', 1, 0, 2.0, 550000.0, 
+  550000.0, 1.0, false, true
+),
+(
+  'NVLC5005', 'NVLC5005', 
+  'Sea bass fillet',
+  'Sea bass fillet', 
+  'Sea bass fillet', 
+  (SELECT id FROM purchase_categories WHERE code = 'SEAFOOD' LIMIT 1),
+  'KG', 'KG', 1, 0, 2.0, 300000.0, 
+  300000.0, 1.0, false, true
+),
+(
+  'NVLC5020', 'NVLC5020', 
+  'Cod fish',
+  'Cod fish', 
+  'Cod fish', 
+  (SELECT id FROM purchase_categories WHERE code = 'SEAFOOD' LIMIT 1),
+  'KG', 'KG', 1, 0, 2.0, 1207500.0, 
+  1207500.0, 1.0, false, true
+),
+(
+  'NVLC5022', 'NVLC5022', 
+  'Tuna Fillet',
+  'Tuna Fillet', 
+  'Tuna Fillet', 
+  (SELECT id FROM purchase_categories WHERE code = 'SEAFOOD' LIMIT 1),
+  'KG', 'KG', 1, 0, 2.0, 580000.0, 
+  580000.0, 1.0, false, true
+),
+(
+  'NVLC60021', 'NVLC60021', 
+  'Scallope (10)',
+  'Scallope (10)', 
+  'Scallope (10)', 
+  (SELECT id FROM purchase_categories WHERE code = 'SEAFOOD' LIMIT 1),
+  'KG', 'KG', 1, 0, 2.0, 840000.0, 
+  840000.0, 1.0, false, true
+),
+(
+  'NVLC60201', 'NVLC60201', 
+  'Tôm dảo sz 25',
+  'Tôm dảo sz 25', 
+  'Tôm dảo sz 25', 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  'KG', 'KG', 1, 0, 5.0, 300000.0, 
+  300000.0, 1.0, false, true
+),
+(
+  'V2002', 'V2002', 
+  'Larousse Chardonnay Sparkling, France',
+  'Larousse Chardonnay Sparkling, France', 
+  'Larousse Chardonnay Sparkling, France', 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  'BOTTLE', 'BOTTLE', 1, 450, 2.0, 314000.0, 
+  314000.0, 1.0, true, true
+),
+(
+  'V4045', 'V4045', 
+  'Louis Latour - Bourgogne Pinot Noir',
+  'Louis Latour - Bourgogne Pinot Noir', 
+  'Louis Latour - Bourgogne Pinot Noir', 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  'BOTTLE', 'BOTTLE', 1, 450, 2.0, 450000.0, 
+  450000.0, 1.0, true, true
+),
+(
+  'V4064', 'V4064', 
+  'F. Thienpont Causse Rouge Merlot, Bordeaux - Red',
+  'F. Thienpont Causse Rouge Merlot, Bordeaux - Red', 
+  'F. Thienpont Causse Rouge Merlot, Bordeaux - Red', 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  'BOTTLE', 'BOTTLE', 1, 450, 2.0, 426000.0, 
+  426000.0, 1.0, true, true
+),
+(
+  'V4074', 'V4074', 
+  'Louis Latour Domaine De Valmoissine - Red',
+  'Louis Latour Domaine De Valmoissine - Red', 
+  'Louis Latour Domaine De Valmoissine - Red', 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  'BOTTLE', 'BOTTLE', 1, 450, 2.0, 292500.0, 
+  292500.0, 1.0, true, true
+),
+(
+  'V6026', 'V6026', 
+  'Marques Casa Cabernet Sauvignon Chile',
+  'Marques Casa Cabernet Sauvignon Chile', 
+  'Marques Casa Cabernet Sauvignon Chile', 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  'BOTTLE', 'BOTTLE', 1, 450, 2.0, 644000.0, 
+  644000.0, 1.0, true, true
+),
+(
+  'V6034', 'V6034', 
+  'Frontera Cabernet Sauvignon 75cl (Red)',
+  'Frontera Cabernet Sauvignon 75cl (Red)', 
+  'Frontera Cabernet Sauvignon 75cl (Red)', 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  'BOTTLE', 'BOTTLE', 1, 450, 2.0, 231000.0, 
+  231000.0, 1.0, true, true
+),
+(
+  'V6035', 'V6035', 
+  'Frontera Sauvignon Blanc 75cl (White)',
+  'Frontera Sauvignon Blanc 75cl (White)', 
+  'Frontera Sauvignon Blanc 75cl (White)', 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  'BOTTLE', 'BOTTLE', 1, 450, 2.0, 231000.0, 
+  231000.0, 1.0, true, true
+),
+(
+  'V9006', 'V9006', 
+  'Kaiken Ultra Malbec',
+  'Kaiken « Ultra » Malbec (Malbec · Uco Valley, Mendoza — Argentina)', 
+  'Kaiken « Ultra » Malbec (Malbec · Uco Valley, Mendoza — Argentina)', 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  'BOTTLE', 'ML', 750, 450, 2.0, 638000.0, 
+  638000.0, 100.0, true, true
 )
 ON CONFLICT (id) DO NOTHING;
 
