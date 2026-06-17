@@ -15021,7 +15021,7 @@
     "B5001": {
       "code": "B5001",
       "name": "Heineken - 33cl",
-      "course": "Bar",
+      "course": "Beverage",
       "category": "Beer",
       "menu_role": "",
       "price": 70000.0,
@@ -15036,13 +15036,18 @@
           "line_cost": 14375.0
         }
       ],
-      "method": [],
-      "notes": "Bán trực tiếp chai/lon."
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 chai Heineken."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
     },
     "B5002": {
       "code": "B5002",
       "name": "Tiger - 33cl",
-      "course": "Bar",
+      "course": "Beverage",
       "category": "Beer",
       "menu_role": "",
       "price": 70000.0,
@@ -15057,13 +15062,18 @@
           "line_cost": 11625.0
         }
       ],
-      "method": [],
-      "notes": "Bán trực tiếp chai/lon."
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 chai Tiger."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
     },
     "B5004": {
       "code": "B5004",
       "name": "Beer 333 - 33cl",
-      "course": "Bar",
+      "course": "Beverage",
       "category": "Beer",
       "menu_role": "",
       "price": 70000.0,
@@ -15078,13 +15088,18 @@
           "line_cost": 9792.0
         }
       ],
-      "method": [],
-      "notes": "Bán trực tiếp chai/lon."
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 lon bia 333."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
     },
     "B5005": {
       "code": "B5005",
-      "name": "Saigon beer - 33cl",
-      "course": "Bar",
+      "name": "Saigon beer - bottle 33cl",
+      "course": "Beverage",
       "category": "Beer",
       "menu_role": "",
       "price": 70000.0,
@@ -15099,13 +15114,18 @@
           "line_cost": 10750.0
         }
       ],
-      "method": [],
-      "notes": "Bán trực tiếp chai/lon."
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 chai bia Sài Gòn."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
     },
     "B5007": {
       "code": "B5007",
       "name": "Sapporo draught",
-      "course": "Bar",
+      "course": "Beverage",
       "category": "Beer",
       "menu_role": "",
       "price": 90000.0,
@@ -15120,13 +15140,18 @@
           "line_cost": 16436.0
         }
       ],
-      "method": [],
-      "notes": "Bán trực tiếp chai/lon."
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 ly bia tươi Sapporo."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
     },
     "B5010": {
       "code": "B5010",
-      "name": "Hanoi - 33cl",
-      "course": "Bar",
+      "name": "Hanoi - bottle 33cl",
+      "course": "Beverage",
       "category": "Beer",
       "menu_role": "",
       "price": 70000.0,
@@ -15141,13 +15166,18 @@
           "line_cost": 9750.0
         }
       ],
-      "method": [],
-      "notes": "Bán trực tiếp chai/lon."
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 chai bia Hà Nội."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
     },
     "B5012": {
       "code": "B5012",
       "name": "Hanoi - can",
-      "course": "Bar",
+      "course": "Beverage",
       "category": "Beer",
       "menu_role": "",
       "price": 70000.0,
@@ -15162,8 +15192,13 @@
           "line_cost": 9833.0
         }
       ],
-      "method": [],
-      "notes": "Bán trực tiếp chai/lon."
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 lon bia Hà Nội."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
     },
     "B5016": {
       "code": "B5016",
@@ -15570,6 +15605,214 @@
         }
       ],
       "notes": "Cocktail Sangria cổ điển phục vụ bằng ly rượu vang kèm trái cây tươi cắt lát."
+    },
+    "M9203": {
+      "code": "M9203",
+      "name": "Cigar Havana",
+      "course": "Beverage",
+      "category": "Other",
+      "menu_role": "",
+      "price": 350000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9203",
+          "qty_net": 1.0,
+          "unit": "PACK",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 300000.0,
+          "line_cost": 300000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 bao Cigar Havana."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M6001": {
+      "code": "M6001",
+      "name": "Coke",
+      "course": "Beverage",
+      "category": "Soft Drink",
+      "menu_role": "",
+      "price": 50000.0,
+      "ingredients": [
+        {
+          "ing_id": "M6001",
+          "qty_net": 1.0,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 8125.0,
+          "line_cost": 8125.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 lon Coca-Cola."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M6002": {
+      "code": "M6002",
+      "name": "Soda",
+      "course": "Beverage",
+      "category": "Soft Drink",
+      "menu_role": "",
+      "price": 50000.0,
+      "ingredients": [
+        {
+          "ing_id": "M6002",
+          "qty_net": 1.0,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 5304.0,
+          "line_cost": 5304.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 lon nước Soda."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M6004": {
+      "code": "M6004",
+      "name": "Sprite",
+      "course": "Beverage",
+      "category": "Soft Drink",
+      "menu_role": "",
+      "price": 50000.0,
+      "ingredients": [
+        {
+          "ing_id": "M6004",
+          "qty_net": 1.0,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 7462.0,
+          "line_cost": 7462.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 lon Sprite."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M6006": {
+      "code": "M6006",
+      "name": "Diet Coke",
+      "course": "Beverage",
+      "category": "Soft Drink",
+      "menu_role": "",
+      "price": 50000.0,
+      "ingredients": [
+        {
+          "ing_id": "M6006",
+          "qty_net": 1.0,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 8541.0,
+          "line_cost": 8541.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 lon Diet Coke."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M6008": {
+      "code": "M6008",
+      "name": "La Vie 1,5 L",
+      "course": "Beverage",
+      "category": "Water",
+      "menu_role": "",
+      "price": 60000.0,
+      "ingredients": [
+        {
+          "ing_id": "M6008",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 6666.0,
+          "line_cost": 6666.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 chai nước suối La Vie 1.5L."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M6010": {
+      "code": "M6010",
+      "name": "S.Pellegrino (Sparkling water 0.5L)",
+      "course": "Beverage",
+      "category": "Water",
+      "menu_role": "",
+      "price": 160000.0,
+      "ingredients": [
+        {
+          "ing_id": "M6010",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 36300.0,
+          "line_cost": 36300.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 chai nước khoáng Sparkling S.Pellegrino."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M6020": {
+      "code": "M6020",
+      "name": "Maison Vie, mineral water bottle 0,52L",
+      "course": "Beverage",
+      "category": "Water",
+      "menu_role": "",
+      "price": 20000.0,
+      "ingredients": [
+        {
+          "ing_id": "M6020",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 3561.84,
+          "line_cost": 3561.84
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 chai nước suối Maison Vie."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
     }
   },
   "sales": [
