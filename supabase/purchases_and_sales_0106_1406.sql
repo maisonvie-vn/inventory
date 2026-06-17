@@ -20,7 +20,12 @@ INSERT INTO uom (id, name, uom_type) VALUES
 ('BOX', 'Hộp/Box', 'COUNT'),
 ('CASE', 'Thùng/Case', 'COUNT'),
 ('L', 'Lít', 'VOLUME'),
-('ML', 'Millilít', 'VOLUME')
+('ML', 'Millilít', 'VOLUME'),
+('QUA', 'Quả/Củ/Cái (QUA)', 'COUNT'),
+('NAI', 'Nải (NAI)', 'COUNT'),
+('Goi', 'Gói/Bao (Goi)', 'COUNT'),
+('Lon', 'Lon (Lon)', 'COUNT'),
+('Ly', 'Ly (Ly)', 'COUNT')
 ON CONFLICT (id) DO NOTHING;
 
 -- Default Import Supplier
