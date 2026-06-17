@@ -68,6 +68,14 @@ export const POS_MAPPING: Record<string, { recipe: string; type: 'alc' | 'set' |
   "B5010": { recipe: "B5010", type: "beer" }, // Hanoi - 33cl
   "B5012": { recipe: "B5012", type: "beer" }, // Hanoi - can
   "B5016": { recipe: "B5016", type: "beer" }, // Leffe - Belgian beer - bottle 33cl
+  "M9203": { recipe: "M9203", type: "beer" }, // Cigar Havana
+  "M6001": { recipe: "M6001", type: "beer" }, // Coke
+  "M6002": { recipe: "M6002", type: "beer" }, // Soda
+  "M6004": { recipe: "M6004", type: "beer" }, // Sprite
+  "M6006": { recipe: "M6006", type: "beer" }, // Diet Coke
+  "M6008": { recipe: "M6008", type: "beer" }, // La Vie 1,5 L
+  "M6010": { recipe: "M6010", type: "beer" }, // S.Pellegrino (Sparkling water 0.5L)
+  "M6020": { recipe: "M6020", type: "beer" }, // Maison Vie, mineral water bottle 0,52L
   "V1001": { recipe: "V1001", type: "alc" }, // Chateau Noaillac Medoc Cru Bourgeois 37.5cl (R)
   "V2002": { recipe: "V2002", type: "alc" }, // Larousse Chardonnay Sparkling, France
   "V4045": { recipe: "V4045", type: "alc" }, // Louis Latour - Bourgogne Pinot Noir

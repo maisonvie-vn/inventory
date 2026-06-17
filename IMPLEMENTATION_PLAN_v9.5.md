@@ -1015,3 +1015,57 @@ create or replace view v_unmapped_sales as
 
 ---
 *Hết bản v9.5 (17/06/2026). Nền móng (RLS/UoM/secret/dark theme/mobile) + phần lớn nghiệp vụ đã triển khai; trọng tâm còn lại: §14 (unmapped + nhập tay) và xác minh cron/email.*
+
+---
+
+# 16. MÔ HÌNH LOẠI-SẢN-PHẨM `deduction_type` (gốc rễ — chuyên nghiệp) *(v9.5)*
+
+> **Vì sao có:** tab Unmapped đang đầy **món chuẩn** (Coke, nước ngọt) — không phải vì chúng "gọi thêm", mà vì **danh mục thiếu** + thay đổi 17/06 (gộp `beer→alc`) **ép món 1:1 phải có công thức**. Gốc rễ: thiếu một trường phân loại **cách trừ kho**. Đây là fix cấu trúc, không phải vá từng lần.
+
+## 16.1. Ba loại `deduction_type`
+- **`DIRECT` (1:1):** món bán **chính là** SKU kho → bán 1 trừ 1. *(Coke, nước ngọt lon, bia chai nguyên, nước suối, chai rượu bán nguyên.)*
+- **`RECIPE` (BOM):** trừ theo công thức nhiều nguyên liệu. *(Cocktail, nước ép, món ăn.)*
+- **`NON_STOCK`:** không ảnh hưởng kho. *(Phí phục vụ, phụ thu.)*
+
+⇒ Logic trừ kho trở nên **xác định**; món DIRECT **không bao giờ** cần công thức giả.
+
+## 16.2. Schema + cách engine dùng
+```sql
+alter table menu_items add column if not exists
+  deduction_type text not null default 'RECIPE'
+  check (deduction_type in ('DIRECT','RECIPE','NON_STOCK'));
+-- DIRECT: pos_alias_map trỏ thẳng pos_item_code -> ingredient SKU, deduct_qty = 1
+--         (KHÔNG cần bảng recipes cho nhóm này)
+```
+Khi trừ kho (POS import / bán tay / reprocess §14): **DIRECT** → trừ chính SKU × SL; **RECIPE** → bung BOM; **NON_STOCK** → bỏ qua (chỉ ghi doanh thu).
+
+## 16.3. Migration — sửa hệ quả 17/06 (`beer→alc`)
+- **Phân loại lại:** lon/chai bán nguyên (Coke, nước ngọt, bia chai, nước suối) → **DIRECT**; cocktail/nước ép → **RECIPE**; phí/phụ thu → **NON_STOCK**.
+- Mỗi món **DIRECT** phải có **một ingredient SKU + một ánh xạ POS 1:1** (deduct_qty=1). Nạp hàng loạt bằng file mẫu (§16.4).
+
+## 16.4. Quy trình chuẩn (one source of truth)
+1. **Import danh mục 1:1** bằng **`MAU_IMPORT_DANHMUC_1-1.xlsx`** (loại DIRECT; có **dropdown** Nhóm/Bộ phận/Đơn vị/Loại trừ kho → chặn trùng UoM tận gốc) — **một pass**, dứt điểm lỗ hổng Coke + nước ngọt + bia chai.
+2. **Tab Unmapped** (§14): nút resolve **theo `deduction_type`** — DIRECT → *"Tạo nhanh SKU 1:1"*, RECIPE → *"Tạo công thức"*, NON_STOCK → *"Không ảnh hưởng kho"*.
+3. **Kỷ luật:** món mới **vào danh mục trước khi bán**; tab Unmapped **trôi về gần rỗng** (nếu đầy món chuẩn = dấu hiệu danh mục bị buông).
+
+## 16.5. Lợi ích
+Hết cảnh món chuẩn rơi vào Unmapped · không còn công thức giả cho lon nước · danh mục thành **master list được kiểm soát** · dropdown chặn trùng đơn vị (CHAI/Chai) ngay từ khâu nhập — đúng chuẩn một hệ F&B chuyên nghiệp.
+
+## 16.6. Kết quả triển khai đồng bộ danh mục 1:1 (17/06/2026)
+
+Đã hoàn thành đồng bộ 15 mặt hàng đồ uống và bia bán nguyên (direct) từ `Soft-Beer.xlsx` vào hệ thống:
+1. **Danh sách sản phẩm**:
+   - **Bia (BEER)**: B5001 (Heineken - 33cl), B5002 (Tiger - 33cl), B5004 (Beer 333 - 33cl), B5005 (Saigon beer), B5007 (Sapporo draught), B5010 (Hanoi bottle), B5012 (Hanoi can).
+   - **Nước ngọt/Nước suối (SOFT_DRINK / WATER)**: M6001 (Coke), M6002 (Soda), M6004 (Sprite), M6006 (Diet Coke), M6008 (La Vie 1,5 L), M6010 (S.Pellegrino 0.5L), M6020 (Maison Vie 0.52L).
+   - **Cigar (OTHER)**: M9203 (Cigar Havana).
+2. **Cập nhật File mẫu**:
+   - `D:\Invenroty\MAU_IMPORT_DANHMUC_1-1.xlsx` (sheet `DANH_MUC_1-1`) được làm sạch và nạp đầy đủ 15 sản phẩm trên với cờ loại trừ kho là `DIRECT` và tỷ lệ trừ kho 1:1.
+3. **Đồng bộ cơ sở dữ liệu Supabase**:
+   - Nạp các nguyên liệu còn thiếu vào bảng `ingredients` với thuộc tính `is_beverage = true` và `purchase_category_id` tương ứng (`ALCOHOL` / `BEVERAGE`).
+   - Thiết lập công thức 1:1 trong bảng `recipes` cho các mặt hàng nước ngọt và Cigar (các mặt hàng bia đã có sẵn công thức chỉ cần liên kết).
+   - Đăng ký ánh xạ POS trong bảng `pos_alias_map` cho toàn bộ 15 mã giúp hệ thống tự động nhận diện khi import file bán hàng POS, tránh rơi vào tab Unmapped.
+   - Gắn nhãn bộ phận `BAR` trong bảng `ingredient_departments` để phân quyền quản lý kho.
+   - Các câu lệnh SQL INSERT tương ứng được lưu lại tại `supabase/seed.sql` và `supabase/seed_soft_beer_sync.sql`.
+4. **Cập nhật Logic mô phỏng**:
+   - `src/data/mockData.ts` được cập nhật trong `POS_MAPPING` với loại `"beer"` cho tất cả 15 mã trên, đảm bảo lượng tiêu hao mô phỏng chạy 1:1 trực tiếp trên ID nguyên liệu tương ứng.
+
