@@ -25,7 +25,9 @@ INSERT INTO uom (id, name, uom_type) VALUES
 ('NAI', 'Nải (NAI)', 'COUNT'),
 ('Goi', 'Gói/Bao (Goi)', 'COUNT'),
 ('Lon', 'Lon (Lon)', 'COUNT'),
-('Ly', 'Ly (Ly)', 'COUNT')
+('Ly', 'Ly (Ly)', 'COUNT'),
+('HOP', 'Hộp (HOP)', 'COUNT'),
+('Hop', 'Hộp (Hop)', 'COUNT')
 ON CONFLICT (id) DO NOTHING;
 
 -- Default Import Supplier
