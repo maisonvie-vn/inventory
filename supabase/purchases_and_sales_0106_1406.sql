@@ -612,163 +612,169 @@ INSERT INTO ingredients (
 ON CONFLICT (id) DO NOTHING;
 
 -- Missing Menu Items
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('000', '010626-J-SHEI-X598-T2610000220', 0.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('001', 'Chateau Guillemin La Gaffelière Saint Emilion Grand Cru (Mr.Hải Triều)', 0.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('B5001', 'Heineken - 33cl', 45000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('B5002', 'Tiger - 33cl', 45000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('B5004', 'Beer 333 - 33cl', 56000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('B5005', 'Saigon beer - bottle 33cl', 30000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('B5007', 'Sapporo draught', 45000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('B5010', 'Hanoi - bottle 33cl', 30000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('B5012', 'Hanoi - can', 30000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('B5016', 'Leffe Blond | Belgium 33cl', 130000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M3002', 'Russian Vodka Glass', 90000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M5001', 'Hennessy V.S.O.P Glass (Bếp - 1/6)', 0.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M5006', 'Poire William Glass', 220000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M6001', 'Coke', 30000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M6002', 'Soda', 30000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M6003', 'Tonic', 30000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M6004', 'Sprite', 40000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M6005', 'Fanta', 50000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M6006', 'Diet Coke', 30000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M6008', 'La Vie 1,5 L', 40000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M6009', 'Perrier (Sparkling water 0.25L)', 85000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M6010', 'S.Pellegrino (Sparkling water 0.5L)', 125000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M6014', 'Evian mineral water bottle 0.5L - France', 125000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M6020', 'Coke', 40000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7001', 'Fresh orange juice', 100000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7002', 'Fresh lemon juice', 60000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7003', 'Mixed Seasonal fresh fruit juice', 100000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7005', 'Water Melon Juice', 60000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7006', 'Mango Juice', 96000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7007', 'Passion juice', 60000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7008', 'Pomelo Juice', 100000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7009', 'Pineapple Juice', 100000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7012', 'Margarita', 220000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7014', 'Long Island Iced Tea', 150000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7015', 'Singapore Sling', 220000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7018', 'Black Russian', 150000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7020', 'Sangria', 220000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7028', 'Cucumber Lime Cooler', 120000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7030', 'Virgin Mojito', 120000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M7031', 'Mango Mojito', 120000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M8001', 'Gin and Tonic', 125000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M8002', 'Whisky & soda', 190000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9001', 'Espresso coffee', 50000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9002', 'Cappuccino', 50000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9003', 'Regular coffee', 35000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9004', 'Ice coffee', 35000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9005', 'Lipton tea', 25000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9006', 'Ice Lipton tea', 25000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9007', 'Hanoi - can', 56000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9008', 'Vietnamese ice tea', 25000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9009', 'Olong tea (pot)', 50000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9012', 'Americano Coffee', 50000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9013', 'Vietnamese tea Pot (Ấm Trà Mạn Thái Nguyên)', 50000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9014', 'Earl grey tea', 50000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9101', 'Red wine glass - FRANCE', 140000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9102', 'White wine glass - FRANCE', 160000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9104', 'White wine glass CHILE - Luis Felipe', 140000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9106', 'Dalat red wine glass', 120000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9107', 'Dalat white wine glass', 120000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9109', 'Rose wine France (glass)', 160000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9121', 'Pierre Larousse Sparkling Brut -  Glass', 400000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('M9204', 'Cigar Cohiba Siglo VI', 300000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1007', 'Seasonal vegetable soup', 0.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1008', 'French Onion soup', 155000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1009', 'Mussels soup', 190000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1013', 'Mixed garden salad', 0.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1020', 'French fries', 100000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1024', 'Mushroom soup', 135000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1025', 'Burgundy snails with garlic butter', 220000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1029', 'Assorted Ham, Salami with Cheese and Pate', 450000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1030', 'Salmon Sashimi', 710000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1031', 'Terrine Platter', 100000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1101', 'Chef''s salad', 250000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1107', 'Assorted ham, salami and terrine mustard Dijon', 150000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1111', 'Garden Vegetables', 250000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1115', 'Seared Ahi Tuna', 260000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1120', 'Creamy pumpkin soup', 0.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1121', 'Tuna carpaccio with quail egg, caviar, organic extra virgin olive oil', 290000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1122', 'Pan-seared foie gras with Calvados, brioche', 435000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R1123', 'Lobster salad with mango, avocado, and passion fruit dressing', 595000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R2141', 'Vietnamese buffalo fillet with pink peppercorn sauce', 455000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R2142', 'Wagyu ribeye with truffle mushroom sauce and potatoes', 1295000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R2144', 'Black Angus ribeye with Béarnaise sauce and potatoes', 535000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R2145', 'Beef Wellington with Madeira sauce', 595000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R2146', 'Burgundy-style beef stew with red wine, organic noodles and mushrooms', 395000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R2147', 'Chicken à la Provençale with mashed potatoes', 395000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R2148', 'Seared French duck breast with blackberry sauce and vegetables', 455000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R2149', 'Herb-crusted AUS lamb rack with organic extra virgin olive oil and asparagus', 595000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R2150', 'Braised AUS lamb shank with white broad beans', 495000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R3116', 'Ốc Bulot Vùng Burgundy Pháp (Pcs)', 25000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R3125', 'Seared Japanese scallops with beurre blanc and caviar', 695000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R3126', 'Sparkling wine poached Norwegian salmon with caviar', 435000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R3127', 'Miso-marinated black cod with organic asparagus and broccoli', 695000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R4001', 'Pasta with sauce Bolognaise', 210000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R4002', 'Pasta with sauce Carbonara', 210000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R4003', 'Pasta with Grogonzola chesse sauce', 210000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R4005', 'Pasta with tomatoes and shrimps', 230000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R5004', 'Profiteroles with vanilla ice cream and hot chocolate sauce', 150000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R5008', 'Ice cream (1 scoop)', 48000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R5009', 'Ice cream (2 scoops)', 78000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R5103', 'Vanilla cream brulee', 135000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R5108', 'Birthday cake', 250000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R5113', 'Chocolate mousse with organic dark cocoa', 125000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R5114', 'Grand Marnier soufflé with vanilla ice cream', 235000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R5117', 'Selection of French cheeses with cinnamon bread', 390000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R5118', 'Plate of seasonal fresh fruits', 195000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6081', 'Roasted Pork with Steam rice', 0.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R60811', 'Pork rib with Steam rice', 0.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6082', 'Pork stew with Steam rice', 0.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R60831', 'Hai Nam Chicken Rice', 0.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6131', 'Set Menu 350A', 350000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6132', 'Set Menu 350B', 350000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6133', 'Set menu 350C', 350000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6134', 'Set Menu 430A', 430000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6135', 'Set Menu 430B', 430000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6136', 'Set Menu 550A', 550000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6137', 'Set Menu 550B', 550000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6138', 'Set Menu 710A', 710000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6140', 'Set Menu 940', 940000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R61401', 'Set Menu 950', 950000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R614011', 'Set Menu 1050', 1050000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R61501', 'Set Menu 720E', 720000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6153', 'Set menu 710C', 710000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6154', 'Set Menu 430C', 430000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6167', 'Set Menu Two Courses 2+4', 195000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6188', 'Set Menu Four Courses A', 550000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6190', 'Set Menu Four Courses C', 550000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6191', 'Set Menu Four Courses D', 550000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6192', 'Set Menu Four Courses E', 550000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6193', 'Set Menu 450', 450000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6194', 'Set Menu 450B', 450000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6208', 'Dégustation Set Menu 4 to 7 Courses-1', 795000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6209', 'Dégustation Set Menu 4 to 7 Courses-2', 880000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6211', 'Dégustation Set Menu 4 to 7 Courses-4', 735000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6217', 'Dégustation Set Menu 4 to 7 Courses-10', 1199000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6231', 'Set Menu Four Courses F', 550000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6260004', 'Set Menu 470A', 470000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6260005', 'Set Menu 470B', 470000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6260007', 'Set Menu 600A', 600000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R6260010', 'Set Menu 770B', 770000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('R7004', 'Basa fillet roulade southern, broccoli and carrot flan', 0.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('SI0003', 'Arugula Salad', 160000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V1001', 'Chateau Noaillac Medoc Cru Bourgeois 37.5cl (R)', 735000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V2002', 'Larousse Chardonnay Sparkling, France', 1200000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V4045', 'Louis Latour - Bourgogne Pinot Noir', 2100000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V4064', 'F. Thienpont Causse Rouge Merlot, Bordeaux - Red', 995000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V4065', 'Baron P. de Rothschild Mouton Cadet Bordeaux - Red', 1300000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V4075', 'Louis Latour Pinot Noir Les Pierres Dorées - Red', 2850000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V4088', 'Château Baratet, Cabernet Sauvignon, France', 1100000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V4091', 'Bernard Magrez « Le Prélat » Rouge Côtes du Rhône Villages Laudun', 1500000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V6027', 'Luis Felipe Chardonnay', 1550000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V6034', 'Frontera Cabernet Sauvignon 75cl (Red)', 1200000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V6056', 'MontGras Estate Cabernet Sauvignon Chile', 1300000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V6059', 'Montes Classic Series Chardonnay (CuricóValley DO — Chile)', 1850000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V9410', 'Dufouleur Monopole Rose Wine', 595000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V9501', 'Dalat Wine Red - Bottle', 550000.0, false) ON CONFLICT (id) DO NOTHING;
-INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('V9502', 'Dalat Wine White - Bottle', 550000.0, false) ON CONFLICT (id) DO NOTHING;
+-- Ensure referenced menu items exist
+INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES
+('000', 'WENDY TOUR VIET NAM - Mr.Long', 0.0, false),
+('001', 'wine service (rượu quê)', 300000.0, false),
+('B5001', 'Heineken - 33cl', 90000.0, false),
+('B5002', 'Tiger - 33cl', 90000.0, false),
+('B5004', 'Beer 333 - 33cl', 70000.0, false),
+('B5005', 'Saigon beer - bottle 33cl', 70000.0, false),
+('B5007', 'Sapporo draught', 70000.0, false),
+('B5010', 'Hanoi - bottle 33cl', 70000.0, false),
+('B5012', 'Hanoi - can', 70000.0, false),
+('B5016', 'Leffe Blond | Belgium 33cl', 130000.0, false),
+('M3002', 'Russian Vodka Glass', 90000.0, false),
+('M5001', 'Hennessy V.S.O.P Glass (Bếp - 1/6)', 0.0, false),
+('M5006', 'Poire William Glass (Bù cost bàn Chú Nhân)', 0.0, false),
+('M6001', 'Coke', 50000.0, false),
+('M6002', 'Soda', 50000.0, false),
+('M6003', 'Tonic', 50000.0, false),
+('M6004', 'Sprite', 50000.0, false),
+('M6005', 'Fanta', 50000.0, false),
+('M6006', 'Diet Coke', 50000.0, false),
+('M6008', 'La Vie 1,5 L', 60000.0, false),
+('M6009', 'Perrier (Sparkling water 0.25L)', 135000.0, false),
+('M6010', 'S.Pellegrino (Sparkling water 0.5L)', 160000.0, false),
+('M6014', 'Evian mineral water bottle 0.5L - France', 125000.0, false),
+('M6020', 'Maison Vie, mineral water bottle 0,52L (9/6)', 20000.0, false),
+('M7001', 'Fresh orange juice', 120000.0, false),
+('M7002', 'Fresh lemon juice', 70000.0, false),
+('M7003', 'Mixed Seasonal fresh fruit juice', 120000.0, false),
+('M7005', 'Water Melon Juice', 70000.0, false),
+('M7006', 'Mango Juice', 120000.0, false),
+('M7007', 'Passion juice', 70000.0, false),
+('M7008', 'Pomelo Juice', 120000.0, false),
+('M7009', 'Pineapple Juice', 120000.0, false),
+('M7012', 'Margarita', 220000.0, false),
+('M7014', 'Long Island Iced Tea', 150000.0, false),
+('M7015', 'Singapore Sling', 220000.0, false),
+('M7018', 'Black Russian', 220000.0, false),
+('M7020', 'Sangria', 220000.0, false),
+('M7028', 'Cucumber Lime Cooler', 120000.0, false),
+('M7030', 'Virgin Mojito', 120000.0, false),
+('M7031', 'Mango Mojito', 120000.0, false),
+('M8001', 'Gin and Tonic', 150000.0, false),
+('M8002', 'Whisky & soda', 220000.0, false),
+('M9001', 'Espresso coffee', 50000.0, false),
+('M9002', 'Cappuccino', 50000.0, false),
+('M9003', 'Regular coffee', 35000.0, false),
+('M9004', 'Ice coffee', 35000.0, false),
+('M9005', 'Lipton tea', 50000.0, false),
+('M9006', 'Ice Lipton tea', 25000.0, false),
+('M9007', 'Vietnamese tea', 25000.0, false),
+('M9008', 'Vietnamese ice tea', 25000.0, false),
+('M9009', 'Olong tea (pot)', 50000.0, false),
+('M9012', 'Americano Coffee', 50000.0, false),
+('M9013', 'Vietnamese tea Pot (Ấm Trà Mạn Thái Nguyên)', 50000.0, false),
+('M9014', 'Earl grey tea', 70000.0, false),
+('M9101', 'Red wine glass - FRANCE  (Bar - 6/6)', 0.0, false),
+('M9102', 'White wine glass - FRANCE', 160000.0, false),
+('M9104', 'White wine glass CHILE - Luis Felipe', 230000.0, false),
+('M9106', 'Dalat red wine glass', 120000.0, false),
+('M9107', 'Dalat white wine glass', 120000.0, false),
+('M9109', 'Rose wine France (glass)', 230000.0, false),
+('M9121', 'Pierre Larousse Sparkling Brut -  Glass (Bếp - 2/6)', 0.0, false),
+('M9204', 'Cigar Cohiba Siglo VI', 300000.0, false),
+('R1007', 'Seasonal vegetable soup', 0.0, false),
+('R1008', 'French Onion soup', 155000.0, false),
+('R1009', 'Mussels soup', 190000.0, false),
+('R1013', 'Mixed garden salad', 160000.0, false),
+('R1020', 'French fries', 100000.0, false),
+('R1024', 'Mushroom soup', 135000.0, false),
+('R1025', 'Burgundy snails with garlic butter', 220000.0, false),
+('R1029', 'Assorted Ham, Salami with Cheese and Pate', 650000.0, false),
+('R1030', 'Salmon Sashimi', 710000.0, false),
+('R1031', 'Terrine Platter', 150000.0, false),
+('R1101', 'Chef''s salad', 250000.0, false),
+('R1107', 'Assorted ham, salami and terrine mustard Dijon', 360000.0, false),
+('R1111', 'Garden Vegetables', 250000.0, false),
+('R1115', 'Seared Ahi Tuna', 260000.0, false),
+('R1120', 'Creamy pumpkin soup', 90000.0, false),
+('R1121', 'Tuna carpaccio with quail egg, caviar, organic extra virgin olive oil', 290000.0, false),
+('R1122', 'Pan-seared foie gras with Calvados, brioche', 435000.0, false),
+('R1123', 'Lobster salad with mango, avocado, and passion fruit dressing', 595000.0, false),
+('R2141', 'Vietnamese buffalo fillet with pink peppercorn sauce', 455000.0, false),
+('R2142', 'Wagyu ribeye with truffle mushroom sauce and potatoes', 1295000.0, false),
+('R2144', 'Black Angus ribeye with Béarnaise sauce and potatoes', 685000.0, false),
+('R2145', 'Beef Wellington with Madeira sauce', 595000.0, false),
+('R2146', 'Burgundy-style beef stew with red wine, organic noodles and mushrooms', 395000.0, false),
+('R2147', 'Chicken à la Provençale with mashed potatoes', 395000.0, false),
+('R2148', 'Seared French duck breast with blackberry sauce and vegetables', 455000.0, false),
+('R2149', 'Herb-crusted AUS lamb rack with organic extra virgin olive oil and asparagus', 695000.0, false),
+('R2150', 'Braised AUS lamb shank with white broad beans', 495000.0, false),
+('R3116', 'Ốc Bulot Vùng Burgundy Pháp (Pcs)', 25000.0, false),
+('R3125', 'Seared Japanese scallops with beurre blanc and caviar', 695000.0, false),
+('R3126', 'Sparkling wine poached Norwegian salmon with caviar', 435000.0, false),
+('R3127', 'Miso-marinated black cod with organic asparagus and broccoli', 695000.0, false),
+('R4001', 'Pasta with sauce Bolognaise', 210000.0, false),
+('R4002', 'Pasta with sauce Carbonara', 210000.0, false),
+('R4003', 'Pasta with Grogonzola chesse sauce', 210000.0, false),
+('R4005', 'Pasta with tomatoes and shrimps', 230000.0, false),
+('R5004', 'Profiteroles with vanilla ice cream and hot chocolate sauce', 150000.0, false),
+('R5008', 'Ice cream (1 scoop)', 73710.0, false),
+('R5009', 'Ice cream (2 scoops)', 78000.0, false),
+('R5103', 'Vanilla cream brulee', 135000.0, false),
+('R5108', 'Birthday cake', 250000.0, false),
+('R5113', 'Chocolate mousse with organic dark cocoa', 175000.0, false),
+('R5114', 'Grand Marnier soufflé with vanilla ice cream', 235000.0, false),
+('R5117', 'Selection of French cheeses with cinnamon bread', 390000.0, false),
+('R5118', 'Plate of seasonal fresh fruits', 250000.0, false),
+('R6081', 'Roasted Pork with Steam rice', 0.0, false),
+('R60811', 'Pork rib with Steam rice', 0.0, false),
+('R6082', 'Pork stew with Steam rice', 0.0, false),
+('R60831', 'Hai Nam Chicken Rice', 0.0, false),
+('R6131', 'Set Menu 350A', 350000.0, false),
+('R6132', 'Set Menu 350B', 350000.0, false),
+('R6133', 'Set menu 350C', 430000.0, false),
+('R6134', 'Set Menu 550A', 550000.0, false),
+('R6135', 'Set Menu 550B', 550000.0, false),
+('R6136', 'Set Menu 550A', 550000.0, false),
+('R6137', 'Set Menu 550B', 550000.0, false),
+('R6138', 'Set Menu 710A', 710000.0, false),
+('R6140', 'Set Menu 940', 940000.0, false),
+('R61401', 'Set Menu 950', 950000.0, false),
+('R614011', 'Set Menu 1050', 1050000.0, false),
+('R61501', 'Set Menu 720E', 720000.0, false),
+('R6153', 'Set menu 710C', 710000.0, false),
+('R6154', 'Set Menu 430C', 430000.0, false),
+('R6167', 'Set Menu Two Courses 2+4', 195000.0, false),
+('R6188', 'Set Menu Four Courses A', 550000.0, false),
+('R6190', 'Set Menu Four Courses C', 550000.0, false),
+('R6191', 'Set Menu Four Courses D', 550000.0, false),
+('R6192', 'Set Menu Four Courses E', 550000.0, false),
+('R6193', 'Set Menu 500A', 500000.0, false),
+('R6194', 'Set Menu 450B', 450000.0, false),
+('R6208', 'Dégustation Set Menu 4 to 7 Courses-1', 795000.0, false),
+('R6209', 'Dégustation Set Menu 4 to 7 Courses-2', 880000.0, false),
+('R6211', 'Dégustation Set Menu 4 to 7 Courses-4', 735000.0, false),
+('R6212', 'Dégustation Set Menu 4 to 7 Courses-5', 1199000.0, true),
+('R6213', 'Dégustation Set Menu 4 to 7 Courses-6', 1199000.0, true),
+('R6217', 'Dégustation Set Menu 4 to 7 Courses-10', 1199000.0, false),
+('R6218', 'Dégustation Set Menu 4 to 7 Courses-11', 1199000.0, true),
+('R6231', 'Set Menu Four Courses F', 550000.0, false),
+('R6260004', 'Set Menu 470A', 470000.0, false),
+('R6260005', 'Set Menu 470B', 470000.0, false),
+('R6260007', 'Set Menu 600A', 600000.0, false),
+('R6260010', 'Set Menu 770B', 770000.0, false),
+('R7004', 'Basa fillet roulade southern, broccoli and carrot flan', 0.0, false),
+('SI0003', 'Arugula Salad', 160000.0, false),
+('V1001', 'Chateau Noaillac Medoc Cru Bourgeois 37.5cl (R)', 735000.0, false),
+('V2002', 'Larousse Chardonnay Sparkling, France', 1200000.0, false),
+('V4045', 'Louis Latour - Bourgogne Pinot Noir', 2100000.0, false),
+('V4064', 'F. Thienpont Causse Rouge Merlot, Bordeaux - Red', 995000.0, false),
+('V4065', 'Baron P. de Rothschild Mouton Cadet Bordeaux - Red', 1300000.0, false),
+('V4075', 'Louis Latour Pinot Noir Les Pierres Dorées - Red', 2850000.0, false),
+('V4088', 'Château Baratet, Cabernet Sauvignon, France', 1100000.0, false),
+('V4091', 'Bernard Magrez « Le Prélat » Rouge Côtes du Rhône Villages Laudun', 1500000.0, false),
+('V6027', 'Luis Felipe Chardonnay', 1550000.0, false),
+('V6034', 'Frontera Cabernet Sauvignon 75cl (Red)', 1200000.0, false),
+('V6056', 'MontGras Estate Cabernet Sauvignon Chile', 1300000.0, false),
+('V6059', 'Montes Classic Series Chardonnay (CuricóValley DO — Chile)', 1850000.0, false),
+('V9410', 'Dufouleur Monopole Rose Wine', 595000.0, false),
+('V9501', 'Dalat Wine Red - Bottle', 650000.0, false),
+('V9502', 'Dalat Wine White - Bottle', 550000.0, false)
+ON CONFLICT (id) DO NOTHING;
 
 -- Purchase Orders
 INSERT INTO purchase_orders (id, po_number, supplier_id, status, source, expected_date) VALUES ('a1f0d674-e630-56af-a0bc-d7759450fe74', 'PO-0602-AN', '90000000-0000-0000-0000-000000000004', 'RECEIVED', 'AUTO_PO', '2026-06-02') ON CONFLICT (id) DO NOTHING;
