@@ -15839,6 +15839,3776 @@
         }
       ],
       "notes": "Món trực tiếp 1:1."
+    },
+    "M9202": {
+      "code": "M9202",
+      "name": "Cigarettes Imported",
+      "course": "Beverage",
+      "category": "Cigar",
+      "menu_role": "",
+      "price": 65000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9202",
+          "qty_net": 1.0,
+          "unit": "PACK",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 36000.0,
+          "line_cost": 36000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Cigarettes Imported."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9402": {
+      "code": "M9402",
+      "name": "Bailey",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 850000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9402",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 340000.0,
+          "line_cost": 340000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Bailey."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9403": {
+      "code": "M9403",
+      "name": "Campari",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 820000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9403",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 330000.0,
+          "line_cost": 330000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Campari."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9405": {
+      "code": "M9405",
+      "name": "Cointrau",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 850000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9405",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 340000.0,
+          "line_cost": 340000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Cointrau."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9406": {
+      "code": "M9406",
+      "name": "Grand Marnier",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 1500000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9406",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 600000.0,
+          "line_cost": 600000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Grand Marnier."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9407": {
+      "code": "M9407",
+      "name": "Kalua",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 700000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9407",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 280000.0,
+          "line_cost": 280000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Kalua."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9408": {
+      "code": "M9408",
+      "name": "Malibu",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 700000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9408",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 280000.0,
+          "line_cost": 280000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Malibu."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9409": {
+      "code": "M9409",
+      "name": "Martini Bianco",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 650000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9409",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 260000.0,
+          "line_cost": 260000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Martini Bianco."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9410": {
+      "code": "M9410",
+      "name": "Martini Dry",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 700000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9410",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 280000.0,
+          "line_cost": 280000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Martini Dry."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9411": {
+      "code": "M9411",
+      "name": "Martini Rosso",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 650000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9411",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 260000.0,
+          "line_cost": 260000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Martini Rosso."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9413": {
+      "code": "M9413",
+      "name": "Porto",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 820000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9413",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 330000.0,
+          "line_cost": 330000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Porto."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9414": {
+      "code": "M9414",
+      "name": "Ricard",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 750000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9414",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 300000.0,
+          "line_cost": 300000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Ricard."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9507": {
+      "code": "M9507",
+      "name": "Mens Vodka",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 90000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9507",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 35000.0,
+          "line_cost": 35000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Mens Vodka."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9508": {
+      "code": "M9508",
+      "name": "Lua moi 500ml",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 180000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9508",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 72000.0,
+          "line_cost": 72000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Lua moi 500ml."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9512": {
+      "code": "M9512",
+      "name": "Smirnoff Red Label",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 520000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9512",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 210000.0,
+          "line_cost": 210000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Smirnoff Red Label."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9513": {
+      "code": "M9513",
+      "name": "Vodka Hanoi 300ml",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 100000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9513",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 40000.0,
+          "line_cost": 40000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Vodka Hanoi 300ml."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9514": {
+      "code": "M9514",
+      "name": "Vodka Hanoi 500ml",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 150000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9514",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 61000.0,
+          "line_cost": 61000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Vodka Hanoi 500ml."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9602": {
+      "code": "M9602",
+      "name": "Ballentines 12",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 1250000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9602",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 500000.0,
+          "line_cost": 500000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Ballentines 12."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9603": {
+      "code": "M9603",
+      "name": "Ballentines 17",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 2380000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9603",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 950000.0,
+          "line_cost": 950000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Ballentines 17."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9604": {
+      "code": "M9604",
+      "name": "Ballentines 21",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 3750000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9604",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 1500000.0,
+          "line_cost": 1500000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Ballentines 21."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9606": {
+      "code": "M9606",
+      "name": "Ballentines Finese",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 900000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9606",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 280000.0,
+          "line_cost": 280000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Ballentines Finese."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9609": {
+      "code": "M9609",
+      "name": "Chivas Regal 0.75L (12 years old)",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 1300000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9609",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 520000.0,
+          "line_cost": 520000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Chivas Regal 0.75L (12 years old)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9611": {
+      "code": "M9611",
+      "name": "Creame de cassic",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 620000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9611",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 250000.0,
+          "line_cost": 250000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Creame de cassic."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9612": {
+      "code": "M9612",
+      "name": "Gordon Gin Bottle",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 580000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9612",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 230000.0,
+          "line_cost": 230000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Gordon Gin Bottle."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9620": {
+      "code": "M9620",
+      "name": "J - B",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 920000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9620",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 370000.0,
+          "line_cost": 370000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị J - B."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9621": {
+      "code": "M9621",
+      "name": "Jack Daniel",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 1120000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9621",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 450000.0,
+          "line_cost": 450000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Jack Daniel."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9623": {
+      "code": "M9623",
+      "name": "Jimbeam",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 580000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9623",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 230000.0,
+          "line_cost": 230000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Jimbeam."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9629": {
+      "code": "M9629",
+      "name": "Johnny Walker red label",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 710000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9629",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 285000.0,
+          "line_cost": 285000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Johnny Walker red label."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9632": {
+      "code": "M9632",
+      "name": "Marcallan 12 year old",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 6620000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9632",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 2650000.0,
+          "line_cost": 2650000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Marcallan 12 year old."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9636": {
+      "code": "M9636",
+      "name": "Single Barrel Jack Daniel's",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 2990000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9636",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 2005000.0,
+          "line_cost": 2005000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Single Barrel Jack Daniel's."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9642": {
+      "code": "M9642",
+      "name": "GlenAllaChie 11",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 6120000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9642",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 2450000.0,
+          "line_cost": 2450000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị GlenAllaChie 11."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9643": {
+      "code": "M9643",
+      "name": "FinLaggan 58",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 5620000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9643",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 2250000.0,
+          "line_cost": 2250000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị FinLaggan 58."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9644": {
+      "code": "M9644",
+      "name": "Liqueur Bols Cherry Brandy 70cl",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 1250000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9644",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 500000.0,
+          "line_cost": 500000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Liqueur Bols Cherry Brandy 70cl."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9645": {
+      "code": "M9645",
+      "name": "Liqueur D.O.M Benedictine 70cl",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 2620000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9645",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 1050000.0,
+          "line_cost": 1050000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Liqueur D.O.M Benedictine 70cl."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9702": {
+      "code": "M9702",
+      "name": "Bacardi Light",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 600000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9702",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 240000.0,
+          "line_cost": 240000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Bacardi Light."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9705": {
+      "code": "M9705",
+      "name": "Tequila light",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 900000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9705",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 360000.0,
+          "line_cost": 360000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Tequila light."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9801": {
+      "code": "M9801",
+      "name": "Creme de cassic (Triple Sec)",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 710000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9801",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 285000.0,
+          "line_cost": 285000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Creme de cassic (Triple Sec)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9802": {
+      "code": "M9802",
+      "name": "Chabot Napoleon Special Reserve Armagnac",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 2000000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9802",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 800000.0,
+          "line_cost": 800000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Chabot Napoleon Special Reserve Armagnac."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M98021": {
+      "code": "M98021",
+      "name": "Armagnac bottle",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 2000000.0,
+      "ingredients": [
+        {
+          "ing_id": "M98021",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 800000.0,
+          "line_cost": 800000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Armagnac bottle."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9803": {
+      "code": "M9803",
+      "name": "Framboise",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 2600000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9803",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 1041700.0,
+          "line_cost": 1041700.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Framboise."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9804": {
+      "code": "M9804",
+      "name": "Mirabelle (Massenez Wild Raspberry)",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 1990000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9804",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 796600.0,
+          "line_cost": 796600.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Mirabelle (Massenez Wild Raspberry)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9805": {
+      "code": "M9805",
+      "name": "Massenez Poire Williams",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 3410000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9805",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 1365000.0,
+          "line_cost": 1365000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Massenez Poire Williams."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9806": {
+      "code": "M9806",
+      "name": "Parisiennes Napoleon X.O 70cl",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 500000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9806",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 200000.0,
+          "line_cost": 200000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Parisiennes Napoleon X.O 70cl."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9808": {
+      "code": "M9808",
+      "name": "Hennessy VSOP 0.7 liter",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 2380000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9808",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 950000.0,
+          "line_cost": 950000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Hennessy VSOP 0.7 liter."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9809": {
+      "code": "M9809",
+      "name": "Hennessy XO",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 9250000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9809",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 3700000.0,
+          "line_cost": 3700000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Hennessy XO."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "M9812": {
+      "code": "M9812",
+      "name": "Remy Martin VSOP",
+      "course": "Beverage",
+      "category": "Spirit",
+      "menu_role": "",
+      "price": 2300000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9812",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 920000.0,
+          "line_cost": 920000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Remy Martin VSOP."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP004": {
+      "code": "NLP004",
+      "name": "Trà olong  Tam Châu 100g",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 190000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP004",
+          "qty_net": 1.0,
+          "unit": "BAG",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 74058.0,
+          "line_cost": 74058.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Trà olong  Tam Châu 100g."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP3021": {
+      "code": "NLP3021",
+      "name": "Sữa tươi TH True Milk Nguyên chất 1L",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 80000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP3021",
+          "qty_net": 1.0,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 33000.0,
+          "line_cost": 33000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Sữa tươi TH True Milk Nguyên chất 1L."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP30251": {
+      "code": "NLP30251",
+      "name": "Đường nước Hàn Quốc",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 60000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP30251",
+          "qty_net": 1.0,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 22400.0,
+          "line_cost": 22400.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Đường nước Hàn Quốc."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP600351": {
+      "code": "NLP600351",
+      "name": "Chè mạn",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 420000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP600351",
+          "qty_net": 1.0,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 168000.0,
+          "line_cost": 168000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Chè mạn."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP60038": {
+      "code": "NLP60038",
+      "name": "Chanh leo",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 80000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60038",
+          "qty_net": 1.0,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 30000.0,
+          "line_cost": 30000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Chanh leo."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP60057": {
+      "code": "NLP60057",
+      "name": "Cà rốt tươi",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 40000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60057",
+          "qty_net": 1.0,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 15000.0,
+          "line_cost": 15000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Cà rốt tươi."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP60058": {
+      "code": "NLP60058",
+      "name": "Gừng tươi",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 100000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60058",
+          "qty_net": 1.0,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 40000.0,
+          "line_cost": 40000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Gừng tươi."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP60059": {
+      "code": "NLP60059",
+      "name": "Bạc hà tươi",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 120000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60059",
+          "qty_net": 1.0,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 50000.0,
+          "line_cost": 50000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Bạc hà tươi."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP60061": {
+      "code": "NLP60061",
+      "name": "Dưa chuột tươi",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 40000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60061",
+          "qty_net": 1.0,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 15000.0,
+          "line_cost": 15000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Dưa chuột tươi."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP9001": {
+      "code": "NLP9001",
+      "name": "Cafe hương chồn 500g",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 380000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9001",
+          "qty_net": 1.0,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 153000.0,
+          "line_cost": 153000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Cafe hương chồn 500g."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP9002": {
+      "code": "NLP9002",
+      "name": "Cafe season 500g/ túi",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 500000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9002",
+          "qty_net": 1.0,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 201800.0,
+          "line_cost": 201800.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Cafe season 500g/ túi."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP90023": {
+      "code": "NLP90023",
+      "name": "Cafe hạt Javador 73 Italya",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 770000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP90023",
+          "qty_net": 1.0,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 308000.0,
+          "line_cost": 308000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Cafe hạt Javador 73 Italya."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP9003": {
+      "code": "NLP9003",
+      "name": "Trà lipton túi lọc (25g/h)",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 90000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9003",
+          "qty_net": 1.0,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 35000.0,
+          "line_cost": 35000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Trà lipton túi lọc (25g/h)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP9004": {
+      "code": "NLP9004",
+      "name": "Trà Kim Anh (sen, nhài)",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 60000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9004",
+          "qty_net": 1.0,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 25000.0,
+          "line_cost": 25000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Trà Kim Anh (sen, nhài)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP9005": {
+      "code": "NLP9005",
+      "name": "Đường que",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 30000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9005",
+          "qty_net": 1.0,
+          "unit": "PACK",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 13000.0,
+          "line_cost": 13000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Đường que."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP9006": {
+      "code": "NLP9006",
+      "name": "Sữa đặc",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 40000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9006",
+          "qty_net": 1.0,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 17788.0,
+          "line_cost": 17788.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Sữa đặc."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP9020": {
+      "code": "NLP9020",
+      "name": "Trà gừng",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 100000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9020",
+          "qty_net": 1.0,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 38000.0,
+          "line_cost": 38000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Trà gừng."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP9024": {
+      "code": "NLP9024",
+      "name": "Trà Eargrey",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 110000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9024",
+          "qty_net": 1.0,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 45000.0,
+          "line_cost": 45000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Trà Eargrey."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "NLP9026": {
+      "code": "NLP9026",
+      "name": "Trà hoa cúc",
+      "course": "Ingredient",
+      "category": "Raw Material",
+      "menu_role": "",
+      "price": 280000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9026",
+          "qty_net": 1.0,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 110000.0,
+          "line_cost": 110000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Trà hoa cúc."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "PKG-001": {
+      "code": "PKG-001",
+      "name": "Cốc giấy mang về 270ml",
+      "course": "Non-Stock",
+      "category": "Packaging",
+      "menu_role": "",
+      "price": 0.0,
+      "ingredients": [
+        {
+          "ing_id": "PKG-001",
+          "qty_net": 1.0,
+          "unit": "PIECE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 1500.0,
+          "line_cost": 1500.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Cốc giấy mang về 270ml."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "PKG-002": {
+      "code": "PKG-002",
+      "name": "Nắp cốc mang về",
+      "course": "Non-Stock",
+      "category": "Packaging",
+      "menu_role": "",
+      "price": 0.0,
+      "ingredients": [
+        {
+          "ing_id": "PKG-002",
+          "qty_net": 1.0,
+          "unit": "PIECE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 500.0,
+          "line_cost": 500.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Nắp cốc mang về."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "PKG-003": {
+      "code": "PKG-003",
+      "name": "Ống hút giấy",
+      "course": "Non-Stock",
+      "category": "Packaging",
+      "menu_role": "",
+      "price": 0.0,
+      "ingredients": [
+        {
+          "ing_id": "PKG-003",
+          "qty_net": 1.0,
+          "unit": "PIECE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 500.0,
+          "line_cost": 500.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Ống hút giấy."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "PKG-004": {
+      "code": "PKG-004",
+      "name": "Túi giấy mang về",
+      "course": "Non-Stock",
+      "category": "Packaging",
+      "menu_role": "",
+      "price": 0.0,
+      "ingredients": [
+        {
+          "ing_id": "PKG-004",
+          "qty_net": 1.0,
+          "unit": "PIECE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 2000.0,
+          "line_cost": 2000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Túi giấy mang về."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "S1003": {
+      "code": "S1003",
+      "name": "Grenadine (Siro Lựu)",
+      "course": "Beverage",
+      "category": "Other",
+      "menu_role": "",
+      "price": 500000.0,
+      "ingredients": [
+        {
+          "ing_id": "S1003",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 200000.0,
+          "line_cost": 200000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Grenadine (Siro Lựu)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "S1004": {
+      "code": "S1004",
+      "name": "Syrup - Pineapple 70cl",
+      "course": "Beverage",
+      "category": "Other",
+      "menu_role": "",
+      "price": 650000.0,
+      "ingredients": [
+        {
+          "ing_id": "S1004",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 260000.0,
+          "line_cost": 260000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Syrup - Pineapple 70cl."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V1008": {
+      "code": "V1008",
+      "name": "La Palma Cabernet Sauvignon 37.5cl, Chile",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 310000.0,
+      "ingredients": [
+        {
+          "ing_id": "V1008",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 123750.0,
+          "line_cost": 123750.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị La Palma Cabernet Sauvignon 37.5cl, Chile."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V2006": {
+      "code": "V2006",
+      "name": "Champagne Taittinger Brut Reserve NV, France",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 3390000.0,
+      "ingredients": [
+        {
+          "ing_id": "V2006",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 1732000.0,
+          "line_cost": 1732000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Champagne Taittinger Brut Reserve NV, France."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V2009": {
+      "code": "V2009",
+      "name": "Champagne Moët & Chandon",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 2990000.0,
+      "ingredients": [
+        {
+          "ing_id": "V2009",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 1260000.0,
+          "line_cost": 1260000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Champagne Moët & Chandon."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V2015": {
+      "code": "V2015",
+      "name": "Chanoine Frères Brut NV (Champagne AOC — France)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 2720000.0,
+      "ingredients": [
+        {
+          "ing_id": "V2015",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 1089000.0,
+          "line_cost": 1089000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Chanoine Frères Brut NV (Champagne AOC — France)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V2016": {
+      "code": "V2016",
+      "name": "Jean-Noël Haton Cuvée Classic Brut NV ( Champagne AOC, Damery)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 3580000.0,
+      "ingredients": [
+        {
+          "ing_id": "V2016",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 1430000.0,
+          "line_cost": 1430000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Jean-Noël Haton Cuvée Classic Brut NV ( Champagne AOC, Damery)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V2018": {
+      "code": "V2018",
+      "name": "Crémant de Bourgogne Brut Vignerons de Buxy, Chardonnay, Aligoté, Gamay",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1780000.0,
+      "ingredients": [
+        {
+          "ing_id": "V2018",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 712000.0,
+          "line_cost": 712000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Crémant de Bourgogne Brut Vignerons de Buxy, Chardonnay, Aligoté, Gamay."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V3002": {
+      "code": "V3002",
+      "name": "Baron Philippe de Rothschild, Mouton Cadet Réserve, Sauternes Half Bottle, France",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1335000.0,
+      "ingredients": [
+        {
+          "ing_id": "V3002",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 725340.0,
+          "line_cost": 725340.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Baron Philippe de Rothschild, Mouton Cadet Réserve, Sauternes Half Bottle, France."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V3003": {
+      "code": "V3003",
+      "name": "Baron Philippe de Rothschild, Mouton Cadet Réserve, Sauternes full  Bottle, France",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 2690000.0,
+      "ingredients": [
+        {
+          "ing_id": "V3003",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 1346730.0,
+          "line_cost": 1346730.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Baron Philippe de Rothschild, Mouton Cadet Réserve, Sauternes full  Bottle, France."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4008": {
+      "code": "V4008",
+      "name": "M. Chapoutier Belleruche, Côtes du Rhône Rouge",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 990000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4008",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 396000.0,
+          "line_cost": 396000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị M. Chapoutier Belleruche, Côtes du Rhône Rouge."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4009": {
+      "code": "V4009",
+      "name": "Les Hauts de La Gaffeliere, Bordeaux Rouge",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1090000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4009",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 441000.0,
+          "line_cost": 441000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Les Hauts de La Gaffeliere, Bordeaux Rouge."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4014": {
+      "code": "V4014",
+      "name": "Château Noaillac Cru Bourgeois",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1350000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4014",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 600000.0,
+          "line_cost": 600000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Château Noaillac Cru Bourgeois."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4017": {
+      "code": "V4017",
+      "name": "Château Haut-Rocher Grand Cru",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1890000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4017",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 867000.0,
+          "line_cost": 867000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Château Haut-Rocher Grand Cru."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4062": {
+      "code": "V4062",
+      "name": "Château Moulin De La Faye",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 680000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4062",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 270000.0,
+          "line_cost": 270000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Château Moulin De La Faye."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4063": {
+      "code": "V4063",
+      "name": "Chantecaille Bordeaux AOC Red",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 570000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4063",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 229000.0,
+          "line_cost": 229000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Chantecaille Bordeaux AOC Red."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4068": {
+      "code": "V4068",
+      "name": "Nicolas Thienpont, Chateau Puygueraud,(Merlot/Cab Franc/ Malbec) Francs Cotes de Bordeaux",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 2170000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4068",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 867000.0,
+          "line_cost": 867000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Nicolas Thienpont, Chateau Puygueraud,(Merlot/Cab Franc/ Malbec) Francs Cotes de Bordeaux."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4069": {
+      "code": "V4069",
+      "name": "Alain Brumont, Chateau Bouscasse, Madiran - Red",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 2200000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4069",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 880000.0,
+          "line_cost": 880000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Alain Brumont, Chateau Bouscasse, Madiran - Red."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4071": {
+      "code": "V4071",
+      "name": "Baron P. de Rothschild Mouton Cadet Reserve Pauillac - Red",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 2650000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4071",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 1059300.0,
+          "line_cost": 1059300.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Baron P. de Rothschild Mouton Cadet Reserve Pauillac - Red."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4072": {
+      "code": "V4072",
+      "name": "Château La Garenne Pomerol - Red",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 2950000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4072",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 1178100.0,
+          "line_cost": 1178100.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Château La Garenne Pomerol - Red."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4074": {
+      "code": "V4074",
+      "name": "Louis Latour Domaine De Valmoissine - Red",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 730000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4074",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 292500.0,
+          "line_cost": 292500.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Louis Latour Domaine De Valmoissine - Red."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4076": {
+      "code": "V4076",
+      "name": "Guigal, Cotes du Rhone - Red",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1600000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4076",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 638000.0,
+          "line_cost": 638000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Guigal, Cotes du Rhone - Red."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4077": {
+      "code": "V4077",
+      "name": "Dufouleur Monopole Red Wine Bt",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 510000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4077",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 203000.0,
+          "line_cost": 203000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Dufouleur Monopole Red Wine Bt."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4081": {
+      "code": "V4081",
+      "name": "Château La Branne Médoc Cru Bourgeois, France",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1610000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4081",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 643500.0,
+          "line_cost": 643500.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Château La Branne Médoc Cru Bourgeois, France."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4082": {
+      "code": "V4082",
+      "name": "CHÂTEAU HAUT SAINT BRICE (Merlot - Cabernet Franc) Saint-Émilion Grand Cru",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1800000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4082",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 721710.0,
+          "line_cost": 721710.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị CHÂTEAU HAUT SAINT BRICE (Merlot - Cabernet Franc) Saint-Émilion Grand Cru."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4083": {
+      "code": "V4083",
+      "name": "CHÂTEAU MONT- PÉRAT (Merlot/Cabernet Franc/Cabernet Sauvignon) Bordeaux",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1960000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4083",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 782100.0,
+          "line_cost": 782100.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị CHÂTEAU MONT- PÉRAT (Merlot/Cabernet Franc/Cabernet Sauvignon) Bordeaux."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4089": {
+      "code": "V4089",
+      "name": "Chateau Haut Mouleyre AOP Bordeaux Rouge",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 400000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4089",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 160000.0,
+          "line_cost": 160000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Chateau Haut Mouleyre AOP Bordeaux Rouge."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4090": {
+      "code": "V4090",
+      "name": "M. Chapoutier « Les Meysonniers »Crozes-Hermitage Syrah (organic)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 2350000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4090",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 940500.0,
+          "line_cost": 940500.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị M. Chapoutier « Les Meysonniers »Crozes-Hermitage Syrah (organic)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V4092": {
+      "code": "V4092",
+      "name": "Grand Bateau Bordeaux Rouge (by Beychevelle) (Merlot · CS · AOC)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 980000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4092",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 392000.0,
+          "line_cost": 392000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Grand Bateau Bordeaux Rouge (by Beychevelle) (Merlot · CS · AOC)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5004": {
+      "code": "V5004",
+      "name": "Les Hauts de La Gaffeliere, Bordeaux Blanc",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1090000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5004",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 441000.0,
+          "line_cost": 441000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Les Hauts de La Gaffeliere, Bordeaux Blanc."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5027": {
+      "code": "V5027",
+      "name": "Chantecaille Bordeaux AOC White",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 570000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5027",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 229000.0,
+          "line_cost": 229000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Chantecaille Bordeaux AOC White."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5028": {
+      "code": "V5028",
+      "name": "F. Thienpont Sauvignon Blanc - White",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1060000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5028",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 426000.0,
+          "line_cost": 426000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị F. Thienpont Sauvignon Blanc - White."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5029": {
+      "code": "V5029",
+      "name": "Ronan By Clinet (by Chateau Clinet, Pomerol) Bordauex Blanc - White",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1240000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5029",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 498000.0,
+          "line_cost": 498000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Ronan By Clinet (by Chateau Clinet, Pomerol) Bordauex Blanc - White."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5030": {
+      "code": "V5030",
+      "name": "Nicolas Thienpont, Chateau Puygueraud,  Francs Cotes de Bordeaux -White",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1980000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5030",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 792000.0,
+          "line_cost": 792000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Nicolas Thienpont, Chateau Puygueraud,  Francs Cotes de Bordeaux -White."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5032": {
+      "code": "V5032",
+      "name": "Louis Latour Chablis La Chanfleure, Chardonnay  - White",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1650000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5032",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 660000.0,
+          "line_cost": 660000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Louis Latour Chablis La Chanfleure, Chardonnay  - White."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5033": {
+      "code": "V5033",
+      "name": "Louis Latour Pouilly-Fuissé - White",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 2010000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5033",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 802500.0,
+          "line_cost": 802500.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Louis Latour Pouilly-Fuissé - White."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5034": {
+      "code": "V5034",
+      "name": "Dufouleur Monopole White wine Bt",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 510000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5034",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 203000.0,
+          "line_cost": 203000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Dufouleur Monopole White wine Bt."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5037": {
+      "code": "V5037",
+      "name": "PASCAL JOLIVET ATTITUDE (Sauvignon Blanc) Loire Valley",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1340000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5037",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 534600.0,
+          "line_cost": 534600.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị PASCAL JOLIVET ATTITUDE (Sauvignon Blanc) Loire Valley."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5038": {
+      "code": "V5038",
+      "name": "Château Baratet, Sauvignon Blanc, France",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 480000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5038",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 190000.0,
+          "line_cost": 190000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Château Baratet, Sauvignon Blanc, France."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5040": {
+      "code": "V5040",
+      "name": "M. Chapoutier « Belleruche » Côtes du Rhône Blanc, Grenache Blanc • Clairette",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1130000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5040",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 450450.0,
+          "line_cost": 450450.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị M. Chapoutier « Belleruche » Côtes du Rhône Blanc, Grenache Blanc • Clairette."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5041": {
+      "code": "V5041",
+      "name": "Bernard Magrez « Le Prélat » Blanc Côtes du Rhône Villages Laudun",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1350000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5041",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 540000.0,
+          "line_cost": 540000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Bernard Magrez « Le Prélat » Blanc Côtes du Rhône Villages Laudun."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5042": {
+      "code": "V5042",
+      "name": "M.Chapoutier Domaine des Granges de Mirabel",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1510000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5042",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 603900.0,
+          "line_cost": 603900.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị M.Chapoutier Domaine des Granges de Mirabel."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V5043": {
+      "code": "V5043",
+      "name": "Gustave Lorentz Gewurztraminer",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1960000.0,
+      "ingredients": [
+        {
+          "ing_id": "V5043",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 782100.0,
+          "line_cost": 782100.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Gustave Lorentz Gewurztraminer."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V6026": {
+      "code": "V6026",
+      "name": "Marques Casa Cabernet Sauvignon Chile",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1290000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6026",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 644000.0,
+          "line_cost": 644000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Marques Casa Cabernet Sauvignon Chile."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V60261": {
+      "code": "V60261",
+      "name": "Concha Y Toro, Marques de Casa Concha Chardonnay, Limari Valley - White Chile",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1610000.0,
+      "ingredients": [
+        {
+          "ing_id": "V60261",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 644000.0,
+          "line_cost": 644000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Concha Y Toro, Marques de Casa Concha Chardonnay, Limari Valley - White Chile."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V6035": {
+      "code": "V6035",
+      "name": "Frontera Sauvignon Blanc 75cl (White)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 490000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6035",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 231000.0,
+          "line_cost": 231000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Frontera Sauvignon Blanc 75cl (White)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V6049": {
+      "code": "V6049",
+      "name": "Luis Felipe Red Wine Bottle",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 490000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6049",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 175000.0,
+          "line_cost": 175000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Luis Felipe Red Wine Bottle."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V6053": {
+      "code": "V6053",
+      "name": "MIGUEL TORRES, LAS MULAS ORGANIC (Cabernet Sauvignon) Central Valley",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 980000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6053",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 393000.0,
+          "line_cost": 393000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị MIGUEL TORRES, LAS MULAS ORGANIC (Cabernet Sauvignon) Central Valley."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V6054": {
+      "code": "V6054",
+      "name": "MIGUEL TORRES, ANDICA RESERVA (Gewurztraminer) Curico Valley",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1120000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6054",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 446000.0,
+          "line_cost": 446000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị MIGUEL TORRES, ANDICA RESERVA (Gewurztraminer) Curico Valley."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V6057": {
+      "code": "V6057",
+      "name": "Karku Cabernet Sauvignon ( Red )",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 550000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6057",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 220000.0,
+          "line_cost": 220000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Karku Cabernet Sauvignon ( Red )."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V6058": {
+      "code": "V6058",
+      "name": "Karku Sauvignon Blanc- Chile ( White )",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 550000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6058",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 220000.0,
+          "line_cost": 220000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Karku Sauvignon Blanc- Chile ( White )."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V6060": {
+      "code": "V6060",
+      "name": "Cremaschi Furlotti Chardonnay (Valle Central DO — Chile)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 520000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6060",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 210000.0,
+          "line_cost": 210000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Cremaschi Furlotti Chardonnay (Valle Central DO — Chile)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V6061": {
+      "code": "V6061",
+      "name": "Cremaschi Furlotti Sauvignon Blanc (Valle Central DO — Chile)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 520000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6061",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 210000.0,
+          "line_cost": 210000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Cremaschi Furlotti Sauvignon Blanc (Valle Central DO — Chile)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V6062": {
+      "code": "V6062",
+      "name": "Cremaschi Furlotti Cabernet Sauvignon (Valle Central DO — Chile)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 520000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6062",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 210000.0,
+          "line_cost": 210000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Cremaschi Furlotti Cabernet Sauvignon (Valle Central DO — Chile)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V6063": {
+      "code": "V6063",
+      "name": "Montes Alpha Cabernet Sauvignon - Red",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1600000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6063",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 638000.0,
+          "line_cost": 638000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Montes Alpha Cabernet Sauvignon - Red."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V7012": {
+      "code": "V7012",
+      "name": "F Negroamaro San Marzano Italy Red WIne",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 2220000.0,
+      "ingredients": [
+        {
+          "ing_id": "V7012",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 890000.0,
+          "line_cost": 890000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị F Negroamaro San Marzano Italy Red WIne."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V7015": {
+      "code": "V7015",
+      "name": "Caselletti  Negroamaro Primitivo - Red",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 950000.0,
+      "ingredients": [
+        {
+          "ing_id": "V7015",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 380000.0,
+          "line_cost": 380000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Caselletti  Negroamaro Primitivo - Red."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V7016": {
+      "code": "V7016",
+      "name": "Talò Primitivo di Manduria « San Marzano »",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1130000.0,
+      "ingredients": [
+        {
+          "ing_id": "V7016",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 453750.0,
+          "line_cost": 453750.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Talò Primitivo di Manduria « San Marzano »."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V8003": {
+      "code": "V8003",
+      "name": "LE BONHEUR (Cabernet Sauvignon) Stellenbosch",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1480000.0,
+      "ingredients": [
+        {
+          "ing_id": "V8003",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 592000.0,
+          "line_cost": 592000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị LE BONHEUR (Cabernet Sauvignon) Stellenbosch."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V8004": {
+      "code": "V8004",
+      "name": "LE BONHEUR, THE EAGLE'S LAIR (Chardonnay) Stellenbosch",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1280000.0,
+      "ingredients": [
+        {
+          "ing_id": "V8004",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 514000.0,
+          "line_cost": 514000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị LE BONHEUR, THE EAGLE'S LAIR (Chardonnay) Stellenbosch."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9004": {
+      "code": "V9004",
+      "name": "Kaiken Estate Sauvignon Blanc–Sémillon",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 960000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9004",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 384000.0,
+          "line_cost": 384000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Kaiken Estate Sauvignon Blanc–Sémillon."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9005": {
+      "code": "V9005",
+      "name": "Kaiken Estate Malbec, Argentina",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 960000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9005",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 384000.0,
+          "line_cost": 384000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Kaiken Estate Malbec, Argentina."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9006": {
+      "code": "V9006",
+      "name": "Kaiken « Ultra » Malbec (Malbec · Uco Valley, Mendoza — Argentina)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1600000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9006",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 0.0,
+          "line_cost": 0.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Kaiken « Ultra » Malbec (Malbec · Uco Valley, Mendoza — Argentina)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9106": {
+      "code": "V9106",
+      "name": "Barramundi, Shiraz - Australia",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 620000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9106",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 247500.0,
+          "line_cost": 247500.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Barramundi, Shiraz - Australia."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9201": {
+      "code": "V9201",
+      "name": "Private Bin Sauvignon Blanc, Villa Maria (White)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1190000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9201",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 558000.0,
+          "line_cost": 558000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Private Bin Sauvignon Blanc, Villa Maria (White)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9202": {
+      "code": "V9202",
+      "name": "Private Bin Cabernet Merlot, Villa Maria (Red)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1190000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9202",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 558000.0,
+          "line_cost": 558000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Private Bin Cabernet Merlot, Villa Maria (Red)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9204": {
+      "code": "V9204",
+      "name": "Allan Scott Sauvignon Blanc(Marlborough GI — New Zealand)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 990000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9204",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 396000.0,
+          "line_cost": 396000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Allan Scott Sauvignon Blanc(Marlborough GI — New Zealand)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9301": {
+      "code": "V9301",
+      "name": "Torrès Sangre de Toro White (Parellada) (White)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 890000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9301",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 375000.0,
+          "line_cost": 375000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Torrès Sangre de Toro White (Parellada) (White)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9302": {
+      "code": "V9302",
+      "name": "Torrès, Sangre de Toro (Grenáche) (Red)",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 890000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9302",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 375000.0,
+          "line_cost": 375000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Torrès, Sangre de Toro (Grenáche) (Red)."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9304": {
+      "code": "V9304",
+      "name": "Marqués de Cáceres Crianza, Spain",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1190000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9304",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 475200.0,
+          "line_cost": 475200.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Marqués de Cáceres Crianza, Spain."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9402": {
+      "code": "V9402",
+      "name": "Villa Garrel Rosé, France",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 780000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9402",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 352000.0,
+          "line_cost": 352000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Villa Garrel Rosé, France."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9408": {
+      "code": "V9408",
+      "name": "Bosio Moscato Rose Spumante Aromatico Dolce 7.5%",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 800000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9408",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 322000.0,
+          "line_cost": 322000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Bosio Moscato Rose Spumante Aromatico Dolce 7.5%."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9411": {
+      "code": "V9411",
+      "name": "Gérard Bertrand « Gris Blanc » IGP, France",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 980000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9411",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 391050.0,
+          "line_cost": 391050.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Gérard Bertrand « Gris Blanc » IGP, France."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9412": {
+      "code": "V9412",
+      "name": "Croix de Peyrassol Rosé IGP, France",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1090000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9412",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 435600.0,
+          "line_cost": 435600.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Croix de Peyrassol Rosé IGP, France."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9504": {
+      "code": "V9504",
+      "name": "Chateau Dalat Special Cabernet Sauvignon 750ml",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 650000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9504",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 179000.0,
+          "line_cost": 179000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Chateau Dalat Special Cabernet Sauvignon 750ml."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
+    },
+    "V9508": {
+      "code": "V9508",
+      "name": "Chateau Dalat Special Sauvignon Blanc 750ml",
+      "course": "Beverage",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 450000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9508",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 179000.0,
+          "line_cost": 179000.0
+        }
+      ],
+      "method": [
+        {
+          "step": "1.",
+          "description": "Bán trực tiếp 1 đơn vị Chateau Dalat Special Sauvignon Blanc 750ml."
+        }
+      ],
+      "notes": "Món trực tiếp 1:1."
     }
   },
   "sales": [

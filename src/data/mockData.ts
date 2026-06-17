@@ -226,7 +226,151 @@ export const POS_MAPPING: Record<string, { recipe: string; type: 'alc' | 'set' |
   "T950A": { recipe: "T950A", type: "alc" },
   "T950B": { recipe: "T950B", type: "alc" },
   "T970A": { recipe: "T970A", type: "alc" },
-};
+  "M9202": { recipe: "M9202", type: "beer" }, // Cigarettes Imported
+  "M9402": { recipe: "M9402", type: "beer" }, // Bailey
+  "M9403": { recipe: "M9403", type: "beer" }, // Campari
+  "M9405": { recipe: "M9405", type: "beer" }, // Cointrau
+  "M9406": { recipe: "M9406", type: "beer" }, // Grand Marnier
+  "M9407": { recipe: "M9407", type: "beer" }, // Kalua
+  "M9408": { recipe: "M9408", type: "beer" }, // Malibu
+  "M9409": { recipe: "M9409", type: "beer" }, // Martini Bianco
+  "M9410": { recipe: "M9410", type: "beer" }, // Martini Dry
+  "M9411": { recipe: "M9411", type: "beer" }, // Martini Rosso
+  "M9413": { recipe: "M9413", type: "beer" }, // Porto
+  "M9414": { recipe: "M9414", type: "beer" }, // Ricard
+  "M9507": { recipe: "M9507", type: "beer" }, // Mens Vodka
+  "M9508": { recipe: "M9508", type: "beer" }, // Lua moi 500ml
+  "M9512": { recipe: "M9512", type: "beer" }, // Smirnoff Red Label
+  "M9513": { recipe: "M9513", type: "beer" }, // Vodka Hanoi 300ml
+  "M9514": { recipe: "M9514", type: "beer" }, // Vodka Hanoi 500ml
+  "M9602": { recipe: "M9602", type: "beer" }, // Ballentines 12
+  "M9603": { recipe: "M9603", type: "beer" }, // Ballentines 17
+  "M9604": { recipe: "M9604", type: "beer" }, // Ballentines 21
+  "M9606": { recipe: "M9606", type: "beer" }, // Ballentines Finese
+  "M9609": { recipe: "M9609", type: "beer" }, // Chivas Regal 0.75L (12 years old)
+  "M9611": { recipe: "M9611", type: "beer" }, // Creame de cassic
+  "M9612": { recipe: "M9612", type: "beer" }, // Gordon Gin Bottle
+  "M9620": { recipe: "M9620", type: "beer" }, // J - B
+  "M9621": { recipe: "M9621", type: "beer" }, // Jack Daniel
+  "M9623": { recipe: "M9623", type: "beer" }, // Jimbeam
+  "M9629": { recipe: "M9629", type: "beer" }, // Johnny Walker red label
+  "M9632": { recipe: "M9632", type: "beer" }, // Marcallan 12 year old
+  "M9636": { recipe: "M9636", type: "beer" }, // Single Barrel Jack Daniel's
+  "M9642": { recipe: "M9642", type: "beer" }, // GlenAllaChie 11
+  "M9643": { recipe: "M9643", type: "beer" }, // FinLaggan 58
+  "M9644": { recipe: "M9644", type: "beer" }, // Liqueur Bols Cherry Brandy 70cl
+  "M9645": { recipe: "M9645", type: "beer" }, // Liqueur D.O.M Benedictine 70cl
+  "M9702": { recipe: "M9702", type: "beer" }, // Bacardi Light
+  "M9705": { recipe: "M9705", type: "beer" }, // Tequila light
+  "M9801": { recipe: "M9801", type: "beer" }, // Creme de cassic (Triple Sec)
+  "M9802": { recipe: "M9802", type: "beer" }, // Chabot Napoleon Special Reserve Armagnac
+  "M98021": { recipe: "M98021", type: "beer" }, // Armagnac bottle
+  "M9803": { recipe: "M9803", type: "beer" }, // Framboise
+  "M9804": { recipe: "M9804", type: "beer" }, // Mirabelle (Massenez Wild Raspberry)
+  "M9805": { recipe: "M9805", type: "beer" }, // Massenez Poire Williams
+  "M9806": { recipe: "M9806", type: "beer" }, // Parisiennes Napoleon X.O 70cl
+  "M9808": { recipe: "M9808", type: "beer" }, // Hennessy VSOP 0.7 liter
+  "M9809": { recipe: "M9809", type: "beer" }, // Hennessy XO
+  "M9812": { recipe: "M9812", type: "beer" }, // Remy Martin VSOP
+  "NLP004": { recipe: "NLP004", type: "beer" }, // Trà olong  Tam Châu 100g
+  "NLP3021": { recipe: "NLP3021", type: "beer" }, // Sữa tươi TH True Milk Nguyên chất 1L
+  "NLP30251": { recipe: "NLP30251", type: "beer" }, // Đường nước Hàn Quốc
+  "NLP600351": { recipe: "NLP600351", type: "beer" }, // Chè mạn
+  "NLP60038": { recipe: "NLP60038", type: "beer" }, // Chanh leo
+  "NLP60057": { recipe: "NLP60057", type: "beer" }, // Cà rốt tươi
+  "NLP60058": { recipe: "NLP60058", type: "beer" }, // Gừng tươi
+  "NLP60059": { recipe: "NLP60059", type: "beer" }, // Bạc hà tươi
+  "NLP60061": { recipe: "NLP60061", type: "beer" }, // Dưa chuột tươi
+  "NLP9001": { recipe: "NLP9001", type: "beer" }, // Cafe hương chồn 500g
+  "NLP9002": { recipe: "NLP9002", type: "beer" }, // Cafe season 500g/ túi
+  "NLP90023": { recipe: "NLP90023", type: "beer" }, // Cafe hạt Javador 73 Italya
+  "NLP9003": { recipe: "NLP9003", type: "beer" }, // Trà lipton túi lọc (25g/h)
+  "NLP9004": { recipe: "NLP9004", type: "beer" }, // Trà Kim Anh (sen, nhài)
+  "NLP9005": { recipe: "NLP9005", type: "beer" }, // Đường que
+  "NLP9006": { recipe: "NLP9006", type: "beer" }, // Sữa đặc
+  "NLP9020": { recipe: "NLP9020", type: "beer" }, // Trà gừng
+  "NLP9024": { recipe: "NLP9024", type: "beer" }, // Trà Eargrey
+  "NLP9026": { recipe: "NLP9026", type: "beer" }, // Trà hoa cúc
+  "PKG-001": { recipe: "PKG-001", type: "beer" }, // Cốc giấy mang về 270ml
+  "PKG-002": { recipe: "PKG-002", type: "beer" }, // Nắp cốc mang về
+  "PKG-003": { recipe: "PKG-003", type: "beer" }, // Ống hút giấy
+  "PKG-004": { recipe: "PKG-004", type: "beer" }, // Túi giấy mang về
+  "S1003": { recipe: "S1003", type: "beer" }, // Grenadine (Siro Lựu)
+  "S1004": { recipe: "S1004", type: "beer" }, // Syrup - Pineapple 70cl
+  "V1008": { recipe: "V1008", type: "alc" }, // La Palma Cabernet Sauvignon 37.5cl, Chile
+  "V2006": { recipe: "V2006", type: "alc" }, // Champagne Taittinger Brut Reserve NV, France
+  "V2009": { recipe: "V2009", type: "alc" }, // Champagne Moët & Chandon
+  "V2015": { recipe: "V2015", type: "alc" }, // Chanoine Frères Brut NV (Champagne AOC — France)
+  "V2016": { recipe: "V2016", type: "alc" }, // Jean-Noël Haton Cuvée Classic Brut NV ( Champagne AOC, Damery)
+  "V2018": { recipe: "V2018", type: "alc" }, // Crémant de Bourgogne Brut Vignerons de Buxy, Chardonnay, Aligoté, Gamay
+  "V3002": { recipe: "V3002", type: "alc" }, // Baron Philippe de Rothschild, Mouton Cadet Réserve, Sauternes Half Bottle, France
+  "V3003": { recipe: "V3003", type: "alc" }, // Baron Philippe de Rothschild, Mouton Cadet Réserve, Sauternes full  Bottle, France
+  "V4008": { recipe: "V4008", type: "alc" }, // M. Chapoutier Belleruche, Côtes du Rhône Rouge
+  "V4009": { recipe: "V4009", type: "alc" }, // Les Hauts de La Gaffeliere, Bordeaux Rouge
+  "V4014": { recipe: "V4014", type: "alc" }, // Château Noaillac Cru Bourgeois
+  "V4017": { recipe: "V4017", type: "alc" }, // Château Haut-Rocher Grand Cru
+  "V4062": { recipe: "V4062", type: "alc" }, // Château Moulin De La Faye
+  "V4063": { recipe: "V4063", type: "alc" }, // Chantecaille Bordeaux AOC Red
+  "V4068": { recipe: "V4068", type: "alc" }, // Nicolas Thienpont, Chateau Puygueraud,(Merlot/Cab Franc/ Malbec) Francs Cotes de Bordeaux
+  "V4069": { recipe: "V4069", type: "alc" }, // Alain Brumont, Chateau Bouscasse, Madiran - Red
+  "V4071": { recipe: "V4071", type: "alc" }, // Baron P. de Rothschild Mouton Cadet Reserve Pauillac - Red
+  "V4072": { recipe: "V4072", type: "alc" }, // Château La Garenne Pomerol - Red
+  "V4074": { recipe: "V4074", type: "alc" }, // Louis Latour Domaine De Valmoissine - Red
+  "V4076": { recipe: "V4076", type: "alc" }, // Guigal, Cotes du Rhone - Red
+  "V4077": { recipe: "V4077", type: "alc" }, // Dufouleur Monopole Red Wine Bt
+  "V4081": { recipe: "V4081", type: "alc" }, // Château La Branne Médoc Cru Bourgeois, France
+  "V4082": { recipe: "V4082", type: "alc" }, // CHÂTEAU HAUT SAINT BRICE (Merlot - Cabernet Franc) Saint-Émilion Grand Cru
+  "V4083": { recipe: "V4083", type: "alc" }, // CHÂTEAU MONT- PÉRAT (Merlot/Cabernet Franc/Cabernet Sauvignon) Bordeaux
+  "V4089": { recipe: "V4089", type: "alc" }, // Chateau Haut Mouleyre AOP Bordeaux Rouge
+  "V4090": { recipe: "V4090", type: "alc" }, // M. Chapoutier « Les Meysonniers »Crozes-Hermitage Syrah (organic)
+  "V4092": { recipe: "V4092", type: "alc" }, // Grand Bateau Bordeaux Rouge (by Beychevelle) (Merlot · CS · AOC)
+  "V5004": { recipe: "V5004", type: "alc" }, // Les Hauts de La Gaffeliere, Bordeaux Blanc
+  "V5027": { recipe: "V5027", type: "alc" }, // Chantecaille Bordeaux AOC White
+  "V5028": { recipe: "V5028", type: "alc" }, // F. Thienpont Sauvignon Blanc - White
+  "V5029": { recipe: "V5029", type: "alc" }, // Ronan By Clinet (by Chateau Clinet, Pomerol) Bordauex Blanc - White
+  "V5030": { recipe: "V5030", type: "alc" }, // Nicolas Thienpont, Chateau Puygueraud,  Francs Cotes de Bordeaux -White
+  "V5032": { recipe: "V5032", type: "alc" }, // Louis Latour Chablis La Chanfleure, Chardonnay  - White
+  "V5033": { recipe: "V5033", type: "alc" }, // Louis Latour Pouilly-Fuissé - White
+  "V5034": { recipe: "V5034", type: "alc" }, // Dufouleur Monopole White wine Bt
+  "V5037": { recipe: "V5037", type: "alc" }, // PASCAL JOLIVET ATTITUDE (Sauvignon Blanc) Loire Valley
+  "V5038": { recipe: "V5038", type: "alc" }, // Château Baratet, Sauvignon Blanc, France
+  "V5040": { recipe: "V5040", type: "alc" }, // M. Chapoutier « Belleruche » Côtes du Rhône Blanc, Grenache Blanc • Clairette
+  "V5041": { recipe: "V5041", type: "alc" }, // Bernard Magrez « Le Prélat » Blanc Côtes du Rhône Villages Laudun
+  "V5042": { recipe: "V5042", type: "alc" }, // M.Chapoutier Domaine des Granges de Mirabel
+  "V5043": { recipe: "V5043", type: "alc" }, // Gustave Lorentz Gewurztraminer
+  "V6026": { recipe: "V6026", type: "alc" }, // Marques Casa Cabernet Sauvignon Chile
+  "V60261": { recipe: "V60261", type: "alc" }, // Concha Y Toro, Marques de Casa Concha Chardonnay, Limari Valley - White Chile
+  "V6035": { recipe: "V6035", type: "alc" }, // Frontera Sauvignon Blanc 75cl (White)
+  "V6049": { recipe: "V6049", type: "alc" }, // Luis Felipe Red Wine Bottle
+  "V6053": { recipe: "V6053", type: "alc" }, // MIGUEL TORRES, LAS MULAS ORGANIC (Cabernet Sauvignon) Central Valley
+  "V6054": { recipe: "V6054", type: "alc" }, // MIGUEL TORRES, ANDICA RESERVA (Gewurztraminer) Curico Valley
+  "V6057": { recipe: "V6057", type: "alc" }, // Karku Cabernet Sauvignon ( Red )
+  "V6058": { recipe: "V6058", type: "alc" }, // Karku Sauvignon Blanc- Chile ( White )
+  "V6060": { recipe: "V6060", type: "alc" }, // Cremaschi Furlotti Chardonnay (Valle Central DO — Chile)
+  "V6061": { recipe: "V6061", type: "alc" }, // Cremaschi Furlotti Sauvignon Blanc (Valle Central DO — Chile)
+  "V6062": { recipe: "V6062", type: "alc" }, // Cremaschi Furlotti Cabernet Sauvignon (Valle Central DO — Chile)
+  "V6063": { recipe: "V6063", type: "alc" }, // Montes Alpha Cabernet Sauvignon - Red
+  "V7012": { recipe: "V7012", type: "alc" }, // F Negroamaro San Marzano Italy Red WIne
+  "V7015": { recipe: "V7015", type: "alc" }, // Caselletti  Negroamaro Primitivo - Red
+  "V7016": { recipe: "V7016", type: "alc" }, // Talò Primitivo di Manduria « San Marzano »
+  "V8003": { recipe: "V8003", type: "alc" }, // LE BONHEUR (Cabernet Sauvignon) Stellenbosch
+  "V8004": { recipe: "V8004", type: "alc" }, // LE BONHEUR, THE EAGLE'S LAIR (Chardonnay) Stellenbosch
+  "V9004": { recipe: "V9004", type: "alc" }, // Kaiken Estate Sauvignon Blanc–Sémillon
+  "V9005": { recipe: "V9005", type: "alc" }, // Kaiken Estate Malbec, Argentina
+  "V9006": { recipe: "V9006", type: "alc" }, // Kaiken « Ultra » Malbec (Malbec · Uco Valley, Mendoza — Argentina)
+  "V9106": { recipe: "V9106", type: "alc" }, // Barramundi, Shiraz - Australia
+  "V9201": { recipe: "V9201", type: "alc" }, // Private Bin Sauvignon Blanc, Villa Maria (White)
+  "V9202": { recipe: "V9202", type: "alc" }, // Private Bin Cabernet Merlot, Villa Maria (Red)
+  "V9204": { recipe: "V9204", type: "alc" }, // Allan Scott Sauvignon Blanc(Marlborough GI — New Zealand)
+  "V9301": { recipe: "V9301", type: "alc" }, // Torrès Sangre de Toro White (Parellada) (White)
+  "V9302": { recipe: "V9302", type: "alc" }, // Torrès, Sangre de Toro (Grenáche) (Red)
+  "V9304": { recipe: "V9304", type: "alc" }, // Marqués de Cáceres Crianza, Spain
+  "V9402": { recipe: "V9402", type: "alc" }, // Villa Garrel Rosé, France
+  "V9408": { recipe: "V9408", type: "alc" }, // Bosio Moscato Rose Spumante Aromatico Dolce 7.5%
+  "V9411": { recipe: "V9411", type: "alc" }, // Gérard Bertrand « Gris Blanc » IGP, France
+  "V9412": { recipe: "V9412", type: "alc" }, // Croix de Peyrassol Rosé IGP, France
+  "V9504": { recipe: "V9504", type: "alc" }, // Chateau Dalat Special Cabernet Sauvignon 750ml
+  "V9508": { recipe: "V9508", type: "alc" }, // Chateau Dalat Special Sauvignon Blanc 750ml};
 
 export const SET_MENU_DEFINITIONS: Record<string, string[]> = {
   "deg_set_5": [

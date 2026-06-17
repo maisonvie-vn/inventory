@@ -1083,4 +1083,22 @@ Hết cảnh món chuẩn rơi vào Unmapped · không còn công thức giả c
      - Cập nhật POS mapping loại `"alc"` (Cocktail) cho mã `M7020` trong `src/data/mockData.ts`.
      - Lưu lại các câu lệnh insert tương ứng tại `supabase/seed_sangria_sync.sql` và lưu trữ trong `supabase/seed.sql`.
 
+## 16.7. Kết quả kiểm tra đối soát và đồng bộ diện rộng 145 mặt hàng đồ uống & rượu bia (18/06/2026)
 
+Thực hiện yêu cầu rà soát chéo giữa các bảng Excel `MAISON_VIE_v6_0_PRO.xlsx`, `BÁO CÁO TỒN KHO BAR T05.2026.xlsx` và `FINAL(12062026)_Maison_Vie_Recipe_Master_2026_CORRIGE.xlsx`. Hệ thống đã phát hiện và đồng bộ toàn bộ các sản phẩm đã có mã và nguyên liệu trong danh mục nhưng chưa có Menu Item, chưa có Recipe 1:1, hoặc chưa có ánh xạ POS trên hệ thống:
+
+1. **Kết quả đối soát danh mục**:
+   - Phát hiện **145 mặt hàng** đồ uống (rượu vang, rượu mạnh, nước ngọt, bia, cigar, nguyên liệu pha chế...) nằm trong danh mục nhưng thiếu mapping, Menu Items và định mức 1:1 trong DB.
+   - Toàn bộ giá bán lẻ (Sale Price) và đơn giá vốn (Cost Price) của 145 mặt hàng này được trích xuất trực tiếp từ sheet `Unit Price` của `BÁO CÁO TỒN KHO BAR T05.2026.xlsx`. Đối với các mặt hàng thiếu giá bán lẻ, hệ thống tự động áp dụng hệ số markup `2.5` lần giá vốn và làm tròn đến 10,000 VND.
+
+2. **Đồng bộ cơ sở dữ liệu Supabase**:
+   - Tạo tập lệnh SQL đồng bộ `scratch_beverage_sync.sql` chứa **472 câu lệnh SQL** (INSERT các `menu_items`, `recipes` 1:1, `pos_alias_map`, và `ingredient_departments`).
+   - Đã thực thi thành công tập lệnh lên database Supabase. Kết quả audit lại DB trả về **0 missing items** (hoàn tất đồng bộ 100%).
+   - Tích hợp toàn bộ các câu lệnh đồng bộ này vào file `supabase/seed.sql` để đảm bảo đồng bộ môi trường local phát triển.
+
+3. **Cập nhật dữ liệu cấu hình Mock & Local (Next.js)**:
+   - **`src/data/db.json`**: Cập nhật thêm 145 công thức direct 1:1 vào danh mục công thức ứng dụng.
+   - **`src/data/mockData.ts`**: Cập nhật 145 ánh xạ POS mới vào đối tượng `POS_MAPPING` (gán nhãn loại `alc` cho các rượu mã `V` và loại `beer` cho bia/nước ngọt/cigar/rượu mạnh).
+
+4. **Cập nhật File mẫu Excel**:
+   - Cập nhật và lưu trữ đầy đủ 145 mặt hàng này vào `D:\Invenroty\MAU_IMPORT_DANHMUC_1-1.xlsx` (sheet `DANH_MUC_1-1`), cấu hình cờ trừ kho là `DIRECT` và đơn vị viết hoa chuẩn (BOTTLE, CAN, PACK...).
