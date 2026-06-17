@@ -71,6 +71,7 @@ export const POS_MAPPING: Record<string, { recipe: string; type: 'alc' | 'set' |
   "M9203": { recipe: "M9203", type: "beer" }, // Cigar Havana
   "M6001": { recipe: "M6001", type: "beer" }, // Coke
   "M6002": { recipe: "M6002", type: "beer" }, // Soda
+  "M6003": { recipe: "M6003", type: "beer" }, // Tonic
   "M6004": { recipe: "M6004", type: "beer" }, // Sprite
   "M6006": { recipe: "M6006", type: "beer" }, // Diet Coke
   "M6008": { recipe: "M6008", type: "beer" }, // La Vie 1,5 L
