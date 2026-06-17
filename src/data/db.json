@@ -5734,6 +5734,102 @@
       "max_stock": 0.0,
       "safety_stock": 0.0,
       "is_beverage": false
+    },
+    {
+      "id": "NLP60057",
+      "fr_name": "Carotte fraîche",
+      "vi_name": "Cà rốt tươi",
+      "en_name": "Fresh Carrot",
+      "category": "Vegetable",
+      "supplier_tier": "Local",
+      "unit": "KG",
+      "price": 15000.0,
+      "yield_rate": 0.6,
+      "is_beverage": true
+    },
+    {
+      "id": "NLP60058",
+      "fr_name": "Gingembre frais",
+      "vi_name": "Gừng tươi",
+      "en_name": "Fresh Ginger",
+      "category": "Vegetable",
+      "supplier_tier": "Local",
+      "unit": "KG",
+      "price": 40000.0,
+      "yield_rate": 0.85,
+      "is_beverage": true
+    },
+    {
+      "id": "NLP60059",
+      "fr_name": "Menthe fraîche",
+      "vi_name": "Bạc hà tươi",
+      "en_name": "Fresh Mint",
+      "category": "Herb",
+      "supplier_tier": "Local",
+      "unit": "KG",
+      "price": 50000.0,
+      "yield_rate": 1.0,
+      "is_beverage": true
+    },
+    {
+      "id": "NLP60061",
+      "fr_name": "Concombre frais",
+      "vi_name": "Dưa chuột tươi",
+      "en_name": "Fresh Cucumber",
+      "category": "Vegetable",
+      "supplier_tier": "Local",
+      "unit": "KG",
+      "price": 15000.0,
+      "yield_rate": 0.6,
+      "is_beverage": true
+    },
+    {
+      "id": "PKG-001",
+      "fr_name": "Gobelet en papier 270ml",
+      "vi_name": "Cốc giấy mang về 270ml",
+      "en_name": "Takeaway Paper Cup 270ml",
+      "category": "Khác",
+      "supplier_tier": "Local",
+      "unit": "PIECE",
+      "price": 1500.0,
+      "yield_rate": 1.0,
+      "is_beverage": true
+    },
+    {
+      "id": "PKG-002",
+      "fr_name": "Couvercle de gobelet",
+      "vi_name": "Nắp cốc mang về",
+      "en_name": "Takeaway Cup Lid",
+      "category": "Khác",
+      "supplier_tier": "Local",
+      "unit": "PIECE",
+      "price": 500.0,
+      "yield_rate": 1.0,
+      "is_beverage": true
+    },
+    {
+      "id": "PKG-003",
+      "fr_name": "Paille en papier",
+      "vi_name": "Ống hút giấy",
+      "en_name": "Paper Straw",
+      "category": "Khác",
+      "supplier_tier": "Local",
+      "unit": "PIECE",
+      "price": 500.0,
+      "yield_rate": 1.0,
+      "is_beverage": true
+    },
+    {
+      "id": "PKG-004",
+      "fr_name": "Sac en papier",
+      "vi_name": "Túi giấy mang về",
+      "en_name": "Takeaway Paper Bag",
+      "category": "Khác",
+      "supplier_tier": "Local",
+      "unit": "PIECE",
+      "price": 2000.0,
+      "yield_rate": 1.0,
+      "is_beverage": true
     }
   ],
   "recipes": {
@@ -13226,6 +13322,2184 @@
       ],
       "method": [],
       "notes": ""
+    },
+    "M7001": {
+      "code": "M7001",
+      "name": "Fresh orange juice",
+      "course": "Bar",
+      "category": "Beverage",
+      "menu_role": "",
+      "price": 100000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60033",
+          "qty_net": 0.575,
+          "unit": "KG",
+          "yield_pct": 40.0,
+          "qty_eff": 1.4374999999999998,
+          "unit_price": 35000.0,
+          "line_cost": 50312.49999999999
+        }
+      ],
+      "method": [],
+      "notes": "Nước cam tươi (sành) vắt máy, dùng cam sành Việt Nam."
+    },
+    "M7002": {
+      "code": "M7002",
+      "name": "Fresh lemon juice",
+      "course": "Bar",
+      "category": "Beverage",
+      "menu_role": "",
+      "price": 60000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60032",
+          "qty_net": 0.133,
+          "unit": "KG",
+          "yield_pct": 30.0,
+          "qty_eff": 0.44333333333333336,
+          "unit_price": 25000.0,
+          "line_cost": 11083.333333333334
+        },
+        {
+          "ing_id": "NLP30251",
+          "qty_net": 0.015,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.015,
+          "unit_price": 22400.0,
+          "line_cost": 336.0
+        }
+      ],
+      "method": [],
+      "notes": "Nước chanh tươi (Limeade) pha với nước RO và syrup."
+    },
+    "M7003": {
+      "code": "M7003",
+      "name": "Mixed Seasonal fresh fruit juice",
+      "course": "Bar",
+      "category": "Beverage",
+      "menu_role": "",
+      "price": 100000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60033",
+          "qty_net": 0.138,
+          "unit": "KG",
+          "yield_pct": 40.0,
+          "qty_eff": 0.34500000000000003,
+          "unit_price": 35000.0,
+          "line_cost": 12075.000000000002
+        },
+        {
+          "ing_id": "NLP60041",
+          "qty_net": 0.1024,
+          "unit": "PIECE",
+          "yield_pct": 45.0,
+          "qty_eff": 0.22755555555555557,
+          "unit_price": 14000.0,
+          "line_cost": 3185.777777777778
+        },
+        {
+          "ing_id": "NLP60057",
+          "qty_net": 0.092,
+          "unit": "KG",
+          "yield_pct": 60.0,
+          "qty_eff": 0.15333333333333335,
+          "unit_price": 15000.0,
+          "line_cost": 2300.0000000000005
+        }
+      ],
+      "method": [],
+      "notes": "Mixed Juice (Cam + Dứa + Cà rốt)."
+    },
+    "M7005": {
+      "code": "M7005",
+      "name": "Water Melon Juice",
+      "course": "Bar",
+      "category": "Beverage",
+      "menu_role": "",
+      "price": 70000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60035",
+          "qty_net": 0.4,
+          "unit": "KG",
+          "yield_pct": 60.0,
+          "qty_eff": 0.6666666666666667,
+          "unit_price": 20000.0,
+          "line_cost": 13333.333333333334
+        }
+      ],
+      "method": [],
+      "notes": "Nước ép dưa hấu tươi."
+    },
+    "M7006": {
+      "code": "M7006",
+      "name": "Mango Juice",
+      "course": "Bar",
+      "category": "Beverage",
+      "menu_role": "",
+      "price": 100000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60034",
+          "qty_net": 0.4,
+          "unit": "KG",
+          "yield_pct": 55.0,
+          "qty_eff": 0.7272727272727273,
+          "unit_price": 50000.0,
+          "line_cost": 36363.63636363637
+        }
+      ],
+      "method": [],
+      "notes": "Nước ép xoài tươi (juice style)."
+    },
+    "M7007": {
+      "code": "M7007",
+      "name": "Passion juice",
+      "course": "Bar",
+      "category": "Beverage",
+      "menu_role": "",
+      "price": 60000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60038",
+          "qty_net": 0.1,
+          "unit": "KG",
+          "yield_pct": 35.0,
+          "qty_eff": 0.28571428571428575,
+          "unit_price": 30000.0,
+          "line_cost": 8571.428571428572
+        },
+        {
+          "ing_id": "NLP30251",
+          "qty_net": 0.015,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.015,
+          "unit_price": 22400.0,
+          "line_cost": 336.0
+        }
+      ],
+      "method": [],
+      "notes": "Nước chanh leo pha với nước RO và syrup."
+    },
+    "M7008": {
+      "code": "M7008",
+      "name": "Pomelo Juice",
+      "course": "Bar",
+      "category": "Beverage",
+      "menu_role": "",
+      "price": 100000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60031",
+          "qty_net": 0.5864,
+          "unit": "PIECE",
+          "yield_pct": 30.0,
+          "qty_eff": 1.9546666666666668,
+          "unit_price": 30000.0,
+          "line_cost": 58640.0
+        }
+      ],
+      "method": [],
+      "notes": "Nước ép bưởi tươi."
+    },
+    "M7009": {
+      "code": "M7009",
+      "name": "Pineapple Juice",
+      "course": "Bar",
+      "category": "Beverage",
+      "menu_role": "",
+      "price": 100000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60041",
+          "qty_net": 0.4088,
+          "unit": "PIECE",
+          "yield_pct": 45.0,
+          "qty_eff": 0.9084444444444444,
+          "unit_price": 14000.0,
+          "line_cost": 12718.22222222222
+        }
+      ],
+      "method": [],
+      "notes": "Nước ép dứa tươi."
+    },
+    "M7010": {
+      "code": "M7010",
+      "name": "Apple Juice",
+      "course": "Bar",
+      "category": "Beverage",
+      "menu_role": "",
+      "price": 70000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60037",
+          "qty_net": 0.307,
+          "unit": "KG",
+          "yield_pct": 75.0,
+          "qty_eff": 0.4093333333333333,
+          "unit_price": 50000.0,
+          "line_cost": 20466.666666666668
+        }
+      ],
+      "method": [],
+      "notes": "Nước ép táo tươi (táo Fuji)."
+    },
+    "M7022": {
+      "code": "M7022",
+      "name": "Detox Juice",
+      "course": "Bar",
+      "category": "Beverage",
+      "menu_role": "",
+      "price": 90000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60037",
+          "qty_net": 0.153,
+          "unit": "KG",
+          "yield_pct": 75.0,
+          "qty_eff": 0.204,
+          "unit_price": 50000.0,
+          "line_cost": 10200.0
+        },
+        {
+          "ing_id": "NLP60057",
+          "qty_net": 0.14,
+          "unit": "KG",
+          "yield_pct": 60.0,
+          "qty_eff": 0.23333333333333336,
+          "unit_price": 15000.0,
+          "line_cost": 3500.0000000000005
+        },
+        {
+          "ing_id": "NLP60058",
+          "qty_net": 0.027,
+          "unit": "KG",
+          "yield_pct": 85.0,
+          "qty_eff": 0.031764705882352945,
+          "unit_price": 40000.0,
+          "line_cost": 1270.5882352941178
+        },
+        {
+          "ing_id": "NLP60032",
+          "qty_net": 0.015,
+          "unit": "KG",
+          "yield_pct": 30.0,
+          "qty_eff": 0.05,
+          "unit_price": 25000.0,
+          "line_cost": 1250.0
+        }
+      ],
+      "method": [],
+      "notes": "Detox Juice (Táo + Cà rốt + Gừng + Chanh)."
+    },
+    "M7012": {
+      "code": "M7012",
+      "name": "Margarita",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 210000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9705",
+          "qty_net": 0.05,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.052631578947368425,
+          "unit_price": 360000.0,
+          "line_cost": 18947.368421052633
+        },
+        {
+          "ing_id": "M9405",
+          "qty_net": 0.02,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.02105263157894737,
+          "unit_price": 340000.0,
+          "line_cost": 7157.894736842106
+        },
+        {
+          "ing_id": "NLP60032",
+          "qty_net": 0.048,
+          "unit": "KG",
+          "yield_pct": 30.0,
+          "qty_eff": 0.16,
+          "unit_price": 25000.0,
+          "line_cost": 4000.0
+        }
+      ],
+      "method": [],
+      "notes": "Tequila 50ml + Triple Sec 20ml + Lime 15ml."
+    },
+    "M7032": {
+      "code": "M7032",
+      "name": "Mojito",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 230000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9702",
+          "qty_net": 0.04,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.04210526315789474,
+          "unit_price": 240000.0,
+          "line_cost": 10105.263157894738
+        },
+        {
+          "ing_id": "NLP60032",
+          "qty_net": 0.095,
+          "unit": "KG",
+          "yield_pct": 30.0,
+          "qty_eff": 0.3166666666666667,
+          "unit_price": 25000.0,
+          "line_cost": 7916.666666666668
+        },
+        {
+          "ing_id": "NLP30251",
+          "qty_net": 0.015,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.015,
+          "unit_price": 22400.0,
+          "line_cost": 336.0
+        },
+        {
+          "ing_id": "M6002",
+          "qty_net": 0.1818,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 0.1818,
+          "unit_price": 5304.0,
+          "line_cost": 964.2671999999999
+        },
+        {
+          "ing_id": "NLP60059",
+          "qty_net": 0.005,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.005,
+          "unit_price": 50000.0,
+          "line_cost": 250.0
+        }
+      ],
+      "method": [],
+      "notes": "White Rum 40ml + Lime juice 30ml + Mint 6-8 leaves + Brown sugar + Soda 60ml."
+    },
+    "M7033": {
+      "code": "M7033",
+      "name": "Piña Colada",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 230000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9702",
+          "qty_net": 0.03,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.031578947368421054,
+          "unit_price": 240000.0,
+          "line_cost": 7578.9473684210525
+        },
+        {
+          "ing_id": "NLP60050",
+          "qty_net": 0.075,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 0.075,
+          "unit_price": 25560.0,
+          "line_cost": 1917.0
+        },
+        {
+          "ing_id": "NLP60041",
+          "qty_net": 0.16,
+          "unit": "PIECE",
+          "yield_pct": 45.0,
+          "qty_eff": 0.35555555555555557,
+          "unit_price": 14000.0,
+          "line_cost": 4977.777777777778
+        }
+      ],
+      "method": [],
+      "notes": "White Rum 30ml + Coconut cream 30ml + Pineapple juice 90ml."
+    },
+    "M7034": {
+      "code": "M7034",
+      "name": "Whisky Sour",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 230000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9621",
+          "qty_net": 0.045,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.04736842105263158,
+          "unit_price": 450000.0,
+          "line_cost": 21315.78947368421
+        },
+        {
+          "ing_id": "NLP600381",
+          "qty_net": 0.08,
+          "unit": "KG",
+          "yield_pct": 35.0,
+          "qty_eff": 0.2285714285714286,
+          "unit_price": 50000.0,
+          "line_cost": 11428.57142857143
+        },
+        {
+          "ing_id": "NLP30251",
+          "qty_net": 0.015,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.015,
+          "unit_price": 22400.0,
+          "line_cost": 336.0
+        },
+        {
+          "ing_id": "NLP2021",
+          "qty_net": 1.0,
+          "unit": "PIECE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 3200.0,
+          "line_cost": 3200.0
+        }
+      ],
+      "method": [],
+      "notes": "Bourbon Whisky 45ml + Lemon juice 30ml + Sugar syrup 15ml + Egg white 1pc."
+    },
+    "M7035": {
+      "code": "M7035",
+      "name": "Tom Collins",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 230000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9612",
+          "qty_net": 0.045,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.04736842105263158,
+          "unit_price": 230000.0,
+          "line_cost": 10894.736842105263
+        },
+        {
+          "ing_id": "NLP600381",
+          "qty_net": 0.08,
+          "unit": "KG",
+          "yield_pct": 35.0,
+          "qty_eff": 0.2285714285714286,
+          "unit_price": 50000.0,
+          "line_cost": 11428.57142857143
+        },
+        {
+          "ing_id": "NLP30251",
+          "qty_net": 0.015,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.015,
+          "unit_price": 22400.0,
+          "line_cost": 336.0
+        },
+        {
+          "ing_id": "M6002",
+          "qty_net": 0.1818,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 0.1818,
+          "unit_price": 5304.0,
+          "line_cost": 964.2671999999999
+        }
+      ],
+      "method": [],
+      "notes": "Gin 45ml + Lemon juice 30ml + Sugar syrup 15ml + Soda 60ml."
+    },
+    "M7036": {
+      "code": "M7036",
+      "name": "Tequila Sunrise",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 230000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9705",
+          "qty_net": 0.045,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.04736842105263158,
+          "unit_price": 360000.0,
+          "line_cost": 17052.63157894737
+        },
+        {
+          "ing_id": "S1003",
+          "qty_net": 0.0214,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 0.0214,
+          "unit_price": 200000.0,
+          "line_cost": 4280.0
+        },
+        {
+          "ing_id": "NLP60033",
+          "qty_net": 0.225,
+          "unit": "KG",
+          "yield_pct": 40.0,
+          "qty_eff": 0.5625,
+          "unit_price": 35000.0,
+          "line_cost": 19687.5
+        }
+      ],
+      "method": [],
+      "notes": "Tequila 45ml + Grenadine 15ml + Orange juice 90ml."
+    },
+    "M7015": {
+      "code": "M7015",
+      "name": "Singapore Sling",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 220000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9612",
+          "qty_net": 0.03,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.031578947368421054,
+          "unit_price": 230000.0,
+          "line_cost": 7263.1578947368425
+        },
+        {
+          "ing_id": "M9644",
+          "qty_net": 0.0214,
+          "unit": "BOTTLE",
+          "yield_pct": 95.0,
+          "qty_eff": 0.022526315789473682,
+          "unit_price": 500000.0,
+          "line_cost": 11263.157894736842
+        },
+        {
+          "ing_id": "M9405",
+          "qty_net": 0.01,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.010526315789473686,
+          "unit_price": 340000.0,
+          "line_cost": 3578.947368421053
+        },
+        {
+          "ing_id": "M9645",
+          "qty_net": 0.0107,
+          "unit": "BOTTLE",
+          "yield_pct": 95.0,
+          "qty_eff": 0.011263157894736841,
+          "unit_price": 1050000.0,
+          "line_cost": 11826.315789473683
+        },
+        {
+          "ing_id": "NLP60041",
+          "qty_net": 0.213,
+          "unit": "PIECE",
+          "yield_pct": 45.0,
+          "qty_eff": 0.47333333333333333,
+          "unit_price": 14000.0,
+          "line_cost": 6626.666666666667
+        },
+        {
+          "ing_id": "NLP60032",
+          "qty_net": 0.048,
+          "unit": "KG",
+          "yield_pct": 30.0,
+          "qty_eff": 0.16,
+          "unit_price": 25000.0,
+          "line_cost": 4000.0
+        },
+        {
+          "ing_id": "S1003",
+          "qty_net": 0.0143,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 0.0143,
+          "unit_price": 200000.0,
+          "line_cost": 2860.0
+        }
+      ],
+      "method": [],
+      "notes": "Gin 30ml + Cherry Brandy 15ml + Cointreau 7.5ml + Benedictine 7.5ml + Pineapple 120ml + Lime 15ml + Grenadine 10ml."
+    },
+    "M7037": {
+      "code": "M7037",
+      "name": "Daiquiri",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 490000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9702",
+          "qty_net": 0.06,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.06315789473684211,
+          "unit_price": 240000.0,
+          "line_cost": 15157.894736842105
+        },
+        {
+          "ing_id": "NLP60032",
+          "qty_net": 0.095,
+          "unit": "KG",
+          "yield_pct": 30.0,
+          "qty_eff": 0.3166666666666667,
+          "unit_price": 25000.0,
+          "line_cost": 7916.666666666668
+        },
+        {
+          "ing_id": "NLP30251",
+          "qty_net": 0.015,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.015,
+          "unit_price": 22400.0,
+          "line_cost": 336.0
+        }
+      ],
+      "method": [],
+      "notes": "White Rum 60ml + Lime juice 30ml + Sugar syrup 15ml."
+    },
+    "M7018": {
+      "code": "M7018",
+      "name": "Black Russian",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 150000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9512",
+          "qty_net": 0.05,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.052631578947368425,
+          "unit_price": 210000.0,
+          "line_cost": 11052.63157894737
+        },
+        {
+          "ing_id": "M9407",
+          "qty_net": 0.0286,
+          "unit": "BOTTLE",
+          "yield_pct": 95.0,
+          "qty_eff": 0.03010526315789474,
+          "unit_price": 280000.0,
+          "line_cost": 8429.473684210527
+        }
+      ],
+      "method": [],
+      "notes": "Vodka 50ml + Coffee liqueur (Kahlua) 20ml."
+    },
+    "M7038": {
+      "code": "M7038",
+      "name": "Kir Royal",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 190000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9611",
+          "qty_net": 0.0143,
+          "unit": "BOTTLE",
+          "yield_pct": 95.0,
+          "qty_eff": 0.01505263157894737,
+          "unit_price": 250000.0,
+          "line_cost": 3763.1578947368425
+        },
+        {
+          "ing_id": "V2002",
+          "qty_net": 0.12,
+          "unit": "BOTTLE",
+          "yield_pct": 95.0,
+          "qty_eff": 0.12631578947368421,
+          "unit_price": 314000.0,
+          "line_cost": 39663.15789473684
+        }
+      ],
+      "method": [],
+      "notes": "Crème de Cassis 10ml + Champagne/Sparkling 90ml."
+    },
+    "M7039": {
+      "code": "M7039",
+      "name": "Campari Soda",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 120000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9403",
+          "qty_net": 0.0571,
+          "unit": "BOTTLE",
+          "yield_pct": 95.0,
+          "qty_eff": 0.06010526315789474,
+          "unit_price": 330000.0,
+          "line_cost": 19834.736842105263
+        },
+        {
+          "ing_id": "M6002",
+          "qty_net": 0.303,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 0.303,
+          "unit_price": 5304.0,
+          "line_cost": 1607.1119999999999
+        }
+      ],
+      "method": [],
+      "notes": "Campari 40ml + Soda 100ml."
+    },
+    "M7040": {
+      "code": "M7040",
+      "name": "Campari Orange",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 120000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9403",
+          "qty_net": 0.0571,
+          "unit": "BOTTLE",
+          "yield_pct": 95.0,
+          "qty_eff": 0.06010526315789474,
+          "unit_price": 330000.0,
+          "line_cost": 19834.736842105263
+        },
+        {
+          "ing_id": "NLP60033",
+          "qty_net": 0.25,
+          "unit": "KG",
+          "yield_pct": 40.0,
+          "qty_eff": 0.625,
+          "unit_price": 35000.0,
+          "line_cost": 21875.0
+        }
+      ],
+      "method": [],
+      "notes": "Campari 40ml + Orange juice 100ml."
+    },
+    "M8002": {
+      "code": "M8002",
+      "name": "Whisky & soda",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 190000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9629",
+          "qty_net": 0.0714,
+          "unit": "BOTTLE",
+          "yield_pct": 95.0,
+          "qty_eff": 0.07515789473684212,
+          "unit_price": 285000.0,
+          "line_cost": 21420.000000000004
+        },
+        {
+          "ing_id": "M6002",
+          "qty_net": 0.303,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 0.303,
+          "unit_price": 5304.0,
+          "line_cost": 1607.1119999999999
+        }
+      ],
+      "method": [],
+      "notes": "Whisky 50ml + Soda 100ml."
+    },
+    "M8001": {
+      "code": "M8001",
+      "name": "Gin and Tonic",
+      "course": "Bar",
+      "category": "Cocktail",
+      "menu_role": "",
+      "price": 125000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9612",
+          "qty_net": 0.0714,
+          "unit": "BOTTLE",
+          "yield_pct": 95.0,
+          "qty_eff": 0.07515789473684212,
+          "unit_price": 230000.0,
+          "line_cost": 17286.315789473687
+        },
+        {
+          "ing_id": "M6003",
+          "qty_net": 0.4545,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 0.4545,
+          "unit_price": 6428.0,
+          "line_cost": 2921.5260000000003
+        }
+      ],
+      "method": [],
+      "notes": "Gin 50ml + Tonic 150ml."
+    },
+    "M7030": {
+      "code": "M7030",
+      "name": "Virgin Mojito",
+      "course": "Bar",
+      "category": "Mocktail",
+      "menu_role": "",
+      "price": 120000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60032",
+          "qty_net": 0.095,
+          "unit": "KG",
+          "yield_pct": 30.0,
+          "qty_eff": 0.3166666666666667,
+          "unit_price": 25000.0,
+          "line_cost": 7916.666666666668
+        },
+        {
+          "ing_id": "NLP30251",
+          "qty_net": 0.015,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.015,
+          "unit_price": 22400.0,
+          "line_cost": 336.0
+        },
+        {
+          "ing_id": "M6002",
+          "qty_net": 0.303,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 0.303,
+          "unit_price": 5304.0,
+          "line_cost": 1607.1119999999999
+        },
+        {
+          "ing_id": "NLP60059",
+          "qty_net": 0.005,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.005,
+          "unit_price": 50000.0,
+          "line_cost": 250.0
+        }
+      ],
+      "method": [],
+      "notes": "Lime juice 30ml + Brown sugar 15ml + Soda 100ml + Mint 6-8 leaves."
+    },
+    "M7021": {
+      "code": "M7021",
+      "name": "Pineapple Cooler",
+      "course": "Bar",
+      "category": "Mocktail",
+      "menu_role": "",
+      "price": 135000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60041",
+          "qty_net": 0.213,
+          "unit": "PIECE",
+          "yield_pct": 45.0,
+          "qty_eff": 0.47333333333333333,
+          "unit_price": 14000.0,
+          "line_cost": 6626.666666666667
+        },
+        {
+          "ing_id": "NLP30251",
+          "qty_net": 0.01,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.01,
+          "unit_price": 22400.0,
+          "line_cost": 224.0
+        },
+        {
+          "ing_id": "M6002",
+          "qty_net": 0.1818,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 0.1818,
+          "unit_price": 5304.0,
+          "line_cost": 964.2671999999999
+        }
+      ],
+      "method": [],
+      "notes": "Pineapple juice 120ml + Sugar syrup 10ml + Soda 60ml."
+    },
+    "M7031": {
+      "code": "M7031",
+      "name": "Mango Mojito",
+      "course": "Bar",
+      "category": "Mocktail",
+      "menu_role": "",
+      "price": 120000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60034",
+          "qty_net": 0.109,
+          "unit": "KG",
+          "yield_pct": 55.0,
+          "qty_eff": 0.19818181818181815,
+          "unit_price": 50000.0,
+          "line_cost": 9909.090909090908
+        },
+        {
+          "ing_id": "NLP60032",
+          "qty_net": 0.063,
+          "unit": "KG",
+          "yield_pct": 30.0,
+          "qty_eff": 0.21000000000000002,
+          "unit_price": 25000.0,
+          "line_cost": 5250.000000000001
+        },
+        {
+          "ing_id": "NLP30251",
+          "qty_net": 0.01,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.01,
+          "unit_price": 22400.0,
+          "line_cost": 224.0
+        },
+        {
+          "ing_id": "M6002",
+          "qty_net": 0.2424,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 0.2424,
+          "unit_price": 5304.0,
+          "line_cost": 1285.6896
+        },
+        {
+          "ing_id": "NLP60059",
+          "qty_net": 0.005,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.005,
+          "unit_price": 50000.0,
+          "line_cost": 250.0
+        }
+      ],
+      "method": [],
+      "notes": "Mango puree 60ml + Lime 20ml + Sugar syrup 10ml + Soda 80ml + Mint 6 leaves."
+    },
+    "M7025": {
+      "code": "M7025",
+      "name": "Sunset Citrus Cooler",
+      "course": "Bar",
+      "category": "Mocktail",
+      "menu_role": "",
+      "price": 125000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60033",
+          "qty_net": 0.15,
+          "unit": "KG",
+          "yield_pct": 40.0,
+          "qty_eff": 0.37499999999999994,
+          "unit_price": 35000.0,
+          "line_cost": 13124.999999999998
+        },
+        {
+          "ing_id": "NLP60032",
+          "qty_net": 0.063,
+          "unit": "KG",
+          "yield_pct": 30.0,
+          "qty_eff": 0.21000000000000002,
+          "unit_price": 25000.0,
+          "line_cost": 5250.000000000001
+        },
+        {
+          "ing_id": "S1003",
+          "qty_net": 0.0214,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 0.0214,
+          "unit_price": 200000.0,
+          "line_cost": 4280.0
+        },
+        {
+          "ing_id": "M6002",
+          "qty_net": 0.2424,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 0.2424,
+          "unit_price": 5304.0,
+          "line_cost": 1285.6896
+        }
+      ],
+      "method": [],
+      "notes": "Orange 60ml + Lime 20ml + Grenadine 15ml + Soda 80ml."
+    },
+    "M7023": {
+      "code": "M7023",
+      "name": "Watermelon Cooler",
+      "course": "Bar",
+      "category": "Mocktail",
+      "menu_role": "",
+      "price": 135000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60035",
+          "qty_net": 0.25,
+          "unit": "KG",
+          "yield_pct": 60.0,
+          "qty_eff": 0.4166666666666667,
+          "unit_price": 20000.0,
+          "line_cost": 8333.333333333334
+        },
+        {
+          "ing_id": "NLP60032",
+          "qty_net": 0.048,
+          "unit": "KG",
+          "yield_pct": 30.0,
+          "qty_eff": 0.16,
+          "unit_price": 25000.0,
+          "line_cost": 4000.0
+        },
+        {
+          "ing_id": "NLP30251",
+          "qty_net": 0.01,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.01,
+          "unit_price": 22400.0,
+          "line_cost": 224.0
+        },
+        {
+          "ing_id": "M6002",
+          "qty_net": 0.0909,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 0.0909,
+          "unit_price": 5304.0,
+          "line_cost": 482.13359999999994
+        }
+      ],
+      "method": [],
+      "notes": "Watermelon juice 150ml + Lime 15ml + Sugar syrup 10ml + Soda 30ml."
+    },
+    "M7028": {
+      "code": "M7028",
+      "name": "Cucumber Lime Cooler",
+      "course": "Bar",
+      "category": "Mocktail",
+      "menu_role": "",
+      "price": 120000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP60061",
+          "qty_net": 0.1,
+          "unit": "KG",
+          "yield_pct": 60.0,
+          "qty_eff": 0.16666666666666669,
+          "unit_price": 15000.0,
+          "line_cost": 2500.0000000000005
+        },
+        {
+          "ing_id": "NLP60032",
+          "qty_net": 0.063,
+          "unit": "KG",
+          "yield_pct": 30.0,
+          "qty_eff": 0.21000000000000002,
+          "unit_price": 25000.0,
+          "line_cost": 5250.000000000001
+        },
+        {
+          "ing_id": "NLP30251",
+          "qty_net": 0.01,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.01,
+          "unit_price": 22400.0,
+          "line_cost": 224.0
+        },
+        {
+          "ing_id": "M6003",
+          "qty_net": 0.2727,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 0.2727,
+          "unit_price": 6428.0,
+          "line_cost": 1752.9156
+        }
+      ],
+      "method": [],
+      "notes": "Cucumber juice 60ml + Lime 20ml + Sugar syrup 10ml + Tonic 90ml."
+    },
+    "M9001": {
+      "code": "M9001",
+      "name": "Espresso coffee",
+      "course": "Bar",
+      "category": "Coffee",
+      "menu_role": "",
+      "price": 50000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP90023",
+          "qty_net": 0.009,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.009,
+          "unit_price": 308000.0,
+          "line_cost": 2772.0
+        }
+      ],
+      "method": [],
+      "notes": "Espresso single shot using premium coffee beans."
+    },
+    "M9010": {
+      "code": "M9010",
+      "name": "Double Espresso",
+      "course": "Bar",
+      "category": "Coffee",
+      "menu_role": "",
+      "price": 70000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP90023",
+          "qty_net": 0.018,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.018,
+          "unit_price": 308000.0,
+          "line_cost": 5544.0
+        }
+      ],
+      "method": [],
+      "notes": "Espresso double shot."
+    },
+    "M9012": {
+      "code": "M9012",
+      "name": "Americano Coffee",
+      "course": "Bar",
+      "category": "Coffee",
+      "menu_role": "",
+      "price": 50000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP90023",
+          "qty_net": 0.018,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.018,
+          "unit_price": 308000.0,
+          "line_cost": 5544.0
+        }
+      ],
+      "method": [],
+      "notes": "Double shot Espresso + hot water."
+    },
+    "M9002": {
+      "code": "M9002",
+      "name": "Cappuccino",
+      "course": "Bar",
+      "category": "Coffee",
+      "menu_role": "",
+      "price": 50000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP90023",
+          "qty_net": 0.018,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.018,
+          "unit_price": 308000.0,
+          "line_cost": 5544.0
+        },
+        {
+          "ing_id": "NLP3021",
+          "qty_net": 0.12,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 0.12,
+          "unit_price": 33000.0,
+          "line_cost": 3960.0
+        }
+      ],
+      "method": [],
+      "notes": "Double shot Espresso + 120ml TH True Milk."
+    },
+    "M9011": {
+      "code": "M9011",
+      "name": "Latte Coffee",
+      "course": "Bar",
+      "category": "Coffee",
+      "menu_role": "",
+      "price": 70000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP90023",
+          "qty_net": 0.018,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.018,
+          "unit_price": 308000.0,
+          "line_cost": 5544.0
+        },
+        {
+          "ing_id": "NLP3021",
+          "qty_net": 0.18,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 0.18,
+          "unit_price": 33000.0,
+          "line_cost": 5940.0
+        }
+      ],
+      "method": [],
+      "notes": "Double shot Espresso + 180ml TH True Milk."
+    },
+    "M9015": {
+      "code": "M9015",
+      "name": "Mocha Coffee",
+      "course": "Bar",
+      "category": "Coffee",
+      "menu_role": "",
+      "price": 70000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP90023",
+          "qty_net": 0.018,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.018,
+          "unit_price": 308000.0,
+          "line_cost": 5544.0
+        },
+        {
+          "ing_id": "NLP3021",
+          "qty_net": 0.15,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 0.15,
+          "unit_price": 33000.0,
+          "line_cost": 4950.0
+        },
+        {
+          "ing_id": "NLP4002",
+          "qty_net": 0.015,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.015,
+          "unit_price": 197000.0,
+          "line_cost": 2955.0
+        }
+      ],
+      "method": [],
+      "notes": "Espresso + Milk + Chocolate."
+    },
+    "M9003": {
+      "code": "M9003",
+      "name": "Regular coffee",
+      "course": "Bar",
+      "category": "Coffee",
+      "menu_role": "",
+      "price": 35000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9002",
+          "qty_net": 0.018,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.018,
+          "unit_price": 201800.0,
+          "line_cost": 3632.3999999999996
+        }
+      ],
+      "method": [],
+      "notes": "Cà phê phin truyền thống (Nóng)."
+    },
+    "M9004": {
+      "code": "M9004",
+      "name": "Ice coffee",
+      "course": "Bar",
+      "category": "Coffee",
+      "menu_role": "",
+      "price": 35000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9002",
+          "qty_net": 0.018,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.018,
+          "unit_price": 201800.0,
+          "line_cost": 3632.3999999999996
+        }
+      ],
+      "method": [],
+      "notes": "Cà phê phin truyền thống (Đá)."
+    },
+    "M9016": {
+      "code": "M9016",
+      "name": "Vietnamese milk coffee",
+      "course": "Bar",
+      "category": "Coffee",
+      "menu_role": "",
+      "price": 50000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9002",
+          "qty_net": 0.018,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.018,
+          "unit_price": 201800.0,
+          "line_cost": 3632.3999999999996
+        },
+        {
+          "ing_id": "NLP9006",
+          "qty_net": 0.053,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 0.053,
+          "unit_price": 17788.0,
+          "line_cost": 942.764
+        }
+      ],
+      "method": [],
+      "notes": "Cà phê sữa đặc Việt Nam."
+    },
+    "M9005": {
+      "code": "M9005",
+      "name": "Lipton tea",
+      "course": "Bar",
+      "category": "Tea",
+      "menu_role": "",
+      "price": 35000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9003",
+          "qty_net": 0.04,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 0.04,
+          "unit_price": 35000.0,
+          "line_cost": 1400.0
+        }
+      ],
+      "method": [],
+      "notes": "Trà Lipton túi lọc."
+    },
+    "M9006": {
+      "code": "M9006",
+      "name": "Ice Lipton tea",
+      "course": "Bar",
+      "category": "Tea",
+      "menu_role": "",
+      "price": 35000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9003",
+          "qty_net": 0.04,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 0.04,
+          "unit_price": 35000.0,
+          "line_cost": 1400.0
+        }
+      ],
+      "method": [],
+      "notes": "Trà Lipton đá."
+    },
+    "M9008": {
+      "code": "M9008",
+      "name": "Vietnamese ice tea",
+      "course": "Bar",
+      "category": "Tea",
+      "menu_role": "",
+      "price": 35000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP600351",
+          "qty_net": 0.005,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.005,
+          "unit_price": 168000.0,
+          "line_cost": 840.0
+        }
+      ],
+      "method": [],
+      "notes": "Trà đá mạn."
+    },
+    "M9009": {
+      "code": "M9009",
+      "name": "Olong tea (pot)",
+      "course": "Bar",
+      "category": "Tea",
+      "menu_role": "",
+      "price": 50000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP004",
+          "qty_net": 0.06,
+          "unit": "BAG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.06,
+          "unit_price": 74058.0,
+          "line_cost": 4443.48
+        }
+      ],
+      "method": [],
+      "notes": "Ấm trà Oolong Tam Châu."
+    },
+    "M9013": {
+      "code": "M9013",
+      "name": "Vietnamese tea Pot (Ấm Trà Mạn Thái Nguyên)",
+      "course": "Bar",
+      "category": "Tea",
+      "menu_role": "",
+      "price": 50000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP600351",
+          "qty_net": 0.006,
+          "unit": "KG",
+          "yield_pct": 100.0,
+          "qty_eff": 0.006,
+          "unit_price": 168000.0,
+          "line_cost": 1008.0
+        }
+      ],
+      "method": [],
+      "notes": "Ấm trà mạn Thái Nguyên."
+    },
+    "M9014": {
+      "code": "M9014",
+      "name": "Earl grey tea",
+      "course": "Bar",
+      "category": "Tea",
+      "menu_role": "",
+      "price": 50000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9024",
+          "qty_net": 0.04,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 0.04,
+          "unit_price": 45000.0,
+          "line_cost": 1800.0
+        }
+      ],
+      "method": [],
+      "notes": "Trà bá tước Earl Grey."
+    },
+    "M9017": {
+      "code": "M9017",
+      "name": "Jasmine Tea",
+      "course": "Bar",
+      "category": "Tea",
+      "menu_role": "",
+      "price": 55000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9004",
+          "qty_net": 0.04,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 0.04,
+          "unit_price": 25000.0,
+          "line_cost": 1000.0
+        }
+      ],
+      "method": [],
+      "notes": "Trà hoa nhài."
+    },
+    "M9018": {
+      "code": "M9018",
+      "name": "Lotus Tea",
+      "course": "Bar",
+      "category": "Tea",
+      "menu_role": "",
+      "price": 55000.0,
+      "ingredients": [
+        {
+          "ing_id": "NLP9004",
+          "qty_net": 0.04,
+          "unit": "BOX",
+          "yield_pct": 100.0,
+          "qty_eff": 0.04,
+          "unit_price": 25000.0,
+          "line_cost": 1000.0
+        }
+      ],
+      "method": [],
+      "notes": "Trà sen."
+    },
+    "M9101": {
+      "code": "M9101",
+      "name": "Red wine glass - FRANCE",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 160000.0,
+      "ingredients": [
+        {
+          "ing_id": "ING-071",
+          "qty_net": 0.125,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.13157894736842105,
+          "unit_price": 86000.0,
+          "line_cost": 11315.78947368421
+        }
+      ],
+      "method": [],
+      "notes": "Rót ly vang đỏ Pháp 125ml."
+    },
+    "M9102": {
+      "code": "M9102",
+      "name": "White wine glass - FRANCE",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 160000.0,
+      "ingredients": [
+        {
+          "ing_id": "ING-070",
+          "qty_net": 0.125,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.13157894736842105,
+          "unit_price": 86000.0,
+          "line_cost": 11315.78947368421
+        }
+      ],
+      "method": [],
+      "notes": "Rót ly vang trắng Pháp 125ml."
+    },
+    "M9104": {
+      "code": "M9104",
+      "name": "White wine glass CHILE - Luis Felipe",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 140000.0,
+      "ingredients": [
+        {
+          "ing_id": "ING-070",
+          "qty_net": 0.125,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.13157894736842105,
+          "unit_price": 86000.0,
+          "line_cost": 11315.78947368421
+        }
+      ],
+      "method": [],
+      "notes": "Rót ly vang trắng Chile 125ml."
+    },
+    "M9106": {
+      "code": "M9106",
+      "name": "Dalat red wine glass",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 120000.0,
+      "ingredients": [
+        {
+          "ing_id": "ING-071",
+          "qty_net": 0.125,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.13157894736842105,
+          "unit_price": 86000.0,
+          "line_cost": 11315.78947368421
+        }
+      ],
+      "method": [],
+      "notes": "Rót ly vang đỏ Đà Lạt 125ml."
+    },
+    "M9107": {
+      "code": "M9107",
+      "name": "Dalat white wine glass",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 120000.0,
+      "ingredients": [
+        {
+          "ing_id": "ING-070",
+          "qty_net": 0.125,
+          "unit": "L",
+          "yield_pct": 95.0,
+          "qty_eff": 0.13157894736842105,
+          "unit_price": 86000.0,
+          "line_cost": 11315.78947368421
+        }
+      ],
+      "method": [],
+      "notes": "Rót ly vang trắng Đà Lạt 125ml."
+    },
+    "M9109": {
+      "code": "M9109",
+      "name": "Rose wine France (glass)",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 160000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9410",
+          "qty_net": 0.1667,
+          "unit": "BOTTLE",
+          "yield_pct": 95.0,
+          "qty_eff": 0.1754736842105263,
+          "unit_price": 203000.0,
+          "line_cost": 35621.15789473684
+        }
+      ],
+      "method": [],
+      "notes": "Rót ly vang hồng Pháp 125ml từ chai 750ml."
+    },
+    "M9121": {
+      "code": "M9121",
+      "name": "Pierre Larousse Sparkling Brut -  Glass",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 400000.0,
+      "ingredients": [
+        {
+          "ing_id": "V2001",
+          "qty_net": 0.3333,
+          "unit": "BOTTLE",
+          "yield_pct": 95.0,
+          "qty_eff": 0.3508421052631579,
+          "unit_price": 215000.0,
+          "line_cost": 75431.05263157895
+        }
+      ],
+      "method": [],
+      "notes": "Rót ly Champagne/Sparkling 125ml từ chai 375ml."
+    },
+    "M9204": {
+      "code": "M9204",
+      "name": "Cigar Cohiba Siglo VI",
+      "course": "Bar",
+      "category": "Khác",
+      "menu_role": "",
+      "price": 300000.0,
+      "ingredients": [
+        {
+          "ing_id": "M9203",
+          "qty_net": 1.0,
+          "unit": "PACK",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 300000.0,
+          "line_cost": 300000.0
+        }
+      ],
+      "method": [],
+      "notes": "Cigar điếu bán lẻ."
+    },
+    "B5001": {
+      "code": "B5001",
+      "name": "Heineken - 33cl",
+      "course": "Bar",
+      "category": "Beer",
+      "menu_role": "",
+      "price": 70000.0,
+      "ingredients": [
+        {
+          "ing_id": "B5001",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 14375.0,
+          "line_cost": 14375.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "B5002": {
+      "code": "B5002",
+      "name": "Tiger - 33cl",
+      "course": "Bar",
+      "category": "Beer",
+      "menu_role": "",
+      "price": 70000.0,
+      "ingredients": [
+        {
+          "ing_id": "B5002",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 11625.0,
+          "line_cost": 11625.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "B5004": {
+      "code": "B5004",
+      "name": "Beer 333 - 33cl",
+      "course": "Bar",
+      "category": "Beer",
+      "menu_role": "",
+      "price": 70000.0,
+      "ingredients": [
+        {
+          "ing_id": "B5004",
+          "qty_net": 1.0,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 9792.0,
+          "line_cost": 9792.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "B5005": {
+      "code": "B5005",
+      "name": "Saigon beer - 33cl",
+      "course": "Bar",
+      "category": "Beer",
+      "menu_role": "",
+      "price": 70000.0,
+      "ingredients": [
+        {
+          "ing_id": "B5005",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 10750.0,
+          "line_cost": 10750.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "B5007": {
+      "code": "B5007",
+      "name": "Sapporo draught",
+      "course": "Bar",
+      "category": "Beer",
+      "menu_role": "",
+      "price": 90000.0,
+      "ingredients": [
+        {
+          "ing_id": "B5007",
+          "qty_net": 1.0,
+          "unit": "GLASS",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 16436.0,
+          "line_cost": 16436.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "B5010": {
+      "code": "B5010",
+      "name": "Hanoi - 33cl",
+      "course": "Bar",
+      "category": "Beer",
+      "menu_role": "",
+      "price": 70000.0,
+      "ingredients": [
+        {
+          "ing_id": "B5010",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 9750.0,
+          "line_cost": 9750.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "B5012": {
+      "code": "B5012",
+      "name": "Hanoi - can",
+      "course": "Bar",
+      "category": "Beer",
+      "menu_role": "",
+      "price": 70000.0,
+      "ingredients": [
+        {
+          "ing_id": "B5012",
+          "qty_net": 1.0,
+          "unit": "CAN",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 9833.0,
+          "line_cost": 9833.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "B5016": {
+      "code": "B5016",
+      "name": "Leffe - Belgian beer - bottle 33cl",
+      "course": "Bar",
+      "category": "Beer",
+      "menu_role": "",
+      "price": 130000.0,
+      "ingredients": [
+        {
+          "ing_id": "B5016",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 22916.0,
+          "line_cost": 22916.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V1001": {
+      "code": "V1001",
+      "name": "Chateau Noaillac Medoc Cru Bourgeois 37.5cl (R)",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 735000.0,
+      "ingredients": [
+        {
+          "ing_id": "V1001",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 318000.0,
+          "line_cost": 318000.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V2002": {
+      "code": "V2002",
+      "name": "Larousse Chardonnay Sparkling, France",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1200000.0,
+      "ingredients": [
+        {
+          "ing_id": "V2002",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 314000.0,
+          "line_cost": 314000.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V4045": {
+      "code": "V4045",
+      "name": "Louis Latour - Bourgogne Pinot Noir",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 2100000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4045",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 450000.0,
+          "line_cost": 450000.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V4064": {
+      "code": "V4064",
+      "name": "F. Thienpont Causse Rouge Merlot, Bordeaux - Red",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 995000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4064",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 426000.0,
+          "line_cost": 426000.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V4065": {
+      "code": "V4065",
+      "name": "Baron P. de Rothschild Mouton Cadet Bordeaux - Red",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1300000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4065",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 257400.0,
+          "line_cost": 257400.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V4075": {
+      "code": "V4075",
+      "name": "Louis Latour Pinot Noir Les Pierres Dorées - Red",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 2850000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4075",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 562500.0,
+          "line_cost": 562500.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V4088": {
+      "code": "V4088",
+      "name": "Château Baratet, Cabernet Sauvignon, France",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1100000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4088",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 190000.0,
+          "line_cost": 190000.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V4091": {
+      "code": "V4091",
+      "name": "Bernard Magrez « Le Prélat » Rouge Côtes du Rhône Villages Laudun",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1500000.0,
+      "ingredients": [
+        {
+          "ing_id": "V4091",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 540000.0,
+          "line_cost": 540000.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V6027": {
+      "code": "V6027",
+      "name": "Luis Felipe Chardonnay",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1550000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6027",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 175000.0,
+          "line_cost": 175000.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V6034": {
+      "code": "V6034",
+      "name": "Frontera Cabernet Sauvignon 75cl (Red)",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1200000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6034",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 231000.0,
+          "line_cost": 231000.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V6056": {
+      "code": "V6056",
+      "name": "MontGras Estate Cabernet Sauvignon Chile",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1300000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6056",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 182500.0,
+          "line_cost": 182500.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V6059": {
+      "code": "V6059",
+      "name": "Montes Classic Series Chardonnay (CuricóValley DO — Chile)",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 1850000.0,
+      "ingredients": [
+        {
+          "ing_id": "V6059",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 384000.0,
+          "line_cost": 384000.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V9410": {
+      "code": "V9410",
+      "name": "Dufouleur Monopole Rose Wine",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 595000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9410",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 203000.0,
+          "line_cost": 203000.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V9501": {
+      "code": "V9501",
+      "name": "Dalat Wine Red - Bottle",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 550000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9501",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 100000.0,
+          "line_cost": 100000.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
+    },
+    "V9502": {
+      "code": "V9502",
+      "name": "Dalat Wine White - Bottle",
+      "course": "Bar",
+      "category": "Wine",
+      "menu_role": "",
+      "price": 550000.0,
+      "ingredients": [
+        {
+          "ing_id": "V9502",
+          "qty_net": 1.0,
+          "unit": "BOTTLE",
+          "yield_pct": 100.0,
+          "qty_eff": 1.0,
+          "unit_price": 100000.0,
+          "line_cost": 100000.0
+        }
+      ],
+      "method": [],
+      "notes": "Bán trực tiếp chai/lon."
     }
   },
   "sales": [
