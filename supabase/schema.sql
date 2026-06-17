@@ -815,4 +815,58 @@ with check (get_current_user_role() in ('admin', 'restaurant_manager', 'BAR_SUPE
 grant select on table ingredient_departments to authenticated;
 grant select on table department_approval_audit_logs to authenticated;
 
+-- =========================================================================
+-- v9.4 SCHEMA ADDITIONS (BÁN HÀNG 2 GIÁ — DINE-IN vs TAKEAWAY)
+-- =========================================================================
 
+-- (a) Gắn kênh vào dữ liệu bán (POS import)
+alter table sales_imports add column if not exists
+  order_type text not null default 'DINE_IN'
+  check (order_type in ('DINE_IN','TAKEAWAY'));
+
+-- Nếu có bảng sales thì cập nhật (dùng block DO để tránh lỗi nếu bảng không tồn tại)
+do $$
+begin
+  if exists (select 1 from pg_tables where tablename = 'sales') then
+    alter table sales add column if not exists
+      order_type text not null default 'DINE_IN'
+      check (order_type in ('DINE_IN','TAKEAWAY'));
+  end if;
+end $$;
+
+-- (b) Map bao bì cho đơn MANG VỀ: mỗi mã món POS → các SKU bao bì + số lượng
+create table if not exists takeaway_packaging_map (
+  pos_item_code text not null,
+  packaging_id  varchar(50) references ingredients(id) not null,  -- hộp/túi/nắp...
+  qty_per_unit  numeric(12,4) not null default 1,
+  primary key (pos_item_code, packaging_id)
+);
+
+alter table takeaway_packaging_map enable row level security;
+drop policy if exists "Allow select packaging_map for all staff" on takeaway_packaging_map;
+create policy "Allow select packaging_map for all staff" on takeaway_packaging_map for select to authenticated using (true);
+drop policy if exists "Allow manage packaging_map for admin and senior roles" on takeaway_packaging_map;
+create policy "Allow manage packaging_map for admin and senior roles"
+on takeaway_packaging_map for all to authenticated
+using (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant'))
+with check (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant'));
+
+-- (c) Bảng giá theo kênh (menu_prices)
+create table if not exists menu_prices (
+  item_code  text not null,
+  order_type text not null check (order_type in ('DINE_IN','TAKEAWAY')),
+  price numeric(15,2) not null,
+  primary key (item_code, order_type)
+);
+
+alter table menu_prices enable row level security;
+drop policy if exists "Allow select menu_prices for all staff" on menu_prices;
+create policy "Allow select menu_prices for all staff" on menu_prices for select to authenticated using (true);
+drop policy if exists "Allow manage menu_prices for admin and senior roles" on menu_prices;
+create policy "Allow manage menu_prices for admin and senior roles"
+on menu_prices for all to authenticated
+using (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant'))
+with check (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_accountant'));
+
+grant select on table takeaway_packaging_map to authenticated;
+grant select on table menu_prices to authenticated;

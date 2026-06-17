@@ -3711,6 +3711,7 @@ export default function Home() {
                     <tr>
                       <th className="px-4 py-3">Mã POS</th>
                       <th className="px-4 py-3">Tên món trên POS</th>
+                      <th className="px-4 py-3 text-center">Kênh bán</th>
                       <th className="px-4 py-3 text-right">Đơn giá bán thực tế</th>
                       <th className="px-4 py-3 text-right">Số lượng bán</th>
                       <th className="px-4 py-3 text-right">Tổng tiền bán</th>
@@ -3724,6 +3725,15 @@ export default function Home() {
                         <tr key={i} className="hover:bg-moss-light/30">
                           <td className="px-4 py-3 font-mono text-accent-gold/70">{sale.code}</td>
                           <td className="px-4 py-3 font-medium text-gray-100">{sale.name}</td>
+                          <td className="px-4 py-3 text-center">
+                            <span className={`inline-block px-1.5 py-0.5 text-[9px] rounded font-sans font-semibold ${
+                              (sale as any).order_type === 'TAKEAWAY' 
+                                ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' 
+                                : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                            }`}>
+                              {(sale as any).order_type === 'TAKEAWAY' ? 'MANG VỀ' : 'TẠI CHỖ'}
+                            </span>
+                          </td>
                           <td className="px-4 py-3 text-right">{sale.price.toLocaleString()} đ</td>
                           <td className="px-4 py-3 text-right font-mono font-semibold">{sale.qty}</td>
                           <td className="px-4 py-3 text-right font-mono text-gray-200">{sale.total_before_discount.toLocaleString()} đ</td>

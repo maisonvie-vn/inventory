@@ -10759,7 +10759,8 @@
       "discount": 0.0,
       "discount_pct": 0.0,
       "service_charge": 0.0,
-      "tax": 0.0
+      "tax": 0.0,
+      "order_type": "TAKEAWAY"
     },
     {
       "code": "B5002",
@@ -10770,7 +10771,8 @@
       "discount": 0.0,
       "discount_pct": 0.0,
       "service_charge": 2250.0,
-      "tax": 3780.0
+      "tax": 3780.0,
+      "order_type": "DINE_IN"
     },
     {
       "code": "B5002",
@@ -10781,7 +10783,8 @@
       "discount": 0.0,
       "discount_pct": 0.0,
       "service_charge": 0.0,
-      "tax": 0.0
+      "tax": 0.0,
+      "order_type": "TAKEAWAY"
     },
     {
       "code": "B5004",

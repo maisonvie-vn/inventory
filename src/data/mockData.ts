@@ -54,6 +54,7 @@ export interface SaleRecord {
   discount_pct: number;
   service_charge: number;
   tax: number;
+  order_type?: 'DINE_IN' | 'TAKEAWAY';
 }
 
 // Map POS codes to recipe codes
