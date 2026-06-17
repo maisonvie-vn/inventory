@@ -27,6 +27,8 @@ import {
 
 import * as XLSX from 'xlsx';
 
+import dbData from '../data/db.json';
+
 import { 
   getIngredients, 
   getRecipes, 
@@ -63,22 +65,26 @@ export default function Home() {
   const [weighDensity, setWeighDensity] = useState<number>(1.0);
 
   // Purchasing & Goods Receipts states
-  const [purchaseOrders, setPurchaseOrders] = useState<any[]>([
-    { id: 'po-1', poNumber: 'PO-20260615-ANNA', supplierName: 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)', supplierId: '90000000-0000-0000-0000-000000000001', expectedDate: '2026-06-16', status: 'OPEN', source: 'AUTO_PO', items: [
-      { ingId: 'ING-003', name: 'Cá tuyết đen đông lạnh', qtyOrdered: 5, unit: 'kg', price: 1400000 },
-      { ingId: 'ING-093', name: 'Thịt bò Ribeye Angus US', qtyOrdered: 10, unit: 'kg', price: 890000 }
-    ]},
-    { id: 'po-2', poNumber: 'PO-20260615-DALO', supplierName: 'Tổng kho Rượu vang Đa Lộc', supplierId: '90000000-0000-0000-0000-000000000003', expectedDate: '2026-06-17', status: 'OPEN', source: 'AUTO_PO', items: [
-      { ingId: 'ING-070', name: 'Vang trắng khô', qtyOrdered: 12, unit: 'BOTTLE', price: 86000 },
-      { ingId: 'ING-071', name: 'Vang đỏ đậm', qtyOrdered: 18, unit: 'BOTTLE', price: 86000 }
-    ]}
-  ]);
-  const [goodsReceipts, setGoodsReceipts] = useState<any[]>([
-    { id: 'grn-1', poId: 'po-1', poNumber: 'PO-20260615-ANNA', supplierName: 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)', invoiceNo: 'INV-ANNAM-9988', invoiceAmount: 15900000, fxRate: 1.0, duty: 0, freight: 400000, status: 'approved', matchStatus: 'APPROVED', date: '2026-06-14', lines: [
-      { ingredientId: 'ING-003', qtyReceived: 5, purchaseUom: 'kg', unitPriceFx: 1400000, landedUnitCost: 1435000 },
-      { ingredientId: 'ING-093', qtyReceived: 10, purchaseUom: 'kg', unitPriceFx: 890000, landedUnitCost: 912000 }
-    ]}
-  ]);
+  const [purchaseOrders, setPurchaseOrders] = useState<any[]>(() => {
+    return (dbData as any).purchase_orders || [
+      { id: 'po-1', poNumber: 'PO-20260615-ANNA', supplierName: 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)', supplierId: '90000000-0000-0000-0000-000000000001', expectedDate: '2026-06-16', status: 'OPEN', source: 'AUTO_PO', items: [
+        { ingId: 'ING-003', name: 'Cá tuyết đen đông lạnh', qtyOrdered: 5, unit: 'kg', price: 1400000 },
+        { ingId: 'ING-093', name: 'Thịt bò Ribeye Angus US', qtyOrdered: 10, unit: 'kg', price: 890000 }
+      ]},
+      { id: 'po-2', poNumber: 'PO-20260615-DALO', supplierName: 'Tổng kho Rượu vang Đa Lộc', supplierId: '90000000-0000-0000-0000-000000000003', expectedDate: '2026-06-17', status: 'OPEN', source: 'AUTO_PO', items: [
+        { ingId: 'ING-070', name: 'Vang trắng khô', qtyOrdered: 12, unit: 'BOTTLE', price: 86000 },
+        { ingId: 'ING-071', name: 'Vang đỏ đậm', qtyOrdered: 18, unit: 'BOTTLE', price: 86000 }
+      ]}
+    ];
+  });
+  const [goodsReceipts, setGoodsReceipts] = useState<any[]>(() => {
+    return (dbData as any).goods_receipts || [
+      { id: 'grn-1', poId: 'po-1', poNumber: 'PO-20260615-ANNA', supplierName: 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)', invoiceNo: 'INV-ANNAM-9988', invoiceAmount: 15900000, fxRate: 1.0, duty: 0, freight: 400000, status: 'approved', matchStatus: 'APPROVED', date: '2026-06-14', lines: [
+        { ingredientId: 'ING-003', qtyReceived: 5, purchaseUom: 'kg', unitPriceFx: 1400000, landedUnitCost: 1435000 },
+        { ingredientId: 'ING-093', qtyReceived: 10, purchaseUom: 'kg', unitPriceFx: 890000, landedUnitCost: 912000 }
+      ]}
+    ];
+  });
   
   // New GRN creation form states
   const [selectedPoForGrn, setSelectedPoForGrn] = useState<string>('');
@@ -244,17 +250,37 @@ export default function Home() {
     txn_type?: string;
     transferId?: string;
   }[]>(() => {
-    // Initialize with mock opening stock of 30 for all ingredients
-    return getIngredients().map(ing => ({
-      id: `init-${ing.id}`,
-      ingredientId: ing.id,
-      type: 'import' as const,
-      qty: 30,
-      unit_price: ing.price,
-      status: 'approved' as const,
-      date: '2026-06-01',
-      note: 'Tồn đầu kỳ (Opening Stock)'
+    // Initialize with actual opening stock of db.json if available, else 0
+    const initTrans = getIngredients().map(ing => {
+      const opStock = (dbData as any).opening_stock?.[ing.id] ?? 0.0;
+      const txLoc = ing.category && ['Wine', 'Alcohol', 'beverage', 'Beverage'].includes(ing.category) ? 'BAR' : 'MAIN_STORE';
+      return {
+        id: `init-${ing.id}`,
+        ingredientId: ing.id,
+        type: 'import' as const,
+        qty: opStock,
+        unit_price: ing.price,
+        status: 'approved' as const,
+        date: '2026-06-01',
+        note: 'Tồn đầu kỳ (Opening Stock)',
+        locationId: txLoc
+      };
+    });
+    
+    // Append other transaction logs from db.json
+    const otherTrans = ((dbData as any).transactions || []).map((t: any) => ({
+      id: t.id,
+      ingredientId: t.ingredientId,
+      type: t.type as any,
+      qty: t.qty,
+      unit_price: t.unit_price,
+      status: t.status as any,
+      date: t.date,
+      note: t.note,
+      locationId: t.locationId
     }));
+    
+    return [...initTrans, ...otherTrans];
   });
 
   // State for Auto-PO simulation results
