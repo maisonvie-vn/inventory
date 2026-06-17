@@ -4143,31 +4143,46 @@ export default function Home() {
                 </div>
 
                 <div className="flex flex-col gap-2 overflow-y-auto max-h-[450px] pr-2">
-                  {filteredRecipes.map((r) => {
-                    const displayCode = r.code.replace('_DEG', '');
-                    const isSelected = selectedRecipe === displayCode;
-                    return (
-                      <button
-                        key={r.code}
-                        onClick={() => setSelectedRecipe(displayCode)}
-                        className={`w-full p-3 text-left rounded border flex items-center justify-between transition-all ${
-                          isSelected 
-                            ? 'bg-accent-gold/5 border-border-moss text-accent-gold' 
-                            : 'bg-moss-light/30 border-gray-800 text-gray-300 hover:bg-moss-light/60 hover:text-gray-100'
-                        }`}
-                      >
-                        <div className="flex flex-col gap-1 min-w-0 pr-2">
-                          <span className="font-serif font-semibold text-sm truncate">{r.name}</span>
-                          <div className="flex items-center gap-2 text-[10px] text-gray-400 font-mono">
-                            <span>Mã: {r.code}</span>
-                            <span>•</span>
-                            <span>{r.course}</span>
+                  {filteredRecipes.length > 0 ? (
+                    filteredRecipes.map((r) => {
+                      const displayCode = r.code.replace('_DEG', '');
+                      const isSelected = selectedRecipe === displayCode;
+                      return (
+                        <button
+                          key={r.code}
+                          onClick={() => setSelectedRecipe(displayCode)}
+                          className={`w-full p-3 text-left rounded border flex items-center justify-between transition-all ${
+                            isSelected 
+                              ? 'bg-accent-gold/5 border-border-moss text-accent-gold' 
+                              : 'bg-moss-light/30 border-gray-800 text-gray-300 hover:bg-moss-light/60 hover:text-gray-100'
+                          }`}
+                        >
+                          <div className="flex flex-col gap-1 min-w-0 pr-2">
+                            <span className="font-serif font-semibold text-sm truncate">{r.name}</span>
+                            <div className="flex items-center gap-2 text-[10px] text-gray-400 font-mono">
+                              <span>Mã: {r.code}</span>
+                              <span>•</span>
+                              <span>{r.course}</span>
+                            </div>
                           </div>
+                          <ChevronRight size={14} className={isSelected ? 'text-accent-gold' : 'text-gray-500'} />
+                        </button>
+                      );
+                    })
+                  ) : (
+                    <div className="text-center py-12 text-gray-500 border border-dashed border-border-moss rounded-md bg-moss-light/10 font-sans">
+                      {recipeType === 'deg' ? (
+                        <div className="flex flex-col items-center gap-2 px-4">
+                          <p className="font-semibold text-accent-gold text-xs">Không có Định mức Tasting (Dégustation)</p>
+                          <p className="text-[10px] text-gray-400 leading-relaxed">
+                            Món uống bộ phận Bar và một số món ăn đặc thù chỉ phục vụ phần À La Carte đầy đủ, không có định lượng Tasting.
+                          </p>
                         </div>
-                        <ChevronRight size={14} className={isSelected ? 'text-accent-gold' : 'text-gray-500'} />
-                      </button>
-                    );
-                  })}
+                      ) : (
+                        <p className="text-xs">Không tìm thấy công thức phù hợp.</p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 
