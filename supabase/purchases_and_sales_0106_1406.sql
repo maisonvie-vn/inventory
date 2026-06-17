@@ -12,7 +12,15 @@ INSERT INTO uom (id, name, uom_type) VALUES
 ('GOI', 'Gói/Bao', 'COUNT'),
 ('BOTTLE', 'Chai/Bottle', 'COUNT'),
 ('KG', 'Kilogram', 'WEIGHT'),
-('G', 'Gram', 'WEIGHT')
+('G', 'Gram', 'WEIGHT'),
+('CAN', 'Lon/Can', 'COUNT'),
+('GLASS', 'Ly/Glass', 'COUNT'),
+('PACK', 'Gói/Pack', 'COUNT'),
+('PIECE', 'Quả/Củ/Cái/Piece', 'COUNT'),
+('BOX', 'Hộp/Box', 'COUNT'),
+('CASE', 'Thùng/Case', 'COUNT'),
+('L', 'Lít', 'VOLUME'),
+('ML', 'Millilít', 'VOLUME')
 ON CONFLICT (id) DO NOTHING;
 
 -- Default Import Supplier
