@@ -17,6 +17,41 @@ INSERT INTO suppliers (id, name, contact, lead_time_days, cutoff_time, is_active
 VALUES ('90000000-0000-0000-0000-000000000004', 'Nhập Đầu Kỳ', '{}', 1, '12:00:00', true)
 ON CONFLICT (id) DO NOTHING;
 
+-- Missing Ingredients
+INSERT INTO ingredients (
+  id, code, nom_fr, ten_vi, name_en, stock_uom, recipe_uom, 
+  stock_to_recipe_factor, purchase_category_id, 
+  wac_price, standard_price, is_beverage, is_active
+) VALUES 
+(
+  'V9006', 'V9006', 
+  'Kaiken Ultra Malbec',
+  'Kaiken « Ultra » Malbec (Malbec · Uco Valley, Mendoza — Argentina)', 
+  'Kaiken Ultra Malbec', 
+  'BOTTLE', 'BOTTLE', 1, 
+  (SELECT id FROM purchase_categories WHERE code = 'ALCOHOL' LIMIT 1),
+  638000.0, 638000.0, true, true
+),
+(
+  'NLP6002', 'NLP6002', 
+  'Ingrédient de cuisine',
+  'Nguyên liệu chế biến bếp', 
+  'Kitchen processing ingredient', 
+  'KG', 'G', 1000, 
+  (SELECT id FROM purchase_categories WHERE code = 'STOCK' LIMIT 1),
+  570984.7, 570984.7, false, true
+),
+(
+  'NLP60048', 'NLP60048', 
+  'Raisins verts sans pépins',
+  'Nho xanh ko hạt', 
+  'Green seedless grapes', 
+  'KG', 'G', 1000, 
+  (SELECT id FROM purchase_categories WHERE code = 'FRUIT' LIMIT 1),
+  150000.0, 150000.0, false, true
+)
+ON CONFLICT (id) DO NOTHING;
+
 -- Missing Menu Items
 INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('000', '010626-J-SHEI-X598-T2610000220', 0.0, false) ON CONFLICT (id) DO NOTHING;
 INSERT INTO menu_items (id, name, sale_price, is_set_menu) VALUES ('001', 'Chateau Guillemin La Gaffelière Saint Emilion Grand Cru (Mr.Hải Triều)', 0.0, false) ON CONFLICT (id) DO NOTHING;
