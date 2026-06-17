@@ -9,7 +9,10 @@ INSERT INTO uom (id, name, uom_type) VALUES
 ('Qua', 'Quả/Củ/Cái', 'COUNT'),
 ('Nai', 'Nải', 'COUNT'),
 ('Chai', 'Chai', 'COUNT'),
-('GOI', 'Gói/Bao', 'COUNT')
+('GOI', 'Gói/Bao', 'COUNT'),
+('BOTTLE', 'Chai/Bottle', 'COUNT'),
+('KG', 'Kilogram', 'WEIGHT'),
+('G', 'Gram', 'WEIGHT')
 ON CONFLICT (id) DO NOTHING;
 
 -- Default Import Supplier
