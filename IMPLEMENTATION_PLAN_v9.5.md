@@ -1069,3 +1069,18 @@ Hết cảnh món chuẩn rơi vào Unmapped · không còn công thức giả c
 4. **Cập nhật Logic mô phỏng**:
    - `src/data/mockData.ts` được cập nhật trong `POS_MAPPING` với loại `"beer"` cho tất cả 15 mã trên, đảm bảo lượng tiêu hao mô phỏng chạy 1:1 trực tiếp trên ID nguyên liệu tương ứng.
 
+5. **Đồng bộ công thức Cocktail Sangria (M7020)**:
+   - **Nguồn gốc**: Tìm thấy công thức định lượng chi tiết trong file `NUOC_EP_MAISON_VIE_270M.xlsx` tại sheet `3.BOM_COCKTAIL_IBA`.
+   - **Định lượng công thức**:
+     - House red wine (`ING-115`): 120 ml (quy đổi thành 0.16 BOTTLE)
+     - Nước cam tươi (`ING-110`): 30 ml (quy đổi thành 0.03 L)
+     - Triple Sec (`M9801`): 15 ml (quy đổi thành 0.02 BOTTLE)
+     - Cognac VSOP (`ING-072`): 15 ml (quy đổi thành 0.015 L)
+     - Trái cây nhiệt đới (`ING-049`): 50 g (quy đổi thành 0.05 KG)
+   - **Đồng bộ database & code**:
+     - Cấu hình công thức liên kết trong bảng `recipes` và tạo liên kết POS (`pos_alias_map`) cho mã `M7020` trên Supabase.
+     - Cập nhật công thức và chi phí cost (34,450 VND) trong `src/data/db.json`.
+     - Cập nhật POS mapping loại `"alc"` (Cocktail) cho mã `M7020` trong `src/data/mockData.ts`.
+     - Lưu lại các câu lệnh insert tương ứng tại `supabase/seed_sangria_sync.sql` và lưu trữ trong `supabase/seed.sql`.
+
+

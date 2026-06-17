@@ -104,6 +104,7 @@ export const POS_MAPPING: Record<string, { recipe: string; type: 'alc' | 'set' |
   "M7015": { recipe: "M7015", type: "alc" }, // Singapore Sling
   "M7018": { recipe: "M7018", type: "alc" }, // Black Russian
   "M7021": { recipe: "M7021", type: "alc" }, // Pineapple Cooler
+  "M7020": { recipe: "M7020", type: "alc" }, // Sangria
   "M7022": { recipe: "M7022", type: "alc" }, // Detox Juice
   "M7023": { recipe: "M7023", type: "alc" }, // Watermelon Cooler
   "M7025": { recipe: "M7025", type: "alc" }, // Sunset Citrus Cooler
