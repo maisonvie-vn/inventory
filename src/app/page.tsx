@@ -125,6 +125,9 @@ export default function Home() {
   // Manual Sale Form States
   const [manualSaleDate, setManualSaleDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [manualSaleOrderType, setManualSaleOrderType] = useState<'DINE_IN' | 'TAKEAWAY'>('DINE_IN');
+
+  // POS Excel Sales Import Date State
+  const [salesImportDate, setSalesImportDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [manualSaleLines, setManualSaleLines] = useState<{ code: string; qty: number; price: number }[]>([]);
   const [selManualSaleCode, setSelManualSaleCode] = useState('');
   const [manualSaleQtyInput, setManualSaleQtyInput] = useState('');
@@ -1043,144 +1046,143 @@ export default function Home() {
   }, []);
 
   // Fetch actual data from Supabase if configured (Giai đoạn 1 & 2)
-  useEffect(() => {
+  const fetchSupabaseData = async () => {
     if (!isSupabaseConfigured() || !currentUser) return;
-
-    const fetchSupabaseData = async () => {
-      try {
-        // 1. Fetch ingredients from corresponding view based on user role
-        let viewName = 'v_inventory_ops';
-        if (userRole === 'admin') {
-          viewName = 'v_inventory_finance';
-        } else if (userRole === 'senior_accountant') {
-          viewName = 'v_inventory_cost';
-        }
-        
-        const { data: ingData, error: ingError } = await supabase
-          .from(viewName)
-          .select('*');
-
-        if (ingError) {
-          console.error("Error fetching ingredients view:", ingError);
-        } else if (ingData && ingData.length > 0) {
-          const mappedIngs = ingData.map(item => ({
-            id: item.ingredient_id,
-            code: item.ingredient_code || item.ingredient_id,
-            fr_name: item.nom_fr || '',
-            vi_name: item.ten_vi || '',
-            en_name: '',
-            category: item.category || 'Khác', 
-            supplier_tier: 'A',
-            unit: item.stock_uom || 'kg',
-            price: item.wac_price || 0,
-            yield_rate: 100.0,
-            stock_uom: item.stock_uom,
-            recipe_uom: item.recipe_uom,
-            stock_to_recipe_factor: parseFloat(item.stock_to_recipe_factor) || 1,
-            tolerance_percent: parseFloat(item.tolerance_percent) || 5.0,
-            tare_weight_grams: parseFloat(item.tare_weight_grams) || 0
-          }));
-          setIngredients(mappedIngs as any[]);
-        }
-
-        // 2. Fetch purchase orders
-        const { data: poData } = await supabase
-          .from('purchase_orders')
-          .select('*, po_lines(*)');
-        
-        if (poData) {
-          const mappedPos = poData.map(po => ({
-            id: po.id,
-            poNumber: po.po_number,
-            supplierName: po.supplier_id || 'Nhà cung cấp',
-            supplierId: po.supplier_id,
-            expectedDate: po.expected_date,
-            status: po.status,
-            source: po.source,
-            items: (po.po_lines || []).map((line: any) => ({
-              ingId: line.ingredient_id,
-              name: line.ingredient_id,
-              qtyOrdered: line.qty_ordered,
-              unit: line.purchase_uom || 'kg',
-              price: 0
-            }))
-          }));
-          setPurchaseOrders(mappedPos);
-        }
-
-        // 3. Fetch goods receipts
-        const { data: grnData } = await supabase
-          .from('goods_receipts')
-          .select('*, grn_lines(*)');
-
-        if (grnData) {
-          const mappedGrns = grnData.map(grn => ({
-            id: grn.id,
-            poId: grn.po_id,
-            poNumber: grn.po_id || '',
-            supplierName: grn.supplier_id || 'Nhà cung cấp',
-            invoiceNo: grn.invoice_no,
-            invoiceAmount: grn.invoice_amount,
-            fxRate: grn.fx_rate,
-            duty: grn.duty,
-            freight: grn.freight,
-            status: grn.status,
-            matchStatus: grn.match_status,
-            date: grn.business_date || grn.created_at?.split('T')[0],
-            lines: (grn.grn_lines || []).map((line: any) => ({
-              ingredientId: line.ingredient_id,
-              qtyReceived: line.qty_received,
-              purchaseUom: line.purchase_uom,
-              unitPriceFx: line.unit_price_fx,
-              landedUnitCost: line.landed_unit_cost || line.unit_price_fx
-            }))
-          }));
-          setGoodsReceipts(mappedGrns);
-        }
-
-        // 4. Fetch waste logs
-        const { data: wasteData } = await supabase
-          .from('waste_logs')
-          .select('*');
-
-        if (wasteData) {
-          const mappedWastes = wasteData.map(w => ({
-            id: w.id,
-            ingredientId: w.ingredient_id,
-            qty: w.qty,
-            reason: w.reason,
-            status: w.status,
-            is_processed: w.is_processed,
-            createdBy: w.created_by || 'Staff',
-            createdAt: w.created_at?.split('T')[0]
-          }));
-          setWasteLogs(mappedWastes);
-        }
-
-        // 5. Fetch inventory transactions
-        const { data: txData } = await supabase
-          .from('inventory_transactions')
-          .select('*');
-
-        if (txData) {
-          const mappedTxs = txData.map(tx => ({
-            id: tx.id.toString(),
-            ingredientId: tx.ingredient_id,
-            type: tx.txn_type === 'IMPORT' ? 'import' : tx.txn_type === 'WASTE' ? 'waste' : 'consumption',
-            qty: Math.abs(tx.qty),
-            unit_price: tx.unit_cost || 0,
-            status: tx.status as any,
-            date: tx.business_date,
-            note: tx.ref_table ? `${tx.txn_type}: ${tx.ref_table} ID ${tx.ref_id}` : tx.txn_type
-          }));
-          setTransactions(mappedTxs as any[]);
-        }
-
-      } catch (err) {
-        console.error("Error pulling Supabase data:", err);
+    try {
+      // 1. Fetch ingredients from corresponding view based on user role
+      let viewName = 'v_inventory_ops';
+      if (userRole === 'admin') {
+        viewName = 'v_inventory_finance';
+      } else if (userRole === 'senior_accountant') {
+        viewName = 'v_inventory_cost';
       }
-    };
+      
+      const { data: ingData, error: ingError } = await supabase
+        .from(viewName)
+        .select('*');
 
+      if (ingError) {
+        console.error("Error fetching ingredients view:", ingError);
+      } else if (ingData && ingData.length > 0) {
+        const mappedIngs = ingData.map(item => ({
+          id: item.ingredient_id,
+          code: item.ingredient_code || item.ingredient_id,
+          fr_name: item.nom_fr || '',
+          vi_name: item.ten_vi || '',
+          en_name: '',
+          category: item.category || 'Khác', 
+          supplier_tier: 'A',
+          unit: item.stock_uom || 'kg',
+          price: item.wac_price || 0,
+          yield_rate: 100.0,
+          stock_uom: item.stock_uom,
+          recipe_uom: item.recipe_uom,
+          stock_to_recipe_factor: parseFloat(item.stock_to_recipe_factor) || 1,
+          tolerance_percent: parseFloat(item.tolerance_percent) || 5.0,
+          tare_weight_grams: parseFloat(item.tare_weight_grams) || 0
+        }));
+        setIngredients(mappedIngs as any[]);
+      }
+
+      // 2. Fetch purchase orders
+      const { data: poData } = await supabase
+        .from('purchase_orders')
+        .select('*, po_lines(*)');
+      
+      if (poData) {
+        const mappedPos = poData.map(po => ({
+          id: po.id,
+          poNumber: po.po_number,
+          supplierName: po.supplier_id || 'Nhà cung cấp',
+          supplierId: po.supplier_id,
+          expectedDate: po.expected_date,
+          status: po.status,
+          source: po.source,
+          items: (po.po_lines || []).map((line: any) => ({
+            ingId: line.ingredient_id,
+            name: line.ingredient_id,
+            qtyOrdered: line.qty_ordered,
+            unit: line.purchase_uom || 'kg',
+            price: 0
+          }))
+        }));
+        setPurchaseOrders(mappedPos);
+      }
+
+      // 3. Fetch goods receipts
+      const { data: grnData } = await supabase
+        .from('goods_receipts')
+        .select('*, grn_lines(*)');
+
+      if (grnData) {
+        const mappedGrns = grnData.map(grn => ({
+          id: grn.id,
+          poId: grn.po_id,
+          poNumber: grn.po_id || '',
+          supplierName: grn.supplier_id || 'Nhà cung cấp',
+          invoiceNo: grn.invoice_no,
+          invoiceAmount: grn.invoice_amount,
+          fxRate: grn.fx_rate,
+          duty: grn.duty,
+          freight: grn.freight,
+          status: grn.status,
+          matchStatus: grn.match_status,
+          date: grn.business_date || grn.created_at?.split('T')[0],
+          lines: (grn.grn_lines || []).map((line: any) => ({
+            ingredientId: line.ingredient_id,
+            qtyReceived: line.qty_received,
+            purchaseUom: line.purchase_uom,
+            unitPriceFx: line.unit_price_fx,
+            landedUnitCost: line.landed_unit_cost || line.unit_price_fx
+          }))
+        }));
+        setGoodsReceipts(mappedGrns);
+      }
+
+      // 4. Fetch waste logs
+      const { data: wasteData } = await supabase
+        .from('waste_logs')
+        .select('*');
+
+      if (wasteData) {
+        const mappedWastes = wasteData.map(w => ({
+          id: w.id,
+          ingredientId: w.ingredient_id,
+          qty: w.qty,
+          reason: w.reason,
+          status: w.status,
+          is_processed: w.is_processed,
+          createdBy: w.created_by || 'Staff',
+          createdAt: w.created_at?.split('T')[0]
+        }));
+        setWasteLogs(mappedWastes);
+      }
+
+      // 5. Fetch inventory transactions
+      const { data: txData } = await supabase
+        .from('inventory_transactions')
+        .select('*');
+
+      if (txData) {
+        const mappedTxs = txData.map(tx => ({
+          id: tx.id.toString(),
+          ingredientId: tx.ingredient_id,
+          type: tx.txn_type === 'IMPORT' ? 'import' : tx.txn_type === 'WASTE' ? 'waste' : 'consumption',
+          qty: Math.abs(tx.qty),
+          unit_price: tx.unit_cost || 0,
+          status: tx.status as any,
+          date: tx.business_date,
+          note: tx.ref_table ? `${tx.txn_type}: ${tx.ref_table} ID ${tx.ref_id}` : tx.txn_type
+        }));
+        setTransactions(mappedTxs as any[]);
+      }
+
+    } catch (err) {
+      console.error("Error pulling Supabase data:", err);
+    }
+  };
+
+  useEffect(() => {
     fetchSupabaseData();
   }, [currentUser, userRole]);
 
@@ -2782,7 +2784,7 @@ export default function Home() {
     setImportSuccess(false);
 
     const reader = new FileReader();
-    reader.onload = (evt) => {
+    reader.onload = async (evt) => {
       try {
         const bstr = evt.target?.result;
         const wb = XLSX.read(bstr, { type: 'binary' });
@@ -2851,9 +2853,107 @@ export default function Home() {
             } as SaleRecord;
           });
           setSalesData(updatedSales);
-          setImportSuccess(true);
-          setTimeout(() => setImportSuccess(false), 4000);
-          alert(`Đã nhập thành công ${updatedSales.length} dòng doanh số POS. Các dòng chưa có công thức đã được đưa vào Hàng đợi Ánh xạ.`);
+
+          // TỰ ĐỘNG ĐỒNG BỘ LÊN DATABASE SUPABASE
+          if (isSupabaseConfigured()) {
+            try {
+              // 1. Lấy thông tin user hiện tại
+              const { data: { session } } = await supabase.auth.getSession();
+              const userId = session?.user.id || '00000000-0000-0000-0000-000000000000';
+
+              // 2. Tự động upsert menu_items chưa tồn tại để tránh vi phạm khóa ngoại
+              const uniqueCodes = Array.from(new Set(updatedSales.map(s => s.code)));
+              const menuItemsToUpsert = uniqueCodes.map(code => {
+                const saleObj = updatedSales.find(s => s.code === code);
+                return {
+                  id: code,
+                  name: saleObj?.name || `Món ${code}`,
+                  sale_price: saleObj?.price || 0,
+                  is_set_menu: code.startsWith('R6') || code.includes('SET') || false
+                };
+              });
+
+              const { error: menuErr } = await supabase
+                .from('menu_items')
+                .upsert(menuItemsToUpsert, { onConflict: 'id' });
+
+              if (menuErr) {
+                console.error("Error upserting menu_items:", menuErr);
+                throw new Error("Lỗi cập nhật danh mục món ăn: " + menuErr.message);
+              }
+
+              // 3. Xóa các bản ghi nhập doanh số và giao dịch cũ của ngày này để tránh cộng dồn/khấu trừ trùng lặp
+              const { error: delTxErr } = await supabase
+                .from('inventory_transactions')
+                .delete()
+                .eq('ref_table', 'sales_imports')
+                .eq('business_date', salesImportDate);
+
+              if (delTxErr) {
+                console.error("Error clearing old depletion transactions:", delTxErr);
+              }
+
+              const { error: delSalesErr } = await supabase
+                .from('sales_imports')
+                .delete()
+                .eq('import_date', salesImportDate);
+
+              if (delSalesErr) {
+                console.error("Error clearing old sales imports:", delSalesErr);
+              }
+
+              // 4. Lưu bản ghi doanh số mới vào bảng sales_imports
+              const fileHash = `${file.name}_${file.size}_${salesImportDate}`;
+              const salesImportsToInsert = updatedSales.map(sale => ({
+                import_date: salesImportDate,
+                menu_item_id: sale.code,
+                qty_sold: Math.round(sale.qty),
+                net_revenue: sale.total_before_discount,
+                is_processed: false,
+                file_hash: fileHash,
+                void_qty: 0,
+                comp_qty: 0,
+                order_type: sale.order_type || 'DINE_IN',
+                mapping_status: sale.mapping_status || 'MAPPED'
+              }));
+
+              const { error: insertErr } = await supabase
+                .from('sales_imports')
+                .insert(salesImportsToInsert);
+
+              if (insertErr) {
+                console.error("Error inserting sales imports:", insertErr);
+                throw new Error("Lỗi lưu dữ liệu bán hàng: " + insertErr.message);
+              }
+
+              // 5. Gọi hàm RPC process_daily_consumption để tự động trừ kho lý thuyết
+              const { error: rpcErr } = await supabase
+                .rpc('process_daily_consumption', {
+                  p_date: salesImportDate,
+                  p_user_id: userId
+                });
+
+              if (rpcErr) {
+                console.error("Error executing process_daily_consumption:", rpcErr);
+                throw new Error("Lỗi tự động khấu trừ kho (RPC): " + rpcErr.message);
+              }
+
+              // 6. Reload lại dữ liệu từ Supabase về client để cập nhật toàn bộ giao dịch và tồn kho
+              await fetchSupabaseData();
+
+              setImportSuccess(true);
+              setTimeout(() => setImportSuccess(false), 5000);
+              alert(`ĐỒNG BỘ HOÀN TOÀN THÀNH CÔNG!\n- Đã đồng bộ ${salesImportsToInsert.length} dòng doanh số POS cho ngày ${salesImportDate} lên Supabase.\n- Đã thực thi trừ kho tự động (process_daily_consumption).\n- Đã cập nhật lại tồn kho thực tế và sổ cái trên hệ thống.`);
+
+            } catch (syncErr: any) {
+              alert(`Lỗi đồng bộ Supabase: ${syncErr.message || syncErr}`);
+            }
+          } else {
+            setImportSuccess(true);
+            setTimeout(() => setImportSuccess(false), 4000);
+            alert(`[GIA LẬP LOCAL] Đã nhập thành công ${updatedSales.length} dòng doanh số POS. Các dòng chưa có công thức đã được đưa vào Hàng đợi Á xạ.`);
+          }
+
         } else {
           alert('Không tìm thấy bản ghi bán hàng hợp lệ.');
         }
@@ -2861,6 +2961,7 @@ export default function Home() {
         alert('Lỗi phân tích Excel: ' + (err as Error).message);
       } finally {
         setIsImporting(false);
+        if (e.target) e.target.value = '';
       }
     };
     reader.readAsBinaryString(file);
@@ -4453,6 +4554,17 @@ export default function Home() {
                 </div>
                 
                 <div className="flex flex-wrap items-center gap-3">
+                  {/* Select date to import POS */}
+                  <div className="flex items-center gap-2 bg-moss-light border border-border-moss px-3 py-2 rounded-sm">
+                    <span className="text-[10px] text-gray-400 font-sans uppercase">Ngày ghi nhận:</span>
+                    <input 
+                      type="date"
+                      value={salesImportDate}
+                      onChange={(e) => setSalesImportDate(e.target.value)}
+                      className="bg-transparent border-none text-xs font-mono text-accent-gold focus:outline-none cursor-pointer font-bold"
+                    />
+                  </div>
+                  
                   <button 
                     onClick={downloadPOSTemplate}
                     className="flex items-center gap-1.5 border border-border-cream hover:bg-accent-gold/5 text-accent-gold font-semibold text-xs px-3.5 py-2.5 rounded-sm transition-all shadow-md active:scale-95"
