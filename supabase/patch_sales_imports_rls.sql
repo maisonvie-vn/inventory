@@ -1,7 +1,7 @@
 -- =========================================================================
--- MAISON VIE v9.6 — PATCH SALES_IMPORTS RLS POLICIES
--- Run this in your Supabase SQL Editor to allow authenticated staff members
--- to upload, select, and overwrite POS Sales records from the frontend.
+-- MAISON VIE v9.6 — PATCH SALES_IMPORTS RLS POLICIES (RELAXED)
+-- Run this in your Supabase SQL Editor to allow all logged-in staff members
+-- to select, insert, and delete POS Sales records during Excel uploads.
 -- =========================================================================
 
 BEGIN;
@@ -19,14 +19,14 @@ CREATE POLICY "Allow select sales_imports for all staff"
 ON sales_imports FOR SELECT TO authenticated
 USING (true);
 
--- 4. Create INSERT policy for admin, restaurant_manager, and senior_accountant
+-- 4. Create INSERT policy for all authenticated users
 CREATE POLICY "Allow insert sales_imports for all staff"
 ON sales_imports FOR INSERT TO authenticated
-WITH CHECK (get_current_user_role() IN ('admin', 'restaurant_manager', 'senior_accountant'));
+WITH CHECK (true);
 
--- 5. Create DELETE policy for admin, restaurant_manager, and senior_accountant
+-- 5. Create DELETE policy for all authenticated users
 CREATE POLICY "Allow delete sales_imports for all staff"
 ON sales_imports FOR DELETE TO authenticated
-USING (get_current_user_role() IN ('admin', 'restaurant_manager', 'senior_accountant'));
+USING (true);
 
 COMMIT;
