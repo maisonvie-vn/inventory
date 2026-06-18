@@ -19,31 +19,31 @@ INSERT INTO ingredients (id, code, nom_fr, ten_vi, name_en, purchase_category_id
 INSERT INTO ingredients (id, code, nom_fr, ten_vi, name_en, purchase_category_id, stock_uom, recipe_uom, stock_to_recipe_factor, wac_price, standard_price, yield_rate, is_beverage) VALUES ('03381c82-ef75-4533-99f8-039f61b57f9b', 'M6020', 'Maison Vie, mineral water bottle 0,52L', 'Maison Vie, mineral water bottle 0,52L', 'Maison Vie, mineral water bottle 0,52L', 'b3b4e57e-464d-562f-80ec-b216c92d5e88', 'BOTTLE', 'BOTTLE', 1, 3561.84, 3561.84, 100.0, true) ON CONFLICT (id) DO NOTHING;
 
 -- 2. Insert Recipes for Direct Soft Drinks and Cigar
-INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('M9203', '78c668d0-a21c-4672-a272-ccb01459200a', 1.0000, 100.00, 'PACK')ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
-INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('M6001', 'f7676897-d98f-408f-9345-73ff56860411', 1.0000, 100.00, 'CAN')ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
-INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('M6002', '8451b8fc-7e24-4707-a486-36a4c6ad2963', 1.0000, 100.00, 'CAN')ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
-INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('M6004', '2426630c-a3ef-46af-9928-f4c927274ead', 1.0000, 100.00, 'CAN')ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
-INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('M6006', '275ea0d8-81b8-4a58-8132-f8ce7c1250c9', 1.0000, 100.00, 'CAN')ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
-INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('M6008', '6a1e2423-3a31-408a-9179-8ce31f428a28', 1.0000, 100.00, 'BOTTLE')ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
-INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('M6010', '585e71d3-074b-4482-810c-d821c22548ba', 1.0000, 100.00, 'BOTTLE')ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
-INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('M6020', '03381c82-ef75-4533-99f8-039f61b57f9b', 1.0000, 100.00, 'BOTTLE')ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
+INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('78c668d0-a21c-4672-a272-ccb01459200a', '78c668d0-a21c-4672-a272-ccb01459200a', 1.0000, 100.00, 'PACK') ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
+INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('f7676897-d98f-408f-9345-73ff56860411', 'f7676897-d98f-408f-9345-73ff56860411', 1.0000, 100.00, 'CAN') ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
+INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('8451b8fc-7e24-4707-a486-36a4c6ad2963', '8451b8fc-7e24-4707-a486-36a4c6ad2963', 1.0000, 100.00, 'CAN') ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
+INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('2426630c-a3ef-46af-9928-f4c927274ead', '2426630c-a3ef-46af-9928-f4c927274ead', 1.0000, 100.00, 'CAN') ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
+INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('275ea0d8-81b8-4a58-8132-f8ce7c1250c9', '275ea0d8-81b8-4a58-8132-f8ce7c1250c9', 1.0000, 100.00, 'CAN') ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
+INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('6a1e2423-3a31-408a-9179-8ce31f428a28', '6a1e2423-3a31-408a-9179-8ce31f428a28', 1.0000, 100.00, 'BOTTLE') ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
+INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('585e71d3-074b-4482-810c-d821c22548ba', '585e71d3-074b-4482-810c-d821c22548ba', 1.0000, 100.00, 'BOTTLE') ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
+INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom) VALUES ('03381c82-ef75-4533-99f8-039f61b57f9b', '03381c82-ef75-4533-99f8-039f61b57f9b', 1.0000, 100.00, 'BOTTLE') ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
 
 -- 3. Insert POS Alias Map
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('B5001', 'B5001', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('B5002', 'B5002', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('B5004', 'B5004', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('B5005', 'B5005', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('B5007', 'B5007', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('B5010', 'B5010', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('B5012', 'B5012', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('M9203', 'M9203', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('M6001', 'M6001', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('M6002', 'M6002', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('M6004', 'M6004', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('M6006', 'M6006', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('M6008', 'M6008', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('M6010', 'M6010', 100.00)ON CONFLICT (pos_code) DO NOTHING;
-INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('M6020', 'M6020', 100.00)ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('72b94339-47eb-4dd7-a60d-2113c52fea38', '72b94339-47eb-4dd7-a60d-2113c52fea38', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('c0266912-72e9-4784-a82c-6924da7fdab1', 'c0266912-72e9-4784-a82c-6924da7fdab1', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('38744af1-fdff-4540-bcd0-45f0312d5f7d', '38744af1-fdff-4540-bcd0-45f0312d5f7d', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('c301c2f1-9ab1-426f-be5d-4ee94c99bee6', 'c301c2f1-9ab1-426f-be5d-4ee94c99bee6', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('70aa6f72-a754-4aaa-9a50-770500fcb020', '70aa6f72-a754-4aaa-9a50-770500fcb020', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('22957314-2fa5-47e2-832b-3149a0aea7a6', '22957314-2fa5-47e2-832b-3149a0aea7a6', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('80715ed7-a6a0-41c7-9391-27654afb079f', '80715ed7-a6a0-41c7-9391-27654afb079f', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('78c668d0-a21c-4672-a272-ccb01459200a', '78c668d0-a21c-4672-a272-ccb01459200a', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('f7676897-d98f-408f-9345-73ff56860411', 'f7676897-d98f-408f-9345-73ff56860411', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('8451b8fc-7e24-4707-a486-36a4c6ad2963', '8451b8fc-7e24-4707-a486-36a4c6ad2963', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('2426630c-a3ef-46af-9928-f4c927274ead', '2426630c-a3ef-46af-9928-f4c927274ead', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('275ea0d8-81b8-4a58-8132-f8ce7c1250c9', '275ea0d8-81b8-4a58-8132-f8ce7c1250c9', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('6a1e2423-3a31-408a-9179-8ce31f428a28', '6a1e2423-3a31-408a-9179-8ce31f428a28', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('585e71d3-074b-4482-810c-d821c22548ba', '585e71d3-074b-4482-810c-d821c22548ba', 100.00) ON CONFLICT (pos_code) DO NOTHING;
+INSERT INTO pos_alias_map (pos_code, menu_item_id, confidence) VALUES ('03381c82-ef75-4533-99f8-039f61b57f9b', '03381c82-ef75-4533-99f8-039f61b57f9b', 100.00) ON CONFLICT (pos_code) DO NOTHING;
 
 -- 4. Insert Ingredient Departments
 INSERT INTO ingredient_departments (ingredient_id, department, usage_context, is_primary) VALUES ('72b94339-47eb-4dd7-a60d-2113c52fea38', 'BAR', 'BEVERAGE', true) ON CONFLICT (ingredient_id, department) DO NOTHING;

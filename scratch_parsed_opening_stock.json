@@ -1,0 +1,2120 @@
+{
+  "AFRICA": {
+    "name": "South Africa",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V8003": {
+    "name": "LE BONHEUR (Cabernet Sauvignon) Stellenbosch",
+    "qty": 1.0,
+    "price": 592000.0,
+    "is_beverage": true
+  },
+  "V8004": {
+    "name": "LE BONHEUR, THE EAGLE'S LAIR (Chardonnay) Stellenbosch",
+    "qty": 1.0,
+    "price": 514000.0,
+    "is_beverage": true
+  },
+  "ARG": {
+    "name": "Argentina",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V9004": {
+    "name": "Kaiken Estate Sauvignon Blanc–Sémillon",
+    "qty": 3.0,
+    "price": 384000.0,
+    "is_beverage": true
+  },
+  "V9005": {
+    "name": "Kaiken Estate Malbec, Argentina",
+    "qty": 3.0,
+    "price": 384000.0,
+    "is_beverage": true
+  },
+  "AUS": {
+    "name": "Australia",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V9106": {
+    "name": "Barramundi, Shiraz - Australia",
+    "qty": 3.0,
+    "price": 247500.0,
+    "is_beverage": true
+  },
+  "BEE": {
+    "name": "Beer",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "B5001": {
+    "name": "Heineken - 33cl",
+    "qty": 35.0,
+    "price": 14375.0,
+    "is_beverage": true
+  },
+  "B5002": {
+    "name": "Tiger - 33cl",
+    "qty": 30.0,
+    "price": 11625.0,
+    "is_beverage": true
+  },
+  "B5004": {
+    "name": "Beer 333 - 33cl",
+    "qty": 102.0,
+    "price": 9792.0,
+    "is_beverage": true
+  },
+  "B5005": {
+    "name": "Saigon beer - 33cl",
+    "qty": 111.0,
+    "price": 10750.0,
+    "is_beverage": true
+  },
+  "B5007": {
+    "name": "Sapporo draught",
+    "qty": 35.0,
+    "price": 16436.0,
+    "is_beverage": true
+  },
+  "B5010": {
+    "name": "Hanoi - 33cl",
+    "qty": 62.0,
+    "price": 9750.0,
+    "is_beverage": true
+  },
+  "B5012": {
+    "name": "Hanoi - can",
+    "qty": 139.0,
+    "price": 9833.0,
+    "is_beverage": true
+  },
+  "B5016": {
+    "name": "Leffe - Belgian beer - bottle 33cl",
+    "qty": 13.0,
+    "price": 22916.0,
+    "is_beverage": true
+  },
+  "CIG": {
+    "name": "Cigarettes",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "M9202": {
+    "name": "Cigarettes Imported",
+    "qty": 3.0,
+    "price": 36000.0,
+    "is_beverage": true
+  },
+  "M9203": {
+    "name": "Cigar Havana",
+    "qty": 4.0,
+    "price": 300000.0,
+    "is_beverage": true
+  },
+  "CHA": {
+    "name": "Champaigne",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V2001": {
+    "name": "Pierre Larousse Blanc De Blancs Brut 37.5cl, France",
+    "qty": 2.0,
+    "price": 215000.0,
+    "is_beverage": true
+  },
+  "V2002": {
+    "name": "Larousse Chardonnay Sparkling, France",
+    "qty": 10.0,
+    "price": 314000.0,
+    "is_beverage": true
+  },
+  "V2006": {
+    "name": "Champagne Taittinger Brut Reserve NV, France",
+    "qty": 2.0,
+    "price": 1732000.0,
+    "is_beverage": true
+  },
+  "V2009": {
+    "name": "Champagne Moët & Chandon",
+    "qty": 2.0,
+    "price": 1260000.0,
+    "is_beverage": true
+  },
+  "V2015": {
+    "name": "Chanoine Frères Brut NV (Champagne AOC — France)",
+    "qty": 2.0,
+    "price": 1089000.0,
+    "is_beverage": true
+  },
+  "V2016": {
+    "name": "Jean-Noël Haton Cuvée Classic Brut NV ( Champagne AOC, Damery)",
+    "qty": 3.0,
+    "price": 1430000.0,
+    "is_beverage": true
+  },
+  "V2018": {
+    "name": "Crémant de Bourgogne Brut Vignerons de Buxy, Chardonnay, Aligoté, Gamay",
+    "qty": 3.0,
+    "price": 712000.0,
+    "is_beverage": true
+  },
+  "CHI": {
+    "name": "Chile",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V6026": {
+    "name": "Marques Casa Cabernet Sauvignon Chile",
+    "qty": 1.0,
+    "price": 644000.0,
+    "is_beverage": true
+  },
+  "V60261": {
+    "name": "Concha Y Toro, Marques de Casa Concha Chardonnay, Limari Valley - White Chile",
+    "qty": 2.0,
+    "price": 644000.0,
+    "is_beverage": true
+  },
+  "V6027": {
+    "name": "Luis Felipe Chardonnay",
+    "qty": 122.2,
+    "price": 175000.0,
+    "is_beverage": true
+  },
+  "V6034": {
+    "name": "Frontera Cabernet Sauvignon 75cl (Red)",
+    "qty": 8.0,
+    "price": 231000.0,
+    "is_beverage": true
+  },
+  "V6035": {
+    "name": "Frontera Sauvignon Blanc 75cl (White)",
+    "qty": 6.2,
+    "price": 231000.0,
+    "is_beverage": true
+  },
+  "V6049": {
+    "name": "Luis Felipe Red Wine Bottle",
+    "qty": 0.0,
+    "price": 175000.0,
+    "is_beverage": true
+  },
+  "V6053": {
+    "name": "MIGUEL TORRES, LAS MULAS ORGANIC (Cabernet Sauvignon) Central Valley",
+    "qty": 4.0,
+    "price": 393000.0,
+    "is_beverage": true
+  },
+  "V6054": {
+    "name": "MIGUEL TORRES, ANDICA RESERVA (Gewurztraminer) Curico Valley",
+    "qty": 2.0,
+    "price": 446000.0,
+    "is_beverage": true
+  },
+  "V6056": {
+    "name": "MontGras Estate Cabernet Sauvignon Chile",
+    "qty": 12.0,
+    "price": 182500.0,
+    "is_beverage": true
+  },
+  "V6057": {
+    "name": "Karku Cabernet Sauvignon ( Red )",
+    "qty": 111.0,
+    "price": 220000.0,
+    "is_beverage": true
+  },
+  "V6058": {
+    "name": "Karku Sauvignon Blanc- Chile ( White )",
+    "qty": 28.0,
+    "price": 220000.0,
+    "is_beverage": true
+  },
+  "V6059": {
+    "name": "Montes Classic Series Chardonnay (CuricóValley DO — Chile)",
+    "qty": 3.0,
+    "price": 384000.0,
+    "is_beverage": true
+  },
+  "V6060": {
+    "name": "Cremaschi Furlotti Chardonnay (Valle Central DO — Chile)",
+    "qty": 12.0,
+    "price": 210000.0,
+    "is_beverage": true
+  },
+  "V6061": {
+    "name": "Cremaschi Furlotti Sauvignon Blanc (Valle Central DO — Chile)",
+    "qty": 12.0,
+    "price": 210000.0,
+    "is_beverage": true
+  },
+  "V6062": {
+    "name": "Cremaschi Furlotti Cabernet Sauvignon (Valle Central DO — Chile)",
+    "qty": 12.0,
+    "price": 210000.0,
+    "is_beverage": true
+  },
+  "V6063": {
+    "name": "Montes Alpha Cabernet Sauvignon - Red",
+    "qty": 3.0,
+    "price": 638000.0,
+    "is_beverage": true
+  },
+  "DALAT": {
+    "name": "Dalat",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V9501": {
+    "name": "Dalat Wine Red - Bottle",
+    "qty": 56.6,
+    "price": 100000.0,
+    "is_beverage": true
+  },
+  "V9502": {
+    "name": "Dalat Wine White - Bottle",
+    "qty": 61.0,
+    "price": 100000.0,
+    "is_beverage": true
+  },
+  "V9504": {
+    "name": "Chateau Dalat Special Cabernet Sauvignon 750ml",
+    "qty": 9.0,
+    "price": 179000.0,
+    "is_beverage": true
+  },
+  "V9508": {
+    "name": "Chateau Dalat Special Sauvignon Blanc 750ml",
+    "qty": 7.0,
+    "price": 179000.0,
+    "is_beverage": true
+  },
+  "HAF": {
+    "name": "Half bottle",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V1001": {
+    "name": "Chateau Noaillac Medoc Cru Bourgeois 37.5cl (R)",
+    "qty": 7.0,
+    "price": 318000.0,
+    "is_beverage": true
+  },
+  "V1008": {
+    "name": "La Palma Cabernet Sauvignon 37.5cl, Chile",
+    "qty": 20.0,
+    "price": 123750.0,
+    "is_beverage": true
+  },
+  "ITALY": {
+    "name": "Italy",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V7012": {
+    "name": "F Negroamaro San Marzano Italy Red WIne",
+    "qty": 2.0,
+    "price": 890000.0,
+    "is_beverage": true
+  },
+  "V7015": {
+    "name": "Caselletti  Negroamaro Primitivo - Red",
+    "qty": 3.0,
+    "price": 380000.0,
+    "is_beverage": true
+  },
+  "V7016": {
+    "name": "Talò Primitivo di Manduria « San Marzano »",
+    "qty": 2.0,
+    "price": 453750.0,
+    "is_beverage": true
+  },
+  "NEWZ": {
+    "name": "Newzealand",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V9201": {
+    "name": "Private Bin Sauvignon Blanc, Villa Maria (White)",
+    "qty": 2.0,
+    "price": 558000.0,
+    "is_beverage": true
+  },
+  "V9202": {
+    "name": "Private Bin Cabernet Merlot, Villa Maria (Red)",
+    "qty": 3.0,
+    "price": 558000.0,
+    "is_beverage": true
+  },
+  "V9203": {
+    "name": "Kim Crawford, Sauvignon Blanc - New Zealand",
+    "qty": 4.0,
+    "price": 412500.0,
+    "is_beverage": true
+  },
+  "V9204": {
+    "name": "Allan Scott Sauvignon Blanc(Marlborough GI — New Zealand)",
+    "qty": 3.0,
+    "price": 396000.0,
+    "is_beverage": true
+  },
+  "RED": {
+    "name": "Red Wine",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V4008": {
+    "name": "M. Chapoutier Belleruche, Côtes du Rhône Rouge",
+    "qty": 3.0,
+    "price": 396000.0,
+    "is_beverage": true
+  },
+  "V4009": {
+    "name": "Les Hauts de La Gaffeliere, Bordeaux Rouge",
+    "qty": 4.0,
+    "price": 441000.0,
+    "is_beverage": true
+  },
+  "V4014": {
+    "name": "Château Noaillac Cru Bourgeois",
+    "qty": 3.0,
+    "price": 600000.0,
+    "is_beverage": true
+  },
+  "V4017": {
+    "name": "Château Haut-Rocher Grand Cru",
+    "qty": 3.0,
+    "price": 867000.0,
+    "is_beverage": true
+  },
+  "V4045": {
+    "name": "Louis Latour - Bourgogne Pinot Noir",
+    "qty": 2.0,
+    "price": 450000.0,
+    "is_beverage": true
+  },
+  "V4062": {
+    "name": "Château Moulin De La Faye",
+    "qty": 0.0,
+    "price": 270000.0,
+    "is_beverage": true
+  },
+  "V4063": {
+    "name": "Chantecaille Bordeaux AOC Red",
+    "qty": 18.2,
+    "price": 229000.0,
+    "is_beverage": true
+  },
+  "V4064": {
+    "name": "F. Thienpont Causse Rouge Merlot, Bordeaux - Red",
+    "qty": 4.0,
+    "price": 426000.0,
+    "is_beverage": true
+  },
+  "V4065": {
+    "name": "Baron P. de Rothschild Mouton Cadet Bordeaux - Red",
+    "qty": 3.0,
+    "price": 257400.0,
+    "is_beverage": true
+  },
+  "V4068": {
+    "name": "Nicolas Thienpont, Chateau Puygueraud,(Merlot/Cab Franc/ Malbec) Francs Cotes de Bordeaux",
+    "qty": 4.0,
+    "price": 867000.0,
+    "is_beverage": true
+  },
+  "V4069": {
+    "name": "Alain Brumont, Chateau Bouscasse, Madiran - Red",
+    "qty": 3.0,
+    "price": 880000.0,
+    "is_beverage": true
+  },
+  "V4071": {
+    "name": "Baron P. de Rothschild Mouton Cadet Reserve Pauillac - Red",
+    "qty": 3.0,
+    "price": 1059300.0,
+    "is_beverage": true
+  },
+  "V4072": {
+    "name": "Château La Garenne Pomerol - Red",
+    "qty": 1.0,
+    "price": 1178100.0,
+    "is_beverage": true
+  },
+  "V4074": {
+    "name": "Louis Latour Domaine De Valmoissine - Red",
+    "qty": 2.0,
+    "price": 292500.0,
+    "is_beverage": true
+  },
+  "V4075": {
+    "name": "Louis Latour Pinot Noir Les Pierres Dorées - Red",
+    "qty": 5.0,
+    "price": 562500.0,
+    "is_beverage": true
+  },
+  "V4076": {
+    "name": "Guigal, Cotes du Rhone - Red",
+    "qty": 4.0,
+    "price": 638000.0,
+    "is_beverage": true
+  },
+  "V4077": {
+    "name": "Dufouleur Monopole Red Wine Bt",
+    "qty": 4.0,
+    "price": 203000.0,
+    "is_beverage": true
+  },
+  "V4078": {
+    "name": "Chateau Haut Selve Graves - Red",
+    "qty": 3.0,
+    "price": 762300.0,
+    "is_beverage": true
+  },
+  "V4081": {
+    "name": "Château La Branne Médoc Cru Bourgeois, France",
+    "qty": 2.0,
+    "price": 643500.0,
+    "is_beverage": true
+  },
+  "V4082": {
+    "name": "CHÂTEAU HAUT SAINT BRICE (Merlot - Cabernet Franc) Saint-Émilion Grand Cru",
+    "qty": 2.0,
+    "price": 721710.0,
+    "is_beverage": true
+  },
+  "V4083": {
+    "name": "CHÂTEAU MONT- PÉRAT (Merlot/Cabernet Franc/Cabernet Sauvignon) Bordeaux",
+    "qty": 3.0,
+    "price": 782100.0,
+    "is_beverage": true
+  },
+  "V4088": {
+    "name": "Château Baratet, Cabernet Sauvignon, France",
+    "qty": 18.0,
+    "price": 190000.0,
+    "is_beverage": true
+  },
+  "V4089": {
+    "name": "Chateau Haut Mouleyre AOP Bordeaux Rouge",
+    "qty": 120.0,
+    "price": 160000.0,
+    "is_beverage": true
+  },
+  "V4090": {
+    "name": "M. Chapoutier « Les Meysonniers »Crozes-Hermitage Syrah (organic)",
+    "qty": 1.0,
+    "price": 940500.0,
+    "is_beverage": true
+  },
+  "V4091": {
+    "name": "Bernard Magrez « Le Prélat » Rouge Côtes du Rhône Villages Laudun",
+    "qty": 3.0,
+    "price": 540000.0,
+    "is_beverage": true
+  },
+  "V4092": {
+    "name": "Grand Bateau Bordeaux Rouge (by Beychevelle) (Merlot · CS · AOC)",
+    "qty": 3.0,
+    "price": 392000.0,
+    "is_beverage": true
+  },
+  "ROSE": {
+    "name": "Rose",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V9402": {
+    "name": "Villa Garrel Rosé, France",
+    "qty": 0.0,
+    "price": 352000.0,
+    "is_beverage": true
+  },
+  "V9408": {
+    "name": "Bosio Moscato Rose Spumante Aromatico Dolce 7.5%",
+    "qty": 6.0,
+    "price": 322000.0,
+    "is_beverage": true
+  },
+  "V9410": {
+    "name": "Dufouleur Monopole Rose Wine",
+    "qty": 8.0,
+    "price": 203000.0,
+    "is_beverage": true
+  },
+  "V9411": {
+    "name": "Gérard Bertrand « Gris Blanc » IGP, France",
+    "qty": 3.0,
+    "price": 391050.0,
+    "is_beverage": true
+  },
+  "V9412": {
+    "name": "Croix de Peyrassol Rosé IGP, France",
+    "qty": 1.0,
+    "price": 435600.0,
+    "is_beverage": true
+  },
+  "SOF": {
+    "name": "Soft drink",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "M6001": {
+    "name": "Coke",
+    "qty": 102.0,
+    "price": 8125.0,
+    "is_beverage": true
+  },
+  "M6002": {
+    "name": "Soda",
+    "qty": 82.0,
+    "price": 5304.0,
+    "is_beverage": true
+  },
+  "M6003": {
+    "name": "Tonic",
+    "qty": 30.0,
+    "price": 6428.0,
+    "is_beverage": true
+  },
+  "M6004": {
+    "name": "Sprite",
+    "qty": 89.0,
+    "price": 7462.0,
+    "is_beverage": true
+  },
+  "M6005": {
+    "name": "Fanta",
+    "qty": 30.0,
+    "price": 7781.0,
+    "is_beverage": true
+  },
+  "M6006": {
+    "name": "Diet Coke",
+    "qty": 62.0,
+    "price": 8541.0,
+    "is_beverage": true
+  },
+  "M6008": {
+    "name": "La Vie 1,5 L",
+    "qty": 43.0,
+    "price": 6666.0,
+    "is_beverage": true
+  },
+  "M6009": {
+    "name": "Perrier (Sparkling water 0.33L)",
+    "qty": 33.0,
+    "price": 32450.0,
+    "is_beverage": true
+  },
+  "M6010": {
+    "name": "S.Pellegrino (Sparkling water 0.5L)",
+    "qty": 18.0,
+    "price": 36300.0,
+    "is_beverage": true
+  },
+  "M6014": {
+    "name": "Evian mineral water bottle 0.5L - France",
+    "qty": 24.0,
+    "price": 27060.0,
+    "is_beverage": true
+  },
+  "M6020": {
+    "name": "Maison Vie, mineral water bottle 0,52L",
+    "qty": 823.0,
+    "price": 3561.84,
+    "is_beverage": true
+  },
+  "SPA": {
+    "name": "Spanish",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V9301": {
+    "name": "Torrès Sangre de Toro White (Parellada) (White)",
+    "qty": 2.0,
+    "price": 375000.0,
+    "is_beverage": true
+  },
+  "V9302": {
+    "name": "Torrès, Sangre de Toro (Grenáche) (Red)",
+    "qty": 3.0,
+    "price": 375000.0,
+    "is_beverage": true
+  },
+  "V9304": {
+    "name": "Marqués de Cáceres Crianza, Spain",
+    "qty": 3.0,
+    "price": 475200.0,
+    "is_beverage": true
+  },
+  "SPR": {
+    "name": "Spirit by bottle(hh)",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "M9402": {
+    "name": "Bailey",
+    "qty": 0.95,
+    "price": 340000.0,
+    "is_beverage": true
+  },
+  "M9403": {
+    "name": "Campari",
+    "qty": 1.9,
+    "price": 330000.0,
+    "is_beverage": true
+  },
+  "M9405": {
+    "name": "Cointrau",
+    "qty": 2.06,
+    "price": 340000.0,
+    "is_beverage": true
+  },
+  "M9406": {
+    "name": "Grand Marnier",
+    "qty": 1.3,
+    "price": 600000.0,
+    "is_beverage": true
+  },
+  "M9407": {
+    "name": "Kalua",
+    "qty": 0.66,
+    "price": 280000.0,
+    "is_beverage": true
+  },
+  "M9408": {
+    "name": "Malibu",
+    "qty": 0.66,
+    "price": 280000.0,
+    "is_beverage": true
+  },
+  "M9409": {
+    "name": "Martini Bianco",
+    "qty": 0.5,
+    "price": 260000.0,
+    "is_beverage": true
+  },
+  "M9410": {
+    "name": "Martini Dry",
+    "qty": 0.43,
+    "price": 280000.0,
+    "is_beverage": true
+  },
+  "M9411": {
+    "name": "Martini Rosso",
+    "qty": 0.26,
+    "price": 260000.0,
+    "is_beverage": true
+  },
+  "M9413": {
+    "name": "Porto",
+    "qty": 0.95,
+    "price": 330000.0,
+    "is_beverage": true
+  },
+  "M9414": {
+    "name": "Ricard",
+    "qty": 0.7,
+    "price": 300000.0,
+    "is_beverage": true
+  },
+  "M9507": {
+    "name": "Mens Vodka",
+    "qty": 4.0,
+    "price": 35000.0,
+    "is_beverage": true
+  },
+  "M9508": {
+    "name": "Lua moi 500ml",
+    "qty": 5.0,
+    "price": 72000.0,
+    "is_beverage": true
+  },
+  "M9512": {
+    "name": "Smirnoff Red Label",
+    "qty": 3.5,
+    "price": 210000.0,
+    "is_beverage": true
+  },
+  "M9513": {
+    "name": "Vodka Hanoi 300ml",
+    "qty": 3.9,
+    "price": 40000.0,
+    "is_beverage": true
+  },
+  "M9514": {
+    "name": "Vodka Hanoi 500ml",
+    "qty": 4.0,
+    "price": 61000.0,
+    "is_beverage": true
+  },
+  "M9602": {
+    "name": "Ballentines 12",
+    "qty": 1.0,
+    "price": 500000.0,
+    "is_beverage": true
+  },
+  "M9603": {
+    "name": "Ballentines 17",
+    "qty": 1.0,
+    "price": 950000.0,
+    "is_beverage": true
+  },
+  "M9604": {
+    "name": "Ballentines 21",
+    "qty": 1.0,
+    "price": 1500000.0,
+    "is_beverage": true
+  },
+  "M9606": {
+    "name": "Ballentines Finese",
+    "qty": 5.16,
+    "price": 280000.0,
+    "is_beverage": true
+  },
+  "M9609": {
+    "name": "Chivas Regal 0.75L (12 years old)",
+    "qty": 2.21,
+    "price": 520000.0,
+    "is_beverage": true
+  },
+  "M9611": {
+    "name": "Creame de cassic",
+    "qty": 0.72,
+    "price": 250000.0,
+    "is_beverage": true
+  },
+  "M9612": {
+    "name": "Gordon Gin Bottle",
+    "qty": 1.5,
+    "price": 230000.0,
+    "is_beverage": true
+  },
+  "M9620": {
+    "name": "J - B",
+    "qty": 0.4,
+    "price": 370000.0,
+    "is_beverage": true
+  },
+  "M9621": {
+    "name": "Jack Daniel",
+    "qty": 1.0,
+    "price": 450000.0,
+    "is_beverage": true
+  },
+  "M9623": {
+    "name": "Jimbeam",
+    "qty": 1.8,
+    "price": 230000.0,
+    "is_beverage": true
+  },
+  "M9629": {
+    "name": "Johnny Walker red label",
+    "qty": 1.4,
+    "price": 285000.0,
+    "is_beverage": true
+  },
+  "M9632": {
+    "name": "Marcallan 12 year old",
+    "qty": 2.0,
+    "price": 2650000.0,
+    "is_beverage": true
+  },
+  "M9636": {
+    "name": "Single Barrel Jack Daniel's",
+    "qty": 0.4,
+    "price": 2005000.0,
+    "is_beverage": true
+  },
+  "M9642": {
+    "name": "GlenAllaChie 11",
+    "qty": 1.0,
+    "price": 2450000.0,
+    "is_beverage": true
+  },
+  "M9643": {
+    "name": "FinLaggan 58",
+    "qty": 1.0,
+    "price": 2250000.0,
+    "is_beverage": true
+  },
+  "M9644": {
+    "name": "Liqueur Bols Cherry Brandy 70cl",
+    "qty": 1.0,
+    "price": 500000.0,
+    "is_beverage": true
+  },
+  "M9645": {
+    "name": "Liqueur D.O.M Benedictine 70cl",
+    "qty": 1.0,
+    "price": 1050000.0,
+    "is_beverage": true
+  },
+  "M9702": {
+    "name": "Bacardi Light",
+    "qty": 2.18,
+    "price": 240000.0,
+    "is_beverage": true
+  },
+  "M9705": {
+    "name": "Tequila light",
+    "qty": 1.4,
+    "price": 360000.0,
+    "is_beverage": true
+  },
+  "M9801": {
+    "name": "Creme de cassic (Triple Sec)",
+    "qty": 0.8,
+    "price": 285000.0,
+    "is_beverage": true
+  },
+  "M9802": {
+    "name": "Chabot Napoleon Special Reserve Armagnac",
+    "qty": 2.79,
+    "price": 800000.0,
+    "is_beverage": true
+  },
+  "M98021": {
+    "name": "Armagnac bottle",
+    "qty": 1.0,
+    "price": 800000.0,
+    "is_beverage": true
+  },
+  "M9803": {
+    "name": "Framboise",
+    "qty": 0.3,
+    "price": 1041700.0,
+    "is_beverage": true
+  },
+  "M9804": {
+    "name": "Mirabelle (Massenez Wild Raspberry)",
+    "qty": 1.0,
+    "price": 796600.0,
+    "is_beverage": true
+  },
+  "M9805": {
+    "name": "Massenez Poire Williams",
+    "qty": 0.6,
+    "price": 1365000.0,
+    "is_beverage": true
+  },
+  "M9806": {
+    "name": "Parisiennes Napoleon X.O 70cl",
+    "qty": 1.0,
+    "price": 200000.0,
+    "is_beverage": true
+  },
+  "M9808": {
+    "name": "Hennessy VSOP 0.7 liter",
+    "qty": 0.9,
+    "price": 950000.0,
+    "is_beverage": true
+  },
+  "M9809": {
+    "name": "Hennessy XO",
+    "qty": 1.0,
+    "price": 3700000.0,
+    "is_beverage": true
+  },
+  "M9812": {
+    "name": "Remy Martin VSOP",
+    "qty": 0.2,
+    "price": 920000.0,
+    "is_beverage": true
+  },
+  "SWE": {
+    "name": "Sweet Wine",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V3002": {
+    "name": "Baron Philippe de Rothschild, Mouton Cadet Réserve, Sauternes Half Bottle, France",
+    "qty": 3.0,
+    "price": 725340.0,
+    "is_beverage": true
+  },
+  "V3003": {
+    "name": "Baron Philippe de Rothschild, Mouton Cadet Réserve, Sauternes full  Bottle, France",
+    "qty": 1.0,
+    "price": 1346730.0,
+    "is_beverage": true
+  },
+  "SYRUP": {
+    "name": "Syrup",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "S1003": {
+    "name": "Grenadine (Siro Lựu)",
+    "qty": 0.6,
+    "price": 200000.0,
+    "is_beverage": true
+  },
+  "S1004": {
+    "name": "Syrup - Pineapple 70cl",
+    "qty": 1.0,
+    "price": 260000.0,
+    "is_beverage": true
+  },
+  "WHI": {
+    "name": "White wine",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "V5004": {
+    "name": "Les Hauts de La Gaffeliere, Bordeaux Blanc",
+    "qty": 1.0,
+    "price": 441000.0,
+    "is_beverage": true
+  },
+  "V5008": {
+    "name": "Gustave Lorentz Riesling",
+    "qty": 2.0,
+    "price": 604450.0,
+    "is_beverage": true
+  },
+  "V5027": {
+    "name": "Chantecaille Bordeaux AOC White",
+    "qty": 13.2,
+    "price": 229000.0,
+    "is_beverage": true
+  },
+  "V5028": {
+    "name": "F. Thienpont Sauvignon Blanc - White",
+    "qty": 4.0,
+    "price": 426000.0,
+    "is_beverage": true
+  },
+  "V5029": {
+    "name": "Ronan By Clinet (by Chateau Clinet, Pomerol) Bordauex Blanc - White",
+    "qty": 2.0,
+    "price": 498000.0,
+    "is_beverage": true
+  },
+  "V5030": {
+    "name": "Nicolas Thienpont, Chateau Puygueraud,  Francs Cotes de Bordeaux -White",
+    "qty": 3.0,
+    "price": 792000.0,
+    "is_beverage": true
+  },
+  "V5032": {
+    "name": "Louis Latour Chablis La Chanfleure, Chardonnay  - White",
+    "qty": 3.0,
+    "price": 660000.0,
+    "is_beverage": true
+  },
+  "V5033": {
+    "name": "Louis Latour Pouilly-Fuissé - White",
+    "qty": 2.0,
+    "price": 802500.0,
+    "is_beverage": true
+  },
+  "V5034": {
+    "name": "Dufouleur Monopole White wine Bt",
+    "qty": 3.0,
+    "price": 203000.0,
+    "is_beverage": true
+  },
+  "V5037": {
+    "name": "PASCAL JOLIVET ATTITUDE (Sauvignon Blanc) Loire Valley",
+    "qty": 2.0,
+    "price": 534600.0,
+    "is_beverage": true
+  },
+  "V5038": {
+    "name": "Château Baratet, Sauvignon Blanc, France",
+    "qty": 18.0,
+    "price": 190000.0,
+    "is_beverage": true
+  },
+  "V5039": {
+    "name": "Grand Bateau Bordeaux Blanc (by Beychevelle)",
+    "qty": 3.0,
+    "price": 392000.0,
+    "is_beverage": true
+  },
+  "V5040": {
+    "name": "M. Chapoutier « Belleruche » Côtes du Rhône Blanc, Grenache Blanc • Clairette",
+    "qty": 3.0,
+    "price": 450450.0,
+    "is_beverage": true
+  },
+  "V5041": {
+    "name": "Bernard Magrez « Le Prélat » Blanc Côtes du Rhône Villages Laudun",
+    "qty": 3.0,
+    "price": 540000.0,
+    "is_beverage": true
+  },
+  "V5042": {
+    "name": "M.Chapoutier Domaine des Granges de Mirabel",
+    "qty": 3.0,
+    "price": 603900.0,
+    "is_beverage": true
+  },
+  "V5043": {
+    "name": "Gustave Lorentz Gewurztraminer",
+    "qty": 2.0,
+    "price": 782100.0,
+    "is_beverage": true
+  },
+  "NL": {
+    "name": "Nguyên liệu",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": true
+  },
+  "NLP004": {
+    "name": "Trà olong  Tam Châu 100g",
+    "qty": 3.0,
+    "price": 74058.0,
+    "is_beverage": true
+  },
+  "NLP3016": {
+    "name": "Sữa tươi Vinamilk 1L",
+    "qty": 16.0,
+    "price": 32785.0,
+    "is_beverage": false
+  },
+  "NLP3021": {
+    "name": "Sữa tươi TH True Milk Nguyên chất 1L",
+    "qty": 15.0,
+    "price": 33000.0,
+    "is_beverage": true
+  },
+  "NLP30251": {
+    "name": "Đường nước Hàn Quốc",
+    "qty": 45.0,
+    "price": 22400.0,
+    "is_beverage": true
+  },
+  "NLP60031": {
+    "name": "Bưởi Năm roi",
+    "qty": 3.0,
+    "price": 30000.0,
+    "is_beverage": true
+  },
+  "NLP60032": {
+    "name": "Chanh",
+    "qty": 0.7,
+    "price": 28000.0,
+    "is_beverage": false
+  },
+  "NLP60033": {
+    "name": "Cam",
+    "qty": 3.2,
+    "price": 25000.0,
+    "is_beverage": false
+  },
+  "NLP60034": {
+    "name": "Xoài",
+    "qty": 0.5,
+    "price": 50000.0,
+    "is_beverage": false
+  },
+  "NLP60035": {
+    "name": "Dưa hấu",
+    "qty": 2.9,
+    "price": 25000.0,
+    "is_beverage": false
+  },
+  "NLP600351": {
+    "name": "Chè mạn",
+    "qty": 3.3,
+    "price": 168000.0,
+    "is_beverage": true
+  },
+  "NLP60038": {
+    "name": "Chanh leo",
+    "qty": 0.0,
+    "price": 32000.0,
+    "is_beverage": false
+  },
+  "NLP60041": {
+    "name": "Dứa quả",
+    "qty": 0.0,
+    "price": 20000.0,
+    "is_beverage": false
+  },
+  "NLP9001": {
+    "name": "Cafe hương chồn 500g",
+    "qty": 3.0,
+    "price": 153000.0,
+    "is_beverage": true
+  },
+  "NLP9002": {
+    "name": "Cafe season 500g/ túi",
+    "qty": 4.0,
+    "price": 201800.0,
+    "is_beverage": true
+  },
+  "NLP90023": {
+    "name": "Cafe hạt Javador 73 Italya",
+    "qty": 1.0,
+    "price": 308000.0,
+    "is_beverage": true
+  },
+  "NLP9003": {
+    "name": "Trà lipton túi lọc (25g/h)",
+    "qty": 1.0,
+    "price": 35000.0,
+    "is_beverage": true
+  },
+  "NLP9004": {
+    "name": "Trà Kim Anh (sen, nhài)",
+    "qty": 5.0,
+    "price": 25000.0,
+    "is_beverage": true
+  },
+  "NLP9005": {
+    "name": "Đường que",
+    "qty": 15.0,
+    "price": 13000.0,
+    "is_beverage": true
+  },
+  "NLP9006": {
+    "name": "Sữa đặc",
+    "qty": 3.0,
+    "price": 17788.0,
+    "is_beverage": true
+  },
+  "NLP9020": {
+    "name": "Trà gừng",
+    "qty": 0.5,
+    "price": 38000.0,
+    "is_beverage": true
+  },
+  "NLP9024": {
+    "name": "Trà Eargrey",
+    "qty": 3.5,
+    "price": 45000.0,
+    "is_beverage": true
+  },
+  "NLP9026": {
+    "name": "Trà hoa cúc",
+    "qty": 1.0,
+    "price": 110000.0,
+    "is_beverage": true
+  },
+  "NVLC1001": {
+    "name": "Beef Tenderloin",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": false
+  },
+  "NVLC10011": {
+    "name": "Beef Tenderloin (Australia)",
+    "qty": 4.8,
+    "price": 609000.0,
+    "is_beverage": false
+  },
+  "NVLC1002": {
+    "name": "Rib eye (USA)",
+    "qty": 0.0,
+    "price": 700000.0,
+    "is_beverage": false
+  },
+  "NVLC10021": {
+    "name": "Beef steak fuji",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": false
+  },
+  "NVLC10022": {
+    "name": "Knuckle Wagyu",
+    "qty": 0.0,
+    "price": 371280.0,
+    "is_beverage": false
+  },
+  "NVLC10023": {
+    "name": "US Striploin ",
+    "qty": 0.0,
+    "price": 480000.0,
+    "is_beverage": false
+  },
+  "NVLC10024": {
+    "name": "Rib eye Wagyu",
+    "qty": 2.73,
+    "price": 2128000.0,
+    "is_beverage": false
+  },
+  "NVLC10025": {
+    "name": "Ribeye Angus",
+    "qty": 4.0,
+    "price": 1113000.0,
+    "is_beverage": false
+  },
+  "NVLC1003": {
+    "name": "Rib eye (Australia)",
+    "qty": 1.9,
+    "price": 882000.0,
+    "is_beverage": false
+  },
+  "NVLC1004": {
+    "name": "Rib eye (Newzeland)",
+    "qty": 0.0,
+    "price": 278000.0,
+    "is_beverage": false
+  },
+  "NVLC10041": {
+    "name": "Beef op rib",
+    "qty": 0.0,
+    "price": 651333.0,
+    "is_beverage": false
+  },
+  "NVLC1010": {
+    "name": "T bone",
+    "qty": 0.0,
+    "price": 720000.0,
+    "is_beverage": false
+  },
+  "NVLC1011": {
+    "name": "Top Blade",
+    "qty": 10.2,
+    "price": 300000.0,
+    "is_beverage": false
+  },
+  "NVLC1012": {
+    "name": "Short rib",
+    "qty": 5.0,
+    "price": 535500.0,
+    "is_beverage": false
+  },
+  "NVLC10121": {
+    "name": "Short rib boneless",
+    "qty": 0.0,
+    "price": 950000.0,
+    "is_beverage": false
+  },
+  "NVLC1016": {
+    "name": "Chuck roll US",
+    "qty": 0.0,
+    "price": 340000.0,
+    "is_beverage": false
+  },
+  "NVLC1018": {
+    "name": "T-bone",
+    "qty": 0.0,
+    "price": 176000.0,
+    "is_beverage": false
+  },
+  "NVLC1019": {
+    "name": "Beef Cheek - Má bò",
+    "qty": 11.5,
+    "price": 371280.0,
+    "is_beverage": false
+  },
+  "NVLC1020": {
+    "name": "Tomahawk - Sườn bò",
+    "qty": 2.0,
+    "price": 810000.0,
+    "is_beverage": false
+  },
+  "NVLC2001": {
+    "name": "Lamb rack",
+    "qty": 5.0,
+    "price": 835000.0,
+    "is_beverage": false
+  },
+  "NVLC2002": {
+    "name": "Lamb shanks",
+    "qty": 10.0,
+    "price": 107625.0,
+    "is_beverage": false
+  },
+  "NVLC2003": {
+    "name": "Lamb leg boneless",
+    "qty": 0.0,
+    "price": 360000.0,
+    "is_beverage": false
+  },
+  "NVLC20031": {
+    "name": "Lamb leg",
+    "qty": 0.0,
+    "price": 220000.0,
+    "is_beverage": false
+  },
+  "NVLC2004": {
+    "name": "Lamb tenderloin",
+    "qty": 0.0,
+    "price": 520000.0,
+    "is_beverage": false
+  },
+  "NVLC3001": {
+    "name": "Pork shoulder",
+    "qty": 67.0,
+    "price": 101850.0,
+    "is_beverage": false
+  },
+  "NVLC3002": {
+    "name": "Pork Loin ",
+    "qty": 0.0,
+    "price": 150000.0,
+    "is_beverage": false
+  },
+  "NVLC3003": {
+    "name": "Pork belly",
+    "qty": 0.0,
+    "price": 150000.0,
+    "is_beverage": false
+  },
+  "NVLC3006": {
+    "name": "Pork Rib",
+    "qty": 0.0,
+    "price": 100000.0,
+    "is_beverage": false
+  },
+  "NVLC3008": {
+    "name": "Iberico Pork Fillet",
+    "qty": 1.9,
+    "price": 657000.0,
+    "is_beverage": false
+  },
+  "NVLC4001": {
+    "name": "Duck leg",
+    "qty": 0.0,
+    "price": 125000.0,
+    "is_beverage": false
+  },
+  "NVLC4002": {
+    "name": "Duck breast",
+    "qty": 8.3,
+    "price": 260000.0,
+    "is_beverage": false
+  },
+  "NVLC4003": {
+    "name": "French Duck Breast",
+    "qty": 2.6,
+    "price": 850000.0,
+    "is_beverage": false
+  },
+  "NVLC4010": {
+    "name": "Chicken leg",
+    "qty": 30.0,
+    "price": 85000.0,
+    "is_beverage": false
+  },
+  "NVLC4011": {
+    "name": "Chicken breast",
+    "qty": 0.0,
+    "price": 75000.0,
+    "is_beverage": false
+  },
+  "NVLC4012": {
+    "name": "Whole chicken",
+    "qty": 0.0,
+    "price": 127800.0,
+    "is_beverage": false
+  },
+  "NVLC5001": {
+    "name": "Salmon fillet",
+    "qty": 6.9,
+    "price": 550000.0,
+    "is_beverage": false
+  },
+  "NVLC5005": {
+    "name": "Sea bass fillet",
+    "qty": 6.5,
+    "price": 300000.0,
+    "is_beverage": false
+  },
+  "NVLC5010": {
+    "name": "Tilapia fillet",
+    "qty": 0.0,
+    "price": 0.0,
+    "is_beverage": false
+  },
+  "NVLC5015": {
+    "name": "Ca Tra fillet",
+    "qty": 50.0,
+    "price": 126500.0,
+    "is_beverage": false
+  },
+  "NVLC5020": {
+    "name": "Cod fish",
+    "qty": 5.0,
+    "price": 1207500.0,
+    "is_beverage": false
+  },
+  "NVLC5022": {
+    "name": "Tuna Fillet",
+    "qty": 2.0,
+    "price": 580000.0,
+    "is_beverage": false
+  },
+  "NVLC5026": {
+    "name": "Frozen NZ Sole whole fish gutted 225-325g",
+    "qty": 0.0,
+    "price": 636300.0,
+    "is_beverage": false
+  },
+  "NVLC5027": {
+    "name": "Squid ( Mực )",
+    "qty": 0.0,
+    "price": 250000.0,
+    "is_beverage": false
+  },
+  "NVLC6001": {
+    "name": "Lobster",
+    "qty": 1.8,
+    "price": 700000.0,
+    "is_beverage": false
+  },
+  "NVLC60021": {
+    "name": "Scallope (10)",
+    "qty": 2.0,
+    "price": 840000.0,
+    "is_beverage": false
+  },
+  "NVLC6005": {
+    "name": "Prawn 31-40 (425g/ túi)",
+    "qty": 1.2,
+    "price": 200000.0,
+    "is_beverage": false
+  },
+  "NVLC6006": {
+    "name": "Mussell meat",
+    "qty": 3.4,
+    "price": 258000.0,
+    "is_beverage": false
+  },
+  "NVLC6007": {
+    "name": "Escargot in tin 800gr",
+    "qty": 4.0,
+    "price": 547800.0,
+    "is_beverage": false
+  },
+  "NVLC60111": {
+    "name": "Tôm Bắc Cực",
+    "qty": 0.0,
+    "price": 392000.0,
+    "is_beverage": false
+  },
+  "NVLC6012": {
+    "name": "Vẹm nguyên con Chile",
+    "qty": 5.0,
+    "price": 184500.0,
+    "is_beverage": false
+  },
+  "NVLC6013": {
+    "name": "Ốc Bulot",
+    "qty": 6.6,
+    "price": 247500.0,
+    "is_beverage": false
+  },
+  "NVLC60141": {
+    "name": "Fresh Oyster - Hàu nhật size M (9-11pcs/kg)",
+    "qty": 0.0,
+    "price": 279200.0,
+    "is_beverage": false
+  },
+  "NVLC6017": {
+    "name": "Octopus",
+    "qty": 0.8,
+    "price": 250000.0,
+    "is_beverage": false
+  },
+  "NVLC6020": {
+    "name": "Prawn (8)",
+    "qty": 0.0,
+    "price": 270000.0,
+    "is_beverage": false
+  },
+  "NVLC60201": {
+    "name": "Tôm dảo sz 25",
+    "qty": 0.8,
+    "price": 300000.0,
+    "is_beverage": false
+  },
+  "NVLC6022": {
+    "name": "Rabbit Whole",
+    "qty": 4.8,
+    "price": 213200.0,
+    "is_beverage": false
+  },
+  "NVLC6024": {
+    "name": "Pigeon meat",
+    "qty": 0.0,
+    "price": 90000.0,
+    "is_beverage": false
+  },
+  "NVLC7001": {
+    "name": "Veal tenderloin",
+    "qty": 0.0,
+    "price": 480000.0,
+    "is_beverage": false
+  },
+  "NLP1001": {
+    "name": "Gouda",
+    "qty": 0.8,
+    "price": 228800.0,
+    "is_beverage": false
+  },
+  "NLP1003": {
+    "name": "Goat cheese saint maure 200gr",
+    "qty": 0.5,
+    "price": 1237500.0,
+    "is_beverage": false
+  },
+  "NLP1005": {
+    "name": "Pho mát Gruyere",
+    "qty": 0.6,
+    "price": 651200.0,
+    "is_beverage": false
+  },
+  "NLP1007": {
+    "name": "Camembert 250g Presiden",
+    "qty": 1.0,
+    "price": 167200.0,
+    "is_beverage": false
+  },
+  "NLP10091": {
+    "name": "Blue d'auvergne",
+    "qty": 0.7,
+    "price": 540100.0,
+    "is_beverage": false
+  },
+  "NLP1012": {
+    "name": "Mozzazella galbani cheese",
+    "qty": 3.0,
+    "price": 204120.0,
+    "is_beverage": false
+  },
+  "NLP20021": {
+    "name": "Parma Ham",
+    "qty": 3.0,
+    "price": 685300.0,
+    "is_beverage": false
+  },
+  "NLP2003": {
+    "name": "Cook ham - Square ham, torchon ham",
+    "qty": 1.0,
+    "price": 179280.0,
+    "is_beverage": false
+  },
+  "NLP20031": {
+    "name": "Dăm bông giò heo Bakery",
+    "qty": 2.6,
+    "price": 159500.0,
+    "is_beverage": false
+  },
+  "NLP20033": {
+    "name": "Rosette (xúc xích khô)",
+    "qty": 1.1,
+    "price": 368500.0,
+    "is_beverage": false
+  },
+  "NLP2004": {
+    "name": "Bacon",
+    "qty": 1.0,
+    "price": 170640.0,
+    "is_beverage": false
+  },
+  "NLP2008": {
+    "name": "Dry sausage 300g",
+    "qty": 0.2,
+    "price": 979000.0,
+    "is_beverage": false
+  },
+  "NLP20083": {
+    "name": "Iberico Chorizo",
+    "qty": 1.1,
+    "price": 605000.0,
+    "is_beverage": false
+  },
+  "NLP2011": {
+    "name": "Foie gras frozen fresh",
+    "qty": 2.1,
+    "price": 1690000.0,
+    "is_beverage": false
+  },
+  "NLP2014": {
+    "name": "Smoke chicken breast",
+    "qty": 0.7,
+    "price": 313200.0,
+    "is_beverage": false
+  },
+  "NLP2021": {
+    "name": "Egg",
+    "qty": 20.0,
+    "price": 3200.0,
+    "is_beverage": false
+  },
+  "NLP3008": {
+    "name": "Anchor Unsalted creamy butter (4x5kg)",
+    "qty": 10.0,
+    "price": 249736.0,
+    "is_beverage": false
+  },
+  "NLP3010": {
+    "name": "Bơ thực vật lạt 15kg (Margarine Palffy unsalted)",
+    "qty": 22.0,
+    "price": 79380.0,
+    "is_beverage": false
+  },
+  "NLP3015": {
+    "name": "Kem sữa Tatua 1L ( Tatua Whipping cream )",
+    "qty": 22.0,
+    "price": 135000.0,
+    "is_beverage": false
+  },
+  "NLP3017": {
+    "name": "Bạt min - súp sò",
+    "qty": 4.0,
+    "price": 91800.0,
+    "is_beverage": false
+  },
+  "NLP3018": {
+    "name": "Icing sugar",
+    "qty": 3.5,
+    "price": 40000.0,
+    "is_beverage": false
+  },
+  "NLP3019": {
+    "name": "Sugar",
+    "qty": 12.0,
+    "price": 25000.0,
+    "is_beverage": false
+  },
+  "NLP3024": {
+    "name": "Glucose Syrup",
+    "qty": 1.5,
+    "price": 162000.0,
+    "is_beverage": false
+  },
+  "NLP3026": {
+    "name": "Nguyên liệu làm kem Louis Francois Stab 2000 1kg",
+    "qty": 0.5,
+    "price": 2592000.0,
+    "is_beverage": false
+  },
+  "NLP3027": {
+    "name": "Bột làm kem trái cây ( bột nền perfeta )",
+    "qty": 0.9,
+    "price": 396000.0,
+    "is_beverage": false
+  },
+  "NLP3029": {
+    "name": "Sữa chua Hy Lạp ( Farmers Greek Union )",
+    "qty": 0.0,
+    "price": 227160.0,
+    "is_beverage": false
+  },
+  "NLP4001": {
+    "name": "White Chocolate",
+    "qty": 3.0,
+    "price": 126000.0,
+    "is_beverage": false
+  },
+  "NLP4002": {
+    "name": "Dark Chocolate",
+    "qty": 5.5,
+    "price": 197000.0,
+    "is_beverage": false
+  },
+  "NLP4004": {
+    "name": "Dark chocolate 72% - socola hạt nút đen",
+    "qty": 2.0,
+    "price": 272000.0,
+    "is_beverage": false
+  },
+  "NLP5001": {
+    "name": "Xốt nâu Demi Glace Knorr",
+    "qty": 5.0,
+    "price": 229000.0,
+    "is_beverage": false
+  },
+  "NLP5002": {
+    "name": "Seafood powder",
+    "qty": 3.0,
+    "price": 130000.0,
+    "is_beverage": false
+  },
+  "NLP50022": {
+    "name": "Garlic powder 250g/ lọ (bột tỏi)",
+    "qty": 0.4,
+    "price": 675262.0,
+    "is_beverage": false
+  },
+  "NLP50024": {
+    "name": "Hạnh nhân nghiền",
+    "qty": 0.9,
+    "price": 280000.0,
+    "is_beverage": false
+  },
+  "NLP50025": {
+    "name": "Hạt phỉ nghiền nhão - Hazelnut paste",
+    "qty": 1.0,
+    "price": 1101600.0,
+    "is_beverage": false
+  },
+  "NLP5003": {
+    "name": "Chicken powder",
+    "qty": 3.0,
+    "price": 107100.0,
+    "is_beverage": false
+  },
+  "NLP5004": {
+    "name": "Dalat Red Wine 3L",
+    "qty": 4.0,
+    "price": 217000.0,
+    "is_beverage": false
+  },
+  "NLP5005": {
+    "name": "Dalat White Wine 3L",
+    "qty": 3.0,
+    "price": 217000.0,
+    "is_beverage": false
+  },
+  "NLP500612": {
+    "name": "GDO EV Olive Oil Organic 750ml",
+    "qty": 2.0,
+    "price": 1195344.0,
+    "is_beverage": false
+  },
+  "NLP50063": {
+    "name": "Pomace Olive Oil 5L",
+    "qty": 2.0,
+    "price": 605000.0,
+    "is_beverage": false
+  },
+  "NLP5007": {
+    "name": "Neptune oil 10L",
+    "qty": 5.0,
+    "price": 563580.0,
+    "is_beverage": false
+  },
+  "NLP5009": {
+    "name": "White truffle oil 250ml (dầu oliu vị nấm truffle)",
+    "qty": 0.2,
+    "price": 757900.0,
+    "is_beverage": false
+  },
+  "NLP5011": {
+    "name": "Barilla Pasta Spaghetti N.5 - 500g",
+    "qty": 9.0,
+    "price": 51700.0,
+    "is_beverage": false
+  },
+  "NLP5014": {
+    "name": "Cous cous",
+    "qty": 0.5,
+    "price": 112860.0,
+    "is_beverage": false
+  },
+  "NLP501511": {
+    "name": "Oliu đen tách hạt 920gr",
+    "qty": 4.0,
+    "price": 107800.0,
+    "is_beverage": false
+  },
+  "NLP501512": {
+    "name": "Oliu xanh tách hạt 920 Gr",
+    "qty": 6.0,
+    "price": 107800.0,
+    "is_beverage": false
+  },
+  "NLP50182": {
+    "name": "Atiso đông lạnh 2.5kg",
+    "qty": 2.5,
+    "price": 382752.0,
+    "is_beverage": false
+  },
+  "NLP50212": {
+    "name": "Gelatin Silver - lá kết đông",
+    "qty": 1.0,
+    "price": 752400.0,
+    "is_beverage": false
+  },
+  "NLP50215": {
+    "name": "Hạt óc chó",
+    "qty": 0.3,
+    "price": 380000.0,
+    "is_beverage": false
+  },
+  "NLP502171": {
+    "name": "Bột ớt cựa gà paprika 510g",
+    "qty": 1.0,
+    "price": 328900.0,
+    "is_beverage": false
+  },
+  "NLP50218": {
+    "name": "Hạt thông",
+    "qty": 0.4,
+    "price": 900000.0,
+    "is_beverage": false
+  },
+  "NLP5024": {
+    "name": "Nấm rừng khô - Dry Mix forest mushroom 500g",
+    "qty": 400.0,
+    "price": 1241.1,
+    "is_beverage": false
+  },
+  "NLP50243": {
+    "name": "Sốt nấm - Tartufi Morra 200g",
+    "qty": 0.3,
+    "price": 245600.0,
+    "is_beverage": false
+  },
+  "NLP50244": {
+    "name": "Nước xốt - Yamasa Yuzu Ponzu 1L",
+    "qty": 1.0,
+    "price": 185760.0,
+    "is_beverage": false
+  },
+  "NLP5025": {
+    "name": "Oregano",
+    "qty": 1000.0,
+    "price": 800.0,
+    "is_beverage": false
+  },
+  "NLP5030": {
+    "name": "Balsamic vinergar 5L",
+    "qty": 0.5,
+    "price": 663300.0,
+    "is_beverage": false
+  },
+  "NLP50312": {
+    "name": "Mustard Dijon 4kg - Clovis",
+    "qty": 1.0,
+    "price": 543400.0,
+    "is_beverage": false
+  },
+  "NLP5033": {
+    "name": "Whole peeled tomato - cà bóc vỏ nguyên trái",
+    "qty": 5.0,
+    "price": 85000.0,
+    "is_beverage": false
+  },
+  "NLP50351": {
+    "name": "Heinz Tomato Paste 3.15 kg",
+    "qty": 2.0,
+    "price": 343000.0,
+    "is_beverage": false
+  },
+  "NLP5036": {
+    "name": "Mật ong",
+    "qty": 1.5,
+    "price": 32000.0,
+    "is_beverage": false
+  },
+  "NLP5041": {
+    "name": "Rượu Mirin",
+    "qty": 1.0,
+    "price": 105555.0,
+    "is_beverage": false
+  },
+  "NLP5042": {
+    "name": "Rượu Sake nấu ăn",
+    "qty": 1.0,
+    "price": 105555.0,
+    "is_beverage": false
+  },
+  "NLP5043": {
+    "name": "Rượu táo - Giffard Apple",
+    "qty": 4.0,
+    "price": 420000.0,
+    "is_beverage": false
+  },
+  "NLP5051": {
+    "name": "Sốt Mayonaise 3kg",
+    "qty": 4.0,
+    "price": 243500.0,
+    "is_beverage": false
+  },
+  "NLP5055": {
+    "name": "Dầu vani 500ml",
+    "qty": 0.5,
+    "price": 320000.0,
+    "is_beverage": false
+  },
+  "NLP5057": {
+    "name": "Riso Gallo Long Grain ( Gạo Nhật 1kg)",
+    "qty": 2.0,
+    "price": 157815.0,
+    "is_beverage": false
+  },
+  "NLP5061": {
+    "name": "Miso Paste",
+    "qty": 0.5,
+    "price": 135000.0,
+    "is_beverage": false
+  },
+  "NLP5071": {
+    "name": "Mơ khô sấy- Dry Apricot",
+    "qty": 0.0,
+    "price": 319000.0,
+    "is_beverage": false
+  },
+  "NLP5074": {
+    "name": "Tagliatelle a nido ( Organic ) 250g",
+    "qty": 9.0,
+    "price": 62640.0,
+    "is_beverage": false
+  },
+  "NLP5076": {
+    "name": "Penne Rigate ( Organic ) 500g",
+    "qty": 2.0,
+    "price": 96120.0,
+    "is_beverage": false
+  },
+  "NLP60049": {
+    "name": "Dâu tây đông lạnh",
+    "qty": 1.0,
+    "price": 100300.0,
+    "is_beverage": false
+  },
+  "NLP60050": {
+    "name": "Nước cốt dừa",
+    "qty": 7.0,
+    "price": 25560.0,
+    "is_beverage": false
+  },
+  "NLP60054": {
+    "name": "Khoai tây sợi 7/7mm Premium",
+    "qty": 8.2,
+    "price": 60000.0,
+    "is_beverage": false
+  },
+  "NLP60056": {
+    "name": "Quả mâm xôi đen đông lạnh - Blackberry",
+    "qty": 0.0,
+    "price": 60950.0,
+    "is_beverage": false
+  },
+  "NLP8001": {
+    "name": "Men nở",
+    "qty": 3.5,
+    "price": 105000.0,
+    "is_beverage": false
+  },
+  "NLP8002": {
+    "name": "Flour - Bột mỳ",
+    "qty": 28.0,
+    "price": 15800.0,
+    "is_beverage": false
+  },
+  "NLP80021": {
+    "name": "Dark rye flour",
+    "qty": 6.3,
+    "price": 100000.0,
+    "is_beverage": false
+  },
+  "NLP80053": {
+    "name": "Khoai tây Spicy Wedges bổ múi cau 1kg",
+    "qty": 2.5,
+    "price": 40000.0,
+    "is_beverage": false
+  },
+  "NLP80071": {
+    "name": "Hạt tiêu hồng- Pink pepercon",
+    "qty": 1.0,
+    "price": 3780000.0,
+    "is_beverage": false
+  },
+  "NLP80074": {
+    "name": "Hạt diêm mạch - Quinoa",
+    "qty": 0.3,
+    "price": 302000.0,
+    "is_beverage": false
+  },
+  "NLP8015": {
+    "name": "Trứng cá đen (hộp)",
+    "qty": 7.0,
+    "price": 200000.0,
+    "is_beverage": false
+  },
+  "NLP8016": {
+    "name": "Frozen whole IQF Fig (quả sung đông lạnh)",
+    "qty": 0.5,
+    "price": 367500.0,
+    "is_beverage": false
+  },
+  "NLP8017": {
+    "name": "Safran whole 10g (nhụy hoa nghệ tây)",
+    "qty": 5.0,
+    "price": 233530.0,
+    "is_beverage": false
+  },
+  "NLP60036": {
+    "name": "Bưởi xanh",
+    "qty": 1.0,
+    "price": 100000.0,
+    "is_beverage": false
+  },
+  "NLP60037": {
+    "name": "Táo",
+    "qty": 7.6,
+    "price": 50000.0,
+    "is_beverage": false
+  },
+  "NLP600381": {
+    "name": "Chanh vàng",
+    "qty": 0.3,
+    "price": 50000.0,
+    "is_beverage": false
+  },
+  "NLP60039": {
+    "name": "Dâu tây",
+    "qty": 0.2,
+    "price": 100000.0,
+    "is_beverage": false
+  },
+  "NLP60040": {
+    "name": "Bơ sáp",
+    "qty": 0.0,
+    "price": 50000.0,
+    "is_beverage": false
+  },
+  "NLP60043": {
+    "name": "Thanh long trắng",
+    "qty": 3.8,
+    "price": 45000.0,
+    "is_beverage": false
+  },
+  "NLP60045": {
+    "name": "Dưa vàng",
+    "qty": 3.4,
+    "price": 30000.0,
+    "is_beverage": false
+  },
+  "NLP60047": {
+    "name": "Kiwi",
+    "qty": 0.0,
+    "price": 100000.0,
+    "is_beverage": false
+  },
+  "NLP60052": {
+    "name": "Cam vàng",
+    "qty": 4.8,
+    "price": 95000.0,
+    "is_beverage": false
+  },
+  "NLP60053": {
+    "name": "Chuối chín",
+    "qty": 0.0,
+    "price": 30000.0,
+    "is_beverage": false
+  }
+}

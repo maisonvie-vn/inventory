@@ -2,6 +2,7 @@ import dbData from './db.json';
 
 export interface Ingredient {
   id: string;
+  code?: string;
   fr_name: string;
   vi_name: string;
   en_name: string;
@@ -416,12 +417,13 @@ export const getIngredients = (): Ingredient[] => {
     let stock_uom = ing.unit;
     
     // Quy đổi đặc thù cho v8.0
-    if (['Wine', 'Alcohol'].includes(ing.category) || ing.id.startsWith('ING-069') || ing.id.startsWith('ING-070') || ing.id.startsWith('ING-071')) {
+    const codeVal = ing.code || ing.id;
+    if (['Wine', 'Alcohol'].includes(ing.category) || codeVal.startsWith('ING-069') || codeVal.startsWith('ING-070') || codeVal.startsWith('ING-071')) {
       // Rượu: Tồn theo BOTTLE (Chai), công thức dùng ML
       stock_uom = 'BOTTLE';
       recipe_uom = 'ML';
       factor = 750; // 1 Chai = 750 ML
-    } else if (ing.id === 'ING-021') {
+    } else if (codeVal === 'ING-021') {
       // Trứng: Tồn theo CASE (Thùng), công thức dùng cái (pc)
       stock_uom = 'CASE';
       recipe_uom = 'pc';

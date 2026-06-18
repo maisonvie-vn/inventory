@@ -1,0 +1,780 @@
+{
+  "missing_ingredients": [
+    {
+      "code": "AFRICA",
+      "name": "South Africa",
+      "unit": "BOTTLE",
+      "source": "BAR_INVENTORY"
+    }
+  ],
+  "missing_menu_items": [
+    {
+      "code": "CKT01",
+      "name": "Margarita",
+      "price": 210000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "CKT04",
+      "name": "Singapore Sling",
+      "price": 210000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "CKT05",
+      "name": "Long Island",
+      "price": 210000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "CKT06",
+      "name": "Black Russian",
+      "price": 210000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "CKT10",
+      "name": "Sangria",
+      "price": 210000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "MIX02",
+      "name": "Whisky Soda",
+      "price": 150000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "MIX03",
+      "name": "Gin Tonic",
+      "price": 150000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "MCK01",
+      "name": "Virgin Mojito",
+      "price": 110000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "MCK02",
+      "name": "Mango Mojito",
+      "price": 110000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "MCK06",
+      "name": "Cucumber Lime",
+      "price": 110000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG01",
+      "name": "Sparkling Glass",
+      "price": 270000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG03",
+      "name": "Fr SB Glass",
+      "price": 160000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG05",
+      "name": "Fr CS Glass",
+      "price": 160000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG06",
+      "name": "Rosé Glass",
+      "price": 160000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG07",
+      "name": "DalatW Glass",
+      "price": 90000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG08",
+      "name": "DalatR Glass",
+      "price": 90000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG09",
+      "name": "Chile W Glass",
+      "price": 160000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG10",
+      "name": "France R Glass",
+      "price": 160000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SPR02",
+      "name": "Vodka Glass",
+      "price": 100000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "BRD01",
+      "name": "Hennessy VSOP",
+      "price": 170000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "BRD06",
+      "name": "Poire William",
+      "price": 230000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "BER01",
+      "name": "Sapporo",
+      "price": 50000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "BER02",
+      "name": "Leffe",
+      "price": 110000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "BER03",
+      "name": "Heineken/Tiger",
+      "price": 50000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "BER04",
+      "name": "Hanoi/Saigon/333",
+      "price": 35000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SOF01",
+      "name": "Coke/Sprite/etc",
+      "price": 30000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SOF02",
+      "name": "MV Water",
+      "price": 25000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SOF03",
+      "name": "La Vie",
+      "price": 50000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SOF04",
+      "name": "Evian",
+      "price": 100000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SOF05",
+      "name": "Perrier",
+      "price": 95000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SOF06",
+      "name": "Pellegrino",
+      "price": 140000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "JUI01",
+      "name": "OJ/Mango/Pomelo/Pine",
+      "price": 125000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "JUI02",
+      "name": "Lemon/Wmelon/Passion",
+      "price": 65000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "JUI03",
+      "name": "Mixed Juice",
+      "price": 120000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "TEA01",
+      "name": "Espresso/Latte/Cap",
+      "price": 60000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "TEA02",
+      "name": "VN Coffee",
+      "price": 45000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "TEA03",
+      "name": "Oolong",
+      "price": 50000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "TEA04",
+      "name": "Earl Grey",
+      "price": 60000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "TEA05",
+      "name": "VN Tea",
+      "price": 25000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "TEA06",
+      "name": "Lipton",
+      "price": 35000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT01",
+      "name": "Larousse Sparkling Bt",
+      "price": 1950000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT02",
+      "name": "Latour Bourg PN Bt",
+      "price": 2950000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT03",
+      "name": "Thienpont Causse Bt",
+      "price": 1900000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT04",
+      "name": "Mouton Cadet Class Bt",
+      "price": 2100000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT05",
+      "name": "Latour PN Pierres Bt",
+      "price": 2950000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT06",
+      "name": "Baratet CS Bt",
+      "price": 1500000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT07",
+      "name": "Magrez Prélat Rg Bt",
+      "price": 1950000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT08",
+      "name": "L.Felipe Chard Bt",
+      "price": 1650000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT09",
+      "name": "Frontera CS Bt",
+      "price": 1350000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT10",
+      "name": "MontGras CS Bt",
+      "price": 1400000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT11",
+      "name": "Montes Chard Bt",
+      "price": 1950000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT12",
+      "name": "Dufouleur Rosé Bt",
+      "price": 1200000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT13",
+      "name": "Dalat Red Bt",
+      "price": 650000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT14",
+      "name": "Dalat White Bt",
+      "price": 650000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT15",
+      "name": "Noaillac 37.5cl",
+      "price": 895000,
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WINE01",
+      "name": "Wine Service",
+      "price": 295000,
+      "source": "RECIPE_BAR"
+    }
+  ],
+  "missing_aliases": [
+    {
+      "code": "CKT01",
+      "name": "Margarita",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "CKT04",
+      "name": "Singapore Sling",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "CKT05",
+      "name": "Long Island",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "CKT06",
+      "name": "Black Russian",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "CKT10",
+      "name": "Sangria",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "MIX02",
+      "name": "Whisky Soda",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "MIX03",
+      "name": "Gin Tonic",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "MCK01",
+      "name": "Virgin Mojito",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "MCK02",
+      "name": "Mango Mojito",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "MCK06",
+      "name": "Cucumber Lime",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG01",
+      "name": "Sparkling Glass",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG03",
+      "name": "Fr SB Glass",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG05",
+      "name": "Fr CS Glass",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG06",
+      "name": "Rosé Glass",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG07",
+      "name": "DalatW Glass",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG08",
+      "name": "DalatR Glass",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG09",
+      "name": "Chile W Glass",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBG10",
+      "name": "France R Glass",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SPR02",
+      "name": "Vodka Glass",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "BRD01",
+      "name": "Hennessy VSOP",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "BRD06",
+      "name": "Poire William",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "BER01",
+      "name": "Sapporo",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "BER02",
+      "name": "Leffe",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "BER03",
+      "name": "Heineken/Tiger",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "BER04",
+      "name": "Hanoi/Saigon/333",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SOF01",
+      "name": "Coke/Sprite/etc",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SOF02",
+      "name": "MV Water",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SOF03",
+      "name": "La Vie",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SOF04",
+      "name": "Evian",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SOF05",
+      "name": "Perrier",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "SOF06",
+      "name": "Pellegrino",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "JUI01",
+      "name": "OJ/Mango/Pomelo/Pine",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "JUI02",
+      "name": "Lemon/Wmelon/Passion",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "JUI03",
+      "name": "Mixed Juice",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "TEA01",
+      "name": "Espresso/Latte/Cap",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "TEA02",
+      "name": "VN Coffee",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "TEA03",
+      "name": "Oolong",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "TEA04",
+      "name": "Earl Grey",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "TEA05",
+      "name": "VN Tea",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "TEA06",
+      "name": "Lipton",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT01",
+      "name": "Larousse Sparkling Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT02",
+      "name": "Latour Bourg PN Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT03",
+      "name": "Thienpont Causse Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT04",
+      "name": "Mouton Cadet Class Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT05",
+      "name": "Latour PN Pierres Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT06",
+      "name": "Baratet CS Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT07",
+      "name": "Magrez Prélat Rg Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT08",
+      "name": "L.Felipe Chard Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT09",
+      "name": "Frontera CS Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT10",
+      "name": "MontGras CS Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT11",
+      "name": "Montes Chard Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT12",
+      "name": "Dufouleur Rosé Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT13",
+      "name": "Dalat Red Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT14",
+      "name": "Dalat White Bt",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WBT15",
+      "name": "Noaillac 37.5cl",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "WINE01",
+      "name": "Wine Service",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "M9204",
+      "name": "Cigar Cohiba",
+      "source": "RECIPE_BAR"
+    },
+    {
+      "code": "R-001",
+      "name": "Carpaccio de Thon — Agrumes, Sel marin",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-002",
+      "name": "Saumon Gravlax, Herbes du Vietnam",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-003",
+      "name": "Salade de Crabe Royal, Agrumes et Avocat",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-004",
+      "name": "Tartare de Saint-Jacques — Caviar, Crème de Yuzu",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-005",
+      "name": "Légumes de Đà Lạt — Émulsion d'Herbes",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-006",
+      "name": "Soupe à l'Oignon — Fromage, Croûton",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-007",
+      "name": "Bisque de Crevettes de Nha Trang, Crème au Cognac",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-008",
+      "name": "Champignons de Tam Đảo — Infusion de Sous-bois",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-009",
+      "name": "Escargots de Bourgogne au Beurre à l'Ail",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-010",
+      "name": "Foie Gras Poêlé — Fruit de Saison, Jus Réduit",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-011",
+      "name": "Cabillaud au Miso — Légumes Verts",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-012",
+      "name": "Wellington de Buffle — Champignons, Poivre Phú Quốc",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-013",
+      "name": "Risotto — Truffe Noire, Champignons de Tam Đảo",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-014",
+      "name": "Langoustine Rôtie — Beurre Noisette",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-015",
+      "name": "Saint-Jacques — Beurre Blanc, Agrumes",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-016",
+      "name": "Bar du Vietnam — Beurre Blanc, Agrumes",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-017",
+      "name": "Magret de Canard — Prunes de Sapa, Madère",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-018",
+      "name": "Carré d'Agneau — Herbes Vietnamiennes",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-019",
+      "name": "Bœuf Wagyu MBS 6-7 — Jus Maison",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-020",
+      "name": "Plat Végétal — Légumineuses, Racines",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-021",
+      "name": "Sélection de Fromages Français Affinés",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-022",
+      "name": "Soufflé du Moment — Glace Vanille",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-023",
+      "name": "Chocolat du Vietnam — Contraste d'Agrumes",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-024",
+      "name": "Crème Brûlée — Vanille",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-025",
+      "name": "Assiette de Fruits Tropicaux",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-026",
+      "name": "Sorbet de Fruits Vietnamiens (Intermezzo)",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-027",
+      "name": "Amuse-Bouche du Chef",
+      "source": "INDEX_ALC"
+    },
+    {
+      "code": "R-028",
+      "name": "Côte de Bœuf Black Angus — Pommes grenaille, Échalote confite",
+      "source": "INDEX_ALC"
+    }
+  ],
+  "pro_recipe_bar_count": 57,
+  "bar_inv_items_count": 203,
+  "master_recipes_count": 28,
+  "db_ingredients_count": 456,
+  "db_menu_items_count": 295
+}

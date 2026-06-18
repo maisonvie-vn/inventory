@@ -90,7 +90,7 @@ alter table purchase_categories enable row level security;
 
 -- Bảng Nguyên Vật Liệu (Ingredients Master v8.0)
 create table ingredients (
-    id varchar(50) primary key,                 -- Mã NVL từ Excel, e.g., 'ING-011', 'ING-093'
+    id uuid default gen_random_uuid() primary key,
     code varchar(50) unique not null,
     nom_fr varchar(255) not null,               -- Tên tiếng Pháp
     ten_vi varchar(255) not null,               -- Tên tiếng Việt
@@ -133,7 +133,7 @@ alter table suppliers enable row level security;
 -- Liên kết Giá & Quy cách theo từng NCC (MỚI v8.0)
 create table supplier_ingredients (
     supplier_id uuid references suppliers(id) on delete cascade,
-    ingredient_id varchar(50) references ingredients(id) on delete cascade,
+    ingredient_id uuid references ingredients(id) on delete cascade,
     purchase_uom text references uom(id) on delete set null,  -- ĐVT mua hàng (VD: Thùng, Hộp)
     pack_size numeric not null default 1,                     -- Quy đổi Mua -> Tồn: 1 đơn vị mua = pack_size đơn vị tồn
     moq numeric not null default 1,                           -- Số lượng đặt hàng tối thiểu (theo purchase_uom)
@@ -176,7 +176,7 @@ alter table set_menu_items enable row level security;
 create table recipes (
     id uuid default gen_random_uuid() primary key,
     menu_item_id varchar(50) references menu_items(id) on delete cascade not null,
-    ingredient_id varchar(50) references ingredients(id) on delete cascade not null,
+    ingredient_id uuid references ingredients(id) on delete cascade not null,
     qty_net numeric(10, 4) not null,                  -- Lượng tịnh trong đĩa ăn (theo recipe_uom)
     yield_pct numeric(5, 2) default 100.00 not null,  -- Yield riêng của NVL này (%)
     qty_eff numeric(10, 4) generated always as (qty_net / (yield_pct / 100.00)) stored, -- Lượng thô hiệu dụng (theo recipe_uom)
@@ -207,7 +207,7 @@ alter table purchase_orders enable row level security;
 -- Chi tiết đơn đặt hàng (PO Lines v8.0)
 create table po_lines (
     po_id uuid references purchase_orders(id) on delete cascade,
-    ingredient_id varchar(50) references ingredients(id) on delete cascade,
+    ingredient_id uuid references ingredients(id) on delete cascade,
     qty_ordered numeric(12, 4) not null,                      -- Số lượng đặt (theo purchase_uom)
     qty_received numeric(12, 4) default 0.0000 not null,      -- Số lượng thực tế đã nhận (theo purchase_uom)
     purchase_uom text references uom(id) on delete set null,
@@ -240,7 +240,7 @@ alter table goods_receipts enable row level security;
 -- Chi tiết nhận hàng (GRN Lines v8.0)
 create table grn_lines (
     grn_id uuid references goods_receipts(id) on delete cascade,
-    ingredient_id varchar(50) references ingredients(id) on delete cascade,
+    ingredient_id uuid references ingredients(id) on delete cascade,
     qty_received numeric(12, 4) not null,                         -- Số lượng nhận (theo purchase_uom)
     purchase_uom text references uom(id) on delete set null,
     unit_price_fx numeric(12, 2) not null,                        -- Giá mua đơn vị theo ngoại tệ
@@ -257,7 +257,7 @@ alter table grn_lines enable row level security;
 -- Lô hàng / Hạn dùng (Lots v8.0 phục vụ FEFO)
 create table lots (
     id uuid default gen_random_uuid() primary key,
-    ingredient_id varchar(50) references ingredients(id) on delete cascade not null,
+    ingredient_id uuid references ingredients(id) on delete cascade not null,
     grn_id uuid references goods_receipts(id) on delete cascade,
     qty_remaining numeric(12, 4) not null,                        -- Số lượng còn lại (theo stock_uom)
     expiry_date date,                                             -- Hạn sử dụng
@@ -269,7 +269,7 @@ alter table lots enable row level security;
 -- Sổ cái biến động kho bất biến (Inventory Transactions v8.0)
 create table inventory_transactions (
     id bigint generated always as identity primary key,
-    ingredient_id varchar(50) references ingredients(id) on delete cascade not null,
+    ingredient_id uuid references ingredients(id) on delete cascade not null,
     txn_type text not null check (txn_type in ('IMPORT', 'SALE_DEPLETION', 'WASTE', 'NON_SALE', 'STOCK_TAKE_ADJ', 'REVERSAL')),
     qty numeric(12, 4) not null,                                  -- Số lượng biến động theo stock_uom (âm = xuất, dương = nhập)
     unit_cost numeric(12, 2),                                     -- Giá vốn WAC tại thời điểm ghi (VND)
@@ -288,7 +288,7 @@ alter table inventory_transactions enable row level security;
 -- Nhật ký hủy hỏng nguyên liệu trong ca
 create table waste_logs (
     id uuid default gen_random_uuid() primary key,
-    ingredient_id varchar(50) references ingredients(id) on delete cascade not null,
+    ingredient_id uuid references ingredients(id) on delete cascade not null,
     qty numeric(12, 4) not null,                                  -- Theo stock_uom
     reason text not null,
     status varchar(20) default 'approved' not null check (status in ('pending_approval', 'approved', 'rejected')),
@@ -318,7 +318,7 @@ alter table sales_imports enable row level security;
 -- Tiêu thụ ngoài bán hàng (Cơm nhân viên, R&D...)
 create table non_sale_consumption (
     id bigint generated always as identity primary key,
-    ingredient_id varchar(50) references ingredients(id) on delete cascade not null,
+    ingredient_id uuid references ingredients(id) on delete cascade not null,
     qty numeric(12, 4) not null,                                  -- Theo stock_uom
     consumption_type text not null check (consumption_type in ('STAFF_MEAL', 'COMP', 'R&D', 'TRAINING', 'EVENT')),
     business_date date not null,
@@ -359,7 +359,7 @@ alter table stock_takes enable row level security;
 -- Chi tiết kiểm kho
 create table stock_take_lines (
     take_id uuid references stock_takes(id) on delete cascade,
-    ingredient_id varchar(50) references ingredients(id) on delete cascade,
+    ingredient_id uuid references ingredients(id) on delete cascade,
     qty_physical numeric(12, 4) not null,
     qty_theoretical numeric(12, 4) not null,
     variance numeric(12, 4) not null,
@@ -769,7 +769,7 @@ grant select on table v_stock_on_hand to authenticated;
 
 -- NHÃN BỘ PHẬN cho từng nguyên liệu (MỚI v9.1)
 create table if not exists ingredient_departments (
-  ingredient_id varchar(50) references ingredients(id) on delete cascade,
+  ingredient_id uuid references ingredients(id) on delete cascade,
   department    text references locations(id) on delete cascade,   -- 'BAR' | 'KITCHEN'
   usage_context text,        -- 'BEVERAGE','COOKING','FLAMBE','GARNISH','SAUCE'
   is_primary    boolean default false,  -- bộ phận "chủ" mã
@@ -791,7 +791,7 @@ with check (get_current_user_role() in ('admin', 'restaurant_manager', 'senior_a
 -- Audit log schema for ingredient_departments (giao diện phê duyệt dùng chung)
 create table if not exists department_approval_audit_logs (
   id uuid primary key default gen_random_uuid(),
-  ingredient_id varchar(50) references ingredients(id) on delete cascade,
+  ingredient_id uuid references ingredients(id) on delete cascade,
   action_type text not null, -- 'ADD_TAG', 'REMOVE_TAG'
   department text not null,
   usage_context text,
@@ -837,7 +837,7 @@ end $$;
 -- (b) Map bao bì cho đơn MANG VỀ: mỗi mã món POS → các SKU bao bì + số lượng
 create table if not exists takeaway_packaging_map (
   pos_item_code text not null,
-  packaging_id  varchar(50) references ingredients(id) not null,  -- hộp/túi/nắp...
+  packaging_id uuid references ingredients(id) not null,  -- hộp/túi/nắp...
   qty_per_unit  numeric(12,4) not null default 1,
   primary key (pos_item_code, packaging_id)
 );

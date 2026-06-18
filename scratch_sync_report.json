@@ -1,0 +1,2816 @@
+{
+  "new_menu_items": [
+    {
+      "id": "M9202",
+      "name": "Cigarettes Imported",
+      "sale_price": 65000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9402",
+      "name": "Bailey",
+      "sale_price": 850000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9403",
+      "name": "Campari",
+      "sale_price": 820000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9405",
+      "name": "Cointrau",
+      "sale_price": 850000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9406",
+      "name": "Grand Marnier",
+      "sale_price": 1500000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9407",
+      "name": "Kalua",
+      "sale_price": 700000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9408",
+      "name": "Malibu",
+      "sale_price": 700000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9409",
+      "name": "Martini Bianco",
+      "sale_price": 650000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9410",
+      "name": "Martini Dry",
+      "sale_price": 700000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9411",
+      "name": "Martini Rosso",
+      "sale_price": 650000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9413",
+      "name": "Porto",
+      "sale_price": 820000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9414",
+      "name": "Ricard",
+      "sale_price": 750000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9507",
+      "name": "Mens Vodka",
+      "sale_price": 90000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9508",
+      "name": "Lua moi 500ml",
+      "sale_price": 180000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9512",
+      "name": "Smirnoff Red Label",
+      "sale_price": 520000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9513",
+      "name": "Vodka Hanoi 300ml",
+      "sale_price": 100000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9514",
+      "name": "Vodka Hanoi 500ml",
+      "sale_price": 150000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9602",
+      "name": "Ballentines 12",
+      "sale_price": 1250000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9603",
+      "name": "Ballentines 17",
+      "sale_price": 2380000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9604",
+      "name": "Ballentines 21",
+      "sale_price": 3750000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9606",
+      "name": "Ballentines Finese",
+      "sale_price": 900000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9609",
+      "name": "Chivas Regal 0.75L (12 years old)",
+      "sale_price": 1300000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9611",
+      "name": "Creame de cassic",
+      "sale_price": 620000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9612",
+      "name": "Gordon Gin Bottle",
+      "sale_price": 580000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9620",
+      "name": "J - B",
+      "sale_price": 920000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9621",
+      "name": "Jack Daniel",
+      "sale_price": 1120000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9623",
+      "name": "Jimbeam",
+      "sale_price": 580000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9629",
+      "name": "Johnny Walker red label",
+      "sale_price": 710000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9632",
+      "name": "Marcallan 12 year old",
+      "sale_price": 6620000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9636",
+      "name": "Single Barrel Jack Daniel's",
+      "sale_price": 2990000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9642",
+      "name": "GlenAllaChie 11",
+      "sale_price": 6120000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9643",
+      "name": "FinLaggan 58",
+      "sale_price": 5620000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9644",
+      "name": "Liqueur Bols Cherry Brandy 70cl",
+      "sale_price": 1250000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9645",
+      "name": "Liqueur D.O.M Benedictine 70cl",
+      "sale_price": 2620000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9702",
+      "name": "Bacardi Light",
+      "sale_price": 600000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9705",
+      "name": "Tequila light",
+      "sale_price": 900000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9801",
+      "name": "Creme de cassic (Triple Sec)",
+      "sale_price": 710000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9802",
+      "name": "Chabot Napoleon Special Reserve Armagnac",
+      "sale_price": 2000000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M98021",
+      "name": "Armagnac bottle",
+      "sale_price": 2000000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9803",
+      "name": "Framboise",
+      "sale_price": 2600000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9804",
+      "name": "Mirabelle (Massenez Wild Raspberry)",
+      "sale_price": 1990000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9805",
+      "name": "Massenez Poire Williams",
+      "sale_price": 3410000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9806",
+      "name": "Parisiennes Napoleon X.O 70cl",
+      "sale_price": 500000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9808",
+      "name": "Hennessy VSOP 0.7 liter",
+      "sale_price": 2380000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9809",
+      "name": "Hennessy XO",
+      "sale_price": 9250000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "M9812",
+      "name": "Remy Martin VSOP",
+      "sale_price": 2300000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP004",
+      "name": "Trà olong  Tam Châu 100g",
+      "sale_price": 190000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP3021",
+      "name": "Sữa tươi TH True Milk Nguyên chất 1L",
+      "sale_price": 80000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP30251",
+      "name": "Đường nước Hàn Quốc",
+      "sale_price": 60000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP600351",
+      "name": "Chè mạn",
+      "sale_price": 420000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP60038",
+      "name": "Chanh leo",
+      "sale_price": 80000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP60057",
+      "name": "Cà rốt tươi",
+      "sale_price": 40000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP60058",
+      "name": "Gừng tươi",
+      "sale_price": 100000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP60059",
+      "name": "Bạc hà tươi",
+      "sale_price": 120000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP60061",
+      "name": "Dưa chuột tươi",
+      "sale_price": 40000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP9001",
+      "name": "Cafe hương chồn 500g",
+      "sale_price": 380000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP9002",
+      "name": "Cafe season 500g/ túi",
+      "sale_price": 500000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP90023",
+      "name": "Cafe hạt Javador 73 Italya",
+      "sale_price": 770000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP9003",
+      "name": "Trà lipton túi lọc (25g/h)",
+      "sale_price": 90000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP9004",
+      "name": "Trà Kim Anh (sen, nhài)",
+      "sale_price": 60000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP9005",
+      "name": "Đường que",
+      "sale_price": 30000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP9006",
+      "name": "Sữa đặc",
+      "sale_price": 40000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP9020",
+      "name": "Trà gừng",
+      "sale_price": 100000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP9024",
+      "name": "Trà Eargrey",
+      "sale_price": 110000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "NLP9026",
+      "name": "Trà hoa cúc",
+      "sale_price": 280000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "PKG-001",
+      "name": "Cốc giấy mang về 270ml",
+      "sale_price": 0.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "PKG-002",
+      "name": "Nắp cốc mang về",
+      "sale_price": 0.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "PKG-003",
+      "name": "Ống hút giấy",
+      "sale_price": 0.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "PKG-004",
+      "name": "Túi giấy mang về",
+      "sale_price": 0.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "S1003",
+      "name": "Grenadine (Siro Lựu)",
+      "sale_price": 500000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "S1004",
+      "name": "Syrup - Pineapple 70cl",
+      "sale_price": 650000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V1008",
+      "name": "La Palma Cabernet Sauvignon 37.5cl, Chile",
+      "sale_price": 310000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V2006",
+      "name": "Champagne Taittinger Brut Reserve NV, France",
+      "sale_price": 3390000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V2009",
+      "name": "Champagne Moët & Chandon",
+      "sale_price": 2990000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V2015",
+      "name": "Chanoine Frères Brut NV (Champagne AOC — France)",
+      "sale_price": 2720000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V2016",
+      "name": "Jean-Noël Haton Cuvée Classic Brut NV ( Champagne AOC, Damery)",
+      "sale_price": 3580000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V2018",
+      "name": "Crémant de Bourgogne Brut Vignerons de Buxy, Chardonnay, Aligoté, Gamay",
+      "sale_price": 1780000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V3002",
+      "name": "Baron Philippe de Rothschild, Mouton Cadet Réserve, Sauternes Half Bottle, France",
+      "sale_price": 1335000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V3003",
+      "name": "Baron Philippe de Rothschild, Mouton Cadet Réserve, Sauternes full  Bottle, France",
+      "sale_price": 2690000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4008",
+      "name": "M. Chapoutier Belleruche, Côtes du Rhône Rouge",
+      "sale_price": 990000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4009",
+      "name": "Les Hauts de La Gaffeliere, Bordeaux Rouge",
+      "sale_price": 1090000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4014",
+      "name": "Château Noaillac Cru Bourgeois",
+      "sale_price": 1350000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4017",
+      "name": "Château Haut-Rocher Grand Cru",
+      "sale_price": 1890000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4062",
+      "name": "Château Moulin De La Faye",
+      "sale_price": 680000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4063",
+      "name": "Chantecaille Bordeaux AOC Red",
+      "sale_price": 570000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4068",
+      "name": "Nicolas Thienpont, Chateau Puygueraud,(Merlot/Cab Franc/ Malbec) Francs Cotes de Bordeaux",
+      "sale_price": 2170000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4069",
+      "name": "Alain Brumont, Chateau Bouscasse, Madiran - Red",
+      "sale_price": 2200000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4071",
+      "name": "Baron P. de Rothschild Mouton Cadet Reserve Pauillac - Red",
+      "sale_price": 2650000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4072",
+      "name": "Château La Garenne Pomerol - Red",
+      "sale_price": 2950000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4074",
+      "name": "Louis Latour Domaine De Valmoissine - Red",
+      "sale_price": 730000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4076",
+      "name": "Guigal, Cotes du Rhone - Red",
+      "sale_price": 1600000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4077",
+      "name": "Dufouleur Monopole Red Wine Bt",
+      "sale_price": 510000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4081",
+      "name": "Château La Branne Médoc Cru Bourgeois, France",
+      "sale_price": 1610000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4082",
+      "name": "CHÂTEAU HAUT SAINT BRICE (Merlot - Cabernet Franc) Saint-Émilion Grand Cru",
+      "sale_price": 1800000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4083",
+      "name": "CHÂTEAU MONT- PÉRAT (Merlot/Cabernet Franc/Cabernet Sauvignon) Bordeaux",
+      "sale_price": 1960000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4089",
+      "name": "Chateau Haut Mouleyre AOP Bordeaux Rouge",
+      "sale_price": 400000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4090",
+      "name": "M. Chapoutier « Les Meysonniers »Crozes-Hermitage Syrah (organic)",
+      "sale_price": 2350000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V4092",
+      "name": "Grand Bateau Bordeaux Rouge (by Beychevelle) (Merlot · CS · AOC)",
+      "sale_price": 980000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5004",
+      "name": "Les Hauts de La Gaffeliere, Bordeaux Blanc",
+      "sale_price": 1090000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5027",
+      "name": "Chantecaille Bordeaux AOC White",
+      "sale_price": 570000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5028",
+      "name": "F. Thienpont Sauvignon Blanc - White",
+      "sale_price": 1060000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5029",
+      "name": "Ronan By Clinet (by Chateau Clinet, Pomerol) Bordauex Blanc - White",
+      "sale_price": 1240000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5030",
+      "name": "Nicolas Thienpont, Chateau Puygueraud,  Francs Cotes de Bordeaux -White",
+      "sale_price": 1980000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5032",
+      "name": "Louis Latour Chablis La Chanfleure, Chardonnay  - White",
+      "sale_price": 1650000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5033",
+      "name": "Louis Latour Pouilly-Fuissé - White",
+      "sale_price": 2010000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5034",
+      "name": "Dufouleur Monopole White wine Bt",
+      "sale_price": 510000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5037",
+      "name": "PASCAL JOLIVET ATTITUDE (Sauvignon Blanc) Loire Valley",
+      "sale_price": 1340000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5038",
+      "name": "Château Baratet, Sauvignon Blanc, France",
+      "sale_price": 480000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5040",
+      "name": "M. Chapoutier « Belleruche » Côtes du Rhône Blanc, Grenache Blanc • Clairette",
+      "sale_price": 1130000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5041",
+      "name": "Bernard Magrez « Le Prélat » Blanc Côtes du Rhône Villages Laudun",
+      "sale_price": 1350000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5042",
+      "name": "M.Chapoutier Domaine des Granges de Mirabel",
+      "sale_price": 1510000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V5043",
+      "name": "Gustave Lorentz Gewurztraminer",
+      "sale_price": 1960000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V6026",
+      "name": "Marques Casa Cabernet Sauvignon Chile",
+      "sale_price": 1290000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V60261",
+      "name": "Concha Y Toro, Marques de Casa Concha Chardonnay, Limari Valley - White Chile",
+      "sale_price": 1610000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V6035",
+      "name": "Frontera Sauvignon Blanc 75cl (White)",
+      "sale_price": 490000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V6049",
+      "name": "Luis Felipe Red Wine Bottle",
+      "sale_price": 490000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V6053",
+      "name": "MIGUEL TORRES, LAS MULAS ORGANIC (Cabernet Sauvignon) Central Valley",
+      "sale_price": 980000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V6054",
+      "name": "MIGUEL TORRES, ANDICA RESERVA (Gewurztraminer) Curico Valley",
+      "sale_price": 1120000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V6057",
+      "name": "Karku Cabernet Sauvignon ( Red )",
+      "sale_price": 550000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V6058",
+      "name": "Karku Sauvignon Blanc- Chile ( White )",
+      "sale_price": 550000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V6060",
+      "name": "Cremaschi Furlotti Chardonnay (Valle Central DO — Chile)",
+      "sale_price": 520000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V6061",
+      "name": "Cremaschi Furlotti Sauvignon Blanc (Valle Central DO — Chile)",
+      "sale_price": 520000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V6062",
+      "name": "Cremaschi Furlotti Cabernet Sauvignon (Valle Central DO — Chile)",
+      "sale_price": 520000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V6063",
+      "name": "Montes Alpha Cabernet Sauvignon - Red",
+      "sale_price": 1600000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V7012",
+      "name": "F Negroamaro San Marzano Italy Red WIne",
+      "sale_price": 2220000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V7015",
+      "name": "Caselletti  Negroamaro Primitivo - Red",
+      "sale_price": 950000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V7016",
+      "name": "Talò Primitivo di Manduria « San Marzano »",
+      "sale_price": 1130000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V8003",
+      "name": "LE BONHEUR (Cabernet Sauvignon) Stellenbosch",
+      "sale_price": 1480000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V8004",
+      "name": "LE BONHEUR, THE EAGLE'S LAIR (Chardonnay) Stellenbosch",
+      "sale_price": 1280000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9004",
+      "name": "Kaiken Estate Sauvignon Blanc–Sémillon",
+      "sale_price": 960000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9005",
+      "name": "Kaiken Estate Malbec, Argentina",
+      "sale_price": 960000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9006",
+      "name": "Kaiken « Ultra » Malbec (Malbec · Uco Valley, Mendoza — Argentina)",
+      "sale_price": 1600000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9106",
+      "name": "Barramundi, Shiraz - Australia",
+      "sale_price": 620000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9201",
+      "name": "Private Bin Sauvignon Blanc, Villa Maria (White)",
+      "sale_price": 1190000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9202",
+      "name": "Private Bin Cabernet Merlot, Villa Maria (Red)",
+      "sale_price": 1190000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9204",
+      "name": "Allan Scott Sauvignon Blanc(Marlborough GI — New Zealand)",
+      "sale_price": 990000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9301",
+      "name": "Torrès Sangre de Toro White (Parellada) (White)",
+      "sale_price": 890000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9302",
+      "name": "Torrès, Sangre de Toro (Grenáche) (Red)",
+      "sale_price": 890000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9304",
+      "name": "Marqués de Cáceres Crianza, Spain",
+      "sale_price": 1190000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9402",
+      "name": "Villa Garrel Rosé, France",
+      "sale_price": 780000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9408",
+      "name": "Bosio Moscato Rose Spumante Aromatico Dolce 7.5%",
+      "sale_price": 800000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9411",
+      "name": "Gérard Bertrand « Gris Blanc » IGP, France",
+      "sale_price": 980000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9412",
+      "name": "Croix de Peyrassol Rosé IGP, France",
+      "sale_price": 1090000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9504",
+      "name": "Chateau Dalat Special Cabernet Sauvignon 750ml",
+      "sale_price": 650000.0,
+      "is_set_menu": false
+    },
+    {
+      "id": "V9508",
+      "name": "Chateau Dalat Special Sauvignon Blanc 750ml",
+      "sale_price": 450000.0,
+      "is_set_menu": false
+    }
+  ],
+  "new_recipes": [
+    {
+      "menu_item_id": "M6005",
+      "ingredient_id": "M6005",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "CAN"
+    },
+    {
+      "menu_item_id": "M6009",
+      "ingredient_id": "M6009",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M6014",
+      "ingredient_id": "M6014",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9202",
+      "ingredient_id": "M9202",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "PACK"
+    },
+    {
+      "menu_item_id": "M9402",
+      "ingredient_id": "M9402",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9403",
+      "ingredient_id": "M9403",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9405",
+      "ingredient_id": "M9405",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9406",
+      "ingredient_id": "M9406",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9407",
+      "ingredient_id": "M9407",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9408",
+      "ingredient_id": "M9408",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9409",
+      "ingredient_id": "M9409",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9410",
+      "ingredient_id": "M9410",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9411",
+      "ingredient_id": "M9411",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9413",
+      "ingredient_id": "M9413",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9414",
+      "ingredient_id": "M9414",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9507",
+      "ingredient_id": "M9507",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9508",
+      "ingredient_id": "M9508",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9512",
+      "ingredient_id": "M9512",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9513",
+      "ingredient_id": "M9513",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9514",
+      "ingredient_id": "M9514",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9602",
+      "ingredient_id": "M9602",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9603",
+      "ingredient_id": "M9603",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9604",
+      "ingredient_id": "M9604",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9606",
+      "ingredient_id": "M9606",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9609",
+      "ingredient_id": "M9609",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9611",
+      "ingredient_id": "M9611",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9612",
+      "ingredient_id": "M9612",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9620",
+      "ingredient_id": "M9620",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9621",
+      "ingredient_id": "M9621",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9623",
+      "ingredient_id": "M9623",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9629",
+      "ingredient_id": "M9629",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9632",
+      "ingredient_id": "M9632",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9636",
+      "ingredient_id": "M9636",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9642",
+      "ingredient_id": "M9642",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9643",
+      "ingredient_id": "M9643",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9644",
+      "ingredient_id": "M9644",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9645",
+      "ingredient_id": "M9645",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9702",
+      "ingredient_id": "M9702",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9705",
+      "ingredient_id": "M9705",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9801",
+      "ingredient_id": "M9801",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9802",
+      "ingredient_id": "M9802",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M98021",
+      "ingredient_id": "M98021",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9803",
+      "ingredient_id": "M9803",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9804",
+      "ingredient_id": "M9804",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9805",
+      "ingredient_id": "M9805",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9806",
+      "ingredient_id": "M9806",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9808",
+      "ingredient_id": "M9808",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9809",
+      "ingredient_id": "M9809",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "M9812",
+      "ingredient_id": "M9812",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "NLP004",
+      "ingredient_id": "NLP004",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BAG"
+    },
+    {
+      "menu_item_id": "NLP3021",
+      "ingredient_id": "NLP3021",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOX"
+    },
+    {
+      "menu_item_id": "NLP30251",
+      "ingredient_id": "NLP30251",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "KG"
+    },
+    {
+      "menu_item_id": "NLP600351",
+      "ingredient_id": "NLP600351",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "KG"
+    },
+    {
+      "menu_item_id": "NLP60038",
+      "ingredient_id": "NLP60038",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "KG"
+    },
+    {
+      "menu_item_id": "NLP60057",
+      "ingredient_id": "NLP60057",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "KG"
+    },
+    {
+      "menu_item_id": "NLP60058",
+      "ingredient_id": "NLP60058",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "KG"
+    },
+    {
+      "menu_item_id": "NLP60059",
+      "ingredient_id": "NLP60059",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "KG"
+    },
+    {
+      "menu_item_id": "NLP60061",
+      "ingredient_id": "NLP60061",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "KG"
+    },
+    {
+      "menu_item_id": "NLP9001",
+      "ingredient_id": "NLP9001",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "KG"
+    },
+    {
+      "menu_item_id": "NLP9002",
+      "ingredient_id": "NLP9002",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "KG"
+    },
+    {
+      "menu_item_id": "NLP90023",
+      "ingredient_id": "NLP90023",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "KG"
+    },
+    {
+      "menu_item_id": "NLP9003",
+      "ingredient_id": "NLP9003",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOX"
+    },
+    {
+      "menu_item_id": "NLP9004",
+      "ingredient_id": "NLP9004",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOX"
+    },
+    {
+      "menu_item_id": "NLP9005",
+      "ingredient_id": "NLP9005",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "PACK"
+    },
+    {
+      "menu_item_id": "NLP9006",
+      "ingredient_id": "NLP9006",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOX"
+    },
+    {
+      "menu_item_id": "NLP9020",
+      "ingredient_id": "NLP9020",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOX"
+    },
+    {
+      "menu_item_id": "NLP9024",
+      "ingredient_id": "NLP9024",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOX"
+    },
+    {
+      "menu_item_id": "NLP9026",
+      "ingredient_id": "NLP9026",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOX"
+    },
+    {
+      "menu_item_id": "PKG-001",
+      "ingredient_id": "PKG-001",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "PIECE"
+    },
+    {
+      "menu_item_id": "PKG-002",
+      "ingredient_id": "PKG-002",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "PIECE"
+    },
+    {
+      "menu_item_id": "PKG-003",
+      "ingredient_id": "PKG-003",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "PIECE"
+    },
+    {
+      "menu_item_id": "PKG-004",
+      "ingredient_id": "PKG-004",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "PIECE"
+    },
+    {
+      "menu_item_id": "S1003",
+      "ingredient_id": "S1003",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "S1004",
+      "ingredient_id": "S1004",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V1008",
+      "ingredient_id": "V1008",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V2001",
+      "ingredient_id": "V2001",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V2006",
+      "ingredient_id": "V2006",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V2009",
+      "ingredient_id": "V2009",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V2015",
+      "ingredient_id": "V2015",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V2016",
+      "ingredient_id": "V2016",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V2018",
+      "ingredient_id": "V2018",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V3002",
+      "ingredient_id": "V3002",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V3003",
+      "ingredient_id": "V3003",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4008",
+      "ingredient_id": "V4008",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4009",
+      "ingredient_id": "V4009",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4014",
+      "ingredient_id": "V4014",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4017",
+      "ingredient_id": "V4017",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4062",
+      "ingredient_id": "V4062",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4063",
+      "ingredient_id": "V4063",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4068",
+      "ingredient_id": "V4068",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4069",
+      "ingredient_id": "V4069",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4071",
+      "ingredient_id": "V4071",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4072",
+      "ingredient_id": "V4072",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4074",
+      "ingredient_id": "V4074",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4076",
+      "ingredient_id": "V4076",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4077",
+      "ingredient_id": "V4077",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4078",
+      "ingredient_id": "V4078",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4081",
+      "ingredient_id": "V4081",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4082",
+      "ingredient_id": "V4082",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4083",
+      "ingredient_id": "V4083",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4089",
+      "ingredient_id": "V4089",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4090",
+      "ingredient_id": "V4090",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V4092",
+      "ingredient_id": "V4092",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5004",
+      "ingredient_id": "V5004",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5008",
+      "ingredient_id": "V5008",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5027",
+      "ingredient_id": "V5027",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5028",
+      "ingredient_id": "V5028",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5029",
+      "ingredient_id": "V5029",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5030",
+      "ingredient_id": "V5030",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5032",
+      "ingredient_id": "V5032",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5033",
+      "ingredient_id": "V5033",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5034",
+      "ingredient_id": "V5034",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5037",
+      "ingredient_id": "V5037",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5038",
+      "ingredient_id": "V5038",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5039",
+      "ingredient_id": "V5039",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5040",
+      "ingredient_id": "V5040",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5041",
+      "ingredient_id": "V5041",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5042",
+      "ingredient_id": "V5042",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V5043",
+      "ingredient_id": "V5043",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V6026",
+      "ingredient_id": "V6026",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V60261",
+      "ingredient_id": "V60261",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V6035",
+      "ingredient_id": "V6035",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V6049",
+      "ingredient_id": "V6049",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V6053",
+      "ingredient_id": "V6053",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V6054",
+      "ingredient_id": "V6054",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V6057",
+      "ingredient_id": "V6057",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V6058",
+      "ingredient_id": "V6058",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V6060",
+      "ingredient_id": "V6060",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V6061",
+      "ingredient_id": "V6061",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V6062",
+      "ingredient_id": "V6062",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V6063",
+      "ingredient_id": "V6063",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V7012",
+      "ingredient_id": "V7012",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V7015",
+      "ingredient_id": "V7015",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V7016",
+      "ingredient_id": "V7016",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V8003",
+      "ingredient_id": "V8003",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V8004",
+      "ingredient_id": "V8004",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9004",
+      "ingredient_id": "V9004",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9005",
+      "ingredient_id": "V9005",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9006",
+      "ingredient_id": "V9006",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9106",
+      "ingredient_id": "V9106",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9201",
+      "ingredient_id": "V9201",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9202",
+      "ingredient_id": "V9202",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9203",
+      "ingredient_id": "V9203",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9204",
+      "ingredient_id": "V9204",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9301",
+      "ingredient_id": "V9301",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9302",
+      "ingredient_id": "V9302",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9304",
+      "ingredient_id": "V9304",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9402",
+      "ingredient_id": "V9402",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9408",
+      "ingredient_id": "V9408",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9411",
+      "ingredient_id": "V9411",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9412",
+      "ingredient_id": "V9412",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9504",
+      "ingredient_id": "V9504",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    },
+    {
+      "menu_item_id": "V9508",
+      "ingredient_id": "V9508",
+      "qty_net": 1.0,
+      "yield_pct": 100.0,
+      "recipe_uom": "BOTTLE"
+    }
+  ],
+  "new_aliases": [
+    {
+      "pos_code": "B5016",
+      "menu_item_id": "B5016",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M6005",
+      "menu_item_id": "M6005",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M6009",
+      "menu_item_id": "M6009",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M6014",
+      "menu_item_id": "M6014",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9202",
+      "menu_item_id": "M9202",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9402",
+      "menu_item_id": "M9402",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9403",
+      "menu_item_id": "M9403",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9405",
+      "menu_item_id": "M9405",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9406",
+      "menu_item_id": "M9406",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9407",
+      "menu_item_id": "M9407",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9408",
+      "menu_item_id": "M9408",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9409",
+      "menu_item_id": "M9409",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9410",
+      "menu_item_id": "M9410",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9411",
+      "menu_item_id": "M9411",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9413",
+      "menu_item_id": "M9413",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9414",
+      "menu_item_id": "M9414",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9507",
+      "menu_item_id": "M9507",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9508",
+      "menu_item_id": "M9508",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9512",
+      "menu_item_id": "M9512",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9513",
+      "menu_item_id": "M9513",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9514",
+      "menu_item_id": "M9514",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9602",
+      "menu_item_id": "M9602",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9603",
+      "menu_item_id": "M9603",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9604",
+      "menu_item_id": "M9604",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9606",
+      "menu_item_id": "M9606",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9609",
+      "menu_item_id": "M9609",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9611",
+      "menu_item_id": "M9611",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9612",
+      "menu_item_id": "M9612",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9620",
+      "menu_item_id": "M9620",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9621",
+      "menu_item_id": "M9621",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9623",
+      "menu_item_id": "M9623",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9629",
+      "menu_item_id": "M9629",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9632",
+      "menu_item_id": "M9632",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9636",
+      "menu_item_id": "M9636",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9642",
+      "menu_item_id": "M9642",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9643",
+      "menu_item_id": "M9643",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9644",
+      "menu_item_id": "M9644",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9645",
+      "menu_item_id": "M9645",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9702",
+      "menu_item_id": "M9702",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9705",
+      "menu_item_id": "M9705",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9801",
+      "menu_item_id": "M9801",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9802",
+      "menu_item_id": "M9802",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M98021",
+      "menu_item_id": "M98021",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9803",
+      "menu_item_id": "M9803",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9804",
+      "menu_item_id": "M9804",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9805",
+      "menu_item_id": "M9805",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9806",
+      "menu_item_id": "M9806",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9808",
+      "menu_item_id": "M9808",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9809",
+      "menu_item_id": "M9809",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "M9812",
+      "menu_item_id": "M9812",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP004",
+      "menu_item_id": "NLP004",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP3021",
+      "menu_item_id": "NLP3021",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP30251",
+      "menu_item_id": "NLP30251",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP600351",
+      "menu_item_id": "NLP600351",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP60038",
+      "menu_item_id": "NLP60038",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP60057",
+      "menu_item_id": "NLP60057",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP60058",
+      "menu_item_id": "NLP60058",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP60059",
+      "menu_item_id": "NLP60059",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP60061",
+      "menu_item_id": "NLP60061",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP9001",
+      "menu_item_id": "NLP9001",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP9002",
+      "menu_item_id": "NLP9002",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP90023",
+      "menu_item_id": "NLP90023",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP9003",
+      "menu_item_id": "NLP9003",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP9004",
+      "menu_item_id": "NLP9004",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP9005",
+      "menu_item_id": "NLP9005",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP9006",
+      "menu_item_id": "NLP9006",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP9020",
+      "menu_item_id": "NLP9020",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP9024",
+      "menu_item_id": "NLP9024",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "NLP9026",
+      "menu_item_id": "NLP9026",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "PKG-001",
+      "menu_item_id": "PKG-001",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "PKG-002",
+      "menu_item_id": "PKG-002",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "PKG-003",
+      "menu_item_id": "PKG-003",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "PKG-004",
+      "menu_item_id": "PKG-004",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "S1003",
+      "menu_item_id": "S1003",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "S1004",
+      "menu_item_id": "S1004",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V1001",
+      "menu_item_id": "V1001",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V1008",
+      "menu_item_id": "V1008",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V2001",
+      "menu_item_id": "V2001",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V2002",
+      "menu_item_id": "V2002",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V2006",
+      "menu_item_id": "V2006",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V2009",
+      "menu_item_id": "V2009",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V2015",
+      "menu_item_id": "V2015",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V2016",
+      "menu_item_id": "V2016",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V2018",
+      "menu_item_id": "V2018",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V3002",
+      "menu_item_id": "V3002",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V3003",
+      "menu_item_id": "V3003",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4008",
+      "menu_item_id": "V4008",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4009",
+      "menu_item_id": "V4009",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4014",
+      "menu_item_id": "V4014",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4017",
+      "menu_item_id": "V4017",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4045",
+      "menu_item_id": "V4045",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4062",
+      "menu_item_id": "V4062",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4063",
+      "menu_item_id": "V4063",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4064",
+      "menu_item_id": "V4064",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4065",
+      "menu_item_id": "V4065",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4068",
+      "menu_item_id": "V4068",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4069",
+      "menu_item_id": "V4069",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4071",
+      "menu_item_id": "V4071",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4072",
+      "menu_item_id": "V4072",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4074",
+      "menu_item_id": "V4074",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4075",
+      "menu_item_id": "V4075",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4076",
+      "menu_item_id": "V4076",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4077",
+      "menu_item_id": "V4077",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4078",
+      "menu_item_id": "V4078",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4081",
+      "menu_item_id": "V4081",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4082",
+      "menu_item_id": "V4082",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4083",
+      "menu_item_id": "V4083",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4088",
+      "menu_item_id": "V4088",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4089",
+      "menu_item_id": "V4089",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4090",
+      "menu_item_id": "V4090",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4091",
+      "menu_item_id": "V4091",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V4092",
+      "menu_item_id": "V4092",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5004",
+      "menu_item_id": "V5004",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5008",
+      "menu_item_id": "V5008",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5027",
+      "menu_item_id": "V5027",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5028",
+      "menu_item_id": "V5028",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5029",
+      "menu_item_id": "V5029",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5030",
+      "menu_item_id": "V5030",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5032",
+      "menu_item_id": "V5032",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5033",
+      "menu_item_id": "V5033",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5034",
+      "menu_item_id": "V5034",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5037",
+      "menu_item_id": "V5037",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5038",
+      "menu_item_id": "V5038",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5039",
+      "menu_item_id": "V5039",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5040",
+      "menu_item_id": "V5040",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5041",
+      "menu_item_id": "V5041",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5042",
+      "menu_item_id": "V5042",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V5043",
+      "menu_item_id": "V5043",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6026",
+      "menu_item_id": "V6026",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V60261",
+      "menu_item_id": "V60261",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6027",
+      "menu_item_id": "V6027",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6034",
+      "menu_item_id": "V6034",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6035",
+      "menu_item_id": "V6035",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6049",
+      "menu_item_id": "V6049",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6053",
+      "menu_item_id": "V6053",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6054",
+      "menu_item_id": "V6054",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6056",
+      "menu_item_id": "V6056",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6057",
+      "menu_item_id": "V6057",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6058",
+      "menu_item_id": "V6058",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6059",
+      "menu_item_id": "V6059",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6060",
+      "menu_item_id": "V6060",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6061",
+      "menu_item_id": "V6061",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6062",
+      "menu_item_id": "V6062",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V6063",
+      "menu_item_id": "V6063",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V7012",
+      "menu_item_id": "V7012",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V7015",
+      "menu_item_id": "V7015",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V7016",
+      "menu_item_id": "V7016",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V8003",
+      "menu_item_id": "V8003",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V8004",
+      "menu_item_id": "V8004",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9004",
+      "menu_item_id": "V9004",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9005",
+      "menu_item_id": "V9005",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9006",
+      "menu_item_id": "V9006",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9106",
+      "menu_item_id": "V9106",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9201",
+      "menu_item_id": "V9201",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9202",
+      "menu_item_id": "V9202",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9203",
+      "menu_item_id": "V9203",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9204",
+      "menu_item_id": "V9204",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9301",
+      "menu_item_id": "V9301",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9302",
+      "menu_item_id": "V9302",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9304",
+      "menu_item_id": "V9304",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9402",
+      "menu_item_id": "V9402",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9408",
+      "menu_item_id": "V9408",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9410",
+      "menu_item_id": "V9410",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9411",
+      "menu_item_id": "V9411",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9412",
+      "menu_item_id": "V9412",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9501",
+      "menu_item_id": "V9501",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9502",
+      "menu_item_id": "V9502",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9504",
+      "menu_item_id": "V9504",
+      "confidence": 100.0
+    },
+    {
+      "pos_code": "V9508",
+      "menu_item_id": "V9508",
+      "confidence": 100.0
+    }
+  ],
+  "new_depts": [
+    {
+      "ingredient_id": "PKG-001",
+      "department": "BAR"
+    },
+    {
+      "ingredient_id": "PKG-002",
+      "department": "BAR"
+    },
+    {
+      "ingredient_id": "PKG-003",
+      "department": "BAR"
+    },
+    {
+      "ingredient_id": "PKG-004",
+      "department": "BAR"
+    },
+    {
+      "ingredient_id": "V9006",
+      "department": "BAR"
+    }
+  ]
+}

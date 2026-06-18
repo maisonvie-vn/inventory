@@ -1,0 +1,1279 @@
+-- =====================================================================
+-- MAISON VIE v9.6 — FILE 2/2: MIGRATION ingredients.id → UUID + code SỬA ĐƯỢC
+-- ĐÃ ĐƯỢC THIẾT KẾ IDEMPOTENT VÀ TÍCH HỢP BẢNG MÃ HÓA UUID CHUẨN
+-- =====================================================================
+create extension if not exists pgcrypto;
+
+-- ---------------------------------------------------------------------
+-- BƯỚC 0 — DROP các Views phụ thuộc để tránh lỗi "cannot drop column"
+-- ---------------------------------------------------------------------
+drop view if exists v_inventory_finance cascade;
+drop view if exists v_inventory_cost cascade;
+drop view if exists v_inventory_ops cascade;
+drop view if exists v_stock_on_hand cascade;
+drop view if exists v_fefo_lots cascade;
+
+-- ---------------------------------------------------------------------
+-- BƯỚC 1 — ingredients: đổi tên id hiện tại sang old_id_text, thêm id uuid mới theo bảng ánh xạ chuẩn (Idempotent)
+-- ---------------------------------------------------------------------
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'id' and (data_type = 'character varying' or data_type = 'text')
+  ) then
+    alter table ingredients rename column id to old_id_text;
+    alter table ingredients add column id uuid;
+    
+    -- Tạo bảng temp mapping trong giao dịch
+    create temp table temp_uuid_mapping (
+        code text primary key,
+        target_uuid uuid not null
+    );
+    
+    insert into temp_uuid_mapping (code, target_uuid) values
+('ING-001', '0000dea7-80a8-4f17-9a50-0840ad24a253'),
+('ING-002', '72aceb6f-0278-4b6e-9218-8b81588b3f17'),
+('ING-003', 'aceaf9ad-c42d-45f3-b95f-09234778ec07'),
+('ING-004', 'bbe44cb9-ddf8-4902-ae99-b0f213c91724'),
+('ING-005', '61904379-f883-4f9e-89a7-e4da92ed38ba'),
+('ING-006', '7000bed6-e88a-45fa-a68f-a3f034ee9135'),
+('ING-007', '8bfe30e0-c0f0-47a8-b4be-4378d470a0aa'),
+('ING-008', 'afaa4ac8-10d3-440e-a87e-16a4fd370a00'),
+('ING-009', '48d016a4-3f40-47be-87d1-40726af9ced9'),
+('ING-010', 'b7102ad7-212b-4435-b199-056260e9cc43'),
+('ING-011', '76377b7d-f599-424d-bc69-38514b8eff92'),
+('ING-012', '1d618d84-7941-479b-a478-693921e9a722'),
+('ING-013', '2322c37d-e200-443b-9958-91fac666c712'),
+('ING-014', 'd00d8022-fd38-4591-b020-c2b9fff693cf'),
+('ING-014B', 'b28673ff-f196-474e-af9e-dc82aa7771a3'),
+('ING-015', '5adeb2df-4923-44a8-b2e2-8c440711454d'),
+('ING-016', '369ab11d-ce38-4970-bf3a-838e76a54c1f'),
+('ING-017', 'cdf6f368-cee4-4865-aabe-ad5501902470'),
+('ING-018', '39b83992-bf95-411f-9a4e-e75915114694'),
+('ING-019', 'be22925b-1d0e-4123-a97d-3c7e2701c3d7'),
+('ING-020', 'e5cf8607-9f92-4d5e-9109-fe572e3a92e0'),
+('ING-021', '56760934-74d1-4c27-aa0f-6128b246f8a2'),
+('ING-022', 'e4edf2e4-d099-49ec-bf93-4427b7034c74'),
+('ING-023', 'fb1935a4-9b46-4721-a8e5-19b4a1141faf'),
+('ING-024', '4a200004-b543-4950-98d8-36c7d75291a8'),
+('ING-025', '78ade0fb-b261-4703-97c0-a02c2fa976d6'),
+('ING-026', 'bd97e7a2-90d4-40e2-a351-ef30610c29ea'),
+('ING-027', 'ce25e72b-e45f-4880-a7ec-0599ce8691ed'),
+('ING-028', 'a09203dd-643c-451f-9065-50c5711b992e'),
+('ING-029', 'be6fae7b-4a27-4af7-bb2e-9ce7b4207236'),
+('ING-030', '8bfe3963-5a98-463c-b947-1f843bcf8470'),
+('ING-031', '2404b5b8-e507-4482-a28f-9e542c4350e4'),
+('ING-032', '0284ee4d-71f1-423d-b378-1c614941b636'),
+('ING-033', 'c88d1bb1-d950-44af-b3bb-052b5c3e751c'),
+('ING-034', 'a5fbf63a-4ce4-4cac-9ffd-8f3d48f13d60'),
+('ING-035', '08fccfc4-a9cd-419a-a282-e358039a0f3b'),
+('ING-036', '1a507557-1e64-4355-9616-fc7b7974ab45'),
+('ING-037', 'ae9a3bd0-ae87-47e9-9a78-676215bfed44'),
+('ING-038', 'f84494cf-491e-4d9a-9902-7141d512371a'),
+('ING-039', 'eb63b1b9-13cd-4122-b22e-e8dbf9d0d412'),
+('ING-040', '6c64c3f4-4fc6-44c8-99e2-19e6b7649845'),
+('ING-041', '482674e6-e09e-41a5-b2d3-e3ad6c95b9ee'),
+('ING-042', '78005225-fea1-4d69-9355-f79b2889aaa0'),
+('ING-043', '5e412466-0e6d-4cd3-8265-05e56b1f3339'),
+('ING-044', '161bec6e-d5c7-453b-9749-55b97f757b72'),
+('ING-045', 'c8a004e6-2af4-4ac2-8890-a131fc1e929d'),
+('ING-046', 'e028af25-8fc7-4e7b-96e6-4d36620f6156'),
+('ING-047', '7ac2b798-ea09-4707-aa96-6d0bc3fc4997'),
+('ING-048', '512b8f42-cb6c-474f-9000-38a2c1f891a1'),
+('ING-049', '1b12c310-56a8-4921-b132-9791a01ed99d'),
+('ING-050', '57a7b4b3-30cf-41a8-9386-36505ebb46ed'),
+('ING-051', '134a290f-5f08-44c9-b103-6fa027c41969'),
+('ING-052', 'fcf4c0cd-2462-4b99-b665-b0ce18ea325f'),
+('ING-053', 'b7ab75d7-3bcc-49ea-af23-4ddda1fe5759'),
+('ING-054', '1d93b97a-1451-4293-b365-5483804dfd4a'),
+('ING-055', 'c9e41f12-90ee-49ef-84ad-8768097c2f15'),
+('ING-056', '8219fddf-fa4b-4904-adcd-be29ec3abf86'),
+('ING-057', '7eb52823-4641-4680-8071-3284bb82f26d'),
+('ING-058', 'b5b71650-1898-4009-bb5c-72eb0a1f411b'),
+('ING-059', 'faae5135-5a1b-4e5b-a5fa-05fcbb7a9ff0'),
+('ING-060', '0f42604f-d00b-44ad-9fa1-f1e1e325d996'),
+('ING-061', '3284ef74-9a1a-470b-8616-ce116ea35001'),
+('ING-062', '23619c46-dd6d-4c27-b4bc-15877e32068c'),
+('ING-063', 'fa75c6e0-ea1e-467c-bf54-f1b35f0d1a6f'),
+('ING-064', 'ce1c2002-6165-4b62-9958-b0c43c8fe17e'),
+('ING-065', '3ab3333f-d5ce-4cd0-8111-5c93d4238055'),
+('ING-066', 'db936942-8d48-4c50-8b7b-44787073c6fd'),
+('ING-067', '1e3139be-7510-420e-aa23-52140b42fbe2'),
+('ING-068', 'e6850b24-54da-41f3-b7ff-8e0b5cd97f6d'),
+('ING-069', '9274531d-99e9-4820-8a46-f5565cf04d5e'),
+('ING-070', '08350414-e24f-4450-91c5-882b0cfc5a50'),
+('ING-071', 'c00aced8-eea6-460b-a638-7c7c18d18044'),
+('ING-072', '74d13a14-84d8-4220-9ae9-103bc12a079d'),
+('ING-073', '7e6085eb-32a2-4265-8e08-c2f05443a85a'),
+('ING-074', '3b58a394-ef9e-4a86-b7dd-5919eed78e80'),
+('ING-075', 'b8f75efe-cc0f-4cf1-8c87-3472a977c660'),
+('ING-076', '04345d3b-6ce8-4606-9161-ea1c05535c13'),
+('ING-077', '5c003a22-607f-48f3-96a7-4add74658a7e'),
+('ING-078', '069c8f2c-a686-4868-a08e-58d2da2b7fbd'),
+('ING-079', '18b25521-c595-4284-8f09-c4e1131c6f86'),
+('ING-080', '4db24d91-fffd-4e95-b771-874f353f4935'),
+('ING-081', '4188fc3b-150d-4a54-b4b4-a1901fca0424'),
+('ING-082', '89ebdcc8-6467-4eb8-a2d8-91eee38471c6'),
+('ING-083', '2a45f18c-4fe7-4bc4-9f50-d91045e70188'),
+('ING-084', '902b9e94-b69c-4dd7-8624-dcf294f376f1'),
+('ING-085', '253a8b78-9ce7-41cf-90d6-33e3dee90091'),
+('ING-086', '79815b05-9e51-47e1-8122-0b9e53c5323f'),
+('ING-087', '676842db-094f-4feb-bce0-7fabfb548264'),
+('ING-088', '34d62bf9-3261-4d2f-bdc9-bab075508e24'),
+('ING-089', 'c74cb7e6-6e1c-47cd-98b9-f8664acf0c22'),
+('ING-090', '89623291-7b98-472f-bb9f-648bd3fed918'),
+('ING-091', '95b2d00d-9f08-464f-afd6-46cc57d4e3f3'),
+('ING-092', '85e70b8c-d180-4e18-bfba-d6169f5826a8'),
+('ING-094', 'b8d7597b-e329-4f31-a328-41ea8327fba0'),
+('ING-100', 'bdab9fad-36f3-4c36-b3ab-b6dd9392bd50'),
+('ING-093', '1dc31bb5-efcb-4deb-8ba2-c9caca08230d'),
+('B5001', '72b94339-47eb-4dd7-a60d-2113c52fea38'),
+('B5002', 'c0266912-72e9-4784-a82c-6924da7fdab1'),
+('B5004', '38744af1-fdff-4540-bcd0-45f0312d5f7d'),
+('B5005', 'c301c2f1-9ab1-426f-be5d-4ee94c99bee6'),
+('B5007', '70aa6f72-a754-4aaa-9a50-770500fcb020'),
+('B5010', '22957314-2fa5-47e2-832b-3149a0aea7a6'),
+('B5012', '80715ed7-a6a0-41c7-9391-27654afb079f'),
+('B5016', 'fcfd6dd2-6be4-4a40-8345-45c967266089'),
+('V8003', '1b3f357a-e89c-47bf-a06f-ac6af69ebf55'),
+('V8004', '81f89338-e36b-45b4-90b7-29ffda656356'),
+('V9004', 'a6bd9918-b6e4-47a0-8190-fcf661b871a2'),
+('V9005', 'afd4d732-2df4-45ea-9258-569cbce70b43'),
+('V9106', '740b9f64-b47a-4821-b25c-b762d86a644b'),
+('M9202', '9fa8b4e1-c966-4886-a6f9-116cccbf63f7'),
+('M9203', '78c668d0-a21c-4672-a272-ccb01459200a'),
+('V2001', 'fb98b6cd-7518-441b-ade4-8fa21a7ab191'),
+('V2002', 'ef1490e7-1c61-4b21-98af-756333c378b5'),
+('V2006', 'd51c7190-378a-4ce4-8b1b-5eb565c72d76'),
+('V2009', 'b3f17e49-0923-4faa-9c0e-f7de07e648a6'),
+('V2015', '5d92346e-c762-4bf9-85d8-0ffe5bf4a3d9'),
+('V2016', '93339d1a-ba36-4f24-8cdd-69cc06b2fb37'),
+('V2018', '6aaa4fc1-6090-4a48-ad85-c7d2222b976a'),
+('V6026', '39ca6eee-d877-43e7-8060-d78419a05618'),
+('V60261', '6de091c1-a533-45bb-a7b8-cdf5631a3df9'),
+('V6027', 'f862aa3e-631d-4569-935f-350e05374838'),
+('V6034', 'fb67c340-4f48-4ed6-a856-ed62e799810d'),
+('V6035', 'e961246f-f636-4d02-81fd-8babe010b31d'),
+('V6049', '5cceac92-4a49-443b-9522-505f85567117'),
+('V6053', '096d79c1-9620-4eea-b89f-771b4cd72c61'),
+('V6054', '079e63c3-4da3-487d-b702-dd419522d5e4'),
+('V6056', '3b525ba4-dfe5-4335-8540-3de8e689f0ac'),
+('V6057', '7560fa84-6865-4716-a38c-cdde7a22cead'),
+('V6058', '7fecd190-88c6-4a08-8656-8f1ba98b75b6'),
+('V6059', 'f05dff5d-545b-4a88-abda-f809b82135f6'),
+('V6060', '527b25ac-dc7d-4910-80a5-1ca2e392a980'),
+('V6061', '9ccf7920-7386-457d-9044-9be4639fdb93'),
+('V6062', '457ef50f-62db-4363-aba9-570dfc1566ec'),
+('V6063', '602e7853-4504-4491-a4d9-a2cf66aac517'),
+('V9501', 'f12a94af-ea53-4457-8a09-d06b02de6e66'),
+('V9502', '18f17bdc-9798-4b37-bdee-605fb1705832'),
+('V9504', 'a596df1b-2cf5-45bf-8ce7-138e471b1947'),
+('V9508', '5c69ab1a-9ffe-40f7-ac7a-de4264f6a5f4'),
+('V1001', '65d1718a-fb3c-4d6b-941c-14dacf97b39f'),
+('V1008', '45185173-d176-41af-99b3-770b8a7bfbd4'),
+('V7012', 'b235473a-9ccd-4a43-a35d-26e039462c93'),
+('V7015', '5686a106-dc41-4e48-aae6-82faa29f0ff3'),
+('V7016', '7b747af1-dc13-4fb9-89c5-7344ae983407'),
+('V9201', 'c9314e5a-a890-403d-a5c8-495e1d9282d4'),
+('V9202', 'f72fa1fe-7b90-4ed5-b5e3-78ca687984f2'),
+('V9203', 'c1b19748-223c-488b-8edd-2480b930d17d'),
+('V9204', '9a8ad31d-43a4-4a71-aa9e-acf5ec972435'),
+('V4008', 'e2c5fa42-8a70-446e-96ea-cb4499ae19fd'),
+('V4009', '518f92f7-db26-4dd5-b42e-5e0ca4e9ae74'),
+('V4014', 'b65f8c74-8dae-41be-9b38-8fb548c62318'),
+('V4017', '10dfc4c1-4c59-4a86-97e7-6c90258f4117'),
+('V4045', '46e53385-d861-427a-b0c0-20247f3a4047'),
+('V4062', '272a4ff9-0051-4af4-889d-9f43450eb747'),
+('V4063', '2c17becb-7a89-4bb3-a49d-6de5bd3c6b74'),
+('V4064', 'd4e4944b-c0e8-4a75-8aa6-37f66d359efe'),
+('V4065', '04619d15-c260-484d-9fb3-b9b139f07b87'),
+('V4068', 'ef1002f4-0ae9-4c8b-bd54-7ecc5add5121'),
+('V4069', '83f2a76a-05dd-4d2b-8cc8-0071e89a2ad2'),
+('V4071', '91be7478-ad23-4c69-8be2-68f4a8a394f5'),
+('V4072', 'e687cf4b-2e40-470e-a000-9ca945807e30'),
+('V4074', 'd9108a83-42a4-4b7e-9a32-d6dc65a001dd'),
+('V4075', 'cd767a47-0483-414d-b82a-a0ee748b6d92'),
+('V4076', '542fa8ef-20c0-4e96-82a8-508fc31306b7'),
+('V4077', '240f18b9-cbdd-41ed-aca5-59950711a242'),
+('V4078', '43184fff-935d-4e02-9ea2-b53f3d9c62a5'),
+('V4081', '709842aa-3814-42dc-932b-74c1fbd9da14'),
+('V4082', '6bfac8ce-aa5b-4880-96fb-95de934fae82'),
+('V4083', 'c692c7c6-e586-4c68-b383-d5a0f2a77cea'),
+('V4088', 'cbae092e-c4b5-4b41-b507-6dc282f6911b'),
+('V4089', '88f92c34-51a9-486a-91a5-1787edcb4b17'),
+('V4090', '7b83e7de-3341-409c-b1f8-79eda66d3e55'),
+('V4091', 'afa0912e-abc8-44fa-b1c3-9d0244a26747'),
+('V4092', 'bab2e75c-b893-4ee3-970e-7f7cd191a353'),
+('V9402', 'ee40dd1b-d73d-43cb-81ab-930c9a636870'),
+('V9408', '93f2eef7-5971-467a-9a6e-bf6f31d56d16'),
+('V9410', '892c74c3-a702-46a9-a720-6338260c8ccc'),
+('V9411', '7e10233c-61d0-40db-a3f1-c0b351cd331a'),
+('V9412', 'd422dd05-b0e5-4947-aed5-b99c7588391c'),
+('M6001', 'f7676897-d98f-408f-9345-73ff56860411'),
+('M6002', '8451b8fc-7e24-4707-a486-36a4c6ad2963'),
+('M6003', '4d36d999-2868-448d-98cf-b4dc182a42db'),
+('M6004', '2426630c-a3ef-46af-9928-f4c927274ead'),
+('M6005', '8399f6ed-f40a-4117-8bc7-3b65d9f7574c'),
+('M6006', '275ea0d8-81b8-4a58-8132-f8ce7c1250c9'),
+('M6008', '6a1e2423-3a31-408a-9179-8ce31f428a28'),
+('M6009', '13ab5df2-c753-4f17-a519-798276c576c7'),
+('M6010', '585e71d3-074b-4482-810c-d821c22548ba'),
+('M6014', '19e5e09c-8aac-410e-8f0c-21556c68a422'),
+('M6020', '03381c82-ef75-4533-99f8-039f61b57f9b'),
+('V9301', 'acda5721-f332-41ec-8331-f18df0daf36d'),
+('V9302', '1fde22db-9be0-40b6-a1c6-838a7a146559'),
+('V9304', 'c9a30e44-6750-472b-95aa-573755dfce8d'),
+('M9402', '197dc716-6f11-4416-9a78-4702e66d77a8'),
+('M9403', 'f4a7eb70-a8d4-408b-a492-7e2c935320ed'),
+('M9405', '5f4ed6cd-7795-4b7d-8b33-e4347ee061c8'),
+('M9406', 'a2623af6-4027-4454-b68c-79ac8223e400'),
+('M9407', '312e0b25-69f2-49e7-a862-f261804218ee'),
+('M9408', '7ee412b5-cbfe-4647-ac2f-7f2cc97ab80d'),
+('M9409', '98296eec-e1ec-4534-b8b5-ee3faf561fec'),
+('M9410', 'c406470c-6e6b-4eac-8aa5-e628a2692a81'),
+('M9411', 'ed497854-92aa-4347-bd72-6cd364bab66a'),
+('M9413', 'bd4af02c-14b5-448e-a1f1-a2874ac7729b'),
+('M9414', 'ceb61f2a-1193-4786-8e0d-3811ad47b2cf'),
+('M9507', 'e26d51ab-c641-4731-9111-d14c9f88a523'),
+('M9508', '773160ec-e5d2-42da-8566-619afdec5654'),
+('M9512', '44d18bbd-a993-4b65-b09d-c93e76c9f1d5'),
+('M9513', 'b9e4a104-8f99-4890-b393-888056565d80'),
+('M9514', 'f53763b3-4e33-4e8e-b8b8-cc9bdadba3a5'),
+('M9602', '08425f33-7d78-4be6-8789-f7784575519f'),
+('M9603', 'b5ccc634-2b5e-410e-82e5-b5d5f010ae0c'),
+('M9604', 'd0458c6a-2797-44c0-b136-9e6271052b28'),
+('M9606', 'bd0319cc-edf1-419c-bb87-4542ff1f7ef3'),
+('M9609', 'f6e7529c-23cc-48d3-b8f3-9bab4b2436f3'),
+('M9611', 'a7e5b53f-c5b8-4996-82e0-e6b1619774ad'),
+('M9612', '8cb2baad-ef18-4ce0-97dd-1f86539bd771'),
+('M9620', '98426391-d953-44b0-b75b-462b33dd17ca'),
+('M9621', '6bc7a982-26c5-4539-a5b9-32bb4a28d465'),
+('M9623', 'eed03c11-04e1-45ff-87c7-562909056a37'),
+('M9629', '841d694d-31fe-4037-87c6-d4c70d360b6e'),
+('M9632', '07cd4035-aa42-4f13-a4b4-8caee029f39d'),
+('M9636', '33862bf2-39b8-45df-8444-aca39c32f5ff'),
+('M9642', 'b18b7549-cf4b-423b-82f5-1bf3aaa47d49'),
+('M9643', '777232d0-6c4f-4174-8ab8-900196fd08e0'),
+('M9644', '0971680a-c919-4c29-bc72-c04a22a24f43'),
+('M9645', 'd4c94458-3215-4ccb-9ef9-162335f8365a'),
+('M9702', '5fc3eedc-963f-40fe-ad5f-468ff2b92817'),
+('M9705', '61498bfb-59bd-48b5-b3b3-b31edd9165de'),
+('M9801', '55a6e0c8-b2e5-40a3-ba73-65d3640b6adb'),
+('M9802', 'fc010305-c7b5-4bd5-aec7-4b7211570da8'),
+('M98021', '21acb7a7-35e6-4aa2-aaf6-f466d136568b'),
+('M9803', '7252f912-5b19-48e5-bd7e-284707a29133'),
+('M9804', '2e7e823f-7df2-4f28-86e5-36c90f397faf'),
+('M9805', '61f24482-e9c8-47a7-886c-006eaa65f2e0'),
+('M9806', 'ea9babec-36cb-459b-9cd7-9b9ab3c87cce'),
+('M9808', 'eb043e40-b081-411b-871a-280c38304b85'),
+('M9809', '5d6079b7-e87f-49b3-b47f-031848d2098c'),
+('M9812', '752c44f4-8a61-4859-9dbb-ee20f4169dbe'),
+('V3002', 'eb3597ab-1f01-41ac-a381-45284819db7b'),
+('V3003', '504b8c02-889f-4a5d-93f8-d2a244e382d0'),
+('S1003', 'c9947b04-4b29-48f8-8996-8d46db954f4c'),
+('S1004', 'e9b964bf-b1bf-4380-b86f-aa5b4971fbbe'),
+('V5004', 'd665d350-8fc5-43b5-a220-a0495d925926'),
+('V5008', '10ae1a10-74fe-4988-bd00-b91dc2f4a0ac'),
+('V5027', '331690f1-f10f-4f29-a438-4faaa8351fa8'),
+('V5028', '74f42c7f-747d-4fab-ba74-67fe350576de'),
+('V5029', '6a227667-136e-4ae3-b91f-e05adb8091ca'),
+('V5030', '7d656f23-ced6-4f54-863b-ed5d7822736f'),
+('V5032', 'b6c8f51b-277c-4fb3-a2f3-799aba65bb49'),
+('V5033', 'b77a3a90-546a-46da-9e0a-ee021b175aff'),
+('V5034', '7c84d995-6d13-4ed4-ba43-698775fa0ac7'),
+('V5037', 'b1ceeb66-c55b-4c63-90c2-dfc7a28f8e9b'),
+('V5038', '90c4a82a-96f0-4568-ad7f-a6d0471ae571'),
+('V5039', '52481c23-0955-4238-89db-50a219d19b8e'),
+('V5040', '63b34ca5-1c14-4c19-94c2-e11fec29a45c'),
+('V5041', 'd7d6e0f7-0ccb-4094-8528-c2fb036f7e8b'),
+('V5042', '62cdfe9a-dbf9-4410-af88-e7e487b09b65'),
+('V5043', '36c99e8f-dc32-4df6-a091-1cdd2a5aab6b'),
+('NLP004', 'e3e4a284-a08c-4a54-9cbf-60d17cbb9713'),
+('NLP3016', '32f7865c-7b33-4fc1-8939-83d42e1cb29c'),
+('NLP3021', '598fecc3-e96f-4ee4-88fa-a6a21d0052e3'),
+('NLP30251', '90cde55b-af83-45c0-8c8b-13b81536f167'),
+('NLP60031', 'a1553d2e-7d24-4dc2-bf15-fbba2b5291fa'),
+('NLP60032', '3c780a81-c3bc-4cfc-a58c-132931611d66'),
+('NLP60033', 'a9b08709-9716-4b69-9351-f0dcd5c42f35'),
+('NLP60034', 'b1a2b360-7ccb-41db-b867-1b42bba762a9'),
+('NLP60035', 'c1232e52-4d92-4124-afc6-27cb4ccaa907'),
+('NLP600351', '4aa08ffa-00f9-4106-9773-81078bfd23a9'),
+('NLP60038', '392dea17-ff95-43ce-85a3-8b89266b0203'),
+('NLP60041', 'ef16ca14-ed91-4c11-988d-d143a95c933d'),
+('NLP9001', '6083c4e0-c8c3-404d-b44d-2f67c577ddb3'),
+('NLP9002', '169a499c-e6ab-4cbe-bdc0-598bf9ece165'),
+('NLP90023', '1352f270-1aec-4aa6-b04e-3aa72d988767'),
+('NLP9003', '21c2e767-4497-4930-bd2e-552e06e49664'),
+('NLP9004', 'b284db1f-30ab-4d51-80b3-4b8e0737b9eb'),
+('NLP9005', '29c11757-e178-4038-9c28-788228ad638d'),
+('NLP9006', '3aeb24f8-15f6-47b5-b844-ebd52c7725fc'),
+('NLP9020', 'f253ad42-a0c0-41fa-9543-f014b5d14a14'),
+('NLP9024', 'e3c8ee4a-8a61-44a8-9b48-d65768a362c0'),
+('NLP9026', 'aecad15d-9569-4c5b-9b49-cebc6e0285e8'),
+('ING-101', 'fcc5a955-67fc-4b75-8697-1ebd5a313f99'),
+('ING-102', 'f71cc81b-27b8-42e1-8474-e78088bd0588'),
+('ING-103', 'b51b2571-1ff7-4d22-912c-55b922c5a65a'),
+('ING-104', '99b0d834-2c8d-4de5-875a-c4939ebf11ad'),
+('ING-105', '4bb1d4a4-8301-418b-bd4d-716fe310a42f'),
+('ING-106', '4f6e8e3c-77c8-48da-b475-698effaa4419'),
+('ING-107', 'f869cab4-99c6-4ad5-a08f-9a18e2c32ea0'),
+('ING-108', '80624764-4d4a-429a-89f8-aad7dba99c72'),
+('ING-109', '0395babd-5aac-446b-befd-43cc282a4292'),
+('ING-110', '42126737-37d6-4598-9ef0-0add4e120112'),
+('ING-111', '5d8bfc64-fc28-4f6c-8fa0-c7e28861368a'),
+('ING-112', '5f223ac9-d021-4a57-b614-5be4ff02405d'),
+('ING-113', '70254eb1-ff3f-4b45-a51e-8a68db7550cc'),
+('ING-114', 'd3594faa-7a05-4f1f-a34f-42577c077c87'),
+('ING-115', '90da7614-aa09-4e09-b3ec-24dec41cda04'),
+('NLP2011', '7cbd7633-dc32-4af5-80ee-3b5e95e7580b'),
+('NLP3008', 'f28fc77f-9c3a-44f1-b43e-ad7e32b3586c'),
+('NLP3015', '67c60361-761f-487d-9a73-58f450e5fbba'),
+('NLP4002', 'd5eacf67-a1b4-4125-9382-73d2eca55bb2'),
+('NVLC10011', '4a23344b-3367-464c-babb-931bd7ffd83a'),
+('NVLC10024', 'ddd68e34-36b6-4235-b6ce-63f19d375550'),
+('NVLC10025', '445a65ff-087e-4a75-b424-0ff1f8d0d765'),
+('NVLC1003', 'f3309fcf-e1a3-4203-85f7-641ba6eb2e30'),
+('NVLC1019', '9e51be41-5c34-4044-8a4f-d79479c746b8'),
+('NVLC3001', 'df6a4637-3ff4-4f43-86c2-fcf379a379c3'),
+('NVLC4002', 'a1939306-5366-4dda-86aa-93ed73af333f'),
+('NVLC4010', 'af8bd97f-8977-40c6-a5b2-dfda48ef9723'),
+('NVLC5001', '4b2bdf8b-5fd3-421e-8933-f8f5eddcb2db'),
+('NVLC5005', '5dae063d-dc36-4702-96e0-95c8f7bdba26'),
+('NVLC5015', '111e2e0f-5f22-4c2e-9688-4ec4a599ec7b'),
+('NVLC5020', '75415464-afde-4998-8e4d-9737617acf11'),
+('NVLC5022', '69eecebe-644b-4ca6-8ecd-837937638ece'),
+('NVLC60021', '3c50dc41-a149-4be9-8a4d-dfe0336ad4f1'),
+('NVLC6005', 'ccfdce41-edd8-4c29-a74b-3ac88fc81122'),
+('NVLC6007', '1e8e2192-9539-4896-9840-163f570a0338'),
+('NVLC6017', '4b02f406-5d8c-43e4-86d9-edee6f226850'),
+('NVLC6030', '7c191d29-5585-41d2-bcdb-88dca610b391'),
+('NVLC1001', '8d8710c2-d9be-4386-b214-f7454e874df0'),
+('NVLC1002', 'e43ace3d-165e-4ed8-8b3b-7d98d720ed5f'),
+('NVLC10021', '745b3578-25de-40bd-968b-683017e88eb1'),
+('NVLC10022', '71c7c10d-3a13-4a62-8e6e-27d0526b8503'),
+('NVLC10023', '7ffb236f-c67e-42c9-9d39-9850d4f271b0'),
+('NVLC1004', '10e35ea5-ff84-4d6f-80e9-995f4f214780'),
+('NVLC10041', '4d94e72f-d9be-4857-9552-f2b17957ba42'),
+('NVLC1010', '93ef44a3-6396-4afb-b4ca-0ad14d0c105d'),
+('NVLC1011', 'b448926e-966b-430c-ae96-ffbebada0964'),
+('NVLC1012', '860c04f0-764c-4710-9f82-49f6cfcfb6e3'),
+('NVLC10121', 'b3d9003b-09f1-4024-94ae-70daeca4c7a0'),
+('NVLC1016', '110f3e00-9dd0-4868-b714-321809171cc8'),
+('NVLC1018', '0019ac22-e7bd-423d-8a11-d2a148cb0434'),
+('NVLC1020', '56075284-dc54-4b79-8ab6-4e5969190e86'),
+('NVLC2001', '2e72468b-e04f-4ef4-90c5-cf4c5e3ab0cd'),
+('NVLC2002', '1318f3a7-1f2d-4551-8e9b-148348e459bd'),
+('NVLC2003', '7c7d4e06-48bd-4185-ab90-8d0de39cc973'),
+('NVLC20031', '8441d7cd-8104-41db-a403-231d55a1bf06'),
+('NVLC2004', '5e75f73f-04c4-4017-8efa-e86df84ea9b0'),
+('NVLC3002', '4566f924-0d42-4126-9d37-803958cde937'),
+('NVLC3003', '321ba732-7c1a-447b-b516-221ed08a348c'),
+('NVLC3006', '780026a0-c532-4d9c-ba0d-65db9438dbe9'),
+('NVLC3008', '9ae92621-d910-4959-a2ff-60fc4ccc9b68'),
+('NVLC4001', 'f9daaa3a-3ba5-4d58-9fba-1fa2b962d4fe'),
+('NVLC4003', '99501672-b742-4057-b8a8-15597d06e743'),
+('NVLC4011', '46a75037-268b-46ac-8515-1ac37e78e19b'),
+('NVLC4012', '323d161a-2e27-4d16-838c-00e3dbae80ac'),
+('NVLC5010', '538530e6-80da-4114-8bc9-90042b2aea63'),
+('NVLC5026', '7fb5dc4f-8170-4099-912d-3e84a0d7ae31'),
+('NVLC5027', '5bd5cf44-1e95-4100-96e0-0e45de66c166'),
+('NVLC6001', '569f3e08-914e-45ac-a29b-58ce47a5f615'),
+('NVLC6006', '821800c3-613d-4d44-bea6-83bb386fa79e'),
+('NVLC60111', 'f2844f67-16ab-4619-9f00-9c9c984f2e27'),
+('NVLC6012', '7975aa4e-7b9b-41c9-9006-589ca5125e49'),
+('NVLC6013', '2bb8cb9f-49c6-499f-8e69-3b084846602b'),
+('NVLC60141', '2a217020-ceeb-443f-8bd3-2b9c02b96d91'),
+('NVLC6020', '27b41094-7bd4-4981-b5c6-1128086921e5'),
+('NVLC60201', '5f75435b-05cf-421e-9e9a-09a7fbe91562'),
+('NVLC6022', '74f4acb6-a4cb-4900-b137-951f188c746d'),
+('NVLC6024', '486a8150-6bce-4e97-a271-f028e4c5a545'),
+('NVLC7001', '07323568-4837-4cbc-b50d-d6960f874a75'),
+('NLP1001', '125de936-1ca9-456f-b17a-3b4f6bfd0c7e'),
+('NLP1003', '9ca22f7c-5663-404f-b005-e9b76edd50d3'),
+('NLP1005', 'c2a0fce8-87b0-43f2-85ff-402c631f8f3f'),
+('NLP1007', 'ae57d568-b7b3-4478-80d1-48fa74599470'),
+('NLP10091', 'a77c7e06-02de-4c2c-b640-31cb311b081a'),
+('NLP1012', '25247a7c-4fa2-400d-9e3f-97379ae2594f'),
+('NLP20021', '26f22afc-6abd-4e6f-9e44-e8a9eeadbd92'),
+('NLP2003', '27683efa-d8a0-4e6c-a8dd-4c73b88b0348'),
+('NLP20031', '0bab85f6-1a0a-47a8-8aac-caefb99a3eb4'),
+('NLP20033', 'b2ddd8d7-1e57-4c01-9c05-68f2ef92b305'),
+('NLP2004', 'bd97ee5c-8cf1-43d6-801f-58b67d860efc'),
+('NLP2008', 'ab342048-6839-49bd-843b-25f4f1479be1'),
+('NLP20083', '7b7511a3-b2d5-41bb-8a47-6348b15b6d41'),
+('NLP2014', '3d839c43-69da-4738-974d-bec8c634c14f'),
+('NLP2021', 'd5f1af1d-8b87-4889-85b4-d3d43bff9d02'),
+('NLP3010', '04cc16c4-9959-45f5-b537-014785735ac2'),
+('NLP3017', '4b34457d-b467-49ac-bb55-a221c88c7159'),
+('NLP3018', 'a213d346-47c4-428e-8f48-836c18d5d3e4'),
+('NLP3019', '9a7fbfe9-4792-4624-afe3-2a86b3c6e723'),
+('NLP3024', '925ecf9d-8018-4193-9b0e-bd83bda681bf'),
+('NLP3026', 'e931ef94-26ec-4b6e-84d9-ab828420ff1b'),
+('NLP3027', '3aa9e3bf-07bd-4277-ba0c-735fc1afedf1'),
+('NLP3029', 'e08427bf-5bc6-49f7-af3e-13ad25b958db'),
+('NLP4001', '76407e0b-ce42-43e0-87ad-1d0361c1c637'),
+('NLP4004', 'ab52289e-faea-4716-9708-d9a7285cbee0'),
+('NLP5001', '5ba9d8ed-ea38-4688-b20e-92509f07e1b2'),
+('NLP5002', '59d2e936-fb3a-4554-a04c-3893a4e5dadd'),
+('NLP50022', 'ba7920b2-44fa-492c-9a32-266186d8183a'),
+('NLP50024', '91aeac5d-7307-4f68-8e4c-95d35e64d82d'),
+('NLP50025', 'c349515a-2f89-4537-928d-742c6ac347a8'),
+('NLP5003', '2cae6cd6-39d1-422f-a98f-b3183543325c'),
+('NLP5004', 'cd133481-2f8a-43a6-8211-8acaf03c2458'),
+('NLP5005', '5ea1bde1-09b5-440b-9d40-f93ac17deab0'),
+('NLP500612', '5bc37ca4-a377-4372-a7dc-380d51553aec'),
+('NLP50063', '27f5a9e5-b0a8-4ce4-9ba1-0cd315947399'),
+('NLP5007', '75c24008-52f9-483f-b3ee-015664cb1524'),
+('NLP5009', '1dc9769b-20b3-4c5c-8df5-7746bb04dd8f'),
+('NLP5011', 'f9701639-a139-4f0b-a114-01a680893c03'),
+('NLP5014', '3729f946-4aa0-45d8-a0bd-73ef72f46a13'),
+('NLP501511', '8c65c7f1-2273-44aa-ae80-8f666556a119'),
+('NLP501512', '4b0b78b5-4a17-42e3-ac4c-47f77185e432'),
+('NLP50182', '1e0e404b-9968-476d-9a3d-04f16a8537fd'),
+('NLP50212', 'ecfed2d8-1e9a-4a47-b1b2-96d634ebc310'),
+('NLP50215', 'c331a18b-8cfa-46f2-85e4-5d309afbc4f4'),
+('NLP502171', '075e888b-07b9-4e9d-afff-bd8dc3e90d94'),
+('NLP50218', 'c3b5af18-1877-43ef-aa99-6fe48b8dbd04'),
+('NLP5024', '2e7c0a20-ad4f-4203-89e9-00df4e9582da'),
+('NLP50243', '713d9d9e-026c-4183-91bb-9df8b2d78b5d'),
+('NLP50244', 'c8e9f215-a9d6-42f3-8c51-2fb6ee04591d'),
+('NLP5025', 'b8523106-f165-4e8d-a632-57ee6f479387'),
+('NLP5030', '080e3396-8655-4a50-a449-f8b41773c1a4'),
+('NLP50312', '2a7d7693-ae55-439e-8594-2c9abceccf5b'),
+('NLP5033', 'ce80f96e-9b0d-4906-8f42-f1545f5348f4'),
+('NLP50351', '12b0e7de-b7df-4b97-8631-3561cbce264b'),
+('NLP5036', 'eb84f1b6-c6e4-4cf9-a6bd-87423c157d6a'),
+('NLP5041', 'd3ff9ba7-b687-409e-8a7a-97046f5aaf3d'),
+('NLP5042', 'b186ec5a-8231-4f43-983d-c570ea358ee5'),
+('NLP5043', '3e35002b-920e-4114-917d-3f272cc75562'),
+('NLP5051', '2c15b6b8-8b1c-4867-9c86-41fbb2fb45fd'),
+('NLP5055', '340ebaff-05fb-416b-8f9a-80128cecb602'),
+('NLP5057', '3a4c45ed-9349-4057-bc50-60d8e59c6f64'),
+('NLP5061', 'a5b11721-d5ba-4c9d-adc2-2aae84dab19b'),
+('NLP5071', '8a619e7b-6865-483e-9e21-8711cd11ee36'),
+('NLP5074', '01712f8f-6de8-4b60-86f1-fac8a01162ef'),
+('NLP5076', '2071bb6e-ac85-487d-842c-1dbb21280228'),
+('NLP60049', 'fd572f2a-6d16-48b9-b600-21cebc6618e3'),
+('NLP60050', '6bf8e797-c5de-47f4-b82d-be0927f81758'),
+('NLP60054', '93d1fec0-67ec-440d-8e62-71dda0cb22c9'),
+('NLP60056', 'bc931079-ed90-4fbc-92f0-42d009dea5e8'),
+('NLP8001', 'b92f7808-c620-4b7a-bf9d-cc07af0fdc60'),
+('NLP8002', '2eb26963-9868-49b9-868e-152827bfa679'),
+('NLP80021', 'c459da18-ae26-4dcb-9bef-17ce2a9de200'),
+('NLP80053', '0d87b930-4610-4027-9181-5eaed0226d73'),
+('NLP80071', '4f3a2ce3-f608-4c84-8e23-1871b1532d94'),
+('NLP80074', '12032e78-765e-4981-85b4-f95b3db77f46'),
+('NLP8015', '2efd1b55-e12d-4921-bf80-6cd38f1bda63'),
+('NLP8016', '672859e3-c005-4b3b-be98-8edd73ab447f'),
+('NLP8017', '5ab15696-e329-4eb4-9b22-3875934f9aad'),
+('NLP60036', '971baae0-f5ad-4a4d-b2f4-27485ae51a99'),
+('NLP60037', '17e34202-1f31-45f5-8314-98d73a7a902a'),
+('NLP600381', '152f52fc-f167-45bc-a3ac-a31b6df026df'),
+('NLP60039', '8e8ee667-7a5b-443d-8423-68dfa0e8f1c6'),
+('NLP60040', '947f484e-b492-45ea-8a07-b6711914b5a8'),
+('NLP60043', 'd9543de1-cff9-4b00-8fb5-ad06bff34f4b'),
+('NLP60045', '4bd7c721-8a6d-44a4-9fb3-3d2d09da9042'),
+('NLP60047', '7c7ac2db-7937-41ca-adfc-a483f7f81e10'),
+('NLP60052', '59208dfc-ad6f-4c7b-a87d-a41c594671c8'),
+('NLP60053', '4a2bdcc6-7c17-4d16-bcc3-72377629aab3'),
+('NLP60057', '8240638e-9bc3-426b-a7c6-3821ff062463'),
+('NLP60058', '2f00e0fa-6cb0-43c7-91ab-5f665bf8cdc8'),
+('NLP60059', '6131f692-47f1-46bc-a907-b4ec5d5f3701'),
+('NLP60061', '0a3ade0b-662e-4dc1-8a0d-1271b1434918'),
+('PKG-001', 'a6877370-53ae-47c1-978f-e2e8aae86e76'),
+('PKG-002', 'c52c6a72-61a3-40ab-8fa4-12caf00f13d6'),
+('PKG-003', '7c96df8b-1d20-4714-8c00-f7d238536c7e'),
+('PKG-004', '3800672c-8468-4c73-b9f1-351cc0ba921f')
+    on conflict (code) do nothing;
+    
+    -- Cập nhật uuid từ mapping theo code/old_id_text
+    update ingredients i
+    set id = m.target_uuid
+    from temp_uuid_mapping m
+    where i.old_id_text = m.code;
+    
+    -- Với những nguyên liệu không nằm trong mapping, gán gen_random_uuid()
+    update ingredients
+    set id = gen_random_uuid()
+    where id is null;
+    
+    -- Đặt NOT NULL cho cột id
+    alter table ingredients alter column id set not null;
+    
+    create unique index if not exists ux_ingredients_id on ingredients(id);
+  end if;
+end $$;
+
+-- ---------------------------------------------------------------------
+-- BƯỚC 2 & 3 — Cập nhật tất cả 14 bảng con sang UUID (Idempotent)
+-- ---------------------------------------------------------------------
+
+-- Bảng 1: recipes
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'recipes' and column_name = 'ingredient_uuid'
+  ) then
+    alter table recipes add column ingredient_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update recipes c 
+    set ingredient_uuid = i.id 
+    from ingredients i 
+    where c.ingredient_id = i.old_id_text and c.ingredient_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'recipes' and constraint_name = 'fk_recipes_ing_uuid'
+  ) then
+    alter table recipes add constraint fk_recipes_ing_uuid foreign key (ingredient_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- Bảng 2: supplier_ingredients
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'supplier_ingredients' and column_name = 'ingredient_uuid'
+  ) then
+    alter table supplier_ingredients add column ingredient_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update supplier_ingredients c 
+    set ingredient_uuid = i.id 
+    from ingredients i 
+    where c.ingredient_id = i.old_id_text and c.ingredient_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'supplier_ingredients' and constraint_name = 'fk_supplier_ingredients_ing_uuid'
+  ) then
+    alter table supplier_ingredients add constraint fk_supplier_ingredients_ing_uuid foreign key (ingredient_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- Bảng 3: po_lines
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'po_lines' and column_name = 'ingredient_uuid'
+  ) then
+    alter table po_lines add column ingredient_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update po_lines c 
+    set ingredient_uuid = i.id 
+    from ingredients i 
+    where c.ingredient_id = i.old_id_text and c.ingredient_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'po_lines' and constraint_name = 'fk_po_lines_ing_uuid'
+  ) then
+    alter table po_lines add constraint fk_po_lines_ing_uuid foreign key (ingredient_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- Bảng 4: grn_lines
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'grn_lines' and column_name = 'ingredient_uuid'
+  ) then
+    alter table grn_lines add column ingredient_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update grn_lines c 
+    set ingredient_uuid = i.id 
+    from ingredients i 
+    where c.ingredient_id = i.old_id_text and c.ingredient_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'grn_lines' and constraint_name = 'fk_grn_lines_ing_uuid'
+  ) then
+    alter table grn_lines add constraint fk_grn_lines_ing_uuid foreign key (ingredient_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- Bảng 5: lots
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'lots' and column_name = 'ingredient_uuid'
+  ) then
+    alter table lots add column ingredient_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update lots c 
+    set ingredient_uuid = i.id 
+    from ingredients i 
+    where c.ingredient_id = i.old_id_text and c.ingredient_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'lots' and constraint_name = 'fk_lots_ing_uuid'
+  ) then
+    alter table lots add constraint fk_lots_ing_uuid foreign key (ingredient_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- Bảng 6: inventory_transactions
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'inventory_transactions' and column_name = 'ingredient_uuid'
+  ) then
+    alter table inventory_transactions add column ingredient_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update inventory_transactions c 
+    set ingredient_uuid = i.id 
+    from ingredients i 
+    where c.ingredient_id = i.old_id_text and c.ingredient_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'inventory_transactions' and constraint_name = 'fk_inventory_transactions_ing_uuid'
+  ) then
+    alter table inventory_transactions add constraint fk_inventory_transactions_ing_uuid foreign key (ingredient_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- Bảng 7: waste_logs
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'waste_logs' and column_name = 'ingredient_uuid'
+  ) then
+    alter table waste_logs add column ingredient_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update waste_logs c 
+    set ingredient_uuid = i.id 
+    from ingredients i 
+    where c.ingredient_id = i.old_id_text and c.ingredient_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'waste_logs' and constraint_name = 'fk_waste_logs_ing_uuid'
+  ) then
+    alter table waste_logs add constraint fk_waste_logs_ing_uuid foreign key (ingredient_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- Bảng 8: non_sale_consumption
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'non_sale_consumption' and column_name = 'ingredient_uuid'
+  ) then
+    alter table non_sale_consumption add column ingredient_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update non_sale_consumption c 
+    set ingredient_uuid = i.id 
+    from ingredients i 
+    where c.ingredient_id = i.old_id_text and c.ingredient_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'non_sale_consumption' and constraint_name = 'fk_non_sale_consumption_ing_uuid'
+  ) then
+    alter table non_sale_consumption add constraint fk_non_sale_consumption_ing_uuid foreign key (ingredient_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- Bảng 9: bar_bottle_calibration
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'bar_bottle_calibration' and column_name = 'ingredient_uuid'
+  ) then
+    alter table bar_bottle_calibration add column ingredient_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update bar_bottle_calibration c 
+    set ingredient_uuid = i.id 
+    from ingredients i 
+    where c.ingredient_id = i.old_id_text and c.ingredient_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'bar_bottle_calibration' and constraint_name = 'fk_bar_bottle_calibration_ing_uuid'
+  ) then
+    alter table bar_bottle_calibration add constraint fk_bar_bottle_calibration_ing_uuid foreign key (ingredient_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- Bảng 10: bar_counts
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'bar_counts' and column_name = 'ingredient_uuid'
+  ) then
+    alter table bar_counts add column ingredient_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update bar_counts c 
+    set ingredient_uuid = i.id 
+    from ingredients i 
+    where c.ingredient_id = i.old_id_text and c.ingredient_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'bar_counts' and constraint_name = 'fk_bar_counts_ing_uuid'
+  ) then
+    alter table bar_counts add constraint fk_bar_counts_ing_uuid foreign key (ingredient_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- Bảng 11: ingredient_departments
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredient_departments' and column_name = 'ingredient_uuid'
+  ) then
+    alter table ingredient_departments add column ingredient_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update ingredient_departments c 
+    set ingredient_uuid = i.id 
+    from ingredients i 
+    where c.ingredient_id = i.old_id_text and c.ingredient_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'ingredient_departments' and constraint_name = 'fk_ingredient_departments_ing_uuid'
+  ) then
+    alter table ingredient_departments add constraint fk_ingredient_departments_ing_uuid foreign key (ingredient_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- Bảng 12: department_approval_audit_logs
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'department_approval_audit_logs' and column_name = 'ingredient_uuid'
+  ) then
+    alter table department_approval_audit_logs add column ingredient_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update department_approval_audit_logs c 
+    set ingredient_uuid = i.id 
+    from ingredients i 
+    where c.ingredient_id = i.old_id_text and c.ingredient_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'department_approval_audit_logs' and constraint_name = 'fk_department_approval_audit_logs_ing_uuid'
+  ) then
+    alter table department_approval_audit_logs add constraint fk_department_approval_audit_logs_ing_uuid foreign key (ingredient_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- Bảng 13: stock_take_lines
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'stock_take_lines' and column_name = 'ingredient_uuid'
+  ) then
+    alter table stock_take_lines add column ingredient_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update stock_take_lines c 
+    set ingredient_uuid = i.id 
+    from ingredients i 
+    where c.ingredient_id = i.old_id_text and c.ingredient_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'stock_take_lines' and constraint_name = 'fk_stock_take_lines_ing_uuid'
+  ) then
+    alter table stock_take_lines add constraint fk_stock_take_lines_ing_uuid foreign key (ingredient_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- Bảng 14: takeaway_packaging_map
+do $$
+begin
+  -- 1. Thêm cột uuid tạm thời nếu chưa có
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_name = 'takeaway_packaging_map' and column_name = 'packaging_uuid'
+  ) then
+    alter table takeaway_packaging_map add column packaging_uuid uuid;
+  end if;
+
+  -- 2. Cập nhật dữ liệu từ old_id_text nếu cột old_id_text còn tồn tại trong ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    update takeaway_packaging_map c 
+    set packaging_uuid = i.id 
+    from ingredients i 
+    where c.packaging_id = i.old_id_text and c.packaging_uuid is null;
+  end if;
+
+  -- 3. Thêm ràng buộc FK mới nếu chưa có
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'takeaway_packaging_map' and constraint_name = 'fk_takeaway_packaging_map_ing_uuid'
+  ) then
+    alter table takeaway_packaging_map add constraint fk_takeaway_packaging_map_ing_uuid foreign key (packaging_uuid) references ingredients(id);
+  end if;
+end $$;
+
+-- ---------------------------------------------------------------------
+-- BƯỚC 4 — Gỡ bỏ FK cũ trỏ đến ingredients(old_id_text) text và đổi PK ingredients (Idempotent)
+-- ---------------------------------------------------------------------
+do $$
+begin
+  -- 4a. Gỡ bỏ các ràng buộc khóa ngoại cũ trỏ tới ingredients(old_id_text) dạng text
+  alter table recipes drop constraint if exists recipes_ingredient_id_fkey;
+  alter table supplier_ingredients drop constraint if exists supplier_ingredients_ingredient_id_fkey;
+  alter table po_lines drop constraint if exists po_lines_ingredient_id_fkey;
+  alter table grn_lines drop constraint if exists grn_lines_ingredient_id_fkey;
+  alter table lots drop constraint if exists lots_ingredient_id_fkey;
+  alter table inventory_transactions drop constraint if exists inventory_transactions_ingredient_id_fkey;
+  alter table waste_logs drop constraint if exists waste_logs_ingredient_id_fkey;
+  alter table non_sale_consumption drop constraint if exists non_sale_consumption_ingredient_id_fkey;
+  alter table bar_bottle_calibration drop constraint if exists bar_bottle_calibration_pkey;
+  alter table bar_bottle_calibration drop constraint if exists bar_bottle_calibration_ingredient_id_fkey;
+  alter table bar_counts drop constraint if exists bar_counts_ingredient_id_fkey;
+  alter table ingredient_departments drop constraint if exists ingredient_departments_ingredient_id_fkey;
+  alter table department_approval_audit_logs drop constraint if exists department_approval_audit_logs_ingredient_id_fkey;
+  alter table stock_take_lines drop constraint if exists stock_take_lines_ingredient_id_fkey;
+  alter table takeaway_packaging_map drop constraint if exists takeaway_packaging_map_packaging_id_fkey;
+
+  -- 4b. Đổi PK của bảng ingredients sang cột UUID mới (cột id)
+  if exists (
+    select 1 from information_schema.table_constraints 
+    where table_name = 'ingredients' and constraint_name = 'ingredients_pkey'
+  ) then
+    -- Kiểm tra xem primary key có phải kiểu text không bằng cách check old_id_text có tồn tại không
+    if exists (
+      select 1 from information_schema.columns 
+      where table_name = 'ingredients' and column_name = 'old_id_text'
+    ) then
+      alter table ingredients drop constraint if exists ingredients_pkey;
+      alter table ingredients add primary key (id);
+    end if;
+  end if;
+end $$;
+
+-- ---------------------------------------------------------------------
+-- BƯỚC 5 — Dọn dẹp cột text cũ ở các bảng con + đổi tên cột uuid về cột gốc (Idempotent)
+-- ---------------------------------------------------------------------
+do $$
+begin
+
+  -- Bảng 1: recipes
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'recipes' and column_name = 'ingredient_uuid'
+  ) then
+    delete from recipes where ingredient_uuid is null;
+    alter table recipes drop column if exists ingredient_id;
+    alter table recipes rename column ingredient_uuid to ingredient_id;
+  end if;
+
+  -- Bảng 2: supplier_ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'supplier_ingredients' and column_name = 'ingredient_uuid'
+  ) then
+    delete from supplier_ingredients where ingredient_uuid is null;
+    alter table supplier_ingredients drop column if exists ingredient_id;
+    alter table supplier_ingredients rename column ingredient_uuid to ingredient_id;
+    alter table supplier_ingredients drop constraint if exists supplier_ingredients_pkey;
+    alter table supplier_ingredients add primary key (supplier_id, ingredient_id);
+  end if;
+
+  -- Bảng 3: po_lines
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'po_lines' and column_name = 'ingredient_uuid'
+  ) then
+    delete from po_lines where ingredient_uuid is null;
+    alter table po_lines drop column if exists ingredient_id;
+    alter table po_lines rename column ingredient_uuid to ingredient_id;
+    alter table po_lines drop constraint if exists po_lines_pkey;
+    alter table po_lines add primary key (po_id, ingredient_id);
+  end if;
+
+  -- Bảng 4: grn_lines
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'grn_lines' and column_name = 'ingredient_uuid'
+  ) then
+    delete from grn_lines where ingredient_uuid is null;
+    alter table grn_lines drop column if exists ingredient_id;
+    alter table grn_lines rename column ingredient_uuid to ingredient_id;
+    alter table grn_lines drop constraint if exists grn_lines_pkey;
+    alter table grn_lines add primary key (grn_id, ingredient_id);
+  end if;
+
+  -- Bảng 5: lots
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'lots' and column_name = 'ingredient_uuid'
+  ) then
+    delete from lots where ingredient_uuid is null;
+    alter table lots drop column if exists ingredient_id;
+    alter table lots rename column ingredient_uuid to ingredient_id;
+  end if;
+
+  -- Bảng 6: inventory_transactions
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'inventory_transactions' and column_name = 'ingredient_uuid'
+  ) then
+    delete from inventory_transactions where ingredient_uuid is null;
+    alter table inventory_transactions drop column if exists ingredient_id;
+    alter table inventory_transactions rename column ingredient_uuid to ingredient_id;
+  end if;
+
+  -- Bảng 7: waste_logs
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'waste_logs' and column_name = 'ingredient_uuid'
+  ) then
+    delete from waste_logs where ingredient_uuid is null;
+    alter table waste_logs drop column if exists ingredient_id;
+    alter table waste_logs rename column ingredient_uuid to ingredient_id;
+  end if;
+
+  -- Bảng 8: non_sale_consumption
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'non_sale_consumption' and column_name = 'ingredient_uuid'
+  ) then
+    delete from non_sale_consumption where ingredient_uuid is null;
+    alter table non_sale_consumption drop column if exists ingredient_id;
+    alter table non_sale_consumption rename column ingredient_uuid to ingredient_id;
+  end if;
+
+  -- Bảng 9: bar_bottle_calibration
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'bar_bottle_calibration' and column_name = 'ingredient_uuid'
+  ) then
+    delete from bar_bottle_calibration where ingredient_uuid is null;
+    alter table bar_bottle_calibration drop column if exists ingredient_id;
+    alter table bar_bottle_calibration rename column ingredient_uuid to ingredient_id;
+    alter table bar_bottle_calibration add primary key (ingredient_id);
+  end if;
+
+  -- Bảng 10: bar_counts
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'bar_counts' and column_name = 'ingredient_uuid'
+  ) then
+    delete from bar_counts where ingredient_uuid is null;
+    alter table bar_counts drop column if exists ingredient_id;
+    alter table bar_counts rename column ingredient_uuid to ingredient_id;
+  end if;
+
+  -- Bảng 11: ingredient_departments
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredient_departments' and column_name = 'ingredient_uuid'
+  ) then
+    delete from ingredient_departments where ingredient_uuid is null;
+    alter table ingredient_departments drop column if exists ingredient_id;
+    alter table ingredient_departments rename column ingredient_uuid to ingredient_id;
+    alter table ingredient_departments drop constraint if exists ingredient_departments_pkey;
+    alter table ingredient_departments add primary key (ingredient_id, department);
+  end if;
+
+  -- Bảng 12: department_approval_audit_logs
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'department_approval_audit_logs' and column_name = 'ingredient_uuid'
+  ) then
+    delete from department_approval_audit_logs where ingredient_uuid is null;
+    alter table department_approval_audit_logs drop column if exists ingredient_id;
+    alter table department_approval_audit_logs rename column ingredient_uuid to ingredient_id;
+  end if;
+
+  -- Bảng 13: stock_take_lines
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'stock_take_lines' and column_name = 'ingredient_uuid'
+  ) then
+    delete from stock_take_lines where ingredient_uuid is null;
+    alter table stock_take_lines drop column if exists ingredient_id;
+    alter table stock_take_lines rename column ingredient_uuid to ingredient_id;
+    alter table stock_take_lines drop constraint if exists stock_take_lines_pkey;
+    alter table stock_take_lines add primary key (take_id, ingredient_id);
+  end if;
+
+  -- Bảng 14: takeaway_packaging_map
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'takeaway_packaging_map' and column_name = 'packaging_uuid'
+  ) then
+    delete from takeaway_packaging_map where packaging_uuid is null;
+    alter table takeaway_packaging_map drop column if exists packaging_id;
+    alter table takeaway_packaging_map rename column packaging_uuid to packaging_id;
+    alter table takeaway_packaging_map drop constraint if exists takeaway_packaging_map_pkey;
+    alter table takeaway_packaging_map add primary key (pos_item_code, packaging_id);
+  end if;
+
+  -- Dọn dẹp cột cũ trong bảng ingredients
+  if exists (
+    select 1 from information_schema.columns 
+    where table_name = 'ingredients' and column_name = 'old_id_text'
+  ) then
+    alter table ingredients drop column old_id_text;
+  end if;
+end $$;
+
+-- ---------------------------------------------------------------------
+-- BƯỚC 6 — `code` SỬA ĐƯỢC + audit (Idempotent)
+-- ---------------------------------------------------------------------
+create table if not exists ingredient_code_audit (
+  id bigserial primary key,
+  ingredient_id uuid references ingredients(id) on delete cascade,
+  old_code text,
+  new_code text,
+  changed_by uuid,
+  changed_at timestamptz default now()
+);
+
+create or replace function trg_audit_code_change() returns trigger
+language plpgsql as $$
+begin
+  if new.code is distinct from old.code then
+    insert into ingredient_code_audit(ingredient_id, old_code, new_code, changed_by)
+    values (old.id, old.code, new.code, auth.uid());
+  end if;
+  return new;
+end $$;
+
+drop trigger if exists audit_code_change on ingredients;
+create trigger audit_code_change before update on ingredients
+  for each row execute function trg_audit_code_change();
+
+-- ---------------------------------------------------------------------
+-- BƯỚC 7 — Tái tạo các Views và Indexes bị ảnh hưởng
+-- ---------------------------------------------------------------------
+
+-- 1. View v_inventory_ops
+create or replace view v_inventory_ops as
+select 
+    i.id as ingredient_id,
+    i.code as ingredient_code,
+    i.nom_fr,
+    i.ten_vi,
+    pc.name as category,
+    i.stock_uom,
+    i.recipe_uom,
+    i.stock_to_recipe_factor,
+    i.tare_weight_grams,
+    i.tolerance_percent,
+    coalesce((select sum(qty) from inventory_transactions where ingredient_id = i.id and status = 'approved'), 0) as qty_on_hand,
+    i.min_stock,
+    i.max_stock,
+    i.safety_stock,
+    i.is_beverage,
+    i.is_active
+from ingredients i
+left join purchase_categories pc on i.purchase_category_id = pc.id
+where i.is_active = true;
+
+-- 2. View v_inventory_cost
+create or replace view v_inventory_cost as
+select 
+    i.id as ingredient_id,
+    i.code as ingredient_code,
+    i.nom_fr,
+    i.ten_vi,
+    pc.name as category,
+    i.stock_uom,
+    i.recipe_uom,
+    i.stock_to_recipe_factor,
+    i.tare_weight_grams,
+    i.tolerance_percent,
+    i.wac_price,
+    i.standard_price,
+    coalesce((select sum(qty) from inventory_transactions where ingredient_id = i.id and status = 'approved'), 0) as qty_on_hand,
+    (coalesce((select sum(qty) from inventory_transactions where ingredient_id = i.id and status = 'approved'), 0) * i.wac_price) as stock_value_vnd,
+    i.min_stock,
+    i.max_stock,
+    i.safety_stock,
+    i.is_beverage,
+    i.is_active
+from ingredients i
+left join purchase_categories pc on i.purchase_category_id = pc.id
+where i.is_active = true;
+
+-- 3. View v_inventory_finance
+create or replace view v_inventory_finance as
+select 
+    i.id as ingredient_id,
+    i.code as ingredient_code,
+    i.nom_fr,
+    i.ten_vi,
+    pc.name as category,
+    i.stock_uom,
+    i.recipe_uom,
+    i.stock_to_recipe_factor,
+    i.tare_weight_grams,
+    i.tolerance_percent,
+    i.wac_price,
+    i.standard_price,
+    coalesce((select sum(qty) from inventory_transactions where ingredient_id = i.id and status = 'approved'), 0) as qty_on_hand,
+    (coalesce((select sum(qty) from inventory_transactions where ingredient_id = i.id and status = 'approved'), 0) * i.wac_price) as stock_value_vnd,
+    (
+        select coalesce(sum(s.net_revenue), 0)
+        from sales_imports s
+        join recipes r on s.menu_item_id = r.menu_item_id
+        where r.ingredient_id = i.id
+    ) as attributed_revenue_vnd,
+    i.min_stock,
+    i.max_stock,
+    i.safety_stock,
+    i.is_beverage,
+    i.is_active
+from ingredients i
+left join purchase_categories pc on i.purchase_category_id = pc.id
+where i.is_active = true;
+
+-- 4. View v_stock_on_hand
+create or replace view v_stock_on_hand as
+  select ingredient_id, location_id, sum(qty) as qty_on_hand
+  from inventory_transactions 
+  where status = 'approved'
+  group by ingredient_id, location_id;
+
+-- Cấp lại quyền SELECT cho role authenticated
+grant select on table v_inventory_ops to authenticated;
+grant select on table v_inventory_cost to authenticated;
+grant select on table v_inventory_finance to authenticated;
+grant select on table v_stock_on_hand to authenticated;
+
+-- Tái tạo index unique ux_invtxn_ref
+create unique index if not exists ux_invtxn_ref
+  on inventory_transactions (ref_table, ref_id, ingredient_id)
+  where ref_table is not null;

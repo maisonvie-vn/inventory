@@ -581,7 +581,7 @@ export default function BarPortal() {
               className="w-full bg-[#38462F] border border-[#46553B] rounded-lg p-2.5 text-sm font-semibold text-[#F1EAD9] focus:outline-none focus:ring-1 focus:ring-[#B08D4F]"
             >
               {ingredients.map(ing => (
-                <option key={ing.id} value={ing.id}>{ing.vi_name} ({ing.id})</option>
+                <option key={ing.id} value={ing.id}>{ing.vi_name} ({ing.unit})</option>
               ))}
             </select>
           </div>
@@ -695,7 +695,7 @@ export default function BarPortal() {
               <div key={ing.id} className="p-3 bg-[#38462F] rounded-xl border border-[#46553B] flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold">{ing.vi_name}</span>
-                  <span className="text-[10px] text-[#C2C9B4] font-mono">{ing.id}</span>
+                  {ing.code && <span className="text-[10px] text-[#C2C9B4] font-mono">{ing.code}</span>}
                 </div>
                 
                 <div className="grid grid-cols-2 gap-3">

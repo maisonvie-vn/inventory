@@ -702,10 +702,21 @@ export default function Home() {
   const [internalTransferStatus, setInternalTransferStatus] = useState<string | null>(null);
 
   // Bar bottle 2-point calibration states
-  const [barCalibrations, setBarCalibrations] = useState<Record<string, { full_weight: number; empty_weight: number; volume_ml: number }>>({
-    "ING-070": { full_weight: 1200, empty_weight: 450, volume_ml: 750 },
-    "ING-071": { full_weight: 1250, empty_weight: 480, volume_ml: 750 },
-    "ING-072": { full_weight: 1600, empty_weight: 650, volume_ml: 1000 },
+  const [barCalibrations, setBarCalibrations] = useState<Record<string, { full_weight: number; empty_weight: number; volume_ml: number }>>(() => {
+    const defaults: Record<string, { full_weight: number; empty_weight: number; volume_ml: number }> = {
+      "ING-070": { full_weight: 1200, empty_weight: 450, volume_ml: 750 },
+      "ING-071": { full_weight: 1250, empty_weight: 480, volume_ml: 750 },
+      "ING-072": { full_weight: 1600, empty_weight: 650, volume_ml: 1000 },
+    };
+    const mapped: Record<string, { full_weight: number; empty_weight: number; volume_ml: number }> = {};
+    const ings = getIngredients();
+    for (const ing of ings) {
+      const code = ing.code || ing.id;
+      if (defaults[code]) {
+        mapped[ing.id] = defaults[code];
+      }
+    }
+    return mapped;
   });
 
   // Immutable Order Documents (PO PDFs)
@@ -788,12 +799,23 @@ export default function Home() {
   const [stockCountSearch, setStockCountSearch] = useState('');
 
   // Stock count state - initialize with empty strings (represents not counted yet)
-  const [actualStocks, setActualStocks] = useState<Record<string, string>>({
-    "ING-003": "15.5", 
-    "ING-093": "22.0", 
-    "ING-013": "8.5",  
-    "ING-017": "12.0", 
-    "ING-025": "4.2",  
+  const [actualStocks, setActualStocks] = useState<Record<string, string>>(() => {
+    const defaults: Record<string, string> = {
+      "ING-003": "15.5", 
+      "ING-093": "22.0", 
+      "ING-013": "8.5",  
+      "ING-017": "12.0", 
+      "ING-025": "4.2",  
+    };
+    const mapped: Record<string, string> = {};
+    const ings = getIngredients();
+    for (const ing of ings) {
+      const code = ing.code || ing.id;
+      if (defaults[code]) {
+        mapped[ing.id] = defaults[code];
+      }
+    }
+    return mapped;
   });
 
   // State for inventory transactions to track movement
@@ -1043,10 +1065,11 @@ export default function Home() {
         } else if (ingData && ingData.length > 0) {
           const mappedIngs = ingData.map(item => ({
             id: item.ingredient_id,
+            code: item.ingredient_code || item.ingredient_id,
             fr_name: item.nom_fr || '',
             vi_name: item.ten_vi || '',
             en_name: '',
-            category: item.nom_fr ? 'Seafood' : 'Khác', 
+            category: item.category || 'Khác', 
             supplier_tier: 'A',
             unit: item.stock_uom || 'kg',
             price: item.wac_price || 0,
@@ -1625,6 +1648,7 @@ export default function Home() {
 
       return {
         id: ingId,
+        code: ing ? (ing.code || ing.id) : ingId,
         name,
         qty,
         unit,
@@ -1699,6 +1723,7 @@ export default function Home() {
 
       return {
         id: ingId,
+        code: ing ? (ing.code || ing.id) : ingId,
         name,
         qty,
         unit,
@@ -1721,7 +1746,7 @@ export default function Home() {
       const nameLower = (ing.vi_name || '').toLowerCase();
       
       const isBarCategory = ['wine', 'alcohol', 'beverage'].includes(categoryLower) || 
-                            ing.id === 'ING-070' || ing.id === 'ING-071' || ing.id === 'ING-072' ||
+                            (ing.code || ing.id) === 'ING-070' || (ing.code || ing.id) === 'ING-071' || (ing.code || ing.id) === 'ING-072' ||
                             nameLower.includes('vang') || nameLower.includes('bia') ||
                             ing.stock_uom === 'BOTTLE';
                             
@@ -1734,12 +1759,12 @@ export default function Home() {
       
       // Shared ingredients (used in both kitchen and bar)
       // Vang đỏ, vang trắng, cognac, cam, chanh, sữa tươi, đường...
-      const isShared = ing.id === 'ING-070' || ing.id === 'ING-071' || ing.id === 'ING-072' || // Rượu vang, mạnh
+      const isShared = (ing.code || ing.id) === 'ING-070' || (ing.code || ing.id) === 'ING-071' || (ing.code || ing.id) === 'ING-072' || // Rượu vang, mạnh
                        nameLower.includes('cognac') || nameLower.includes('rum') || nameLower.includes('vodka') ||
                        nameLower.includes('chanh') || nameLower.includes('cam') || nameLower.includes('dưa hấu') ||
                        nameLower.includes('xoài') || nameLower.includes('bưởi') || nameLower.includes('dứa') ||
                        nameLower.includes('sữa tươi') || nameLower.includes('đường') || nameLower.includes('sữa đặc') ||
-                       ing.id === 'NLP60032' || ing.id === 'NLP60033' || ing.id === 'NLP3016' || ing.id === 'NLP3021';
+                       (ing.code || ing.id) === 'NLP60032' || (ing.code || ing.id) === 'NLP60033' || (ing.code || ing.id) === 'NLP3016' || (ing.code || ing.id) === 'NLP3021';
                        
       if (isShared) {
         if (!departments.includes('BAR')) departments.push('BAR');
@@ -1862,10 +1887,13 @@ export default function Home() {
 
   // v9.4 Filtered consumption data based on roleFilteredIngredients for the Dashboard
   const roleFilteredConsumptionData = useMemo(() => {
-    return consumptionData.filter(c => 
-      roleFilteredIngredients.some(ing => ing.id === c.id)
-    );
-  }, [consumptionData, roleFilteredIngredients]);
+    return consumptionData.filter(c => {
+      const ingDepts = ingredientDepartments[c.id] || ['KITCHEN'];
+      const matchesDept = dashboardDeptFilter === 'ALL' || ingDepts.includes(dashboardDeptFilter);
+      const matchesRole = roleFilteredIngredients.some(ing => ing.id === c.id);
+      return matchesDept && matchesRole;
+    });
+  }, [consumptionData, roleFilteredIngredients, dashboardDeptFilter, ingredientDepartments]);
 
   // v9.4 Low stock warnings filtered by department
   const lowStockIngredients = useMemo(() => {
@@ -2210,12 +2238,13 @@ export default function Home() {
     }[] = [];
     const nowStr = new Date().toISOString().split('T')[0];
 
-    const subRecipeIng = ingredients.find(i => i.id === selectedSubRecipe);
+    const subRecipeIng = ingredients.find(i => i.id === selectedSubRecipe || i.code === selectedSubRecipe);
+    const subRecipeId = subRecipeIng ? subRecipeIng.id : selectedSubRecipe;
     const subRecipePrice = subRecipeIng ? subRecipeIng.price : 0;
 
     newTrans.push({
       id: `sr-add-${Date.now()}`,
-      ingredientId: selectedSubRecipe,
+      ingredientId: subRecipeId,
       type: 'import' as const,
       qty: qty,
       unit_price: subRecipePrice,
@@ -2226,7 +2255,7 @@ export default function Home() {
 
     formula.ingredients.forEach(ing => {
       const deductionQty = ing.qty * qty;
-      const rawIng = ingredients.find(i => i.id === ing.ing_id);
+      const rawIng = ingredients.find(i => i.id === ing.ing_id || i.code === ing.ing_id);
       const rawPrice = rawIng ? rawIng.price : 0;
       newTrans.push({
         id: `sr-deduct-${Date.now()}-${ing.ing_id}`,
@@ -2512,13 +2541,14 @@ export default function Home() {
     setOrderDocuments(prev => prev.map(d => d.id === doc.id ? { ...d, status: 'APPROVED', content_hash: hash } : d));
     
     const getItemGroup = (ingId: string) => {
-      const ing = ingredients.find(i => i.id === ingId);
+      const ing = ingredients.find(i => i.id === ingId || i.code === ingId);
       if (!ing) return 'Khác';
       const cat = ing.category || '';
       const name = (ing.vi_name || '').toLowerCase();
+      const codeVal = ing.code || ing.id;
       
-      if (ingId === 'ING-070' || ingId === 'ING-071' || name.includes('vang')) return 'Rượu vang';
-      if (ingId === 'ING-072' || name.includes('cognac') || name.includes('whisky') || name.includes('vodka') || name.includes('rum') || name.includes('tequila') || ['alcohol', 'wine'].includes(cat.toLowerCase())) {
+      if (codeVal === 'ING-070' || codeVal === 'ING-071' || name.includes('vang')) return 'Rượu vang';
+      if (codeVal === 'ING-072' || name.includes('cognac') || name.includes('whisky') || name.includes('vodka') || name.includes('rum') || name.includes('tequila') || ['alcohol', 'wine'].includes(cat.toLowerCase())) {
         if (name.includes('vang')) return 'Rượu vang';
         return 'Rượu mạnh';
       }
@@ -3130,15 +3160,15 @@ export default function Home() {
           const qty = parseFloat(qtyStr);
           if (isNaN(qty)) continue;
 
-          const ing = ingredients.find(x => x.id === code);
+          const ing = ingredients.find(x => x.id === code || x.code === code);
           if (!ing) continue;
 
-          const currentQty = getTheoreticalStock(code, 'BAR');
+          const currentQty = getTheoreticalStock(ing.id, 'BAR');
           const variance = qty - currentQty;
 
           newTrans.push({
-            id: `tx-admin-import-${Date.now()}-${code}`,
-            ingredientId: code,
+            id: `tx-admin-import-${Date.now()}-${ing.id}`,
+            ingredientId: ing.id,
             type: 'stock_take' as const,
             txn_type: 'STOCK_TAKE_ADJ',
             qty: variance,
@@ -3154,7 +3184,7 @@ export default function Home() {
           newAudits.push({
             actor: currentUser?.name || 'Admin',
             action: 'ADMIN_WRITE_BAR_IMPORT',
-            ingredientId: code,
+            ingredientId: ing.id,
             vi_name: ing.vi_name,
             before: currentQty,
             after: qty,
@@ -3162,7 +3192,7 @@ export default function Home() {
             source: 'ADMIN_IMPORT'
           });
 
-          newActualStocksObj[code] = String(qty);
+          newActualStocksObj[ing.id] = String(qty);
           count++;
         }
 
@@ -3579,7 +3609,9 @@ export default function Home() {
                 .eq('code', line.ingredientId)
                 .limit(1);
 
-              let isBar = line.ingredientId.startsWith('V') || line.ingredientId.startsWith('B') || line.ingredientId.startsWith('M');
+              const ingObj = ingredients.find(i => i.id === line.ingredientId);
+                                const ingCodeVal = ingObj ? (ingObj.code || ingObj.id) : line.ingredientId;
+                                let isBar = ingCodeVal.startsWith('V') || ingCodeVal.startsWith('B') || ingCodeVal.startsWith('M');
               if (ingData && ingData.length > 0) {
                 dbIngredientId = ingData[0].id;
                 const catCode = (ingData[0].purchase_categories as any)?.code || (ingData[0].purchase_categories as any)?.[0]?.code || '';
@@ -4324,8 +4356,8 @@ export default function Home() {
                   {/* Custom SVG Bar Chart (Scrollable on mobile) */}
                   <div className="overflow-x-auto overflow-y-hidden max-w-full pb-2">
                     <div className="h-44 min-w-[500px] lg:min-w-0 w-full bg-moss-dark/50 rounded border border-border-moss p-4 flex items-end justify-between gap-2">
-                      {roleFilteredConsumptionData.slice(0, 8).map((item, idx) => {
-                        const maxVal = Math.max(...roleFilteredConsumptionData.slice(0, 8).map(c => c.totalCost));
+                      {roleFilteredConsumptionData.slice(0, 10).map((item, idx) => {
+                        const maxVal = Math.max(...roleFilteredConsumptionData.slice(0, 10).map(c => c.totalCost));
                         const barHeight = maxVal > 0 ? (item.totalCost / maxVal) * 100 : 0;
                         return (
                           <div key={item.id} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
@@ -4358,9 +4390,9 @@ export default function Home() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-amber-500/5">
-                        {roleFilteredConsumptionData.slice(0, 6).map((item) => (
+                        {roleFilteredConsumptionData.slice(0, 15).map((item) => (
                           <tr key={item.id} className="hover:bg-moss-light/30">
-                            <td className="px-4 py-2 font-mono text-accent-gold/70">{item.id}</td>
+                            <td className="px-4 py-2 font-mono text-accent-gold/70">{item.code && item.code.length < 20 ? item.code : '—'}</td>
                             <td className="px-4 py-2 font-medium">{item.name}</td>
                             <td className="px-4 py-2 text-right">{item.qty.toFixed(3)} {item.unit}</td>
                             <td className="px-4 py-2 text-right">{item.unitPrice.toLocaleString()} đ</td>
@@ -4394,7 +4426,7 @@ export default function Home() {
                               <span className="flex items-center gap-1 text-[9px] bg-accent-gold/10 text-accent-gold border border-border-cream px-1.5 py-0.5 rounded uppercase font-semibold">Low Stock</span>
                             </div>
                             <div className="flex justify-between items-center text-[10px] text-gray-400 font-mono mt-1">
-                              <span>Mã: {ing.id}</span>
+                              <span>Mã: {(ing as any).code || '—'}</span>
                               <span>Tồn hiện tại: <strong className="text-gray-200">{currentStock.toFixed(2)}</strong> {ing.unit} (Mốc: {minStock} {ing.unit})</span>
                             </div>
                           </div>
@@ -4762,7 +4794,7 @@ export default function Home() {
                       >
                         <option value="">-- Chọn nguyên liệu --</option>
                         {roleFilteredIngredients.map(ing => (
-                          <option key={ing.id} value={ing.id}>{ing.id} - {ing.vi_name} ({ing.unit})</option>
+                          <option key={ing.id} value={ing.id}>{ing.vi_name} ({ing.unit})</option>
                         ))}
                       </select>
                     </div>
@@ -4928,7 +4960,7 @@ export default function Home() {
                     <tbody className="divide-y divide-amber-500/5">
                       {filteredIngredients.map((ing) => (
                         <tr key={ing.id} className="hover:bg-moss-light/30">
-                          <td className="px-4 py-3 font-mono text-accent-gold/70 font-semibold">{ing.id}</td>
+                          <td className="px-4 py-3 font-mono text-accent-gold/70 font-semibold">{ing.code && ing.code.length < 20 ? ing.code : '—'}</td>
                           <td className="px-4 py-3 font-medium text-gray-100">{ing.vi_name}</td>
                           <td className="px-4 py-3 text-gray-400 italic">{ing.fr_name}</td>
                           <td className="px-4 py-3 text-gray-400">{ing.category}</td>
@@ -5021,7 +5053,7 @@ export default function Home() {
                         >
                           <option value="">-- Chọn nguyên liệu --</option>
                           {ingredients.map(ing => (
-                            <option key={ing.id} value={ing.id}>{ing.id} - {ing.vi_name}</option>
+                            <option key={ing.id} value={ing.id}>{ing.vi_name} ({ing.unit})</option>
                           ))}
                         </select>
                       </div>
@@ -5270,7 +5302,7 @@ export default function Home() {
                               const details = ingredients.find(x => x.id === ing.ing_id);
                               return (
                                 <tr key={i} className="hover:bg-moss-light/30">
-                                  <td className="px-4 py-2 font-mono text-accent-gold/70">{ing.ing_id}</td>
+                                  <td className="px-4 py-2 font-mono text-accent-gold/70">{ingredients.find(i => i.id === ing.ing_id)?.code || ing.ing_id}</td>
                                   <td className="px-4 py-2 font-medium">{details?.vi_name || "Bán thành phẩm"}</td>
                                   <td className="px-4 py-2 text-right">{ing.qty_net.toFixed(3)} {ing.unit}</td>
                                   <td className="px-4 py-2 text-center font-mono">{(ing.yield_pct * 100).toFixed(0)}%</td>
@@ -5445,7 +5477,7 @@ export default function Home() {
 
                       return (
                         <tr key={ing.id} className="hover:bg-moss-light/30">
-                          <td className="px-4 py-3 font-mono text-accent-gold/70">{ing.id}</td>
+                          <td className="px-4 py-3 font-mono text-accent-gold/70">{ing.code && ing.code.length < 20 ? ing.code : '—'}</td>
                           <td className="px-4 py-3 font-medium text-gray-100">
                             {ing.vi_name}
                             {['Wine', 'Alcohol', 'Beverage'].includes(ing.category) && (
@@ -5658,12 +5690,13 @@ export default function Home() {
                                 const formula = SUB_RECIPE_FORMULAS[code];
                                 if (!formula) continue;
                                 
-                                const subRecipeIng = ingredients.find(i => i.id === code);
+                                const subRecipeIng = ingredients.find(i => i.id === code || i.code === code);
+                                const subRecipeId = subRecipeIng ? subRecipeIng.id : code;
                                 const subRecipePrice = subRecipeIng ? subRecipeIng.price : 0;
                                 
                                 newTrans.push({
                                   id: `sr-excel-add-${Date.now()}-${code}`,
-                                  ingredientId: code,
+                                  ingredientId: subRecipeId,
                                   type: 'import' as const,
                                   qty: qty,
                                   unit_price: subRecipePrice,
@@ -5673,7 +5706,7 @@ export default function Home() {
                                 });
                                 
                                 formula.ingredients.forEach(ing => {
-                                  const rawIng = ingredients.find(i => i.id === ing.ing_id);
+                                  const rawIng = ingredients.find(i => i.id === ing.ing_id || i.code === ing.ing_id);
                                   const rawPrice = rawIng ? rawIng.price : 0;
                                   newTrans.push({
                                     id: `sr-excel-deduct-${Date.now()}-${code}-${ing.ing_id}`,
@@ -5735,7 +5768,7 @@ export default function Home() {
                             const totalDeduction = ing.qty * (parseFloat(cookedQty) || 0);
                             return (
                               <tr key={ing.ing_id} className="hover:bg-moss-light/30 font-sans">
-                                <td className="px-4 py-2 font-mono text-accent-gold/70">{ing.ing_id}</td>
+                                <td className="px-4 py-2 font-mono text-accent-gold/70">{ingredients.find(i => i.id === ing.ing_id)?.code || ing.ing_id}</td>
                                 <td className="px-4 py-2 font-medium">{detail?.vi_name || 'Chưa rõ'}</td>
                                 <td className="px-4 py-2 text-right font-mono">{ing.qty} {detail?.unit || 'kg'}</td>
                                 <td className="px-4 py-2 text-right font-mono text-accent-gold font-semibold">{totalDeduction.toFixed(3)} {detail?.unit || 'kg'}</td>
@@ -6168,7 +6201,7 @@ export default function Home() {
                            >
                              <option value="">-- Chọn nguyên liệu tiêu hao --</option>
                              {roleFilteredIngredients.map(ing => (
-                               <option key={ing.id} value={ing.id}>📦 {ing.id} - {ing.vi_name} ({ing.unit})</option>
+                               <option key={ing.id} value={ing.id}>📦 {ing.vi_name} ({ing.unit})</option>
                              ))}
                            </select>
                         </div>
@@ -6304,7 +6337,7 @@ export default function Home() {
                             >
                               <option value="">-- Chọn nguyên liệu --</option>
                               {ingredients.map(ing => (
-                                <option key={ing.id} value={ing.id}>{ing.id} - {ing.vi_name}</option>
+                                <option key={ing.id} value={ing.id}>{ing.vi_name} ({ing.unit})</option>
                               ))}
                             </select>
                           </div>
@@ -6866,7 +6899,7 @@ export default function Home() {
 
             <div className="bg-moss-light p-3.5 rounded border border-border-moss flex flex-col gap-1.5 text-xs text-text-light">
               <p><strong>Nguyên liệu kiểm:</strong> <span className="text-gray-100 font-semibold">{weighIngredient.vi_name}</span></p>
-              <p><strong>Mã hàng:</strong> <span className="font-mono text-accent-gold/80">{weighIngredient.id}</span></p>
+              <p><strong>Mã hàng:</strong> <span className="font-mono text-accent-gold/80">{weighIngredient.code && weighIngredient.code.length < 20 ? weighIngredient.code : '—'}</span></p>
               <p><strong>Quy cách:</strong> 1 chai = <span className="font-semibold text-accent-gold">{(weighIngredient as any).stock_to_recipe_factor || 750} ML</span></p>
             </div>
 
@@ -7065,7 +7098,7 @@ export default function Home() {
                   >
                     <option value="">-- Chọn nguyên liệu tiêu hao --</option>
                     {ingredients.map(ing => (
-                      <option key={ing.id} value={ing.id}>{ing.id} - {ing.vi_name} ({ing.unit})</option>
+                      <option key={ing.id} value={ing.id}>{ing.vi_name} ({ing.unit})</option>
                     ))}
                   </select>
                   <input
