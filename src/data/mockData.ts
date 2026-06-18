@@ -77,8 +77,53 @@ export const POS_MAPPING: Record<string, { recipe: string; type: 'alc' | 'set' |
   "M6006": { recipe: "M6006", type: "beer" }, // Diet Coke
   "M6008": { recipe: "M6008", type: "beer" }, // La Vie 1,5 L
   "M6010": { recipe: "M6010", type: "beer" }, // S.Pellegrino (Sparkling water 0.5L)
+  "M6005": { recipe: "M6005", type: "beer" }, // Fanta - LON
+  "M6009": { recipe: "M6009", type: "beer" }, // Perrier (Sparkling water 0.33L) - CHAI
+  "M6014": { recipe: "M6014", type: "beer" }, // Evian mineral water bottle 0.5L - CHAI
   "M6020": { recipe: "M6020", type: "beer" }, // Maison Vie, mineral water bottle 0,52L
+  // === NLP — Nguyên liệu Bar / Gọi ngoài menu (Direct 1:1 deduction) ===
+  "NLP004":    { recipe: "NLP004",    type: "beer" }, // Trà olong Tam Châu 100g - TUI
+  "NLP3016":   { recipe: "NLP3016",   type: "beer" }, // Sữa tươi Vinamilk 1L - HOP
+  "NLP3021":   { recipe: "NLP3021",   type: "beer" }, // Sữa tươi TH True Milk 1L - HOP
+  "NLP30251":  { recipe: "NLP30251",  type: "beer" }, // Đường nước Hàn Quốc - KG
+  "NLP60031":  { recipe: "NLP60031",  type: "beer" }, // Bưởi Năm Roi - QUẢ
+  "NLP60032":  { recipe: "NLP60032",  type: "beer" }, // Chanh - KG
+  "NLP60033":  { recipe: "NLP60033",  type: "beer" }, // Cam - KG
+  "NLP60034":  { recipe: "NLP60034",  type: "beer" }, // Xoài - KG
+  "NLP60035":  { recipe: "NLP60035",  type: "beer" }, // Dưa hấu - KG
+  "NLP600351": { recipe: "NLP600351", type: "beer" }, // Chè mạn - KG
+  "NLP60038":  { recipe: "NLP60038",  type: "beer" }, // Chanh leo - KG
+  "NLP60041":  { recipe: "NLP60041",  type: "beer" }, // Dứa quả - QUẢ
+  "NLP9001":   { recipe: "NLP9001",   type: "beer" }, // Cafe hương chồn 500g - KG
+  "NLP9002":   { recipe: "NLP9002",   type: "beer" }, // Cafe season 500g - KG
+  "NLP90023":  { recipe: "NLP90023",  type: "beer" }, // Cafe hạt Javador 73 Italya - KG
+  "NLP9003":   { recipe: "NLP9003",   type: "beer" }, // Trà lipton túi lọc - HOP
+  "NLP9004":   { recipe: "NLP9004",   type: "beer" }, // Trà Kim Anh (sen, nhài) - HOP
+  "NLP9005":   { recipe: "NLP9005",   type: "beer" }, // Đường que - GÓI
+  "NLP9006":   { recipe: "NLP9006",   type: "beer" }, // Sữa đặc - HOP
+  "NLP9020":   { recipe: "NLP9020",   type: "beer" }, // Trà gừng - HOP
+  "NLP9024":   { recipe: "NLP9024",   type: "beer" }, // Trà Eargrey - HOP
+  "NLP9026":   { recipe: "NLP9026",   type: "beer" }, // Trà hoa cúc - HOP
+  // === NLP — Nguyên liệu Bếp / Gọi thêm ngoài menu ===
+  "NLP2021":   { recipe: "NLP2021",   type: "beer" }, // Trứng (Egg) - phục vụ gọi thêm
+  "NLP60039":  { recipe: "NLP60039",  type: "beer" }, // Dâu tây - KG (garnish/gọi thêm)
+  "NLP60049":  { recipe: "NLP60049",  type: "beer" }, // Dâu tây đông lạnh - KG
+  "NLP60056":  { recipe: "NLP60056",  type: "beer" }, // Mâm xôi đen đông lạnh - Blackberry
+  "NLP50218":  { recipe: "NLP50218",  type: "beer" }, // Hạt thông (Pine nuts) - đĩa hạt
+  "NLP50215":  { recipe: "NLP50215",  type: "beer" }, // Hạt óc chó - đĩa hạt
+  "NLP60047":  { recipe: "NLP60047",  type: "beer" }, // Kiwi - trái cây gọi thêm
+  "NLP60052":  { recipe: "NLP60052",  type: "beer" }, // Cam vàng - trái cây gọi thêm
+  "NLP60053":  { recipe: "NLP60053",  type: "beer" }, // Chuối chín - trái cây gọi thêm
+  "NLP60036":  { recipe: "NLP60036",  type: "beer" }, // Bưởi xanh - trái cây gọi thêm
+  "NLP60037":  { recipe: "NLP60037",  type: "beer" }, // Táo - trái cây gọi thêm
+  "NLP600381": { recipe: "NLP600381", type: "beer" }, // Chanh vàng - trái cây gọi thêm
+  "NLP60040":  { recipe: "NLP60040",  type: "beer" }, // Bơ sáp - trái cây gọi thêm
+  "NLP60043":  { recipe: "NLP60043",  type: "beer" }, // Thanh long trắng - trái cây gọi thêm
+  "NLP60045":  { recipe: "NLP60045",  type: "beer" }, // Dưa vàng - trái cây gọi thêm
+  "S1003":     { recipe: "S1003",     type: "beer" }, // Grenadine Syrup - Siro Lựu
+  "S1004":     { recipe: "S1004",     type: "beer" }, // Syrup Pineapple 70cl
   "V1001": { recipe: "V1001", type: "alc" }, // Chateau Noaillac Medoc Cru Bourgeois 37.5cl (R)
+
   "V2002": { recipe: "V2002", type: "alc" }, // Larousse Chardonnay Sparkling, France
   "V4045": { recipe: "V4045", type: "alc" }, // Louis Latour - Bourgogne Pinot Noir
   "V4064": { recipe: "V4064", type: "alc" }, // F. Thienpont Causse Rouge Merlot, Bordeaux - Red
