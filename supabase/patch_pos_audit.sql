@@ -1,9 +1,17 @@
 -- =====================================================================
--- SQL PATCH FOR POS AUDIT & SYNC (GENERATED 2026-06-18T09:59:15.839Z)
--- Adds 818 ingredients, 854 menu items and recipes.
+-- SQL PATCH FOR POS AUDIT & SYNC (GENERATED 2026-06-18T10:01:06.555Z)
+-- Adds missing UOMs, 818 ingredients, 854 menu items and recipes.
 -- =====================================================================
 
 BEGIN;
+
+-- 0. INSERT MISSING UOMS
+INSERT INTO uom (id, name, uom_type) VALUES 
+('CUP', 'Cúp/Ly nhỏ', 'COUNT'),
+('PLATE', 'Đĩa', 'COUNT'),
+('BOWL', 'Bát/Tô', 'COUNT'),
+('PAX', 'Khách/Suất', 'COUNT')
+ON CONFLICT (id) DO NOTHING;
 
 -- 1. INSERT NEW INGREDIENTS
 INSERT INTO ingredients (
@@ -2614,7 +2622,7 @@ INSERT INTO ingredients (
       is_beverage, auto_po_group, is_active
     ) VALUES (
       'c8b934ec-81d5-4345-a79d-e07b1f7e96e6', '000', 'Open Menu Food', 'Open Menu Food', 'Open Menu Food', NULL,
-      'pc', 'pc', 1, 0,
+      'PIECE', 'PIECE', 1, 0,
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
@@ -2653,7 +2661,7 @@ INSERT INTO ingredients (
       is_beverage, auto_po_group, is_active
     ) VALUES (
       'bf2678bb-166f-4cf0-9a96-6637929d9972', 'NLP6001', 'Nguyên liệu chế biến ( ko nhập)', 'Nguyên liệu chế biến ( ko nhập)', 'Nguyên liệu chế biến ( ko nhập)', NULL,
-      'pc', 'pc', 1, 0,
+      'PIECE', 'PIECE', 1, 0,
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
@@ -2666,7 +2674,7 @@ INSERT INTO ingredients (
       is_beverage, auto_po_group, is_active
     ) VALUES (
       'f70a0a3f-2028-4c68-ba73-4501a449ae16', 'NLP6002', 'Nguyên liệu chế biến bếp', 'Nguyên liệu chế biến bếp', 'Nguyên liệu chế biến bếp', NULL,
-      'pc', 'pc', 1, 0,
+      'PIECE', 'PIECE', 1, 0,
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
@@ -2679,7 +2687,7 @@ INSERT INTO ingredients (
       is_beverage, auto_po_group, is_active
     ) VALUES (
       '30da0866-7bab-42db-885d-2d2f57724dd9', 'NLP6003', 'Nguyên liệu chế biến bar', 'Nguyên liệu chế biến bar', 'Nguyên liệu chế biến bar', NULL,
-      'pc', 'pc', 1, 0,
+      'PIECE', 'PIECE', 1, 0,
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
@@ -6137,7 +6145,7 @@ INSERT INTO ingredients (
       is_beverage, auto_po_group, is_active
     ) VALUES (
       '3f3006df-3806-4c0d-9183-e83dd9fdc898', 'R5108', 'Birthday cake', 'Birthday cake', 'Birthday cake', NULL,
-      'pc', 'pc', 1, 0,
+      'PIECE', 'PIECE', 1, 0,
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
@@ -6579,7 +6587,7 @@ INSERT INTO ingredients (
       is_beverage, auto_po_group, is_active
     ) VALUES (
       '9faf0f9d-2f85-4b80-bd24-5be6f9d5c779', 'R2123', 'Roasted Beef Op Rib (kg)', 'Roasted Beef Op Rib (kg)', 'Roasted Beef Op Rib (kg)', NULL,
-      'pc', 'pc', 1, 0,
+      'PIECE', 'PIECE', 1, 0,
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
@@ -6904,7 +6912,7 @@ INSERT INTO ingredients (
       is_beverage, auto_po_group, is_active
     ) VALUES (
       '88e52db1-d60c-4777-b12b-98e8319d70a5', 'V9601', 'Belle Ambiance Pinot Noir California', 'Belle Ambiance Pinot Noir California', 'Belle Ambiance Pinot Noir California', '5b0ee48b-8e19-5d8f-853a-4056cefff5e5',
-      'pc', 'pc', 1, 450,
+      'PIECE', 'PIECE', 1, 450,
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
@@ -6917,7 +6925,7 @@ INSERT INTO ingredients (
       is_beverage, auto_po_group, is_active
     ) VALUES (
       '02b75ffc-d438-4628-9f60-4779d478f1af', 'V9602', 'Belle Ambiance Pinot Grigio California', 'Belle Ambiance Pinot Grigio California', 'Belle Ambiance Pinot Grigio California', '5b0ee48b-8e19-5d8f-853a-4056cefff5e5',
-      'pc', 'pc', 1, 450,
+      'PIECE', 'PIECE', 1, 450,
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
@@ -7515,7 +7523,7 @@ INSERT INTO ingredients (
       is_beverage, auto_po_group, is_active
     ) VALUES (
       '55a92f7b-328f-447f-8aae-d56cde5789c7', '0001', 'MK', 'MK', 'MK', 'b3b4e57e-464d-562f-80ec-b216c92d5e88',
-      'pc', 'pc', 1, 450,
+      'PIECE', 'PIECE', 1, 450,
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
@@ -8360,7 +8368,7 @@ INSERT INTO ingredients (
       is_beverage, auto_po_group, is_active
     ) VALUES (
       '3e15180f-3b29-43b1-9e97-6de4ece25394', '001', 'Open Menu Drink', 'Open Menu Drink', 'Open Menu Drink', 'b3b4e57e-464d-562f-80ec-b216c92d5e88',
-      'pc', 'pc', 1, 450,
+      'PIECE', 'PIECE', 1, 450,
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
@@ -11858,7 +11866,7 @@ INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('000', 'Open Menu Food', 0.0, false, 'RECIPE')
 ON CONFLICT (id) DO NOTHING;
 INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom)
-VALUES ('000', 'c8b934ec-81d5-4345-a79d-e07b1f7e96e6', 1, 100.0, 'pc')
+VALUES ('000', 'c8b934ec-81d5-4345-a79d-e07b1f7e96e6', 1, 100.0, 'PIECE')
 ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
 INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('NLC1006', 'Top Side', 0.0, false, 'RECIPE')
@@ -11876,19 +11884,19 @@ INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('NLP6001', 'Nguyên liệu chế biến ( ko nhập)', 0.0, false, 'RECIPE')
 ON CONFLICT (id) DO NOTHING;
 INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom)
-VALUES ('NLP6001', 'bf2678bb-166f-4cf0-9a96-6637929d9972', 1, 100.0, 'pc')
+VALUES ('NLP6001', 'bf2678bb-166f-4cf0-9a96-6637929d9972', 1, 100.0, 'PIECE')
 ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
 INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('NLP6002', 'Nguyên liệu chế biến bếp', 0.0, false, 'RECIPE')
 ON CONFLICT (id) DO NOTHING;
 INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom)
-VALUES ('NLP6002', 'f70a0a3f-2028-4c68-ba73-4501a449ae16', 1, 100.0, 'pc')
+VALUES ('NLP6002', 'f70a0a3f-2028-4c68-ba73-4501a449ae16', 1, 100.0, 'PIECE')
 ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
 INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('NLP6003', 'Nguyên liệu chế biến bar', 0.0, false, 'RECIPE')
 ON CONFLICT (id) DO NOTHING;
 INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom)
-VALUES ('NLP6003', '30da0866-7bab-42db-885d-2d2f57724dd9', 1, 100.0, 'pc')
+VALUES ('NLP6003', '30da0866-7bab-42db-885d-2d2f57724dd9', 1, 100.0, 'PIECE')
 ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
 INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('R6002', 'Set Dinner1', 498000.0, false, 'RECIPE')
@@ -12548,7 +12556,7 @@ INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('NVLC6007', 'Escargot', 0.0, false, 'RECIPE')
 ON CONFLICT (id) DO NOTHING;
 INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom)
-VALUES ('NVLC6007', '1e8e2192-9539-4896-9840-163f570a0338', 1, 100.0, 'BOX')
+VALUES ('NVLC6007', '1e8e2192-9539-4896-9840-163f570a0338', 1, 100.0, 'PIECE')
 ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
 INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('NVLC6010', 'Rabit', 0.0, false, 'RECIPE')
@@ -13670,7 +13678,7 @@ INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('R5108', 'Birthday cake', 0.0, false, 'RECIPE')
 ON CONFLICT (id) DO NOTHING;
 INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom)
-VALUES ('R5108', '3f3006df-3806-4c0d-9183-e83dd9fdc898', 1, 100.0, 'pc')
+VALUES ('R5108', '3f3006df-3806-4c0d-9183-e83dd9fdc898', 1, 100.0, 'PIECE')
 ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
 INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('R1030', 'Salmon Sashimi', 0.0, false, 'RECIPE')
@@ -13874,7 +13882,7 @@ INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('R2123', 'Roasted Beef Op Rib (kg)', 3250000.0, false, 'RECIPE')
 ON CONFLICT (id) DO NOTHING;
 INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom)
-VALUES ('R2123', '9faf0f9d-2f85-4b80-bd24-5be6f9d5c779', 1, 100.0, 'pc')
+VALUES ('R2123', '9faf0f9d-2f85-4b80-bd24-5be6f9d5c779', 1, 100.0, 'PIECE')
 ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
 INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('R6021', 'Set Menu 30A1', 710000.0, false, 'RECIPE')
@@ -14024,13 +14032,13 @@ INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('V9601', 'Belle Ambiance Pinot Noir California', 890000.0, false, 'RECIPE')
 ON CONFLICT (id) DO NOTHING;
 INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom)
-VALUES ('V9601', '88e52db1-d60c-4777-b12b-98e8319d70a5', 1, 100.0, 'pc')
+VALUES ('V9601', '88e52db1-d60c-4777-b12b-98e8319d70a5', 1, 100.0, 'PIECE')
 ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
 INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('V9602', 'Belle Ambiance Pinot Grigio California', 890000.0, false, 'RECIPE')
 ON CONFLICT (id) DO NOTHING;
 INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom)
-VALUES ('V9602', '02b75ffc-d438-4628-9f60-4779d478f1af', 1, 100.0, 'pc')
+VALUES ('V9602', '02b75ffc-d438-4628-9f60-4779d478f1af', 1, 100.0, 'PIECE')
 ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
 INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('V4049', 'Chateau Badette, Pessac - Saint Emilion GCC', 0.0, false, 'RECIPE')
@@ -14306,7 +14314,7 @@ INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('0001', 'MK', 0.0, false, 'RECIPE')
 ON CONFLICT (id) DO NOTHING;
 INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom)
-VALUES ('0001', '55a92f7b-328f-447f-8aae-d56cde5789c7', 1, 100.0, 'pc')
+VALUES ('0001', '55a92f7b-328f-447f-8aae-d56cde5789c7', 1, 100.0, 'PIECE')
 ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
 INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('V6050', 'Casa Subercaseaux Cab Sauv', 490000.0, false, 'RECIPE')
@@ -14702,7 +14710,7 @@ INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('001', 'Open Menu Drink', 0.0, false, 'RECIPE')
 ON CONFLICT (id) DO NOTHING;
 INSERT INTO recipes (menu_item_id, ingredient_id, qty_net, yield_pct, recipe_uom)
-VALUES ('001', '3e15180f-3b29-43b1-9e97-6de4ece25394', 1, 100.0, 'pc')
+VALUES ('001', '3e15180f-3b29-43b1-9e97-6de4ece25394', 1, 100.0, 'PIECE')
 ON CONFLICT (menu_item_id, ingredient_id) DO NOTHING;
 INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
 VALUES ('R6137', 'Set Menu 550B', 550000.0, false, 'RECIPE')
