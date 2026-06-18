@@ -1,5 +1,5 @@
 -- =====================================================================
--- SQL PATCH FOR POS AUDIT & SYNC (GENERATED 2026-06-18T10:01:06.555Z)
+-- SQL PATCH FOR POS AUDIT & SYNC (GENERATED 2026-06-18T10:02:58.417Z)
 -- Adds missing UOMs, 818 ingredients, 854 menu items and recipes.
 -- =====================================================================
 
@@ -26,7 +26,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -39,7 +39,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -52,7 +52,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -65,7 +65,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -78,7 +78,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -91,7 +91,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -104,7 +104,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -117,7 +117,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -130,7 +130,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -143,7 +143,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -156,7 +156,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -169,7 +169,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -182,7 +182,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -195,7 +195,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -208,7 +208,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -221,7 +221,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -234,7 +234,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -247,7 +247,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -260,7 +260,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -273,7 +273,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -286,7 +286,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -299,7 +299,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -312,7 +312,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -325,7 +325,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -338,7 +338,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -351,7 +351,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -364,7 +364,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -377,7 +377,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -390,7 +390,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -403,7 +403,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -416,7 +416,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -429,7 +429,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -442,7 +442,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -455,7 +455,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -468,7 +468,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -481,7 +481,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -494,7 +494,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -507,7 +507,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -520,7 +520,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -533,7 +533,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -546,7 +546,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -559,7 +559,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -572,7 +572,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -585,7 +585,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -598,7 +598,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -611,7 +611,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -624,7 +624,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -637,7 +637,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -650,7 +650,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -663,7 +663,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -676,7 +676,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -689,7 +689,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -702,7 +702,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -715,7 +715,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -728,7 +728,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -741,7 +741,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -754,7 +754,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -767,7 +767,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -780,7 +780,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -793,7 +793,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -806,7 +806,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -819,7 +819,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -832,7 +832,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -845,7 +845,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -858,7 +858,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -871,7 +871,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -884,7 +884,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -897,7 +897,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -910,7 +910,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -923,7 +923,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -936,7 +936,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -949,7 +949,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -962,7 +962,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -975,7 +975,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -988,7 +988,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1001,7 +1001,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1014,7 +1014,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1027,7 +1027,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1040,7 +1040,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1053,7 +1053,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1066,7 +1066,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1079,7 +1079,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1092,7 +1092,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1105,7 +1105,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1118,7 +1118,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1131,7 +1131,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1144,7 +1144,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1157,7 +1157,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1170,7 +1170,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1183,7 +1183,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1196,7 +1196,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1209,7 +1209,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1222,7 +1222,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1235,7 +1235,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1248,7 +1248,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1261,7 +1261,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1274,7 +1274,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1287,7 +1287,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1300,7 +1300,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1313,7 +1313,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1326,7 +1326,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1339,7 +1339,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1352,7 +1352,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1365,7 +1365,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1378,7 +1378,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1391,7 +1391,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1404,7 +1404,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1417,7 +1417,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1430,7 +1430,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1443,7 +1443,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1456,7 +1456,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1469,7 +1469,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1482,7 +1482,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1495,7 +1495,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1508,7 +1508,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1521,7 +1521,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1534,7 +1534,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1547,7 +1547,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1560,7 +1560,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1573,7 +1573,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1586,7 +1586,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1599,7 +1599,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1612,7 +1612,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1625,7 +1625,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1638,7 +1638,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1651,7 +1651,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1664,7 +1664,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1677,7 +1677,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1690,7 +1690,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1703,7 +1703,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1716,7 +1716,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1729,7 +1729,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1742,7 +1742,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1755,7 +1755,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1768,7 +1768,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1781,7 +1781,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1794,7 +1794,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1807,7 +1807,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1820,7 +1820,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1833,7 +1833,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1846,7 +1846,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1859,7 +1859,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1872,7 +1872,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1885,7 +1885,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1898,7 +1898,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1911,7 +1911,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1924,7 +1924,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1937,7 +1937,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1950,7 +1950,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1963,7 +1963,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1976,7 +1976,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -1989,7 +1989,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2002,7 +2002,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2015,7 +2015,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2028,7 +2028,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2041,7 +2041,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2054,7 +2054,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2067,7 +2067,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2080,7 +2080,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2093,7 +2093,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2106,7 +2106,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2119,7 +2119,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2132,7 +2132,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2145,7 +2145,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2158,7 +2158,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2171,7 +2171,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2184,7 +2184,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2197,7 +2197,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2210,7 +2210,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2223,7 +2223,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2236,7 +2236,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2249,7 +2249,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2262,7 +2262,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2275,7 +2275,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2288,7 +2288,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2301,7 +2301,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2314,7 +2314,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2327,7 +2327,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2340,7 +2340,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2353,7 +2353,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2366,7 +2366,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2379,7 +2379,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2392,7 +2392,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2405,7 +2405,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2418,7 +2418,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2431,7 +2431,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2444,7 +2444,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2457,7 +2457,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2470,7 +2470,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2483,7 +2483,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2496,7 +2496,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2509,7 +2509,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2522,7 +2522,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2535,7 +2535,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2548,7 +2548,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2561,7 +2561,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2574,7 +2574,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2587,7 +2587,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2600,7 +2600,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2613,7 +2613,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2626,7 +2626,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2639,7 +2639,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2652,7 +2652,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2665,7 +2665,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2678,7 +2678,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2691,7 +2691,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2704,7 +2704,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2717,7 +2717,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2730,7 +2730,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2743,7 +2743,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2756,7 +2756,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2769,7 +2769,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2782,7 +2782,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2795,7 +2795,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2808,7 +2808,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2821,7 +2821,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2834,7 +2834,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2847,7 +2847,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2860,7 +2860,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2873,7 +2873,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2886,7 +2886,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2899,7 +2899,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2912,7 +2912,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2925,7 +2925,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2938,7 +2938,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2951,7 +2951,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2964,7 +2964,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2977,7 +2977,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -2990,7 +2990,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3003,7 +3003,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3016,7 +3016,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3029,7 +3029,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3042,7 +3042,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3055,7 +3055,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3068,7 +3068,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3081,7 +3081,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3094,7 +3094,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3107,7 +3107,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3120,7 +3120,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3133,7 +3133,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3146,7 +3146,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3159,7 +3159,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3172,7 +3172,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3185,7 +3185,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3198,7 +3198,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3211,7 +3211,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3224,7 +3224,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3237,7 +3237,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3250,7 +3250,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3263,7 +3263,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3276,7 +3276,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3289,7 +3289,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3302,7 +3302,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3315,7 +3315,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3328,7 +3328,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3341,7 +3341,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3354,7 +3354,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3367,7 +3367,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3380,7 +3380,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3393,7 +3393,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3406,7 +3406,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3419,7 +3419,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3432,7 +3432,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3445,7 +3445,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3458,7 +3458,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3471,7 +3471,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3484,7 +3484,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3497,7 +3497,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3510,7 +3510,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3523,7 +3523,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3536,7 +3536,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3549,7 +3549,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3562,7 +3562,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3575,7 +3575,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3588,7 +3588,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3601,7 +3601,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3614,7 +3614,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3627,7 +3627,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3640,7 +3640,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3653,7 +3653,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3666,7 +3666,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3679,7 +3679,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3692,7 +3692,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3705,7 +3705,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3718,7 +3718,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3731,7 +3731,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3744,7 +3744,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3757,7 +3757,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3770,7 +3770,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3783,7 +3783,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3796,7 +3796,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3809,7 +3809,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3822,7 +3822,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3835,7 +3835,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3848,7 +3848,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3861,7 +3861,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3874,7 +3874,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3887,7 +3887,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3900,7 +3900,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3913,7 +3913,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3926,7 +3926,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3939,7 +3939,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3952,7 +3952,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3965,7 +3965,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3978,7 +3978,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -3991,7 +3991,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4004,7 +4004,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4017,7 +4017,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4030,7 +4030,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4043,7 +4043,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4056,7 +4056,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4069,7 +4069,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4082,7 +4082,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4095,7 +4095,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4108,7 +4108,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4121,7 +4121,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4134,7 +4134,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4147,7 +4147,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4160,7 +4160,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4173,7 +4173,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4186,7 +4186,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4199,7 +4199,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4212,7 +4212,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4225,7 +4225,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4238,7 +4238,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4251,7 +4251,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4264,7 +4264,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4277,7 +4277,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4290,7 +4290,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4303,7 +4303,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4316,7 +4316,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4329,7 +4329,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4342,7 +4342,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4355,7 +4355,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4368,7 +4368,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4381,7 +4381,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4394,7 +4394,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4407,7 +4407,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4420,7 +4420,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4433,7 +4433,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4446,7 +4446,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4459,7 +4459,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4472,7 +4472,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4485,7 +4485,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4498,7 +4498,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4511,7 +4511,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4524,7 +4524,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4537,7 +4537,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4550,7 +4550,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4563,7 +4563,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4576,7 +4576,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4589,7 +4589,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4602,7 +4602,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4615,7 +4615,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4628,7 +4628,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4641,7 +4641,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4654,7 +4654,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4667,7 +4667,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4680,7 +4680,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4693,7 +4693,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4706,7 +4706,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4719,7 +4719,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4732,7 +4732,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4745,7 +4745,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4758,7 +4758,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4771,7 +4771,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4784,7 +4784,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4797,7 +4797,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4810,7 +4810,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4823,7 +4823,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4836,7 +4836,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4849,7 +4849,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4862,7 +4862,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4875,7 +4875,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4888,7 +4888,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4901,7 +4901,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4914,7 +4914,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4927,7 +4927,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4940,7 +4940,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4953,7 +4953,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4966,7 +4966,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4979,7 +4979,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -4992,7 +4992,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5005,7 +5005,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5018,7 +5018,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5031,7 +5031,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5044,7 +5044,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5057,7 +5057,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5070,7 +5070,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5083,7 +5083,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5096,7 +5096,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5109,7 +5109,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5122,7 +5122,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5135,7 +5135,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5148,7 +5148,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5161,7 +5161,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5174,7 +5174,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5187,7 +5187,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5200,7 +5200,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5213,7 +5213,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5226,7 +5226,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5239,7 +5239,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5252,7 +5252,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5265,7 +5265,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5278,7 +5278,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5291,7 +5291,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5304,7 +5304,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5317,7 +5317,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5330,7 +5330,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5343,7 +5343,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5356,7 +5356,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5369,7 +5369,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5382,7 +5382,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5395,7 +5395,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5408,7 +5408,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5421,7 +5421,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5434,7 +5434,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5447,7 +5447,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5460,7 +5460,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5473,7 +5473,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5486,7 +5486,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5499,7 +5499,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5512,7 +5512,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5525,7 +5525,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5538,7 +5538,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5551,7 +5551,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5564,7 +5564,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5577,7 +5577,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5590,7 +5590,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5603,7 +5603,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5616,7 +5616,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5629,7 +5629,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5642,7 +5642,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5655,7 +5655,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5668,7 +5668,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5681,7 +5681,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5694,7 +5694,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5707,7 +5707,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5720,7 +5720,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5733,7 +5733,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5746,7 +5746,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5759,7 +5759,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5772,7 +5772,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5785,7 +5785,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5798,7 +5798,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5811,7 +5811,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5824,7 +5824,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5837,7 +5837,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5850,7 +5850,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5863,7 +5863,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5876,7 +5876,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5889,7 +5889,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5902,7 +5902,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5915,7 +5915,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5928,7 +5928,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5941,7 +5941,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5954,7 +5954,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5967,7 +5967,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5980,7 +5980,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -5993,7 +5993,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6006,7 +6006,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6019,7 +6019,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6032,7 +6032,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6045,7 +6045,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6058,7 +6058,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6071,7 +6071,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6084,7 +6084,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6097,7 +6097,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6110,7 +6110,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6123,7 +6123,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6136,7 +6136,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6149,7 +6149,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6162,7 +6162,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6175,7 +6175,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6188,7 +6188,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6201,7 +6201,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6214,7 +6214,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6227,7 +6227,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6240,7 +6240,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6253,7 +6253,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6266,7 +6266,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6279,7 +6279,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6292,7 +6292,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6305,7 +6305,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6318,7 +6318,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6331,7 +6331,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6344,7 +6344,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6357,7 +6357,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6370,7 +6370,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6383,7 +6383,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6396,7 +6396,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6409,7 +6409,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6422,7 +6422,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6435,7 +6435,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6448,7 +6448,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6461,7 +6461,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6474,7 +6474,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6487,7 +6487,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6500,7 +6500,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6513,7 +6513,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6526,7 +6526,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6539,7 +6539,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6552,7 +6552,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6565,7 +6565,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6578,7 +6578,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6591,7 +6591,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6604,7 +6604,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6617,7 +6617,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6630,7 +6630,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6643,7 +6643,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6656,7 +6656,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6669,7 +6669,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6682,7 +6682,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6695,7 +6695,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6708,7 +6708,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6721,7 +6721,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6734,7 +6734,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6747,7 +6747,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6760,7 +6760,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6773,7 +6773,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6786,7 +6786,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6799,7 +6799,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6812,7 +6812,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6825,7 +6825,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6838,7 +6838,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6851,7 +6851,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6864,7 +6864,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6877,7 +6877,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6890,7 +6890,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6903,7 +6903,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6916,7 +6916,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6929,7 +6929,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6942,7 +6942,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6955,7 +6955,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6968,7 +6968,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6981,7 +6981,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -6994,7 +6994,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7007,7 +7007,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7020,7 +7020,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7033,7 +7033,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7046,7 +7046,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7059,7 +7059,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7072,7 +7072,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7085,7 +7085,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7098,7 +7098,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7111,7 +7111,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7124,7 +7124,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7137,7 +7137,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7150,7 +7150,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7163,7 +7163,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7176,7 +7176,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7189,7 +7189,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7202,7 +7202,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7215,7 +7215,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7228,7 +7228,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7241,7 +7241,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7254,7 +7254,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7267,7 +7267,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7280,7 +7280,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7293,7 +7293,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7306,7 +7306,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7319,7 +7319,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7332,7 +7332,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7345,7 +7345,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7358,7 +7358,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7371,7 +7371,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7384,7 +7384,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7397,7 +7397,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7410,7 +7410,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7423,7 +7423,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7436,7 +7436,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7449,7 +7449,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7462,7 +7462,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7475,7 +7475,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7488,7 +7488,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7501,7 +7501,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7514,7 +7514,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7527,7 +7527,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7540,7 +7540,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7553,7 +7553,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7566,7 +7566,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7579,7 +7579,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7592,7 +7592,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7605,7 +7605,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7618,7 +7618,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7631,7 +7631,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7644,7 +7644,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7657,7 +7657,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7670,7 +7670,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7683,7 +7683,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7696,7 +7696,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7709,7 +7709,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7722,7 +7722,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7735,7 +7735,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7748,7 +7748,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7761,7 +7761,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7774,7 +7774,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7787,7 +7787,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7800,7 +7800,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7813,7 +7813,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7826,7 +7826,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7839,7 +7839,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7852,7 +7852,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7865,7 +7865,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7878,7 +7878,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7891,7 +7891,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7904,7 +7904,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7917,7 +7917,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7930,7 +7930,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7943,7 +7943,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7956,7 +7956,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7969,7 +7969,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7982,7 +7982,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -7995,7 +7995,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8008,7 +8008,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8021,7 +8021,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8034,7 +8034,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8047,7 +8047,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8060,7 +8060,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8073,7 +8073,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8086,7 +8086,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8099,7 +8099,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8112,7 +8112,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8125,7 +8125,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8138,7 +8138,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8151,7 +8151,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8164,7 +8164,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8177,7 +8177,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8190,7 +8190,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8203,7 +8203,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8216,7 +8216,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8229,7 +8229,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8242,7 +8242,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8255,7 +8255,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8268,7 +8268,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8281,7 +8281,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8294,7 +8294,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8307,7 +8307,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8320,7 +8320,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8333,7 +8333,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8346,7 +8346,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8359,7 +8359,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8372,7 +8372,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8385,7 +8385,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8398,7 +8398,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8411,7 +8411,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8424,7 +8424,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8437,7 +8437,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8450,7 +8450,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8463,7 +8463,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8476,7 +8476,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8489,7 +8489,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8502,7 +8502,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8515,7 +8515,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8528,7 +8528,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8541,7 +8541,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8554,7 +8554,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8567,7 +8567,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8580,7 +8580,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8593,7 +8593,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8606,7 +8606,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8619,7 +8619,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8632,7 +8632,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8645,7 +8645,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8658,7 +8658,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8671,7 +8671,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8684,7 +8684,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8697,7 +8697,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8710,7 +8710,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8723,7 +8723,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8736,7 +8736,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8749,7 +8749,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8762,7 +8762,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8775,7 +8775,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8788,7 +8788,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8801,7 +8801,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8814,7 +8814,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8827,7 +8827,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8840,7 +8840,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8853,7 +8853,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8866,7 +8866,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8879,7 +8879,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8892,7 +8892,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8905,7 +8905,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8918,7 +8918,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8931,7 +8931,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8944,7 +8944,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8957,7 +8957,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8970,7 +8970,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8983,7 +8983,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -8996,7 +8996,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9009,7 +9009,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9022,7 +9022,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9035,7 +9035,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9048,7 +9048,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9061,7 +9061,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9074,7 +9074,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9087,7 +9087,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9100,7 +9100,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9113,7 +9113,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9126,7 +9126,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9139,7 +9139,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9152,7 +9152,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9165,7 +9165,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9178,7 +9178,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9191,7 +9191,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9204,7 +9204,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9217,7 +9217,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9230,7 +9230,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9243,7 +9243,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9256,7 +9256,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9269,7 +9269,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9282,7 +9282,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9295,7 +9295,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9308,7 +9308,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9321,7 +9321,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9334,7 +9334,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9347,7 +9347,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9360,7 +9360,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9373,7 +9373,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9386,7 +9386,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9399,7 +9399,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9412,7 +9412,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9425,7 +9425,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9438,7 +9438,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9451,7 +9451,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9464,7 +9464,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9477,7 +9477,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9490,7 +9490,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9503,7 +9503,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9516,7 +9516,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9529,7 +9529,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9542,7 +9542,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9555,7 +9555,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9568,7 +9568,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9581,7 +9581,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9594,7 +9594,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9607,7 +9607,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9620,7 +9620,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9633,7 +9633,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9646,7 +9646,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9659,7 +9659,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9672,7 +9672,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9685,7 +9685,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9698,7 +9698,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9711,7 +9711,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9724,7 +9724,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9737,7 +9737,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9750,7 +9750,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9763,7 +9763,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9776,7 +9776,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9789,7 +9789,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9802,7 +9802,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9815,7 +9815,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9828,7 +9828,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9841,7 +9841,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9854,7 +9854,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9867,7 +9867,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9880,7 +9880,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9893,7 +9893,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9906,7 +9906,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9919,7 +9919,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9932,7 +9932,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9945,7 +9945,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9958,7 +9958,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9971,7 +9971,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9984,7 +9984,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -9997,7 +9997,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10010,7 +10010,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10023,7 +10023,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10036,7 +10036,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10049,7 +10049,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10062,7 +10062,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10075,7 +10075,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10088,7 +10088,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10101,7 +10101,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10114,7 +10114,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10127,7 +10127,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10140,7 +10140,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10153,7 +10153,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10166,7 +10166,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10179,7 +10179,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10192,7 +10192,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10205,7 +10205,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10218,7 +10218,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10231,7 +10231,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10244,7 +10244,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10257,7 +10257,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10270,7 +10270,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10283,7 +10283,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10296,7 +10296,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10309,7 +10309,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10322,7 +10322,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10335,7 +10335,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10348,7 +10348,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10361,7 +10361,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10374,7 +10374,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10387,7 +10387,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10400,7 +10400,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10413,7 +10413,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10426,7 +10426,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10439,7 +10439,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10452,7 +10452,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10465,7 +10465,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10478,7 +10478,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10491,7 +10491,7 @@ INSERT INTO ingredients (
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,
       false, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10504,7 +10504,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10517,7 +10517,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10530,7 +10530,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10543,7 +10543,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10556,7 +10556,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10569,7 +10569,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10582,7 +10582,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10595,7 +10595,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10608,7 +10608,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10621,7 +10621,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10634,7 +10634,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 INSERT INTO ingredients (
       id, code, nom_fr, ten_vi, name_en, purchase_category_id, 
       stock_uom, recipe_uom, stock_to_recipe_factor, tare_weight_grams, 
@@ -10647,7 +10647,7 @@ INSERT INTO ingredients (
       2.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, true,
       true, 'MANUAL_REQUISITION', true
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (code) DO NOTHING;
 
 -- 2. INSERT NEW MENU ITEMS & RECIPES
 INSERT INTO menu_items (id, name, sale_price, is_set_menu, deduction_type)
