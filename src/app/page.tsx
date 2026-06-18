@@ -825,7 +825,7 @@ export default function Home() {
   const [transactions, setTransactions] = useState<{
     id: string;
     ingredientId: string;
-    type: 'import' | 'consumption' | 'stock_take' | 'waste' | 'transfer_in' | 'transfer_out';
+    type: 'import' | 'consumption' | 'stock_take' | 'waste' | 'transfer_in' | 'transfer_out' | 'sale_depletion';
     qty: number;
     unit_price: number;
     status: 'pending' | 'approved' | 'rejected';
@@ -1167,14 +1167,47 @@ export default function Home() {
         const mappedTxs = txData.map(tx => ({
           id: tx.id.toString(),
           ingredientId: tx.ingredient_id,
-          type: tx.txn_type === 'IMPORT' ? 'import' : tx.txn_type === 'WASTE' ? 'waste' : 'consumption',
+          type: tx.txn_type === 'IMPORT' ? 'import' : 
+                tx.txn_type === 'WASTE' ? 'waste' : 
+                tx.txn_type === 'TRANSFER_IN' ? 'transfer_in' : 
+                tx.txn_type === 'TRANSFER_OUT' ? 'transfer_out' : 
+                tx.txn_type === 'SALE_DEPLETION' ? 'sale_depletion' : 'consumption',
           qty: Math.abs(tx.qty),
           unit_price: tx.unit_cost || 0,
           status: tx.status as any,
           date: tx.business_date,
-          note: tx.ref_table ? `${tx.txn_type}: ${tx.ref_table} ID ${tx.ref_id}` : tx.txn_type
+          note: tx.ref_table ? `${tx.txn_type}: ${tx.ref_table} ID ${tx.ref_id}` : tx.txn_type,
+          txn_type: tx.txn_type,
+          locationId: tx.location_id || 'MAIN_STORE'
         }));
         setTransactions(mappedTxs as any[]);
+      }
+
+      // 6. Fetch sales imports
+      const { data: salesDbData, error: salesDbError } = await supabase
+        .from('sales_imports')
+        .select('*, menu_items(id, name, sale_price)');
+
+      if (salesDbError) {
+        console.error("Error fetching sales imports:", salesDbError);
+      } else if (salesDbData) {
+        const mappedSales = salesDbData.map(sale => {
+          const menuItem = sale.menu_items as any;
+          return {
+            code: sale.menu_item_id,
+            name: menuItem?.name || `Món ${sale.menu_item_id}`,
+            price: menuItem?.sale_price || (sale.qty_sold > 0 ? (sale.net_revenue / sale.qty_sold) : 0),
+            qty: sale.qty_sold,
+            total_before_discount: sale.net_revenue,
+            discount: 0,
+            discount_pct: 0,
+            service_charge: 0,
+            tax: 0,
+            order_type: (sale.order_type || 'DINE_IN') as 'DINE_IN' | 'TAKEAWAY',
+            mapping_status: (sale.mapping_status || 'MAPPED') as 'MAPPED' | 'UNMAPPED' | 'RESOLVED' | 'NO_STOCK_IMPACT'
+          };
+        });
+        setSalesData(mappedSales);
       }
 
     } catch (err) {
@@ -2347,7 +2380,7 @@ export default function Home() {
       transactions.forEach(t => {
         const txLoc = t.locationId || t.location_id || 'MAIN_STORE';
         if (t.ingredientId === ing.id && txLoc === selectedLocation) {
-          if (t.type === 'consumption' || t.type === 'waste' || t.txn_type === 'TRANSFER_OUT' || t.txn_type === 'ISSUE') {
+          if (t.type === 'consumption' || t.type === 'sale_depletion' || t.type === 'waste' || t.txn_type === 'TRANSFER_OUT' || t.txn_type === 'ISSUE') {
             totalUsed += t.qty;
           }
         }

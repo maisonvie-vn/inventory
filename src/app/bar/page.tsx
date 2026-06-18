@@ -76,6 +76,16 @@ export default function BarPortal() {
   const [shiftCounts, setShiftCounts] = useState<Record<string, { full_bottles: number; scale_grams: number }>>({});
   const [shiftSubmitSuccess, setShiftSubmitSuccess] = useState(false);
 
+  // Sales data state for Supabase sync
+  const [salesData, setSalesData] = useState<SaleRecord[]>(() => {
+    const rawSales = getSales();
+    return rawSales.map(sale => ({
+      ...sale,
+      mapping_status: POS_MAPPING[sale.code] ? 'MAPPED' : 'UNMAPPED',
+      order_type: sale.order_type || 'DINE_IN'
+    }));
+  });
+
   // Pour Variance and historical counts list
   const [pastCounts, setPastCounts] = useState<any[]>([
     { id: 'c-1', business_date: '2026-06-15', ingredient_id: 'ING-070', name: 'Vang trắng khô', sealed_qty: 5, open_bottle_grams: 850, derived_volume_ml: 400, shift: 'CLOSE', counted_by: 'Bartender Minh Cường', counted_at: '2026-06-15 23:05' },
@@ -147,6 +157,30 @@ export default function BarPortal() {
               counted_by: c.counted_by || 'Bartender',
               counted_at: c.counted_at?.replace('T', ' ').substring(0, 16)
             })));
+          }
+
+          // Fetch live sales data from Supabase
+          const { data: salesDbData } = await supabase
+            .from('sales_imports')
+            .select('*, menu_items(id, name, sale_price)');
+          if (salesDbData && salesDbData.length > 0) {
+            const mappedSales = salesDbData.map(sale => {
+              const menuItem = sale.menu_items as any;
+              return {
+                code: sale.menu_item_id,
+                name: menuItem?.name || `Món ${sale.menu_item_id}`,
+                price: menuItem?.sale_price || (sale.qty_sold > 0 ? (sale.net_revenue / sale.qty_sold) : 0),
+                qty: sale.qty_sold,
+                total_before_discount: sale.net_revenue,
+                discount: 0,
+                discount_pct: 0,
+                service_charge: 0,
+                tax: 0,
+                order_type: (sale.order_type || 'DINE_IN') as any,
+                mapping_status: (sale.mapping_status || 'MAPPED') as any
+              };
+            });
+            setSalesData(mappedSales);
           }
         } catch (e) {
           console.error("Supabase load failed in bar page, falling back to local simulation.", e);
@@ -391,7 +425,7 @@ export default function BarPortal() {
   // Calculate Pour Variance based on mock POS sales and shift records
   const pourVarianceReport = useMemo(() => {
     const report: any[] = [];
-    const sales: SaleRecord[] = getSales();
+    const sales: SaleRecord[] = salesData;
     
     // Group sales by ingredient id
     const theoreticalConsumption: Record<string, number> = {}; // in ml
