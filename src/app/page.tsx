@@ -1841,7 +1841,11 @@ export default function Home() {
     };
   }, [salesData, consumptionData, roleFilteredIngredients, actualStocks, transactions]);
 
-  const canViewFinancials = userRole === 'admin' || userRole === 'senior_accountant';
+  const canViewFinancials = userRole === 'admin' || 
+                            userRole === 'senior_accountant' || 
+                            userRole === 'restaurant_manager' || 
+                            userRole === 'head_chef' || 
+                            userRole === 'junior_accountant';
 
   // Load categories dynamically for filter options
   const categories = useMemo(() => {

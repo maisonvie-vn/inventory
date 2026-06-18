@@ -31,8 +31,8 @@ Như vậy giữ được buffer theo ý bạn mà **vẫn không mù variance**
 ### ⚠️ Lỗi 3 — Chưa "mobile-ready" (tràn trang, cụt thông tin)
 Ảnh 3 cho thấy: khối header (logo + đăng nhập + giờ + test vai trò + sync) **chiếm trọn màn hình đầu tiên**; bảng dữ liệu **tràn ngang, cụt cột** ("LƯỢNG TIÊU THỤ", đơn vị BOTTLE/GLASS/CAN bị cắt). Vi phạm §B. Khắc phục theo **§B.4 (mới)**: header thu gọn 1 thanh slim + bảng rộng chuyển sang **thẻ xếp chồng** hoặc **khung cuộn ngang có cột đầu ghim**.
 
-### ⚠️ Lỗi 4 — Card tài chính "Khóa (Cấp 1)" vẫn khóa khi đang là CFO
-CFO **chính là** Cấp 1 → ba card *Cost / Giá trị tồn / Variance* phải **mở khóa và hiện số thật** cho CFO. Hiện vẫn hiện ổ khóa cho cả CFO là **sai logic phân quyền** — ổ khóa chỉ nên xuất hiện với vai trò KHÔNG đủ quyền. Sửa: trạng thái khóa phải đọc theo vai trò hiện hành, không hard-code.
+### ⚠️ Lỗi 4 — Card tài chính "Khóa (Cấp 1)" vẫn khóa khi đang là CFO, Manager, Chef, hoặc Thủ Kho
+CFO, Manager, Chef, Thủ Kho → ba card *Cost / Giá trị tồn / Variance* phải **mở khóa và hiện số thật**. Hiện vẫn hiện ổ khóa cho các vai trò này là **sai logic phân quyền** — ổ khóa chỉ nên xuất hiện với vai trò KHÔNG đủ quyền (như Bar). Sửa: trạng thái khóa phải đọc theo vai trò hiện hành, không hard-code.
 
 ### ℹ️ Lỗi phụ — Tồn đầu kỳ đang là "Standard Opening 30" (seed demo)
 Tồn lý thuyết ~30 đồng loạt mọi mã là dữ liệu seed, **chưa phải kiểm kê đầu kỳ thật**. Variance **chưa có ý nghĩa** cho tới khi nạp tồn đầu thực tế (§8 / Giai đoạn 1). Đừng đánh giá độ chính xác hệ thống dựa trên số seed này.
@@ -202,14 +202,14 @@ create table ingredient_departments (
 
 **Bảng VAI TRÒ → PHẠM VI BỘ PHẬN (đã tách Manager/Chef — Phương án A):**
 
-| Vai trò | Phạm vi thấy | Doanh thu/Tiền | Ghi chú |
-| :-- | :-- | :--: | :-- |
-| Owner / CFO / Admin | **Tất cả** (Bếp + Bar) | ✔ | Có bộ lọc Tất cả/Bếp/Bar |
-| **Quản lý NH (Manager)** | **Tất cả** (Bếp + Bar) | ✘ | Giám sát cả hai, không xem doanh thu |
-| **Bếp trưởng (Chef)** | **CHỈ Bếp** (+ mã dùng chung) | ✘ | *Tách khỏi Manager* — không thấy cocktail/bia bán của Bar |
-| Kế toán (senior_accountant) | **Tất cả** | Giá vốn (không DT) | Cần đối soát WAC/PO toàn bộ |
-| Thủ kho | **Tất cả** | ✘ | Vận hành kho tổng (nhập/xuất cả 2 bộ phận) |
-| **Bar (Bartender/QL Bar)** | **CHỈ Bar** (+ mã dùng chung) | ✘ | Khóa cứng scope Bar |
+| Vai trò | Phạm vi thấy | Doanh thu POS | Cost / Tồn kho / Variance | Ghi chú |
+| :-- | :-- | :--: | :--: | :-- |
+| Owner / CFO / Admin | **Tất cả** (Bếp + Bar) | ✔ | ✔ | Có bộ lọc Tất cả/Bếp/Bar |
+| **Quản lý NH (Manager)** | **Tất cả** (Bếp + Bar) | ✘ | ✔ | Giám sát cả hai, không xem doanh thu POS |
+| **Bếp trưởng (Chef)** | **CHỈ Bếp** (+ mã dùng chung) | ✘ | ✔ | *Tách khỏi Manager* — không thấy cocktail/bia bán của Bar |
+| Kế toán (senior_accountant) | **Tất cả** | ✘ | ✔ | Cần đối soát WAC/PO toàn bộ |
+| Thủ kho (junior_accountant) | **Tất cả** | ✘ | ✔ | Vận hành kho tổng (nhập/xuất cả 2 bộ phận) |
+| **Bar (Bartender/QL Bar)** | **CHỈ Bar** (+ mã dùng chung) | ✘ | ✘ | Khóa cứng scope Bar |
 
 **Hệ quả code:** `roleToDept(role)` = `'KITCHEN'` cho **Chef**, `'BAR'` cho **Bar**, `null` (tất cả) cho phần còn lại (Admin/CFO/Manager/Kế toán/Thủ kho). Việc cần làm: (1) **gỡ nav item `/bar`** cho vai trò quản trị; (2) thêm **bộ lọc `Tất cả/Bếp/Bar`** trên dashboard hợp nhất; (3) **tách role Chef** ra khỏi role gộp `restaurant_manager` (Chef = KITCHEN-scope riêng).
 

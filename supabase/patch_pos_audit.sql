@@ -2673,7 +2673,7 @@ INSERT INTO ingredients (
       min_stock, max_stock, safety_stock, is_import, track_lot, 
       is_beverage, auto_po_group, is_active
     ) VALUES (
-      'f70a0a3f-2028-4c68-ba73-4501a449ae16', 'NLP6002', 'Nguyên liệu chế biến bếp', 'Nguyên liệu chế biến bếp', 'Nguyên liệu chế biến bếp', NULL,
+      'f28fc77f-9c3a-44f1-b43e-ad7e32b358cb', 'NLP6002', 'Nguyên liệu chế biến bếp', 'Nguyên liệu chế biến bếp', 'Nguyên liệu chế biến bếp', NULL,
       'PIECE', 'PIECE', 1, 0,
       5.0, 0.0, 0.0, 100.0,
       0.0, 0.0, 0.0, false, false,

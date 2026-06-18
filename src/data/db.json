@@ -8749,7 +8749,7 @@
       "code": "NLP6001"
     },
     {
-      "id": "f70a0a3f-2028-4c68-ba73-4501a449ae16",
+      "id": "f28fc77f-9c3a-44f1-b43e-ad7e32b358cb",
       "fr_name": "Nguyên liệu chế biến bếp",
       "vi_name": "Nguyên liệu chế biến bếp",
       "en_name": "Nguyên liệu chế biến bếp",
@@ -35766,7 +35766,7 @@
       "price": 0,
       "ingredients": [
         {
-          "ing_id": "f70a0a3f-2028-4c68-ba73-4501a449ae16",
+          "ing_id": "f28fc77f-9c3a-44f1-b43e-ad7e32b358cb",
           "qty_net": 1,
           "unit": "pc",
           "yield_pct": 100,
