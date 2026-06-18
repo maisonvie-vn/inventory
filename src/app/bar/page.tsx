@@ -160,10 +160,19 @@ export default function BarPortal() {
           }
 
           // Fetch live sales data from Supabase
-          const { data: salesDbData } = await supabase
+          const { data: salesDbData, error: salesDbError } = await supabase
             .from('sales_imports')
             .select('*, menu_items(id, name, sale_price)');
-          if (salesDbData && salesDbData.length > 0) {
+          if (salesDbError) {
+            console.error("Supabase sales load failed, using local mock fallback", salesDbError);
+            const rawSales = getSales();
+            const mappedSales = rawSales.map(sale => ({
+              ...sale,
+              mapping_status: POS_MAPPING[sale.code] ? 'MAPPED' : 'UNMAPPED',
+              order_type: sale.order_type || 'DINE_IN'
+            }));
+            setSalesData(mappedSales as SaleRecord[]);
+          } else if (salesDbData && salesDbData.length > 0) {
             const mappedSales = salesDbData.map(sale => {
               const menuItem = sale.menu_items as any;
               return {
@@ -181,6 +190,15 @@ export default function BarPortal() {
               };
             });
             setSalesData(mappedSales);
+          } else {
+            // Fallback to mock data if empty
+            const rawSales = getSales();
+            const mappedSales = rawSales.map(sale => ({
+              ...sale,
+              mapping_status: POS_MAPPING[sale.code] ? 'MAPPED' : 'UNMAPPED',
+              order_type: sale.order_type || 'DINE_IN'
+            }));
+            setSalesData(mappedSales as SaleRecord[]);
           }
         } catch (e) {
           console.error("Supabase load failed in bar page, falling back to local simulation.", e);

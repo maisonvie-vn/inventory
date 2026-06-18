@@ -1190,7 +1190,15 @@ export default function Home() {
 
       if (salesDbError) {
         console.error("Error fetching sales imports:", salesDbError);
-      } else if (salesDbData) {
+        // Fallback to mock data on error
+        const rawSales = getSales();
+        const mappedSales = rawSales.map(sale => ({
+          ...sale,
+          mapping_status: posMappings[sale.code] ? 'MAPPED' : 'UNMAPPED',
+          order_type: sale.order_type || 'DINE_IN'
+        }));
+        setSalesData(mappedSales as SaleRecord[]);
+      } else if (salesDbData && salesDbData.length > 0) {
         const mappedSales = salesDbData.map(sale => {
           const menuItem = sale.menu_items as any;
           return {
@@ -1208,6 +1216,15 @@ export default function Home() {
           };
         });
         setSalesData(mappedSales);
+      } else {
+        // Fallback to mock data if empty
+        const rawSales = getSales();
+        const mappedSales = rawSales.map(sale => ({
+          ...sale,
+          mapping_status: posMappings[sale.code] ? 'MAPPED' : 'UNMAPPED',
+          order_type: sale.order_type || 'DINE_IN'
+        }));
+        setSalesData(mappedSales as SaleRecord[]);
       }
 
     } catch (err) {
