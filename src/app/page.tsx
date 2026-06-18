@@ -2312,7 +2312,31 @@ export default function Home() {
   };
 
   // Function to run Auto-PO simulation (Giai đoạn 4 + v9.0 updates)
-  const handleRunAutoPOSimulation = () => {
+  const handleRunAutoPOSimulation = async () => {
+    if (isSupabaseConfigured()) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const userId = session?.user.id || '00000000-0000-0000-0000-000000000000';
+        const nowStr = new Date().toISOString().split('T')[0];
+
+        const { error } = await supabase.rpc('generate_auto_po', {
+          p_date: nowStr,
+          p_user_id: userId
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        await fetchSupabaseData();
+        alert(`Đã chạy tự động đặt hàng Auto-PO thành công trên Supabase!\nPhát hiện các nguyên liệu dưới định mức tồn an toàn và tạo các bản nháp PO trong cơ sở dữ liệu.`);
+        return;
+      } catch (err: any) {
+        alert(`Lỗi chạy Auto-PO trên Supabase: ${err.message || err}`);
+        return;
+      }
+    }
+
     const poItems: Record<string, { ingId: string; name: string; qtyNeeded: number; unit: string; estCost: number; onHand: number; warning: string }[]> = {};
 
     ingredients.forEach(ing => {
