@@ -164,6 +164,7 @@ export default function Home() {
   const [adhocQty, setAdhocQty] = useState('');
   const [adhocItemsList, setAdhocItemsList] = useState<{ ingredientId: string; qty: number }[]>([]);
   const [showUnmappedModalType, setShowUnmappedModalType] = useState<'MAP' | 'ADHOC' | null>(null);
+  const [recipeSearchQuery, setRecipeSearchQuery] = useState('');
 
   // Compute unmapped sales count
   const unmappedSalesCount = useMemo(() => {
@@ -612,6 +613,7 @@ export default function Home() {
     alert(`Đã ánh xạ món POS "${selectedUnmappedItem}" vào công thức "${selectedMappingRecipeCode}" thành công!`);
     setSelectedUnmappedItem(null);
     setSelectedMappingRecipeCode('');
+    setRecipeSearchQuery('');
     setShowUnmappedModalType(null);
   };
 
@@ -7277,17 +7279,85 @@ export default function Home() {
 
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5 font-sans">
-                <label className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold font-sans">Chọn công thức định mức (Recipe):</label>
-                <select
-                  value={selectedMappingRecipeCode}
-                  onChange={(e) => setSelectedMappingRecipeCode(e.target.value)}
-                  className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 font-sans"
-                >
-                  <option value="">-- Chọn một công thức để liên kết --</option>
-                  {Object.keys(recipes).map(code => (
-                    <option key={code} value={code}>📖 {code} - {recipes[code].name}</option>
-                  ))}
-                </select>
+                <label className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold font-sans">Tìm công thức (mã hoặc tên món):</label>
+                {/* Search box */}
+                <div className="relative">
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none">🔍</span>
+                  <input
+                    type="text"
+                    value={recipeSearchQuery}
+                    onChange={(e) => {
+                      setRecipeSearchQuery(e.target.value);
+                      setSelectedMappingRecipeCode('');
+                    }}
+                    placeholder="Nhập mã (R6131) hoặc tên món (Set Menu, Beef...)..."
+                    className="w-full bg-[#090d16] border border-amber-500/60 text-xs rounded p-2.5 pl-8 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-amber-400 font-sans"
+                    autoFocus
+                  />
+                  {recipeSearchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => { setRecipeSearchQuery(''); setSelectedMappingRecipeCode(''); }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 text-sm"
+                    >✕</button>
+                  )}
+                </div>
+
+                {/* Filtered results list */}
+                {(() => {
+                  const q = recipeSearchQuery.toLowerCase().trim();
+                  const allCodes = Object.keys(recipes);
+                  const filtered = q
+                    ? allCodes.filter(code =>
+                        code.toLowerCase().includes(q) ||
+                        (recipes[code].name || '').toLowerCase().includes(q)
+                      )
+                    : allCodes;
+
+                  return (
+                    <div className="flex flex-col gap-1">
+                      {/* Count badge */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] text-gray-500">
+                          {q ? `${filtered.length} kết quả cho "${recipeSearchQuery}"` : `${allCodes.length} công thức`}
+                        </span>
+                        {selectedMappingRecipeCode && (
+                          <span className="text-[10px] text-amber-400 font-semibold">
+                            ✅ Đã chọn: {selectedMappingRecipeCode}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Scrollable result list */}
+                      <div className="max-h-52 overflow-y-auto border border-border-cream rounded bg-[#090d16] divide-y divide-border-moss">
+                        {filtered.length === 0 ? (
+                          <div className="p-3 text-xs text-gray-500 text-center">
+                            Không tìm thấy kết quả. Thử từ khóa khác.
+                          </div>
+                        ) : (
+                          filtered.slice(0, 100).map(code => (
+                            <button
+                              key={code}
+                              type="button"
+                              onClick={() => setSelectedMappingRecipeCode(code)}
+                              className={`w-full text-left px-3 py-2 text-xs flex items-start gap-2 hover:bg-moss-light transition-colors ${
+                                selectedMappingRecipeCode === code
+                                  ? 'bg-amber-500/15 border-l-2 border-amber-500'
+                                  : 'border-l-2 border-transparent'
+                              }`}
+                            >
+                              <span className="font-mono text-amber-400/80 text-[10px] min-w-[70px] pt-0.5 shrink-0">{code}</span>
+                              <span className="text-gray-200 leading-snug">{recipes[code].name}</span>
+                              {selectedMappingRecipeCode === code && (
+                                <span className="ml-auto text-amber-400 shrink-0">✓</span>
+                              )}
+                            </button>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
 
               <div className="flex justify-end gap-3 border-t border-border-cream pt-4 mt-2">
@@ -7297,6 +7367,7 @@ export default function Home() {
                     setShowUnmappedModalType(null);
                     setSelectedUnmappedItem(null);
                     setSelectedMappingRecipeCode('');
+                    setRecipeSearchQuery('');
                   }}
                   className="border border-gray-700 hover:bg-gray-800 text-gray-300 px-4 py-2 rounded text-xs font-semibold font-sans"
                 >
