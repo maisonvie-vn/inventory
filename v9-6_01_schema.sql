@@ -232,3 +232,7 @@ create table if not exists stocktake_lines (
   counted_qty numeric,
   variance numeric, variance_value numeric, reason text
 );
+
+-- Bổ sung cột source và note cho inventory_transactions để lưu vết nghiệp vụ và ghi chú
+alter table inventory_transactions add column if not exists source text;
+alter table inventory_transactions add column if not exists note text;
