@@ -17,10 +17,10 @@ alter table sales_imports add column if not exists
   mapping_status text not null default 'MAPPED'
   check (mapping_status in ('MAPPED','UNMAPPED','RESOLVED','NO_STOCK_IMPACT'));
 
--- Khóa idempotency: chống trừ kho trùng khi reprocess (§14 / §19) (được chỉnh sửa thành ref_table cho phù hợp thực tế database)
-create unique index if not exists ux_invtxn_ref
-  on inventory_transactions (ref_table, ref_id, ingredient_id)
-  where ref_table is not null;
+-- NOTE: ux_invtxn_ref index đã bị xóa (2026-06-19)
+-- Lý do: gây false conflict khi cùng ingredient có cả SALE_DEPLETION + NON_SALE (comp)
+-- cho cùng 1 sales_import row với lot_id=NULL.
+-- process_single_sale_import đã tự chống duplicate bằng DELETE-then-INSERT nên index này thừa.
 
 -- ---------------------------------------------------------------------
 -- B. §17.2 non_sale_consumption (cơm NV / training / tasting)
