@@ -790,6 +790,7 @@ export default function Home() {
 
   // Internal transfer form states
   const [internalTransferIngId, setInternalTransferIngId] = useState('');
+  const [transferIngSearchText, setTransferIngSearchText] = useState(''); // search for transfer combobox
   const [internalTransferSrc, setInternalTransferSrc] = useState('MAIN_STORE');
   const [internalTransferDest, setInternalTransferDest] = useState('KITCHEN');
   const [internalTransferQty, setInternalTransferQty] = useState('');
@@ -2709,6 +2710,8 @@ export default function Home() {
     
     setInternalTransferQty('');
     setInternalTransferNote('');
+    setInternalTransferIngId('');
+    setTransferIngSearchText('');
   };
 
   // v9.0 Daily Confirmation Handler
@@ -5154,17 +5157,43 @@ export default function Home() {
                   <form onSubmit={handleInternalTransferSubmit} className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1.5">
                       <label className="text-[10px] uppercase text-gray-400 font-semibold">Chọn nguyên liệu chuyển</label>
-                      <select
-                        value={internalTransferIngId}
-                        onChange={(e) => setInternalTransferIngId(e.target.value)}
-                        className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full"
-                        required
-                      >
-                        <option value="">-- Chọn nguyên liệu --</option>
-                        {roleFilteredIngredients.map(ing => (
-                          <option key={ing.id} value={ing.id}>{ing.vi_name} ({ing.unit})</option>
-                        ))}
-                      </select>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={transferIngSearchText}
+                          onChange={e => { setTransferIngSearchText(e.target.value); setInternalTransferIngId(''); }}
+                          placeholder="🔍 Gõ mã (V6027, B5001...) hoặc tên nguyên liệu..."
+                          className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full"
+                        />
+                        {transferIngSearchText && !internalTransferIngId && (() => {
+                          const filtered = roleFilteredIngredients.filter(ing =>
+                            ing.code?.toLowerCase().includes(transferIngSearchText.toLowerCase()) ||
+                            ing.vi_name?.toLowerCase().includes(transferIngSearchText.toLowerCase())
+                          ).slice(0, 8);
+                          return filtered.length > 0 ? (
+                            <div className="absolute z-50 top-full left-0 right-0 bg-[#051a18] border border-border-moss border-t-0 rounded-b shadow-xl max-h-44 overflow-y-auto">
+                              {filtered.map(ing => (
+                                <div
+                                  key={ing.id}
+                                  onMouseDown={e => e.preventDefault()}
+                                  onClick={() => {
+                                    setInternalTransferIngId(ing.id);
+                                    setTransferIngSearchText(`${ing.code} — ${ing.vi_name}`);
+                                  }}
+                                  className="px-3 py-2 cursor-pointer hover:bg-accent-gold/20 text-xs border-b border-border-moss/30 flex gap-2 items-center"
+                                >
+                                  <span className="font-mono text-accent-gold min-w-[5rem] shrink-0">{ing.code}</span>
+                                  <span className="text-text-light truncate">{ing.vi_name}</span>
+                                  <span className="ml-auto text-gray-400 shrink-0 text-[10px]">{ing.unit}</span>
+                                </div>
+                              ))}
+                            </div>
+                          ) : <div className="absolute z-50 top-full left-0 right-0 bg-[#051a18] border border-border-moss border-t-0 rounded-b px-3 py-2 text-xs text-gray-500 italic">Không tìm thấy nguyên liệu phù hợp</div>;
+                        })()}
+                      </div>
+                      {internalTransferIngId && (
+                        <div className="text-[10px] text-accent-gold font-mono px-1">✓ Đã chọn: {transferIngSearchText.split('—')[0]?.trim()}</div>
+                      )}
                     </div>
 
                     <div className="grid grid-cols-3 gap-3">
