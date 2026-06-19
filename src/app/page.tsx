@@ -165,6 +165,8 @@ export default function Home() {
   const [adhocItemsList, setAdhocItemsList] = useState<{ ingredientId: string; qty: number }[]>([]);
   const [showUnmappedModalType, setShowUnmappedModalType] = useState<'MAP' | 'ADHOC' | null>(null);
   const [recipeSearchQuery, setRecipeSearchQuery] = useState('');
+  const [adhocSearchQuery, setAdhocSearchQuery] = useState('');
+  const [isAdhocDropdownOpen, setIsAdhocDropdownOpen] = useState(false);
 
   // Compute unmapped sales count
   const unmappedSalesCount = useMemo(() => {
@@ -244,6 +246,7 @@ export default function Home() {
     setAdhocItemsList(prev => [...prev, { ingredientId: adhocIngId, qty }]);
     setAdhocIngId('');
     setAdhocQty('');
+    setAdhocSearchQuery('');
   };
 
   const handleRemoveAdhocItem = (index: number) => {
@@ -707,6 +710,9 @@ export default function Home() {
       alert(`Đã khai tiêu hao một lần thành công cho món POS "${selectedUnmappedItem}"!`);
       setSelectedUnmappedItem(null);
       setAdhocItemsList([]);
+      setAdhocSearchQuery('');
+      setAdhocIngId('');
+      setIsAdhocDropdownOpen(false);
       setShowUnmappedModalType(null);
     } catch (err: any) {
       console.error("Error in handleResolveUnmappedAdhoc:", err);
@@ -6995,6 +7001,9 @@ export default function Home() {
                             onClick={() => {
                               setSelectedUnmappedItem(item.code);
                               setAdhocItemsList([]);
+                              setAdhocSearchQuery('');
+                              setAdhocIngId('');
+                              setIsAdhocDropdownOpen(false);
                               setShowUnmappedModalType('ADHOC');
                             }}
                             className="bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 px-2.5 py-1.5 rounded text-[10px] font-bold uppercase transition-all cursor-pointer"
@@ -7526,16 +7535,91 @@ export default function Home() {
               <div className="flex flex-col gap-2 p-3 bg-bg-2 border border-border-moss rounded">
                 <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold block">Thêm nguyên liệu tiêu hao:</span>
                 <div className="flex flex-col sm:flex-row gap-2">
-                  <select
-                    value={adhocIngId}
-                    onChange={(e) => setAdhocIngId(e.target.value)}
-                    className="flex-1 bg-[#090d16] border border-border-cream text-xs rounded p-2 text-gray-200 focus:outline-none focus:border-amber-500 font-sans min-w-0"
-                  >
-                    <option value="">-- Chọn nguyên liệu tiêu hao --</option>
-                    {ingredients.map(ing => (
-                      <option key={ing.id} value={ing.id}>{ing.vi_name} ({ing.unit})</option>
-                    ))}
-                  </select>
+                  {/* Searchable Dropdown for Ingredients */}
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      value={adhocSearchQuery}
+                      onChange={(e) => {
+                        setAdhocSearchQuery(e.target.value);
+                        setIsAdhocDropdownOpen(true);
+                        const matched = ingredients.find(ing => `${ing.vi_name} (${ing.unit})` === e.target.value);
+                        if (matched) {
+                          setAdhocIngId(matched.id);
+                        } else {
+                          setAdhocIngId('');
+                        }
+                      }}
+                      onFocus={() => setIsAdhocDropdownOpen(true)}
+                      placeholder="-- Tìm/Chọn nguyên liệu tiêu hao --"
+                      className="w-full bg-[#090d16] border border-border-cream text-xs rounded p-2 pr-10 text-gray-200 focus:outline-none focus:border-amber-500 font-sans min-w-0"
+                    />
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 text-gray-400">
+                      {adhocSearchQuery && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAdhocSearchQuery('');
+                            setAdhocIngId('');
+                            setIsAdhocDropdownOpen(true);
+                          }}
+                          className="hover:text-gray-200 text-[10px] cursor-pointer p-0.5"
+                        >
+                          ✕
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setIsAdhocDropdownOpen(!isAdhocDropdownOpen)}
+                        className="hover:text-gray-200 text-[9px] cursor-pointer p-0.5"
+                      >
+                        ▼
+                      </button>
+                    </div>
+
+                    {isAdhocDropdownOpen && (
+                      <>
+                        <div 
+                          className="fixed inset-0 z-40" 
+                          onClick={() => setIsAdhocDropdownOpen(false)}
+                        />
+                        <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-[#090d16] border border-border-moss rounded shadow-xl z-50 divide-y divide-border-moss/40">
+                          {(() => {
+                            const query = adhocSearchQuery.toLowerCase().trim();
+                            const filtered = query
+                              ? ingredients.filter(ing => 
+                                  ing.vi_name.toLowerCase().includes(query) ||
+                                  (ing.code || '').toLowerCase().includes(query) ||
+                                  (ing.en_name || '').toLowerCase().includes(query)
+                                )
+                              : ingredients;
+
+                            if (filtered.length === 0) {
+                              return <div className="p-3 text-xs text-gray-500 italic text-center">Không tìm thấy nguyên liệu</div>;
+                            }
+
+                            return filtered.map(ing => (
+                              <button
+                                key={ing.id}
+                                type="button"
+                                onClick={() => {
+                                  setAdhocIngId(ing.id);
+                                  setAdhocSearchQuery(`${ing.vi_name} (${ing.unit})`);
+                                  setIsAdhocDropdownOpen(false);
+                                }}
+                                className={`w-full text-left px-3 py-2 text-xs transition-colors hover:bg-moss-light/60 flex justify-between items-center ${
+                                  adhocIngId === ing.id ? 'bg-amber-500/15 text-amber-400 font-semibold' : 'text-gray-300'
+                                }`}
+                              >
+                                <span>{ing.vi_name}</span>
+                                <span className="text-[10px] text-gray-500 font-mono bg-bg-2 px-1.5 py-0.5 rounded">{ing.unit}</span>
+                              </button>
+                            ));
+                          })()}
+                        </div>
+                      </>
+                    )}
+                  </div>
                   <input
                     type="number"
                     step="any"
@@ -7589,6 +7673,9 @@ export default function Home() {
                     setShowUnmappedModalType(null);
                     setSelectedUnmappedItem(null);
                     setAdhocItemsList([]);
+                    setAdhocSearchQuery('');
+                    setAdhocIngId('');
+                    setIsAdhocDropdownOpen(false);
                   }}
                   className="border border-gray-700 hover:bg-gray-800 text-gray-300 px-4 py-2 rounded text-xs font-semibold font-sans"
                 >
