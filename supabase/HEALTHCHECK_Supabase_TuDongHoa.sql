@@ -165,7 +165,7 @@ begin
   -- 7. KIỂM TRA CRON JOBS LẬP LỊCH
   category := 'CRON';
   declare
-    cron_record record;
+    t_name text;
     cron_jobs text[] := array['auto_close', 'variance_nightly', 'auto_po', 'lowstock_email', 'expiry_alert', 'po_aging', 'daily_report', 'weekly_report', 'monthly_partition', 'storage_cleanup'];
   begin
     if exists (select 1 from pg_tables where tablename = 'job' and table_schema = 'cron') then
