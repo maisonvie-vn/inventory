@@ -19,9 +19,9 @@ BEGIN
 
   -- 1. Tạo dữ liệu giả lập cho nguyên liệu
   INSERT INTO ingredients (
-    code, vi_name, fr_name, en_name, category, supplier_tier, unit, wac_price, standard_price, track_lot, yield_rate
+    code, ten_vi, nom_fr, name_en, stock_uom, wac_price, standard_price, track_lot, yield_rate
   ) VALUES (
-    'ING-TEST-VERIFY', 'Nguyên Liệu Kiểm Thử', 'Ing Test Verify', 'Ing Test Verify', 'Meat', 'TIER_1', 'kg', 100000, 100000, true, 1.0
+    'ING-TEST-VERIFY', 'Nguyên Liệu Kiểm Thử', 'Ing Test Verify', 'Ing Test Verify', 'KG', 100000, 100000, true, 100.00
   ) RETURNING id INTO v_test_ing_id;
 
   RAISE NOTICE '1. Tạo NVL kiểm thử thành công: %', v_test_ing_id;
@@ -95,9 +95,9 @@ BEGIN
 
   -- 4. Thực hiện khấu trừ kho bằng FEFO (deplete_stock_fefo) thông qua non_sale_consumption
   INSERT INTO non_sale_consumption (
-    ingredient_id, qty, business_date, reason, created_by, note
+    ingredient_id, qty, business_date, reason, consumption_type, created_by, note
   ) VALUES (
-    v_test_ing_id, 4.0000, current_date, 'TRAINING', '00000000-0000-0000-0000-000000000000'::uuid, 'Mẫu thử cho lớp học bar'
+    v_test_ing_id, 4.0000, current_date, 'TRAINING', 'TRAINING', '00000000-0000-0000-0000-000000000000'::uuid, 'Mẫu thử cho lớp học bar'
   );
 
   -- Kiểm tra lượng còn lại trong lô
