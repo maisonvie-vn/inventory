@@ -63,12 +63,12 @@ returns void language plpgsql security definer set search_path=public as $func$
 begin
   insert into inventory_transactions
         (ingredient_id, qty, txn_type, ref_table, ref_id, business_date, status, created_at)
-  select (c->>'ingredient_id'),
+  select (c->>'ingredient_id')::uuid,
          -((c->>'qty')::numeric), 'NON_SALE', 'sales_imports', lid::text, sl.import_date, 'approved', now()
   from unnest(p_line_ids) lid
   join sales_imports sl on sl.id = lid
   cross join jsonb_array_elements(p_consume) c
-  on conflict (ref_table, ref_id, ingredient_id) do nothing;
+  on conflict (ref_table, ref_id, ingredient_id) where ref_table is not null do nothing;
 
   update sales_imports set mapping_status='RESOLVED', is_processed=true where id = any(p_line_ids);
 end; $func$;
