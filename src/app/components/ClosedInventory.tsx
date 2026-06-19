@@ -133,11 +133,7 @@ export default function ClosedInventory({
     }
   };
 
-  useEffect(() => {
-    if (periodRange.startStr && periodRange.endStr) {
-      fetchPeriodStockData(periodRange.startStr, periodRange.endStr);
-    }
-  }, [periodRange.startStr, periodRange.endStr]);
+
 
   // Determine if financial info (price, cost, value) is visible to current user
   // (Only Owner/CFO - 'admin' role in this system has financial privileges)
@@ -176,6 +172,14 @@ export default function ClosedInventory({
       endStr: end.toISOString().split('T')[0]
     };
   }, [selectedDate, periodType]);
+
+  // Fetch period stock data whenever the period range changes
+  useEffect(() => {
+    if (periodRange.startStr && periodRange.endStr) {
+      fetchPeriodStockData(periodRange.startStr, periodRange.endStr);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [periodRange.startStr, periodRange.endStr]);
 
   // Find if current period range is locked
   const currentPeriodStatus = useMemo(() => {
