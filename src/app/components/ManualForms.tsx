@@ -15,6 +15,7 @@ import {
   ArrowRightLeft
 } from 'lucide-react';
 import UniversalSearch from './UniversalSearch';
+import { supabase, isSupabaseConfigured } from '../../lib/supabaseClient';
 
 interface ManualFormsProps {
   ingredients: any[];
@@ -50,6 +51,126 @@ export default function ManualForms({
   locations
 }: ManualFormsProps) {
   const [activeTab, setActiveTab] = useState<'sale' | 'grn' | 'issue'>('sale');
+
+  const refreshSupabaseData = async () => {
+    if (!isSupabaseConfigured()) return;
+    try {
+      // 1. Fetch ingredients view
+      const viewName = currentUser?.role === 'admin' ? 'v_inventory_finance' : 
+                       currentUser?.role === 'senior_accountant' ? 'v_inventory_cost' : 'v_inventory_ops';
+      
+      const { data: ingData } = await supabase.from(viewName).select('*');
+      if (ingData) {
+        const mappedIngs = ingData.map(item => ({
+          id: item.ingredient_id,
+          code: item.ingredient_code || item.ingredient_id,
+          fr_name: item.nom_fr || '',
+          vi_name: item.ten_vi || '',
+          en_name: '',
+          category: item.category || 'Khác', 
+          supplier_tier: 'A',
+          unit: item.stock_uom || 'kg',
+          price: item.wac_price || 0,
+          yield_rate: 100.0,
+          stock_uom: item.stock_uom,
+          recipe_uom: item.recipe_uom,
+          stock_to_recipe_factor: parseFloat(item.stock_to_recipe_factor) || 1,
+          tolerance_percent: parseFloat(item.tolerance_percent) || 5.0,
+          tare_weight_grams: parseFloat(item.tare_weight_grams) || 0
+        }));
+        setIngredients(mappedIngs);
+      }
+
+      // 2. Fetch goods receipts
+      const { data: grnData } = await supabase.from('goods_receipts').select('*, grn_lines(*)');
+      if (grnData) {
+        const mappedGrns = grnData.map(grn => ({
+          id: grn.id,
+          poId: grn.po_id,
+          poNumber: grn.po_id || '',
+          supplierName: grn.supplier_id || 'Nhà cung cấp',
+          invoiceNo: grn.invoice_no,
+          invoiceAmount: grn.invoice_amount,
+          fxRate: grn.fx_rate,
+          duty: grn.duty,
+          freight: grn.freight,
+          status: grn.status,
+          matchStatus: grn.match_status,
+          date: grn.business_date || grn.created_at?.split('T')[0],
+          lines: (grn.grn_lines || []).map((line: any) => ({
+            ingredientId: line.ingredient_id,
+            qtyReceived: line.qty_received,
+            purchaseUom: line.purchase_uom,
+            unitPriceFx: line.unit_price_fx,
+            landedUnitCost: line.landed_unit_cost || line.unit_price_fx
+          }))
+        }));
+        setGoodsReceipts(mappedGrns);
+      }
+
+      // 3. Fetch sales imports
+      const { data: salesDbData } = await supabase.from('sales_imports').select('*, menu_items(id, name, sale_price)');
+      if (salesDbData) {
+        const mappedSales = salesDbData.map(sale => {
+          const menuItem = sale.menu_items as any;
+          return {
+            code: sale.menu_item_id,
+            name: menuItem?.name || `Món ${sale.menu_item_id}`,
+            price: menuItem?.sale_price || (sale.qty_sold > 0 ? (sale.net_revenue / sale.qty_sold) : 0),
+            qty: sale.qty_sold,
+            total_before_discount: sale.net_revenue,
+            discount: 0,
+            discount_pct: 0,
+            service_charge: 0,
+            tax: 0,
+            order_type: (sale.order_type || 'DINE_IN') as 'DINE_IN' | 'TAKEAWAY',
+            mapping_status: (sale.mapping_status || 'MAPPED') as 'MAPPED' | 'UNMAPPED' | 'RESOLVED' | 'NO_STOCK_IMPACT'
+          };
+        });
+        setSalesData(mappedSales);
+      }
+
+      // 4. Fetch inventory transactions
+      const { data: txData } = await supabase.from('inventory_transactions').select('*');
+      if (txData) {
+        const mappedTxs = txData.map(tx => ({
+          id: tx.id.toString(),
+          ingredientId: tx.ingredient_id,
+          type: tx.txn_type === 'IMPORT' ? 'import' : 
+                tx.txn_type === 'WASTE' ? 'waste' : 
+                tx.txn_type === 'TRANSFER_IN' ? 'transfer_in' : 
+                tx.txn_type === 'TRANSFER_OUT' ? 'transfer_out' : 
+                tx.txn_type === 'SALE_DEPLETION' ? 'sale_depletion' : 'consumption',
+          qty: Math.abs(tx.qty),
+          unit_price: tx.unit_cost || 0,
+          status: tx.status as any,
+          date: tx.business_date,
+          note: tx.ref_table ? `${tx.txn_type}: ${tx.ref_table} ID ${tx.ref_id}` : tx.txn_type,
+          txn_type: tx.txn_type,
+          locationId: tx.location_id || 'MAIN_STORE'
+        }));
+        setTransactions(mappedTxs);
+      }
+
+      // 5. Fetch waste logs
+      const { data: wasteData } = await supabase.from('waste_logs').select('*');
+      if (wasteData) {
+        const mappedWastes = wasteData.map(w => ({
+          id: w.id,
+          ingredientId: w.ingredient_id,
+          qty: w.qty,
+          reason: w.reason,
+          status: w.status,
+          is_processed: w.is_processed,
+          createdBy: w.created_by || 'Staff',
+          createdAt: w.created_at?.split('T')[0]
+        }));
+        setWasteLogs(mappedWastes);
+      }
+    } catch (err) {
+      console.error("Lỗi đồng bộ dữ liệu Supabase:", err);
+    }
+  };
 
   // ==========================================
   // TAB 1: MANUAL SALE STATES
@@ -100,7 +221,7 @@ export default function ManualForms({
     setManualSaleLines(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSaveManualSale = (e: React.FormEvent) => {
+  const handleSaveManualSale = async (e: React.FormEvent) => {
     e.preventDefault();
     if (manualSaleLines.length === 0) {
       alert('Vui lòng thêm ít nhất một món ăn!');
@@ -121,6 +242,38 @@ export default function ManualForms({
         `CẢNH BÁO TRÙNG LẶP:\nMón ${dupes.join(', ')} đã có doanh số POS trong ngày hôm nay.\n\nBạn có chắc chắn muốn ghi đè/nhập thủ công thêm?`
       );
       if (!confirmed) return;
+    }
+
+    if (isSupabaseConfigured()) {
+      try {
+        const insertRows = manualSaleLines.map(line => {
+          const matchedRecipe = posMappings[line.code];
+          const mappingStatus = matchedRecipe ? 'MAPPED' : 'UNMAPPED';
+          return {
+            import_date: manualSaleDate,
+            menu_item_id: line.code,
+            qty_sold: Math.round(line.qty),
+            net_revenue: line.price * line.qty,
+            is_processed: false,
+            void_qty: 0,
+            comp_qty: 0,
+            mapping_status: mappingStatus,
+            order_type: manualSaleOrderType
+          };
+        });
+
+        const { error } = await supabase.from('sales_imports').insert(insertRows);
+        if (error) throw error;
+        
+        await refreshSupabaseData();
+        setManualSaleLines([]);
+        alert(`Đã lưu và tự động trừ kho thành công ${manualSaleLines.length} dòng doanh số trên Supabase!`);
+        return;
+      } catch (err: any) {
+        console.error("Lỗi lưu Supabase:", err);
+        alert(`Lỗi lưu Supabase: ${err.message}`);
+        return;
+      }
     }
 
     const newSales: any[] = [];
@@ -155,7 +308,7 @@ export default function ManualForms({
           newTrans.push({
             id: `tx-msale-${Date.now()}-${recipeCode}`,
             ingredientId: ing?.id || recipeCode,
-            type: 'consumption',
+            type: 'sale_depletion',
             txn_type: 'SALE_DEPLETION',
             qty: line.qty,
             unit_cost: ing?.price || ing?.wac_price || 0,
@@ -176,7 +329,7 @@ export default function ManualForms({
               newTrans.push({
                 id: `tx-msale-${Date.now()}-${ri.ing_id}`,
                 ingredientId: ing?.id || ri.ing_id,
-                type: 'consumption',
+                type: 'sale_depletion',
                 txn_type: 'SALE_DEPLETION',
                 qty: deduction,
                 unit_cost: ing?.price || ing?.wac_price || 0,
@@ -196,7 +349,7 @@ export default function ManualForms({
     setSalesData(prev => [...newSales, ...prev]);
     setTransactions(prev => [...newTrans, ...prev]);
     setManualSaleLines([]);
-    alert(`Đã lưu thành công ${newSales.length} dòng doanh số thủ công!`);
+    alert(`Đã lưu thành công ${newSales.length} dòng doanh số thủ công (Sandbox)!`);
   };
 
   // ==========================================
@@ -261,7 +414,7 @@ export default function ManualForms({
       }, 0);
   };
 
-  const handleSaveManualGrn = (e: React.FormEvent) => {
+  const handleSaveManualGrn = async (e: React.FormEvent) => {
     e.preventDefault();
     if (manualGrnLines.length === 0) {
       alert('Vui lòng thêm ít nhất một nguyên liệu!');
@@ -286,7 +439,69 @@ export default function ManualForms({
     const duty = parseFloat(manualGrnDuty) || 0;
     const totalExtra = freight + duty;
 
-    // Landed cost allocation based on value proportion
+    if (isSupabaseConfigured()) {
+      try {
+        let supplierId = '90000000-0000-0000-0000-000000000001'; 
+        const { data: supData } = await supabase
+          .from('suppliers')
+          .select('id')
+          .ilike('name', `%${manualGrnSupplier.trim()}%`)
+          .limit(1);
+        if (supData && supData.length > 0) {
+          supplierId = supData[0].id;
+        }
+
+        const { data: grnResult, error: grnErr } = await supabase
+          .from('goods_receipts')
+          .insert({
+            supplier_id: supplierId,
+            invoice_no: manualGrnInvoiceNo,
+            invoice_amount: totalInvoiceCost + totalExtra,
+            fx_rate: 1.0,
+            duty,
+            freight,
+            status: 'pending',
+            match_status: 'APPROVED',
+            business_date: manualGrnDate
+          })
+          .select('id')
+          .single();
+
+        if (grnErr) throw grnErr;
+
+        const grnLinesToInsert = manualGrnLines.map(line => ({
+          grn_id: grnResult.id,
+          ingredient_id: line.ingredientId,
+          qty_received: line.qty,
+          purchase_uom: line.unit,
+          unit_price_fx: line.price
+        }));
+
+        const { error: linesErr } = await supabase.from('grn_lines').insert(grnLinesToInsert);
+        if (linesErr) throw linesErr;
+
+        const { error: approveErr } = await supabase
+          .from('goods_receipts')
+          .update({ status: 'approved' })
+          .eq('id', grnResult.id);
+        
+        if (approveErr) throw approveErr;
+
+        await refreshSupabaseData();
+        setManualGrnLines([]);
+        setManualGrnInvoiceNo('');
+        setManualGrnSupplier('');
+        setManualGrnFreight('0');
+        setManualGrnDuty('0');
+        alert(`Đã nhập kho và tự động phân bổ Landed Cost, Moving WAC thành công phiếu nhập ${manualGrnInvoiceNo} trên Supabase!`);
+        return;
+      } catch (err: any) {
+        console.error("Lỗi lưu phiếu nhập Supabase:", err);
+        alert(`Lỗi lưu phiếu nhập Supabase: ${err.message}`);
+        return;
+      }
+    }
+
     const grnLinesCalculated = manualGrnLines.map(line => {
       const baseValue = line.qty * line.price;
       const proportion = totalInvoiceCost > 0 ? baseValue / totalInvoiceCost : 0;
@@ -328,7 +543,6 @@ export default function ManualForms({
         const ing = updatedIngredients[ingIdx];
         const currentStock = getTheoreticalStock(ing.id);
         
-        // Moving WAC calculation (non-negative stock adjusted)
         const adjustedCurrentStock = Math.max(currentStock, 0);
         const newWac = (adjustedCurrentStock + line.qtyReceived) > 0 
           ? (adjustedCurrentStock * (ing.price || ing.wac_price || 0) + line.qtyReceived * line.landedUnitCost) / (adjustedCurrentStock + line.qtyReceived)
@@ -364,7 +578,7 @@ export default function ManualForms({
     setManualGrnSupplier('');
     setManualGrnFreight('0');
     setManualGrnDuty('0');
-    alert(`Đã lập và duyệt thành công phiếu nhập kho thủ công ${manualGrnInvoiceNo}! Cập nhật WAC của các nguyên liệu liên quan.`);
+    alert(`Đã lập và duyệt thành công phiếu nhập kho thủ công ${manualGrnInvoiceNo}! Cập nhật WAC của các nguyên liệu liên quan (Sandbox).`);
   };
 
   // ==========================================
@@ -410,7 +624,7 @@ export default function ManualForms({
     setManualIssueLines(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSaveManualIssue = (e: React.FormEvent) => {
+  const handleSaveManualIssue = async (e: React.FormEvent) => {
     e.preventDefault();
     if (manualIssueLines.length === 0) {
       alert('Vui lòng thêm ít nhất một mặt hàng!');
@@ -420,6 +634,128 @@ export default function ManualForms({
     if (manualIssueReason === 'TRANSFER' && manualIssueSrcLocation === manualIssueDestLocation) {
       alert('Lỗi: Kho nguồn và kho đích phải khác nhau khi chuyển kho!');
       return;
+    }
+
+    if (isSupabaseConfigured()) {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        const userId = user?.id || null;
+
+        if (manualIssueReason === 'WASTE') {
+          for (const line of manualIssueLines) {
+            const { data: inserted, error: insertErr } = await supabase
+              .from('waste_logs')
+              .insert({
+                ingredient_id: line.ingredientId,
+                qty: line.qty,
+                reason: line.note,
+                status: 'pending_approval',
+                is_processed: false,
+                created_by: userId
+              })
+              .select('id')
+              .single();
+            if (insertErr) throw insertErr;
+
+            const { error: updateErr } = await supabase
+              .from('waste_logs')
+              .update({ status: 'approved' })
+              .eq('id', inserted.id);
+            if (updateErr) throw updateErr;
+          }
+        } else if (manualIssueReason === 'NON_SALE') {
+          const insertRows = manualIssueLines.map(line => {
+            let cType: 'STAFF_MEAL' | 'COMP' | 'R&D' | 'TRAINING' | 'EVENT' = 'R&D';
+            const noteUpper = line.note.toUpperCase();
+            if (noteUpper.includes('CƠM') || noteUpper.includes('STAFF') || noteUpper.includes('NV')) {
+              cType = 'STAFF_MEAL';
+            } else if (noteUpper.includes('TẶNG') || noteUpper.includes('COMP')) {
+              cType = 'COMP';
+            } else if (noteUpper.includes('TRAIN') || noteUpper.includes('HỌC')) {
+              cType = 'TRAINING';
+            } else if (noteUpper.includes('TIỆC') || noteUpper.includes('EVENT') || noteUpper.includes('SỰ KIỆN')) {
+              cType = 'EVENT';
+            }
+            return {
+              ingredient_id: line.ingredientId,
+              qty: line.qty,
+              consumption_type: cType,
+              business_date: manualIssueDate,
+              note: line.note,
+              created_by: userId
+            };
+          });
+
+          const { error } = await supabase.from('non_sale_consumption').insert(insertRows);
+          if (error) throw error;
+        } else if (manualIssueReason === 'TRANSFER') {
+          const txsToInsert: any[] = [];
+          manualIssueLines.forEach(line => {
+            const transferId = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : 'tr-' + Math.random().toString(36).substring(2, 15);
+            const ing = ingredients.find(i => i.id === line.ingredientId);
+            const price = ing?.price || ing?.wac_price || 0;
+
+            // Leg OUT
+            txsToInsert.push({
+              ingredient_id: line.ingredientId,
+              txn_type: 'TRANSFER_OUT',
+              qty: -line.qty,
+              unit_cost: price,
+              business_date: manualIssueDate,
+              status: 'approved',
+              location_id: manualIssueSrcLocation,
+              note: `Chuyển kho nội bộ (Leg OUT): ${line.note}`,
+              transfer_id: transferId,
+              created_by: userId
+            });
+
+            // Leg IN
+            txsToInsert.push({
+              ingredient_id: line.ingredientId,
+              txn_type: 'TRANSFER_IN',
+              qty: line.qty,
+              unit_cost: price,
+              business_date: manualIssueDate,
+              status: 'approved',
+              location_id: manualIssueDestLocation,
+              note: `Chuyển kho nội bộ (Leg IN): ${line.note}`,
+              transfer_id: transferId,
+              created_by: userId
+            });
+          });
+
+          const { error } = await supabase.from('inventory_transactions').insert(txsToInsert);
+          if (error) throw error;
+        } else if (manualIssueReason === 'ADJUST') {
+          const txsToInsert = manualIssueLines.map(line => {
+            const ing = ingredients.find(i => i.id === line.ingredientId);
+            const price = ing?.price || ing?.wac_price || 0;
+            return {
+              ingredient_id: line.ingredientId,
+              txn_type: 'STOCK_TAKE_ADJ',
+              qty: line.qty,
+              unit_cost: price,
+              business_date: manualIssueDate,
+              status: 'approved',
+              location_id: manualIssueSrcLocation,
+              note: `Điều chỉnh số liệu (MANUAL_ISSUE): ${line.note}`,
+              created_by: userId
+            };
+          });
+
+          const { error } = await supabase.from('inventory_transactions').insert(txsToInsert);
+          if (error) throw error;
+        }
+
+        await refreshSupabaseData();
+        setManualIssueLines([]);
+        alert(`Đã lưu giao dịch xuất kho thủ công thành công lên Supabase!`);
+        return;
+      } catch (err: any) {
+        console.error("Lỗi lưu phiếu xuất kho Supabase:", err);
+        alert(`Lỗi lưu phiếu xuất kho Supabase: ${err.message}`);
+        return;
+      }
     }
 
     const newTrans: any[] = [];
@@ -529,7 +865,7 @@ export default function ManualForms({
     }
     setTransactions(prev => [...newTrans, ...prev]);
     setManualIssueLines([]);
-    alert(`Đã thực hiện xuất kho thủ công thành công!`);
+    alert(`Đã thực hiện xuất kho thủ công thành công (Sandbox)!`);
   };
 
   return (
