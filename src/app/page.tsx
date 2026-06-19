@@ -135,6 +135,7 @@ export default function Home() {
   const [selManualSaleCode, setSelManualSaleCode] = useState('');
   const [manualSaleQtyInput, setManualSaleQtyInput] = useState('');
   const [manualSalePriceInput, setManualSalePriceInput] = useState('');
+  const [saleSearchText, setSaleSearchText] = useState(''); // search for sale combobox
 
   // Manual GRN Form States
   const [manualGrnSupplier, setManualGrnSupplier] = useState('');
@@ -146,6 +147,8 @@ export default function Home() {
   const [selManualGrnIng, setSelManualGrnIng] = useState('');
   const [manualGrnQtyInput, setManualGrnQtyInput] = useState('');
   const [manualGrnPriceInput, setManualGrnPriceInput] = useState('');
+  const [grnIngSearchText, setGrnIngSearchText] = useState(''); // search for GRN combobox
+  const [nonSaleSearchText, setNonSaleSearchText] = useState(''); // search for non-sale combobox
 
   // Manual Issue Form States
   const [manualIssueDate, setManualIssueDate] = useState(() => new Date().toISOString().split('T')[0]);
@@ -191,6 +194,7 @@ export default function Home() {
     }
     setManualSaleLines(prev => [...prev, { code: selManualSaleCode, qty, price }]);
     setSelManualSaleCode('');
+    setSaleSearchText('');
     setManualSaleQtyInput('');
     setManualSalePriceInput('');
   };
@@ -211,6 +215,7 @@ export default function Home() {
     const unit = ingObj?.unit || ingObj?.stock_uom || 'kg';
     setManualGrnLines(prev => [...prev, { ingredientId: selManualGrnIng, qty, unit, price }]);
     setSelManualGrnIng('');
+    setGrnIngSearchText('');
     setManualGrnQtyInput('');
     setManualGrnPriceInput('');
   };
@@ -4923,22 +4928,44 @@ export default function Home() {
                       
                       <div className="flex flex-col gap-1">
                         <label className="text-[9px] uppercase text-gray-400">Chọn món</label>
-                        <select
-                          value={selManualSaleCode}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            setSelManualSaleCode(val);
-                            if (val && recipes[val]) {
-                              setManualSalePriceInput(recipes[val].price.toString());
-                            }
-                          }}
-                          className="bg-moss-dark border border-border-moss rounded p-2 text-text-light focus:outline-none focus:border-accent-gold w-full"
-                        >
-                          <option value="">-- Chọn món ăn --</option>
-                          {Object.entries(recipes).map(([code, r]) => (
-                            <option key={code} value={code}>{code} - {r.name}</option>
-                          ))}
-                        </select>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            value={saleSearchText}
+                            onChange={e => { setSaleSearchText(e.target.value); setSelManualSaleCode(''); }}
+                            placeholder="🔍 Gõ mã (R1001, B5001...) hoặc tên món..."
+                            className="bg-moss-dark border border-border-moss rounded p-2 text-text-light focus:outline-none focus:border-accent-gold w-full text-xs"
+                          />
+                          {saleSearchText && !selManualSaleCode && (() => {
+                            const filtered = Object.entries(recipes).filter(([code, r]) =>
+                              code.toLowerCase().includes(saleSearchText.toLowerCase()) ||
+                              (r as any).name.toLowerCase().includes(saleSearchText.toLowerCase())
+                            ).slice(0, 8);
+                            return filtered.length > 0 ? (
+                              <div className="absolute z-50 top-full left-0 right-0 bg-[#051a18] border border-border-moss border-t-0 rounded-b shadow-xl max-h-44 overflow-y-auto">
+                                {filtered.map(([code, r]) => (
+                                  <div
+                                    key={code}
+                                    onMouseDown={e => e.preventDefault()}
+                                    onClick={() => {
+                                      setSelManualSaleCode(code);
+                                      setSaleSearchText(`${code} — ${(r as any).name}`);
+                                      setManualSalePriceInput(String((r as any).price || 0));
+                                    }}
+                                    className="px-3 py-2 cursor-pointer hover:bg-accent-gold/20 text-xs border-b border-border-moss/30 flex gap-2 items-center"
+                                  >
+                                    <span className="font-mono text-accent-gold min-w-[4.5rem] shrink-0">{code}</span>
+                                    <span className="text-text-light truncate">{(r as any).name}</span>
+                                    <span className="ml-auto text-gray-400 shrink-0">{(r as any).price?.toLocaleString()}đ</span>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : <div className="absolute z-50 top-full left-0 right-0 bg-[#051a18] border border-border-moss border-t-0 rounded-b px-3 py-2 text-xs text-gray-500 italic">Không tìm thấy món phù hợp</div>;
+                          })()}
+                        </div>
+                        {selManualSaleCode && (
+                          <div className="text-[10px] text-accent-gold font-mono px-1">✓ Đã chọn: {selManualSaleCode}</div>
+                        )}
                       </div>
 
                       <div className="grid grid-cols-2 gap-2">
@@ -6532,17 +6559,44 @@ export default function Home() {
                       <form onSubmit={handleLogNonSaleConsumption} className="flex flex-col gap-4">
                         <div className="flex flex-col gap-1.5">
                            <label className="text-[10px] uppercase text-gray-400 font-semibold font-sans">1. Chọn nguyên liệu</label>
-                           <select
-                             value={nonSaleIngId}
-                             onChange={(e) => setNonSaleIngId(e.target.value)}
-                             className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-200 focus:outline-none focus:border-amber-500 w-full font-sans"
-                             required
-                           >
-                             <option value="">-- Chọn nguyên liệu tiêu hao --</option>
-                             {roleFilteredIngredients.map(ing => (
-                               <option key={ing.id} value={ing.id}>📦 {ing.vi_name} ({ing.unit})</option>
-                             ))}
-                           </select>
+                           <div className="relative">
+                             <input
+                               type="text"
+                               value={nonSaleSearchText}
+                               onChange={e => { setNonSaleSearchText(e.target.value); setNonSaleIngId(''); }}
+                               placeholder="🔍 Gõ mã (V6027, NLP...) hoặc tên nguyên liệu..."
+                               className="bg-[#090d16] border border-border-cream text-xs rounded p-2.5 text-gray-100 focus:outline-none focus:border-amber-500 w-full font-sans"
+                               required={!nonSaleIngId}
+                             />
+                             {nonSaleSearchText && !nonSaleIngId && (() => {
+                               const filtered = roleFilteredIngredients.filter(ing =>
+                                 ing.code?.toLowerCase().includes(nonSaleSearchText.toLowerCase()) ||
+                                 ing.vi_name?.toLowerCase().includes(nonSaleSearchText.toLowerCase())
+                               ).slice(0, 8);
+                               return filtered.length > 0 ? (
+                                 <div className="absolute z-50 top-full left-0 right-0 bg-[#090d16] border border-border-cream border-t-0 rounded-b shadow-xl max-h-44 overflow-y-auto">
+                                   {filtered.map(ing => (
+                                     <div
+                                       key={ing.id}
+                                       onMouseDown={e => e.preventDefault()}
+                                       onClick={() => {
+                                         setNonSaleIngId(ing.id);
+                                         setNonSaleSearchText(`${ing.code} — ${ing.vi_name}`);
+                                       }}
+                                       className="px-3 py-2 cursor-pointer hover:bg-amber-500/20 text-xs border-b border-border-cream/20 flex gap-2 items-center"
+                                     >
+                                       <span className="font-mono text-amber-400 min-w-[5rem] shrink-0">{ing.code}</span>
+                                       <span className="text-gray-200 truncate">{ing.vi_name}</span>
+                                       <span className="ml-auto text-gray-500 shrink-0 text-[10px]">{ing.unit}</span>
+                                     </div>
+                                   ))}
+                                 </div>
+                               ) : <div className="absolute z-50 top-full left-0 right-0 bg-[#090d16] border border-border-cream border-t-0 rounded-b px-3 py-2 text-xs text-gray-500 italic">Không tìm thấy nguyên liệu phù hợp</div>;
+                             })()}
+                           </div>
+                           {nonSaleIngId && (
+                             <div className="text-[10px] text-amber-400 font-mono px-1">✓ Đã chọn: {nonSaleSearchText.split('—')[0]?.trim()}</div>
+                           )}
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
@@ -6669,16 +6723,46 @@ export default function Home() {
                           
                           <div className="flex flex-col gap-1">
                             <label className="text-[9px] uppercase text-gray-400">Chọn nguyên liệu</label>
-                            <select
-                              value={selManualGrnIng}
-                              onChange={(e) => setSelManualGrnIng(e.target.value)}
-                              className="bg-moss-dark border border-border-moss rounded p-2 text-text-light focus:outline-none focus:border-accent-gold w-full"
-                            >
-                              <option value="">-- Chọn nguyên liệu --</option>
-                              {ingredients.map(ing => (
-                                <option key={ing.id} value={ing.id}>{ing.vi_name} ({ing.unit})</option>
-                              ))}
-                            </select>
+                            <div className="relative">
+                              <input
+                                type="text"
+                                value={grnIngSearchText}
+                                onChange={e => { setGrnIngSearchText(e.target.value); setSelManualGrnIng(''); }}
+                                placeholder="🔍 Gõ mã (V6027, NVLC...) hoặc tên..."
+                                className="bg-moss-dark border border-border-moss rounded p-2 text-text-light focus:outline-none focus:border-accent-gold w-full text-xs"
+                              />
+                              {grnIngSearchText && !selManualGrnIng && (() => {
+                                const filtered = ingredients.filter(ing =>
+                                  ing.code?.toLowerCase().includes(grnIngSearchText.toLowerCase()) ||
+                                  ing.vi_name?.toLowerCase().includes(grnIngSearchText.toLowerCase())
+                                ).slice(0, 8);
+                                return filtered.length > 0 ? (
+                                  <div className="absolute z-50 top-full left-0 right-0 bg-[#051a18] border border-border-moss border-t-0 rounded-b shadow-xl max-h-44 overflow-y-auto">
+                                    {filtered.map(ing => (
+                                      <div
+                                        key={ing.id}
+                                        onMouseDown={e => e.preventDefault()}
+                                        onClick={() => {
+                                          setSelManualGrnIng(ing.id);
+                                          setGrnIngSearchText(`${ing.code} — ${ing.vi_name}`);
+                                          if ((ing as any).wac_price || (ing as any).price) {
+                                            setManualGrnPriceInput(String((ing as any).wac_price || (ing as any).price || 0));
+                                          }
+                                        }}
+                                        className="px-3 py-2 cursor-pointer hover:bg-accent-gold/20 text-xs border-b border-border-moss/30 flex gap-2 items-center"
+                                      >
+                                        <span className="font-mono text-accent-gold min-w-[5rem] shrink-0">{ing.code}</span>
+                                        <span className="text-text-light truncate">{ing.vi_name}</span>
+                                        <span className="ml-auto text-gray-400 shrink-0 text-[10px]">{ing.unit || ing.stock_uom}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                ) : <div className="absolute z-50 top-full left-0 right-0 bg-[#051a18] border border-border-moss border-t-0 rounded-b px-3 py-2 text-xs text-gray-500 italic">Không tìm thấy nguyên liệu phù hợp</div>;
+                              })()}
+                            </div>
+                            {selManualGrnIng && (
+                              <div className="text-[10px] text-accent-gold font-mono px-1">✓ Đã chọn: {grnIngSearchText.split('—')[0]?.trim()}</div>
+                            )}
                           </div>
 
                           <div className="grid grid-cols-2 gap-2">
