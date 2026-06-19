@@ -46,6 +46,7 @@ export default function ClosedInventory({
   const [selectedLocation, setSelectedLocation] = useState<string>('ALL');
   const [categoryFilter, setCategoryFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [showOnlyWithStock, setShowOnlyWithStock] = useState<boolean>(true);
 
   // Period stock data fetched via RPC (bypasses RLS on inventory_transactions)
   const [periodStockData, setPeriodStockData] = useState<any[]>([]);
@@ -281,14 +282,18 @@ export default function ClosedInventory({
 
   // Filtered Closed Inventory table rows
   const filteredRows = useMemo(() => {
-    return closedInventoryData.filter(row => {
-      const matchesSearch = row.code.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            row.ten_vi.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            row.nom_fr.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = categoryFilter === 'ALL' || row.category === categoryFilter;
-      return matchesSearch && matchesCategory;
-    });
-  }, [closedInventoryData, searchQuery, categoryFilter]);
+    return closedInventoryData
+      .filter(row => {
+        const matchesSearch = row.code.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              row.ten_vi.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                              row.nom_fr.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = categoryFilter === 'ALL' || row.category === categoryFilter;
+        const matchesStock = !showOnlyWithStock || 
+                             (row.openingQty !== 0 || row.inQty !== 0 || row.outQty !== 0 || row.closingQty !== 0);
+        return matchesSearch && matchesCategory && matchesStock;
+      })
+      .sort((a, b) => b.closingQty - a.closingQty);
+  }, [closedInventoryData, searchQuery, categoryFilter, showOnlyWithStock]);
 
   // Aggregated asset summary
   const totals = useMemo(() => {
@@ -671,13 +676,29 @@ export default function ClosedInventory({
           </div>
         </div>
 
-        <button
-          onClick={exportToExcel}
-          className="flex items-center gap-1.5 bg-[#0C201F] hover:bg-[#0c201f]/80 text-[#62A57C] border border-[#62A57C]/40 px-3.5 py-2 rounded text-xs font-bold font-sans active:scale-95 transition-all cursor-pointer shadow mt-4 md:mt-0"
-        >
-          <Download size={14} />
-          <span>Xuất Excel</span>
-        </button>
+        <div className="flex items-center gap-2 mt-4 md:mt-0">
+          {/* Show only with stock toggle */}
+          <button
+            onClick={() => setShowOnlyWithStock(prev => !prev)}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded text-xs font-bold font-sans active:scale-95 transition-all cursor-pointer shadow border ${
+              showOnlyWithStock
+                ? 'bg-emerald-900/50 border-emerald-500/60 text-emerald-400'
+                : 'bg-[#0C201F] border-[#C9A581]/30 text-gray-400'
+            }`}
+            title={showOnlyWithStock ? 'Đang lọc: chỉ hiển thị hàng có tồn' : 'Hiển thị tất cả hàng'}
+          >
+            <Filter size={14} />
+            <span>{showOnlyWithStock ? `Có tồn (${filteredRows.length})` : `Tất cả (${filteredRows.length})`}</span>
+          </button>
+
+          <button
+            onClick={exportToExcel}
+            className="flex items-center gap-1.5 bg-[#0C201F] hover:bg-[#0c201f]/80 text-[#62A57C] border border-[#62A57C]/40 px-3.5 py-2 rounded text-xs font-bold font-sans active:scale-95 transition-all cursor-pointer shadow"
+          >
+            <Download size={14} />
+            <span>Xuất Excel</span>
+          </button>
+        </div>
       </div>
 
       {/* Closed Period Data Grid Table */}
