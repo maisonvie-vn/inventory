@@ -42,8 +42,11 @@ import {
   SaleRecord
 } from '../data/mockData';
 
+import ClosedInventory from './components/ClosedInventory';
+import ManualForms from './components/ManualForms';
+
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation' | 'purchasing' | 'unmapped'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation' | 'purchasing' | 'unmapped' | 'closedinventory' | 'manualforms'>('dashboard');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [isMobileMetaOpen, setIsMobileMetaOpen] = useState(false);
@@ -880,29 +883,29 @@ export default function Home() {
     if (role === 'admin') return true;
     switch (role) {
       case 'restaurant_manager':
-        return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing', 'unmapped'].includes(tab);
+        return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing', 'unmapped', 'closedinventory', 'manualforms'].includes(tab);
       case 'head_chef':
-        return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'unmapped'].includes(tab);
+        return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'unmapped', 'manualforms'].includes(tab);
       case 'senior_accountant':
-        return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing', 'unmapped'].includes(tab);
+        return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing', 'unmapped', 'closedinventory', 'manualforms'].includes(tab);
       case 'foh_supervisor':
-        return ['recipes'].includes(tab);
+        return ['recipes', 'manualforms'].includes(tab);
       case 'sous_chef':
-        return ['recipes', 'stockcount', 'subrecipes'].includes(tab);
+        return ['recipes', 'stockcount', 'subrecipes', 'manualforms'].includes(tab);
       case 'junior_accountant':
-        return ['inventory', 'purchasing'].includes(tab);
+        return ['inventory', 'purchasing', 'closedinventory', 'manualforms'].includes(tab);
       case 'BAR_SUPERVISOR':
-        return ['dashboard', 'inventory', 'stockcount', 'purchasing', 'unmapped'].includes(tab);
+        return ['dashboard', 'inventory', 'stockcount', 'purchasing', 'unmapped', 'manualforms'].includes(tab);
       case 'BARTENDER':
-        return ['stockcount'].includes(tab);
+        return ['stockcount', 'manualforms'].includes(tab);
       default:
         return false;
     }
   };
 
   React.useEffect(() => {
-    const tabs: ('dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation' | 'purchasing' | 'unmapped')[] = [
-      'dashboard', 'sales', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing', 'unmapped'
+    const tabs: ('dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation' | 'purchasing' | 'unmapped' | 'closedinventory' | 'manualforms')[] = [
+      'dashboard', 'sales', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing', 'unmapped', 'closedinventory', 'manualforms'
     ];
     if (!hasTabAccess(userRole, activeTab)) {
       const firstAccessible = tabs.find(t => hasTabAccess(userRole, t));
@@ -4410,6 +4413,36 @@ export default function Home() {
             </button>
           )}
 
+          {hasTabAccess(userRole, 'manualforms') && (
+            <button 
+              onClick={() => setActiveTab('manualforms')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                activeTab === 'manualforms' 
+                  ? 'bg-moss-dark text-text-light font-medium border-border-moss' 
+                  : 'border-transparent text-text-dark/70 hover:text-text-light hover:bg-moss-dark'
+              }`}
+              title="Nhập giao dịch thủ công"
+            >
+              <ArrowRight size={18} className={activeTab === 'manualforms' ? 'text-accent-gold' : ''} />
+              {!isSidebarCollapsed && <span>Nhập liệu thủ công</span>}
+            </button>
+          )}
+
+          {hasTabAccess(userRole, 'closedinventory') && (
+            <button 
+              onClick={() => setActiveTab('closedinventory')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                activeTab === 'closedinventory' 
+                  ? 'bg-moss-dark text-text-light font-medium border-border-moss' 
+                  : 'border-transparent text-text-dark/70 hover:text-text-light hover:bg-moss-dark'
+              }`}
+              title="Báo cáo Closed Inventory"
+            >
+              <FileText size={18} className={activeTab === 'closedinventory' ? 'text-accent-gold' : ''} />
+              {!isSidebarCollapsed && <span>Báo cáo Chốt Kỳ</span>}
+            </button>
+          )}
+
 
 
           {!isSidebarCollapsed && (
@@ -6880,6 +6913,39 @@ export default function Home() {
             </div>
           )}
 
+          {activeTab === 'manualforms' && (
+            <ManualForms
+              ingredients={ingredients}
+              setIngredients={setIngredients}
+              goodsReceipts={goodsReceipts}
+              setGoodsReceipts={setGoodsReceipts}
+              salesData={salesData}
+              setSalesData={setSalesData}
+              transactions={transactions}
+              setTransactions={setTransactions}
+              wasteLogs={wasteLogs}
+              setWasteLogs={setWasteLogs}
+              recipes={recipes}
+              posMappings={posMappings}
+              currentUser={currentUser}
+              locations={locations}
+            />
+          )}
+
+          {activeTab === 'closedinventory' && (
+            <ClosedInventory
+              userRole={userRole}
+              ingredients={ingredients}
+              transactions={transactions}
+              salesData={salesData}
+              wasteLogs={wasteLogs}
+              goodsReceipts={goodsReceipts}
+              currentUser={currentUser}
+              posMappings={posMappings}
+              locations={locations}
+            />
+          )}
+
         </main>
       </div>
 
@@ -7537,6 +7603,30 @@ export default function Home() {
                       {unmappedSalesCount}
                     </span>
                   )}
+                </button>
+              )}
+              
+              {hasTabAccess(userRole, 'manualforms') && (
+                <button 
+                  onClick={() => { setActiveTab('manualforms'); setIsMobileDrawerOpen(false); }}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                    activeTab === 'manualforms' ? 'bg-moss-light border-accent-gold text-accent-gold' : 'border-transparent text-text-light/80'
+                  }`}
+                >
+                  <ArrowRight size={18} />
+                  <span>Nhập liệu thủ công</span>
+                </button>
+              )}
+
+              {hasTabAccess(userRole, 'closedinventory') && (
+                <button 
+                  onClick={() => { setActiveTab('closedinventory'); setIsMobileDrawerOpen(false); }}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                    activeTab === 'closedinventory' ? 'bg-moss-light border-accent-gold text-accent-gold' : 'border-transparent text-text-light/80'
+                  }`}
+                >
+                  <FileText size={18} />
+                  <span>Báo cáo Chốt Kỳ</span>
                 </button>
               )}
               
