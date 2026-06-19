@@ -54,6 +54,10 @@ begin
     from supplier_ingredients
     where supplier_id = r_grn.supplier_id and ingredient_id = r_line.ingredient_id;
 
+    if v_pack_size is null or v_pack_size <= 0 then
+      v_pack_size := 1;
+    end if;
+
     v_qty_received_stock_uom := r_line.qty_received * v_pack_size;
     v_line_val_vnd := r_line.qty_received * r_line.unit_price_fx * r_grn.fx_rate;
 
