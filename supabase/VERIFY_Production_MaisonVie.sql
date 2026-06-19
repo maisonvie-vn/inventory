@@ -46,7 +46,7 @@ BEGIN
   INSERT INTO grn_lines (
     grn_id, ingredient_id, qty_received, purchase_uom, unit_price_fx
   ) VALUES (
-    v_grn_id, v_test_ing_id, 10.0000, 'kg', 90000
+    v_grn_id, v_test_ing_id, 10.0000, 'KG', 90000
   );
 
   -- 3. Phê duyệt nhận hàng để kích hoạt trigger trg_goods_receipt_approve_trigger
