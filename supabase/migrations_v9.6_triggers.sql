@@ -322,7 +322,7 @@ begin
       from inventory_transactions
       where ingredient_id = r_line.ingredient_id and status = 'approved';
 
-      v_adjusted_qty := max(v_current_qty, 0.0000);
+      v_adjusted_qty := greatest(v_current_qty, 0.0000);
       v_current_wac := r_line.wac_price;
 
       if v_current_qty < 0 then
@@ -526,7 +526,7 @@ begin
   select coalesce(sum(qty), 0) into v_output_current_qty
   from inventory_transactions where ingredient_id = new.output_ingredient_id and status = 'approved' and id <> lastval();
   
-  v_output_adjusted_qty := max(v_output_current_qty, 0.0000);
+  v_output_adjusted_qty := greatest(v_output_current_qty, 0.0000);
   
   declare
     v_old_wac numeric;

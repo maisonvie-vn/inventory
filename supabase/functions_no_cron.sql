@@ -81,7 +81,7 @@ begin
     where ingredient_id = r_line.ingredient_id and status = 'approved';
 
     -- [BẢO VỆ TỒN ÂM]: Nếu kho đang bị âm do ghi sổ trễ, coi như tồn hiện tại = 0 để tránh giá vốn ảo
-    v_adjusted_qty := max(v_current_qty, 0.0000);
+    v_adjusted_qty := greatest(v_current_qty, 0.0000);
     v_current_wac := r_line.wac_price;
 
     -- Ghi nhận cảnh báo tồn âm nếu thực tế bị âm
@@ -500,7 +500,7 @@ begin
       v_qty_raw := r_ing.max_stock - v_projected_on_hand;
       
       -- Phải đạt tối thiểu MOQ (quy đổi về stock_uom)
-      v_qty_to_order_stock_uom := max(v_qty_raw, r_ing.moq * r_ing.pack_size);
+      v_qty_to_order_stock_uom := greatest(v_qty_raw, r_ing.moq * r_ing.pack_size);
 
       -- Làm tròn theo quy cách đóng gói pack_size (Thùng/Hộp)
       v_qty_to_order_purchase_uom := ceil(v_qty_to_order_stock_uom / r_ing.pack_size);
