@@ -593,80 +593,154 @@ export default function Home() {
     alert(`Đã thực hiện xuất kho thủ công thành công!`);
   };
 
-  const handleResolveUnmappedMapping = () => {
+  const handleResolveUnmappedMapping = async () => {
     if (!selectedUnmappedItem || !selectedMappingRecipeCode) return;
     
-    const updatedMappings = {
-      ...posMappings,
-      [selectedUnmappedItem]: { recipe: selectedMappingRecipeCode, type: 'alc' as const }
-    };
-    setPosMappings(updatedMappings);
-    localStorage.setItem('mv_pos_mappings', JSON.stringify(updatedMappings));
+    try {
+      if (isSupabaseConfigured()) {
+        const { error: mappingErr } = await supabase
+          .from('pos_alias_map')
+          .upsert({ 
+            pos_code: selectedUnmappedItem, 
+            menu_item_id: selectedMappingRecipeCode,
+            confidence: 100.00
+          }, { onConflict: 'pos_code' });
+        
+        if (mappingErr) {
+          console.error("Error upserting mapping:", mappingErr);
+          alert(`Lỗi khi lưu ánh xạ vào database: ${mappingErr.message}`);
+          return;
+        }
 
-    setSalesData(prev => prev.map(s => {
-      if (s.code === selectedUnmappedItem) {
-        return { ...s, mapping_status: 'MAPPED' };
+        const { data: reprocessCount, error: reprocessErr } = await supabase
+          .rpc('resolve_unmapped_item', { p_pos_item_code: selectedUnmappedItem });
+
+        if (reprocessErr) {
+          console.error("Error running resolve_unmapped_item:", reprocessErr);
+          alert(`Lỗi khi chạy xử lý trừ kho: ${reprocessErr.message}`);
+        } else {
+          console.log(`Reprocessed ${reprocessCount} rows for ${selectedUnmappedItem}`);
+        }
       }
-      return s;
-    }));
 
-    alert(`Đã ánh xạ món POS "${selectedUnmappedItem}" vào công thức "${selectedMappingRecipeCode}" thành công!`);
-    setSelectedUnmappedItem(null);
-    setSelectedMappingRecipeCode('');
-    setRecipeSearchQuery('');
-    setShowUnmappedModalType(null);
+      const updatedMappings = {
+        ...posMappings,
+        [selectedUnmappedItem]: { recipe: selectedMappingRecipeCode, type: 'alc' as const }
+      };
+      setPosMappings(updatedMappings);
+      localStorage.setItem('mv_pos_mappings', JSON.stringify(updatedMappings));
+
+      setSalesData(prev => prev.map(s => {
+        if (s.code === selectedUnmappedItem) {
+          return { ...s, mapping_status: 'RESOLVED' };
+        }
+        return s;
+      }));
+
+      alert(`Đã ánh xạ món POS "${selectedUnmappedItem}" vào công thức "${selectedMappingRecipeCode}" thành công!`);
+      setSelectedUnmappedItem(null);
+      setSelectedMappingRecipeCode('');
+      setRecipeSearchQuery('');
+      setShowUnmappedModalType(null);
+    } catch (err: any) {
+      console.error("Error in handleResolveUnmappedMapping:", err);
+      alert(`Lỗi: ${err.message || err}`);
+    }
   };
 
-  const handleResolveUnmappedAdhoc = () => {
+  const handleResolveUnmappedAdhoc = async () => {
     if (!selectedUnmappedItem || adhocItemsList.length === 0) return;
 
-    const totalQty = salesData
-      .filter(s => s.code === selectedUnmappedItem && (s.mapping_status === 'UNMAPPED' || !posMappings[s.code]))
-      .reduce((sum, s) => sum + s.qty, 0);
+    try {
+      const targetSales = salesData.filter(s => s.code === selectedUnmappedItem && (s.mapping_status === 'UNMAPPED' || !posMappings[s.code]));
+      const totalQty = targetSales.reduce((sum, s) => sum + s.qty, 0);
+      const unmappedIds = targetSales.map(s => (s as any).id).filter(Boolean);
 
-    const newTrans: any[] = [];
-    adhocItemsList.forEach(item => {
-      const ing = ingredients.find(i => i.id === item.ingredientId);
-      const price = ing?.price || 0;
-      newTrans.push({
-        id: `tx-adhoc-${Date.now()}-${item.ingredientId}`,
-        ingredientId: item.ingredientId,
-        type: 'consumption',
-        txn_type: 'NON_SALE',
-        qty: item.qty * totalQty,
-        unit_price: price,
-        status: 'approved',
-        date: new Date().toISOString().split('T')[0],
-        locationId: 'MAIN_STORE',
-        note: `Tiêu hao 1 lần cho món POS ${selectedUnmappedItem} x${totalQty}`,
-        source: 'POS_ADHOC',
-        created_by: currentUser?.name || 'Staff'
-      });
-    });
+      if (isSupabaseConfigured() && unmappedIds.length > 0) {
+        const consumePayload = adhocItemsList.map(item => ({
+          ingredient_id: item.ingredientId,
+          qty: item.qty
+        }));
 
-    setTransactions(prev => [...prev, ...newTrans]);
+        const { error: rpcErr } = await supabase
+          .rpc('consume_adhoc', {
+            p_line_ids: unmappedIds,
+            p_consume: consumePayload
+          });
 
-    setSalesData(prev => prev.map(s => {
-      if (s.code === selectedUnmappedItem) {
-        return { ...s, mapping_status: 'RESOLVED' };
+        if (rpcErr) {
+          console.error("Error executing consume_adhoc:", rpcErr);
+          alert(`Lỗi khi lưu adhoc vào database: ${rpcErr.message}`);
+          return;
+        }
       }
-      return s;
-    }));
 
-    alert(`Đã khai tiêu hao một lần thành công cho món POS "${selectedUnmappedItem}"!`);
-    setSelectedUnmappedItem(null);
-    setAdhocItemsList([]);
-    setShowUnmappedModalType(null);
+      const newTrans: any[] = [];
+      adhocItemsList.forEach(item => {
+        const ing = ingredients.find(i => i.id === item.ingredientId);
+        const price = ing?.price || 0;
+        newTrans.push({
+          id: `tx-adhoc-${Date.now()}-${item.ingredientId}`,
+          ingredientId: item.ingredientId,
+          type: 'consumption',
+          txn_type: 'NON_SALE',
+          qty: item.qty * totalQty,
+          unit_price: price,
+          status: 'approved',
+          date: new Date().toISOString().split('T')[0],
+          locationId: 'MAIN_STORE',
+          note: `Tiêu hao 1 lần cho món POS ${selectedUnmappedItem} x${totalQty}`,
+          source: 'POS_ADHOC',
+          created_by: currentUser?.name || 'Staff'
+        });
+      });
+
+      setTransactions(prev => [...prev, ...newTrans]);
+
+      setSalesData(prev => prev.map(s => {
+        if (s.code === selectedUnmappedItem) {
+          return { ...s, mapping_status: 'RESOLVED' };
+        }
+        return s;
+      }));
+
+      alert(`Đã khai tiêu hao một lần thành công cho món POS "${selectedUnmappedItem}"!`);
+      setSelectedUnmappedItem(null);
+      setAdhocItemsList([]);
+      setShowUnmappedModalType(null);
+    } catch (err: any) {
+      console.error("Error in handleResolveUnmappedAdhoc:", err);
+      alert(`Lỗi: ${err.message || err}`);
+    }
   };
 
-  const handleNoStockImpact = (posCode: string) => {
-    setSalesData(prev => prev.map(s => {
-      if (s.code === posCode) {
-        return { ...s, mapping_status: 'NO_STOCK_IMPACT' };
+  const handleNoStockImpact = async (posCode: string) => {
+    try {
+      if (isSupabaseConfigured()) {
+        const { error: updateErr } = await supabase
+          .from('sales_imports')
+          .update({ mapping_status: 'NO_STOCK_IMPACT', is_processed: true })
+          .eq('menu_item_id', posCode)
+          .eq('mapping_status', 'UNMAPPED');
+
+        if (updateErr) {
+          console.error("Error setting NO_STOCK_IMPACT:", updateErr);
+          alert(`Lỗi khi cập nhật database: ${updateErr.message}`);
+          return;
+        }
       }
-      return s;
-    }));
-    alert(`Đã bỏ qua ảnh hưởng kho cho món POS "${posCode}"!`);
+
+      setSalesData(prev => prev.map(s => {
+        if (s.code === posCode) {
+          return { ...s, mapping_status: 'NO_STOCK_IMPACT' };
+        }
+        return s;
+      }));
+      alert(`Đã bỏ qua ảnh hưởng kho cho món POS "${posCode}"!`);
+    } catch (err: any) {
+      console.error("Error in handleNoStockImpact:", err);
+      alert(`Lỗi: ${err.message || err}`);
+    }
   };
 
   // Auth states
@@ -1188,6 +1262,21 @@ export default function Home() {
         setTransactions(mappedTxs as any[]);
       }
 
+      // 5.5. Fetch POS alias map mappings
+      const { data: aliasData, error: aliasError } = await supabase
+        .from('pos_alias_map')
+        .select('pos_code, menu_item_id');
+
+      if (aliasError) {
+        console.error("Error fetching pos_alias_map:", aliasError);
+      } else if (aliasData) {
+        const dbMappings: Record<string, { recipe: string; type: 'alc' | 'set' | 'beer' }> = {};
+        aliasData.forEach(row => {
+          dbMappings[row.pos_code] = { recipe: row.menu_item_id, type: 'alc' };
+        });
+        setPosMappings(prev => ({ ...prev, ...dbMappings }));
+      }
+
       // 6. Fetch sales imports
       const { data: salesDbData, error: salesDbError } = await supabase
         .from('sales_imports')
@@ -1198,7 +1287,16 @@ export default function Home() {
         // Fallback to mock data on error
         const rawSales = getSales();
         const mappedSales = rawSales.map(sale => ({
-          ...sale,
+          id: (sale as any).id,
+          code: sale.code,
+          name: sale.name,
+          price: sale.price,
+          qty: sale.qty,
+          total_before_discount: sale.total_before_discount,
+          discount: sale.discount,
+          discount_pct: sale.discount_pct,
+          service_charge: sale.service_charge,
+          tax: sale.tax,
           mapping_status: posMappings[sale.code] ? 'MAPPED' : 'UNMAPPED',
           order_type: sale.order_type || 'DINE_IN'
         }));
@@ -1207,6 +1305,7 @@ export default function Home() {
         const mappedSales = salesDbData.map(sale => {
           const menuItem = sale.menu_items as any;
           return {
+            id: sale.id,
             code: sale.menu_item_id,
             name: menuItem?.name || `Món ${sale.menu_item_id}`,
             price: menuItem?.sale_price || (sale.qty_sold > 0 ? (sale.net_revenue / sale.qty_sold) : 0),
@@ -1225,7 +1324,16 @@ export default function Home() {
         // Fallback to mock data if empty
         const rawSales = getSales();
         const mappedSales = rawSales.map(sale => ({
-          ...sale,
+          id: (sale as any).id,
+          code: sale.code,
+          name: sale.name,
+          price: sale.price,
+          qty: sale.qty,
+          total_before_discount: sale.total_before_discount,
+          discount: sale.discount,
+          discount_pct: sale.discount_pct,
+          service_charge: sale.service_charge,
+          tax: sale.tax,
           mapping_status: posMappings[sale.code] ? 'MAPPED' : 'UNMAPPED',
           order_type: sale.order_type || 'DINE_IN'
         }));
