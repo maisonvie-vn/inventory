@@ -47,6 +47,10 @@ export default function ClosedInventory({
   const [categoryFilter, setCategoryFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  // Period stock data fetched via RPC (bypasses RLS on inventory_transactions)
+  const [periodStockData, setPeriodStockData] = useState<any[]>([]);
+  const [isLoadingPeriodData, setIsLoadingPeriodData] = useState(false);
+
   // UI state for period close operations
   const [showChecklistModal, setShowChecklistModal] = useState(false);
   const [showReopenModal, setShowReopenModal] = useState(false);
@@ -107,6 +111,33 @@ export default function ClosedInventory({
   useEffect(() => {
     fetchClosedPeriods();
   }, []);
+
+  // Fetch period stock data from Supabase RPC whenever period changes
+  const fetchPeriodStockData = async (startDate: string, endDate: string) => {
+    if (!isSupabaseConfigured()) return;
+    setIsLoadingPeriodData(true);
+    try {
+      const { data, error } = await supabase.rpc('get_period_stock_summary', {
+        p_start_date: startDate,
+        p_end_date: endDate
+      });
+      if (error) {
+        console.error('get_period_stock_summary error:', error);
+      } else if (data) {
+        setPeriodStockData(data);
+      }
+    } catch (e) {
+      console.error('fetchPeriodStockData failed:', e);
+    } finally {
+      setIsLoadingPeriodData(false);
+    }
+  };
+
+  useEffect(() => {
+    if (periodRange.startStr && periodRange.endStr) {
+      fetchPeriodStockData(periodRange.startStr, periodRange.endStr);
+    }
+  }, [periodRange.startStr, periodRange.endStr]);
 
   // Determine if financial info (price, cost, value) is visible to current user
   // (Only Owner/CFO - 'admin' role in this system has financial privileges)
@@ -188,7 +219,7 @@ export default function ClosedInventory({
     };
   }, [periodRange, salesData, goodsReceipts, wasteLogs, selectedDate]);
 
-  // Calculate stock table data: Beginning + In - Out = Ending
+  // Calculate stock table data: from RPC data (bypasses RLS) or snapshots
   const closedInventoryData = useMemo(() => {
     // If period is closed and snapshots exist, read from snapshot
     const closedRecord = closedPeriods.find(
@@ -215,74 +246,34 @@ export default function ClosedInventory({
             outQty: s.out_qty,
             closingQty: s.closing_qty,
             closingValue: s.closing_value,
-            variance: 0 // Snapshot is frozen
+            variance: 0
           };
         });
       }
     }
 
-    // Otherwise calculate on-the-fly
-    const start = new Date(periodRange.startStr);
-    const end = new Date(periodRange.endStr);
+    // Use RPC data (SECURITY DEFINER → bypasses RLS on inventory_transactions)
+    if (periodStockData.length > 0) {
+      return periodStockData.map(row => ({
+        id: row.ingredient_id,
+        code: row.ingredient_code || 'UNKNOWN',
+        nom_fr: row.nom_fr || '',
+        ten_vi: row.ten_vi || '',
+        category: row.category || 'Khác',
+        unit: row.stock_uom || 'kg',
+        wac: parseFloat(row.wac_price) || 0,
+        openingQty: parseFloat(row.opening_qty) || 0,
+        inQty: parseFloat(row.in_qty) || 0,
+        outQty: parseFloat(row.out_qty) || 0,
+        closingQty: parseFloat(row.closing_qty) || 0,
+        closingValue: parseFloat(row.closing_value) || 0,
+        variance: parseFloat(row.adj_qty) || 0
+      }));
+    }
 
-    return ingredients.map(ing => {
-      // Filter transactions up to start date (exclusive) to find Opening Stock
-      const openingTx = transactions.filter(t => {
-        const d = new Date(t.date);
-        const matchesLoc = selectedLocation === 'ALL' || t.locationId === selectedLocation;
-        return d < start && t.ingredientId === ing.id && t.status === 'approved' && matchesLoc;
-      });
-      const openingQty = openingTx.reduce((sum, t) => sum + (t.txn_type === 'IMPORT' || t.txn_type === 'TRANSFER_IN' ? Math.abs(t.qty) : -Math.abs(t.qty)), 0);
-
-      // In quantity during the period
-      const inTx = transactions.filter(t => {
-        const d = new Date(t.date);
-        const matchesLoc = selectedLocation === 'ALL' || t.locationId === selectedLocation;
-        return d >= start && d <= end && t.ingredientId === ing.id && t.status === 'approved' && matchesLoc &&
-               (t.txn_type === 'IMPORT' || t.txn_type === 'TRANSFER_IN');
-      });
-      const inQty = inTx.reduce((sum, t) => sum + Math.abs(t.qty), 0);
-
-      // Out quantity during the period
-      const outTx = transactions.filter(t => {
-        const d = new Date(t.date);
-        const matchesLoc = selectedLocation === 'ALL' || t.locationId === selectedLocation;
-        return d >= start && d <= end && t.ingredientId === ing.id && t.status === 'approved' && matchesLoc &&
-               (t.txn_type === 'SALE_DEPLETION' || t.txn_type === 'WASTE' || t.txn_type === 'NON_SALE' || t.txn_type === 'TRANSFER_OUT' || t.txn_type === 'ISSUE');
-      });
-      const outQty = outTx.reduce((sum, t) => sum + Math.abs(t.qty), 0);
-
-      // Closing stock
-      const closingQty = openingQty + inQty - outQty;
-
-      // Variance calculation (from adjustment logs)
-      const adjTx = transactions.filter(t => {
-        const d = new Date(t.date);
-        const matchesLoc = selectedLocation === 'ALL' || t.locationId === selectedLocation;
-        return d >= start && d <= end && t.ingredientId === ing.id && t.status === 'approved' && matchesLoc && t.txn_type === 'STOCK_TAKE_ADJ';
-      });
-      const variance = adjTx.reduce((sum, t) => sum + t.qty, 0);
-
-      const wac = ing.price || 0;
-      const closingValue = closingQty * wac;
-
-      return {
-        id: ing.id,
-        code: ing.code || 'UNKNOWN',
-        nom_fr: ing.fr_name || '',
-        ten_vi: ing.vi_name || '',
-        category: ing.category || 'Khác',
-        unit: ing.unit || 'kg',
-        wac,
-        openingQty,
-        inQty,
-        outQty,
-        closingQty,
-        closingValue,
-        variance
-      };
-    });
-  }, [periodType, periodRange, ingredients, transactions, closedPeriods, snapshots, selectedLocation]);
+    // Fallback: empty (waiting for RPC data)
+    return [];
+  }, [periodType, periodRange, ingredients, periodStockData, closedPeriods, snapshots]);
 
   // Filtered Closed Inventory table rows
   const filteredRows = useMemo(() => {
@@ -732,13 +723,21 @@ export default function ClosedInventory({
                 )}
               </tr>
             ))}
-            {filteredRows.length === 0 && (
+            {isLoadingPeriodData && (
+              <tr>
+                <td colSpan={isFinancialVisible ? 10 : 8} className="p-8 text-center text-gray-400 italic font-medium">
+                  <span className="animate-pulse">⏳ Đang tải dữ liệu tồn kho kỳ...</span>
+                </td>
+              </tr>
+            )}
+            {!isLoadingPeriodData && filteredRows.length === 0 && (
               <tr>
                 <td colSpan={isFinancialVisible ? 10 : 8} className="p-8 text-center text-gray-500 italic font-medium">
                   Không tìm thấy nguyên liệu nào trong kỳ này.
                 </td>
               </tr>
             )}
+
           </tbody>
         </table>
       </div>
