@@ -101,15 +101,18 @@ begin
   
   declare
     trg_record record;
-    trg_list table (t_name text, trg_name text) := values
-      ('sales_imports', 'trg_sales_imports_process_trigger'),
-      ('goods_receipts', 'trg_goods_receipt_approve_trigger'),
-      ('waste_logs', 'trg_waste_logs_process_trigger'),
-      ('non_sale_consumption', 'trg_non_sale_consumption_trigger'),
-      ('production_orders', 'trg_production_orders_trigger'),
-      ('stocktakes', 'trg_stocktakes_post_trigger');
   begin
-    for trg_record in select * from trg_list loop
+    for trg_record in 
+      select * from (
+        values 
+          ('sales_imports', 'trg_sales_imports_process_trigger'),
+          ('goods_receipts', 'trg_goods_receipt_approve_trigger'),
+          ('waste_logs', 'trg_waste_logs_process_trigger'),
+          ('non_sale_consumption', 'trg_non_sale_consumption_trigger'),
+          ('production_orders', 'trg_production_orders_trigger'),
+          ('stocktakes', 'trg_stocktakes_post_trigger')
+      ) as t(t_name, trg_name)
+    loop
       item_name := trg_record.trg_name || ' on ' || trg_record.t_name;
       if exists (
         select 1 from pg_trigger t
