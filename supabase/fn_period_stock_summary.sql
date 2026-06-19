@@ -74,7 +74,7 @@ RETURNS TABLE (
   LEFT JOIN purchase_categories pc ON pc.id = i.purchase_category_id
   WHERE i.is_active = true OR i.is_active IS NULL
   GROUP BY i.id, i.code, i.ten_vi, i.nom_fr, pc.name, i.stock_uom, i.wac_price, i.is_beverage
-  ORDER BY i.is_beverage, pc.name, i.code;
+  ORDER BY i.is_beverage DESC, pc.name, i.code;
 $$;
 
 -- Grant execute to authenticated role

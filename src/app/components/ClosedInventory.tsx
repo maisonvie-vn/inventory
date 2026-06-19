@@ -118,10 +118,14 @@ export default function ClosedInventory({
     if (!isSupabaseConfigured()) return;
     setIsLoadingPeriodData(true);
     try {
-      const { data, error } = await supabase.rpc('get_period_stock_summary', {
-        p_start_date: startDate,
-        p_end_date: endDate
-      });
+      // NOTE: PostgREST default limit is 1000 rows — must explicitly set higher limit
+      // to fetch all 1273+ ingredients including beverages (which sort last by default)
+      const { data, error } = await supabase
+        .rpc('get_period_stock_summary', {
+          p_start_date: startDate,
+          p_end_date: endDate
+        })
+        .limit(5000);
       if (error) {
         console.error('get_period_stock_summary error:', error);
       } else if (data) {
@@ -292,7 +296,7 @@ export default function ClosedInventory({
                              (row.openingQty !== 0 || row.inQty !== 0 || row.outQty !== 0 || row.closingQty !== 0);
         return matchesSearch && matchesCategory && matchesStock;
       })
-      .sort((a, b) => b.closingQty - a.closingQty);
+      .sort((a, b) => b.closingValue - a.closingValue);
   }, [closedInventoryData, searchQuery, categoryFilter, showOnlyWithStock]);
 
   // Aggregated asset summary
