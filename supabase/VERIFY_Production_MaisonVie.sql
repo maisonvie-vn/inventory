@@ -39,7 +39,7 @@ BEGIN
     'pending',
     'APPROVED',
     current_date,
-    '00000000-0000-0000-0000-000000000000'::uuid
+    NULL
   ) RETURNING id INTO v_grn_id;
 
   -- Tạo dòng line cho GRN
@@ -97,7 +97,7 @@ BEGIN
   INSERT INTO non_sale_consumption (
     ingredient_id, qty, business_date, reason, consumption_type, created_by, note
   ) VALUES (
-    v_test_ing_id, 4.0000, current_date, 'TRAINING', 'TRAINING', '00000000-0000-0000-0000-000000000000'::uuid, 'Mẫu thử cho lớp học bar'
+    v_test_ing_id, 4.0000, current_date, 'TRAINING', 'TRAINING', NULL, 'Mẫu thử cho lớp học bar'
   );
 
   -- Kiểm tra lượng còn lại trong lô
