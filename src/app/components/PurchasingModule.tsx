@@ -109,13 +109,14 @@ export default function PurchasingModule({
   const [loading, setLoading] = useState(false);
   const [importStatus, setImportStatus] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [searchText, setSearchText] = useState('');
 
   // Badges liên quan PO
   const poBadges = badges.filter(b => b.badge_type === 'PO_PENDING_APPROVAL' || b.badge_type === 'ESCALATION');
   const hasBlinkingBadge = poBadges.length > 0;
 
   const canApprove = ['admin','restaurant_manager','senior_accountant'].includes(userRole);
-  const canCreate  = ['admin','restaurant_manager','senior_accountant','junior_accountant'].includes(userRole);
+  const canCreate  = ['admin','restaurant_manager','senior_accountant','junior_accountant','head_chef','BAR_SUPERVISOR'].includes(userRole);
 
   // Fetch dữ liệu
   const fetchAll = useCallback(async () => {
@@ -458,29 +459,51 @@ export default function PurchasingModule({
       </div>
 
       {/* Tab: Worklist */}
-      {activeSubTab === 'worklist' && (
-        <WorklistTab
-          worklist={worklist}
-          loading={loading}
-          selectedItems={selectedItems}
-          onToggleItem={(key: string) => setSelectedItems(prev => {
-            const s = new Set(prev);
-            s.has(key) ? s.delete(key) : s.add(key);
-            return s;
-          })}
-          onToggleAll={() => {
-            if (selectedItems.size === worklist.length) {
-              setSelectedItems(new Set());
-            } else {
-              setSelectedItems(new Set(worklist.map(w => `${w.ingredient_id}:${w.location_id}`)));
-            }
-          }}
-          onCreatePO={handleCreatePO}
-          canCreate={canCreate}
-          canViewFinancials={canViewFinancials}
-          onRefresh={fetchAll}
-        />
-      )}
+      {activeSubTab === 'worklist' && (() => {
+        const filteredWorklist = worklist.filter(item => {
+          const q = searchText.toLowerCase();
+          return (
+            item.code.toLowerCase().includes(q) ||
+            item.name.toLowerCase().includes(q) ||
+            (item.supplier_name && item.supplier_name.toLowerCase().includes(q))
+          );
+        });
+        return (
+          <WorklistTab
+            worklist={filteredWorklist}
+            loading={loading}
+            selectedItems={selectedItems}
+            onToggleItem={(key: string) => setSelectedItems(prev => {
+              const s = new Set(prev);
+              s.has(key) ? s.delete(key) : s.add(key);
+              return s;
+            })}
+            onToggleAll={() => {
+              const allFilteredSelected = filteredWorklist.every(w => selectedItems.has(`${w.ingredient_id}:${w.location_id}`));
+              if (allFilteredSelected) {
+                setSelectedItems(prev => {
+                  const s = new Set(prev);
+                  filteredWorklist.forEach(w => s.delete(`${w.ingredient_id}:${w.location_id}`));
+                  return s;
+                });
+              } else {
+                setSelectedItems(prev => {
+                  const s = new Set(prev);
+                  filteredWorklist.forEach(w => s.add(`${w.ingredient_id}:${w.location_id}`));
+                  return s;
+                });
+              }
+            }}
+            onCreatePO={handleCreatePO}
+            canCreate={canCreate}
+            canViewFinancials={canViewFinancials}
+            onRefresh={fetchAll}
+            searchText={searchText}
+            setSearchText={setSearchText}
+            rawWorklist={worklist}
+          />
+        );
+      })()}
 
       {/* Tab: Duyệt PO */}
       {activeSubTab === 'approve' && (
@@ -521,9 +544,23 @@ export default function PurchasingModule({
 // -------------------------------------------------------------------
 // WorklistTab
 // -------------------------------------------------------------------
-function WorklistTab({ worklist, loading, selectedItems, onToggleItem, onToggleAll, onCreatePO, canCreate, canViewFinancials, onRefresh }: any) {
-  const critCount = worklist.filter((w: WorklistItem) => w.alert_level === 'OUT' || w.alert_level === 'CRITICAL').length;
-  const reorderCount = worklist.filter((w: WorklistItem) => w.alert_level === 'REORDER').length;
+function WorklistTab({
+  worklist,
+  loading,
+  selectedItems,
+  onToggleItem,
+  onToggleAll,
+  onCreatePO,
+  canCreate,
+  canViewFinancials,
+  onRefresh,
+  searchText,
+  setSearchText,
+  rawWorklist
+}: any) {
+  const countsSource = rawWorklist || worklist;
+  const critCount = countsSource.filter((w: WorklistItem) => w.alert_level === 'OUT' || w.alert_level === 'CRITICAL').length;
+  const reorderCount = countsSource.filter((w: WorklistItem) => w.alert_level === 'REORDER').length;
 
   return (
     <div>
@@ -548,6 +585,17 @@ function WorklistTab({ worklist, loading, selectedItems, onToggleItem, onToggleA
             </button>
           )}
         </div>
+      </div>
+
+      {/* Tìm kiếm */}
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="🔍 Tìm kiếm nhanh theo mã hoặc tên sản phẩm..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          className="w-full max-w-md px-3 py-2 bg-[#042726] border border-[#C9A581]/30 rounded-lg text-sm text-[#FBF8F4] placeholder-[#C9A581]/50 focus:outline-none focus:border-[#A8884E] transition-all"
+        />
       </div>
 
       {worklist.length === 0 && !loading && (
