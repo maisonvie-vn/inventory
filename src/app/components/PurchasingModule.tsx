@@ -140,12 +140,20 @@ export default function PurchasingModule({
       // POs
       const { data: pos } = await supabase
         .from('purchase_orders')
-        .select('*, suppliers(name)')
+        .select('*, suppliers(name), po_lines(*, ingredients(ten_vi, code))')
         .order('created_at', { ascending: false })
         .limit(100);
       setPurchaseOrders((pos || []).map((p: any) => ({
         ...p,
-        supplier_name: p.suppliers?.name || p.supplier_id
+        supplier_name: p.suppliers?.name || p.supplier_id,
+        items: (p.po_lines || []).map((line: any) => ({
+          ingredient_id: line.ingredients?.code || line.ingredient_id,
+          ingredient_name: line.ingredients?.ten_vi || '',
+          qty: line.qty_ordered || line.qty || 0,
+          purchase_uom: line.purchase_uom || 'UNIT',
+          unit_price: line.unit_price || 0,
+          estimated_value: line.estimated_value || ((line.qty_ordered || line.qty || 0) * (line.unit_price || 0))
+        }))
       })));
 
       // GRNs
