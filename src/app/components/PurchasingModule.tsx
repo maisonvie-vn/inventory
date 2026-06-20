@@ -1402,8 +1402,21 @@ function SuppliersMgmtTab({ suppliers, onAddSupplier, onToggleActive, loading, c
 
         const leadTimeDays = isNaN(parseInt(row[1])) ? 1 : parseInt(row[1]);
         let cutoffTime = row[2] ? row[2].toString().trim() : null;
-        if (cutoffTime && /^\d{1,2}:\d{2}$/.test(cutoffTime)) {
-          cutoffTime = `${cutoffTime}:00`;
+        if (cutoffTime) {
+          const num = Number(cutoffTime);
+          if (!isNaN(num) && num >= 0 && num < 1) {
+            const totalSeconds = Math.round(num * 24 * 3600);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            cutoffTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+          } else if (/^\d{1,2}:\d{2}$/.test(cutoffTime)) {
+            cutoffTime = `${cutoffTime}:00`;
+          } else if (/^\d{1,2}:\d{2}:\d{2}$/.test(cutoffTime)) {
+            // Already in HH:MM:SS format, keep it
+          } else {
+            cutoffTime = null; // Invalid time format, set to null
+          }
         }
 
         const phone = row[3] ? row[3].toString().trim() : null;
