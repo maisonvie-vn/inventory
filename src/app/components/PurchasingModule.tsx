@@ -258,6 +258,20 @@ export default function PurchasingModule({
     }
   }, [fetchAll]);
 
+  // Đặt Nhà cung cấp ưu tiên nhanh từ UI
+  const handleSetPreferredSupplier = useCallback(async (ingredientId: string, supplierId: string) => {
+    try {
+      const { error } = await supabase.rpc('set_preferred_supplier', {
+        p_ingredient_id: ingredientId,
+        p_supplier_id: supplierId
+      });
+      if (error) throw error;
+      fetchAll(); // Tải lại để cập nhật danh sách
+    } catch (err: any) {
+      alert(`❌ Lỗi đặt NCC ưu tiên: ${err.message}`);
+    }
+  }, [fetchAll]);
+
   // Submit PO để duyệt
   const handleSubmitPO = useCallback(async (poId: string) => {
     try {
@@ -543,6 +557,8 @@ export default function PurchasingModule({
             searchText={searchText}
             setSearchText={setSearchText}
             rawWorklist={worklist}
+            suppliers={suppliers}
+            onSetPreferredSupplier={handleSetPreferredSupplier}
           />
         );
       })()}
@@ -608,7 +624,9 @@ function WorklistTab({
   onRefresh,
   searchText,
   setSearchText,
-  rawWorklist
+  rawWorklist,
+  suppliers,
+  onSetPreferredSupplier
 }: any) {
   const countsSource = rawWorklist || worklist;
   const critCount = countsSource.filter((w: WorklistItem) => w.alert_level === 'OUT' || w.alert_level === 'CRITICAL').length;
@@ -710,8 +728,22 @@ function WorklistTab({
                     <td className="p-2 text-right text-[#C9A581]">
                       {item.days_of_cover !== null ? `${item.days_of_cover}d` : '–'}
                     </td>
-                    <td className="p-2 text-[#FBF8F4] max-w-[120px] truncate" title={item.supplier_name || ''}>
-                      {item.supplier_name || <span className="text-[#C9A581] italic">Chưa có NCC</span>}
+                    <td className="p-2" onClick={(e) => e.stopPropagation()}>
+                      <select
+                        value={item.supplier_id || ''}
+                        onChange={async (e) => {
+                          const val = e.target.value;
+                          if (val) {
+                            await onSetPreferredSupplier(item.ingredient_id, val);
+                          }
+                        }}
+                        className="bg-[#03201E] border border-[#C9A581]/30 rounded px-1 py-0.5 text-xs text-[#FBF8F4] focus:outline-none focus:border-[#A8884E] w-full max-w-[140px]"
+                      >
+                        <option value="">-- Chọn NCC --</option>
+                        {suppliers.map((s: any) => (
+                          <option key={s.id} value={s.id}>{s.name}</option>
+                        ))}
+                      </select>
                     </td>
                     <td className="p-2 text-right text-[#62A57C] font-bold">
                       {item.suggested_order_qty} {item.purchase_uom || item.stock_uom}
