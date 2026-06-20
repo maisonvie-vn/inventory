@@ -511,6 +511,20 @@ export default function PurchasingModule({
       'MAIN_STORE': 'Kho chính'
     };
 
+    const formatStaffName = (name: string) => {
+      if (!name) return '';
+      const clean = name.trim().toLowerCase();
+      if (clean === 'chef' || clean === 'head_chef' || clean === 'headchef') return 'Bếp trưởng';
+      if (clean === 'bar_supervisor' || clean === 'bar') return 'Giám sát Bar';
+      if (clean === 'restaurant_manager' || clean === 'rm') return 'Quản lý Nhà hàng';
+      if (clean === 'senior_accountant' || clean === 'senior.accountant') return 'Kế toán kho';
+      if (clean === 'junior' || clean === 'storekeeper' || clean === 'junior_accountant') return 'Thủ kho';
+      if (clean === 'cfo') return 'CFO';
+      if (clean === 'director' || clean === 'dir') return 'Giám đốc';
+      // Capitalize normal names
+      return name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    };
+
     const printContent = `
       <html><head><title>In Hàng Loạt Phiếu Đặt Hàng PO</title>
       <style>
@@ -524,8 +538,18 @@ export default function PurchasingModule({
         .sign-box { border-top: 1px solid #333; padding-top: 8px; width: 180px; text-align: center; font-size: 11px; }
         @media print {
           body { padding: 0; }
-          .po-page { page-break-after: always; }
-          .po-page:last-child { page-break-after: avoid; }
+          .po-page {
+            page-break-inside: avoid;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+          }
+          .po-page:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+            page-break-after: avoid;
+          }
         }
         @media screen {
           .po-page {
@@ -553,23 +577,30 @@ export default function PurchasingModule({
           const pany = p as any;
           return pany.requester?.full_name || pany.creator?.full_name || '';
         }).filter(Boolean)));
-        const requesterDisplay = requesters.length > 0 ? requesters.join(' & ') : 'Kế toán kho';
+        const requesterDisplay = requesters.length > 0 
+          ? requesters.map(formatStaffName).join(' & ') 
+          : 'Kế toán kho';
 
         const approvers = Array.from(new Set(supPos.map(p => {
           const pany = p as any;
           return pany.approver?.full_name || '';
         }).filter(Boolean)));
-        const approverDisplay = approvers.length > 0 ? approvers.join(' & ') : '';
+        const approverDisplay = approvers.length > 0 
+          ? approvers.map(formatStaffName).join(' & ') 
+          : 'Bếp trưởng / Quản lý';
 
         const secondApprovers = Array.from(new Set(supPos.map(p => {
           const pany = p as any;
           return pany.second_approver_profile?.full_name || '';
         }).filter(Boolean)));
-        const secondApproverDisplay = secondApprovers.length > 0 ? secondApprovers.join(' & ') : '';
+        const secondApproverDisplay = secondApprovers.length > 0 
+          ? secondApprovers.map(formatStaffName).join(' & ') 
+          : 'CFO / Ban Giám đốc';
 
         // Merge items
         const mergedItems: Record<string, {
           ingredient_id: string;
+          ingredient_code: string;
           ingredient_name: string;
           qty: number;
           purchase_uom: string;
@@ -588,6 +619,7 @@ export default function PurchasingModule({
             } else {
               mergedItems[key] = {
                 ingredient_id: item.ingredient_id,
+                ingredient_code: item.ingredient_code || itemany.ingredient_code || '',
                 ingredient_name: item.ingredient_name || '',
                 qty: item.qty,
                 purchase_uom: item.purchase_uom,
@@ -628,7 +660,7 @@ export default function PurchasingModule({
                 ${itemsList.map((line, i) => `
                   <tr>
                     <td>${i + 1}</td>
-                    <td>${line.ingredient_id}</td>
+                    <td>${line.ingredient_code || ''}</td>
                     <td>${line.ingredient_name || ''}</td>
                     <td>${line.qty}</td>
                     <td>${line.purchase_uom}</td>
@@ -644,17 +676,17 @@ export default function PurchasingModule({
                 <strong>Người lập</strong><br/>
                 <span style="font-size: 10px; color: #555; font-weight: normal;">(${locations})</span>
                 <br/><br/><br/><br/>
-                <strong>${requesterDisplay}</strong>
+                <strong>${locations} - ${requesterDisplay}</strong>
               </div>
               <div class="sign-box">
                 <strong>Người duyệt</strong>
                 <br/><br/><br/><br/><br/>
-                <strong>${approverDisplay || '___________________'}</strong>
+                <strong>${approverDisplay}</strong>
               </div>
               <div class="sign-box">
                 <strong>Người duyệt cuối</strong>
                 <br/><br/><br/><br/><br/>
-                <strong>${secondApproverDisplay || '___________________'}</strong>
+                <strong>${secondApproverDisplay}</strong>
               </div>
             </div>
           </div>
