@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 import { 
   LayoutDashboard, 
@@ -22,7 +22,8 @@ import {
   RefreshCw,
   Download,
   Cpu,
-  Wine
+  Wine,
+  Bell
 } from 'lucide-react';
 
 import * as XLSX from 'xlsx';
@@ -44,6 +45,10 @@ import {
 
 import ClosedInventory from './components/ClosedInventory';
 import ManualForms from './components/ManualForms';
+import StockAlertPanel from './components/StockAlertPanel';
+import PurchasingModule from './components/PurchasingModule';
+import { useWebPush } from '../lib/useWebPush';
+import { useRealtimeBadges } from '../lib/useRealtimeBadges';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation' | 'purchasing' | 'unmapped' | 'closedinventory' | 'manualforms'>('dashboard');
@@ -757,7 +762,7 @@ export default function Home() {
   };
 
   // Auth states
-  const [currentUser, setCurrentUser] = useState<{ email: string; name?: string; role: string } | null>(null);
+  const [currentUser, setCurrentUser] = useState<{ email: string; name?: string; role: string; id?: string } | null>(null);
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [isAuthLoading, setIsAuthLoading] = useState(false);
@@ -772,6 +777,39 @@ export default function Home() {
   const [adminWriteBarIngId, setAdminWriteBarIngId] = useState('');
   const [adminWriteBarQty, setAdminWriteBarQty] = useState('');
   const [adminAuditLogs, setAdminAuditLogs] = useState<any[]>([]);
+
+  // v3.0 — Web Push + Realtime Badges
+  useWebPush(currentUser?.id);
+  const {
+    badges,
+    totalCount: totalBadgeCount,
+    pendingApprovalCount,
+    escalationCount,
+    resolveBadgesByRef,
+  } = useRealtimeBadges(currentUser?.id, userRole);
+
+  // Scope theo bộ phận (cho StockAlertPanel)
+  const userLocationScope: string | null = useMemo(() => {
+    if (userRole === 'BAR_SUPERVISOR' || userRole === 'BARTENDER') return 'BAR';
+    if (userRole === 'head_chef' || userRole === 'sous_chef') return 'KITCHEN';
+    return null; // admin/manager xem tất cả
+  }, [userRole]);
+
+
+
+  // Handle notification click from service worker
+  useEffect(() => {
+    const handler = (e: CustomEvent) => {
+      const { badge_type } = e.detail;
+      if (badge_type === 'PO_PENDING_APPROVAL' || badge_type === 'ESCALATION') {
+        setActiveTab('purchasing');
+      } else if (badge_type === 'LOW_STOCK') {
+        setActiveTab('dashboard');
+      }
+    };
+    window.addEventListener('mv_notification_click', handler as EventListener);
+    return () => window.removeEventListener('mv_notification_click', handler as EventListener);
+  }, []);
 
   // v9.0 locations & multi-location tracking
   const [locations, setLocations] = useState<any[]>([
@@ -1175,7 +1213,20 @@ export default function Home() {
           tare_weight_grams: parseFloat(item.tare_weight_grams) || 0
         }));
         setIngredients(mappedIngs as any[]);
+
+        // ✅ v3.0.1: Đọc qty_on_hand thực tế từ view vào actualStocks
+        // Đây là tồn kho PERPETUAL — tổng của mọi inventory_transactions approved
+        const stockMap: Record<string, string> = {};
+        for (const item of ingData) {
+          if (item.ingredient_id && item.qty_on_hand != null) {
+            stockMap[item.ingredient_id] = String(parseFloat(item.qty_on_hand) || 0);
+          }
+        }
+        if (Object.keys(stockMap).length > 0) {
+          setActualStocks(prev => ({ ...prev, ...stockMap }));
+        }
       }
+
 
       // 2. Fetch purchase orders
       const { data: poData } = await supabase
@@ -1677,34 +1728,55 @@ export default function Home() {
 
   // Helper function to compute transaction-aware theoretical stock (with 10% buffer)
   const getTheoreticalStock = (ingId: string, locationId?: string) => {
+    // ✅ v3.0.2: Ưu tiên dùng qty_on_hand từ DB (actualStocks được set bởi fetchSupabaseData)
+    // Khi không có locationId filter, dùng trực tiếp từ DB — chính xác nhất
+    if (!locationId && actualStocks[ingId] !== undefined && actualStocks[ingId] !== '') {
+      const dbStock = parseFloat(actualStocks[ingId]);
+      if (!isNaN(dbStock)) return dbStock;
+    }
+
+    // Fallback: tính từ transactions state (dùng khi locationId cụ thể hoặc chưa fetch DB)
     let stock = 0;
     transactions.forEach(t => {
       if (t.ingredientId === ingId && t.status === 'approved') {
         const txLoc = t.locationId || t.location_id || 'MAIN_STORE';
         if (!locationId || txLoc === locationId) {
-          if (t.type === 'import' || t.type === 'transfer_in' || t.txn_type === 'TRANSFER_IN' || t.txn_type === 'IMPORT') {
+          const txType = t.txn_type || '';
+          const type = t.type || '';
+          // Cộng vào: nhập kho, chuyển vào
+          if (type === 'import' || type === 'transfer_in' || txType === 'TRANSFER_IN' || txType === 'IMPORT' || txType === 'STOCK_TAKE_ADJ') {
             stock += t.qty;
-          } else if (t.type === 'consumption' || t.type === 'waste' || t.type === 'transfer_out' || t.txn_type === 'TRANSFER_OUT' || t.txn_type === 'ISSUE') {
+          }
+          // Trừ ra: tiêu hao, hủy, chuyển ra, BÁN HÀNG (SALE_DEPLETION + NON_SALE)
+          else if (
+            type === 'consumption' || type === 'waste' || type === 'transfer_out' || type === 'sale_depletion' ||
+            txType === 'TRANSFER_OUT' || txType === 'ISSUE' || txType === 'WASTE' ||
+            txType === 'SALE_DEPLETION' || txType === 'NON_SALE'
+          ) {
             stock -= t.qty;
           }
         }
       }
     });
 
-    // Deduct POS sales consumption
+    // Trừ tiêu hao POS đã tính trong consumptionData (nếu chưa có trong transactions)
     const consumed = consumptionData.find(c => c.id === ingId)?.qty || 0;
     const ing = ingredients.find(i => i.id === ingId);
     const isBarItem = ing?.category && ['Wine', 'Alcohol', 'beverage', 'Beverage'].includes(ing.category);
 
-    if (!locationId) {
-      stock -= consumed;
-    } else if (locationId === 'BAR' && isBarItem) {
-      stock -= consumed;
-    } else if (locationId === 'KITCHEN' && !isBarItem) {
-      stock -= consumed;
+    // Chỉ trừ consumptionData nếu không có transactions SALE_DEPLETION (tránh double-count)
+    const hasSaleDepletionTx = transactions.some(t => t.ingredientId === ingId && (t.txn_type === 'SALE_DEPLETION' || t.type === 'sale_depletion'));
+    if (!hasSaleDepletionTx) {
+      if (!locationId) {
+        stock -= consumed;
+      } else if (locationId === 'BAR' && isBarItem) {
+        stock -= consumed;
+      } else if (locationId === 'KITCHEN' && !isBarItem) {
+        stock -= consumed;
+      }
     }
 
-    // Deduct approved waste logs that are not yet aggregated into transactions
+    // Trừ waste logs chưa được xử lý thành transaction
     const unTransactionedWaste = wasteLogs
       .filter(w => w.ingredientId === ingId && w.status === 'approved' && !w.is_processed)
       .reduce((sum, w) => {
@@ -2020,11 +2092,14 @@ export default function Home() {
     };
   }, [salesData, consumptionData, roleFilteredIngredients, actualStocks, transactions]);
 
-  const canViewFinancials = userRole === 'admin' || 
-                            userRole === 'senior_accountant' || 
-                            userRole === 'restaurant_manager' || 
-                            userRole === 'head_chef' || 
-                            userRole === 'junior_accountant';
+  const canViewFinancials = useMemo(() =>
+    userRole === 'admin' ||
+    userRole === 'senior_accountant' ||
+    userRole === 'restaurant_manager' ||
+    userRole === 'head_chef' ||
+    userRole === 'junior_accountant'
+  , [userRole]);
+
 
   // Load categories dynamically for filter options
   const categories = useMemo(() => {
@@ -3129,16 +3204,16 @@ export default function Home() {
                 throw new Error("Lỗi lưu dữ liệu bán hàng: " + insertErr.message);
               }
 
-              // 5. Gọi hàm RPC process_daily_consumption để tự động trừ kho lý thuyết
-              const { error: rpcErr } = await supabase
-                .rpc('process_daily_consumption', {
-                  p_date: salesImportDate,
-                  p_user_id: userId
+              // 5. Gọi RPC reprocess để trừ kho tự động (SECURITY DEFINER, không cần auth context)
+              const { data: reprocessResult, error: rpcErr } = await supabase
+                .rpc('reprocess_unprocessed_sales', {
+                  p_date: salesImportDate
                 });
 
               if (rpcErr) {
-                console.error("Error executing process_daily_consumption:", rpcErr);
-                throw new Error("Lỗi tự động khấu trừ kho (RPC): " + rpcErr.message);
+                console.error("Error executing reprocess_unprocessed_sales:", rpcErr);
+                // Không throw — trigger trong DB đã chạy song song, RPC chỉ là safety net
+                console.warn("Trigger DB sẽ tự xử lý. Tiếp tục reload data...");
               }
 
               // 6. Reload lại dữ liệu từ Supabase về client để cập nhật toàn bộ giao dịch và tồn kho
@@ -3146,7 +3221,9 @@ export default function Home() {
 
               setImportSuccess(true);
               setTimeout(() => setImportSuccess(false), 5000);
-              alert(`ĐỒNG BỘ HOÀN TOÀN THÀNH CÔNG!\n- Đã đồng bộ ${salesImportsToInsert.length} dòng doanh số POS cho ngày ${salesImportDate} lên Supabase.\n- Đã thực thi trừ kho tự động (process_daily_consumption).\n- Đã cập nhật lại tồn kho thực tế và sổ cái trên hệ thống.`);
+              const rr = reprocessResult?.[0];
+              alert(`ĐỒNG BỘ HOÀN TOÀN THÀNH CÔNG!\n- Đã đồng bộ ${salesImportsToInsert.length} dòng doanh số POS cho ngày ${salesImportDate} lên Supabase.\n- Trừ kho: ${rr?.processed ?? '?'} món, ${rr?.unmapped ?? 0} unmapped, ${rr?.failed ?? 0} lỗi.\n- Tồn kho đã cập nhật realtime.`);
+
 
             } catch (syncErr: any) {
               alert(`Lỗi đồng bộ Supabase: ${syncErr.message || syncErr}`);
@@ -4505,15 +4582,26 @@ export default function Home() {
           {hasTabAccess(userRole, 'purchasing') && (
             <button 
               onClick={() => setActiveTab('purchasing')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-md transition-all text-left border text-sm ${
                 activeTab === 'purchasing' 
                   ? 'bg-moss-dark text-text-light font-medium border-border-moss' 
                   : 'border-transparent text-text-dark/70 hover:text-text-light hover:bg-moss-dark'
               }`}
               title="Mua hàng & Nhập kho (GRN)"
             >
-              <DollarSign size={18} className={activeTab === 'purchasing' ? 'text-accent-gold' : ''} />
-              {!isSidebarCollapsed && <span>Mua hàng & Nhập kho</span>}
+              <div className="flex items-center gap-3">
+                <DollarSign size={18} className={activeTab === 'purchasing' ? 'text-accent-gold' : ''} />
+                {!isSidebarCollapsed && <span>Mua hàng & Nhập kho</span>}
+              </div>
+              {/* Badge nhấp nháy đỏ khi có PO chờ duyệt hoặc escalation */}
+              {(pendingApprovalCount > 0 || escalationCount > 0) && (
+                <span className="relative flex h-4 w-4 ml-auto">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D06A5C] opacity-75"/>
+                  <span className="relative inline-flex items-center justify-center rounded-full h-4 w-4 bg-[#D06A5C] text-white text-[9px] font-bold">
+                    {pendingApprovalCount + escalationCount}
+                  </span>
+                </span>
+              )}
             </button>
           )}
 
@@ -6495,6 +6583,43 @@ export default function Home() {
                     <h3 className="text-xl font-semibold text-accent-gold font-serif">Nghiệp vụ Mua hàng & Nhập kho (PO / GRN)</h3>
                     <p className="text-xs text-gray-400 font-sans">Kiểm soát đơn đặt hàng PO, lập phiếu nhận hàng GRN và phân bổ Landed Cost tự động cập nhật WAC.</p>
                   </div>
+                  {/* v3.0 Badge indicator */}
+                  {totalBadgeCount > 0 && (
+                    <div className="flex items-center gap-2 bg-[#3A1B17] border border-[#D06A5C]/50 rounded-lg px-3 py-2">
+                      <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D06A5C] opacity-75"/>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-[#D06A5C]"/>
+                      </span>
+                      <span className="text-[#D06A5C] text-xs font-semibold">
+                        {pendingApprovalCount > 0 && `${pendingApprovalCount} PO chờ duyệt`}
+                        {escalationCount > 0 && ` · ${escalationCount} Escalation`}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* v3.0: PurchasingModule (Worklist + PO + Duyệt + GRN bulk import) */}
+                <PurchasingModule
+                  userRole={userRole}
+                  userId={currentUser?.id || ''}
+                  badges={badges}
+                  onResolveBadge={resolveBadgesByRef}
+                  canViewFinancials={canViewFinancials}
+                />
+
+                {/* v3.0: Stock Alert Panel */}
+                <div className="mt-4">
+                  <h4 className="text-xs font-bold uppercase text-accent-gold mb-2">Cảnh báo tồn kho thời gian thực</h4>
+                  <StockAlertPanel
+                    userRole={userRole}
+                    userLocationScope={userLocationScope}
+                    onNavigateToPurchasing={() => {}}
+                  />
+                </div>
+
+                {/* Legacy section separator */}
+                <div className="border-t border-border-cream pt-4">
+                  <p className="text-xs text-gray-500 mb-4">— Thao tác nhập kho thủ công & legacy PO —</p>
                   <div className="flex flex-wrap items-center gap-2">
                     <button 
                       onClick={downloadGrnTemplate}

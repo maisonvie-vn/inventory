@@ -265,10 +265,22 @@ export default function ManualForms({
         const { error } = await supabase.from('sales_imports').insert(insertRows);
         if (error) throw error;
         
+        // ✅ v3.0.1: Gọi reprocess để đảm bảo trigger đã chạy đúng
+        // (trigger tự chạy trong DB, nhưng gọi thêm RPC để chắc chắn)
+        const { error: rpcErr } = await supabase.rpc('reprocess_unprocessed_sales', { 
+          p_date: manualSaleDate 
+        });
+        if (rpcErr) {
+          console.warn('[ManualSale] reprocess_unprocessed_sales warning:', rpcErr.message);
+          // Không throw — trigger đã chạy trong DB, RPC chỉ là safety net
+        }
+
         await refreshSupabaseData();
         setManualSaleLines([]);
-        alert(`Đã lưu và tự động trừ kho thành công ${manualSaleLines.length} dòng doanh số trên Supabase!`);
+        const successLines = manualSaleLines.map(l => `• ${l.name} x${l.qty}`).join('\n');
+        alert(`✅ Đã lưu và trừ kho tự động thành công!\n\n${successLines}\n\nTồn kho đã được cập nhật realtime.`);
         return;
+
       } catch (err: any) {
         console.error("Lỗi lưu Supabase:", err);
         alert(`Lỗi lưu Supabase: ${err.message}`);
