@@ -124,9 +124,18 @@ export default function PurchasingModule({
     if (!isSupabaseConfigured()) return;
     setLoading(true);
     try {
-      // Worklist
-      const { data: wl } = await supabase.from('v_order_worklist_ops').select('*');
-      setWorklist((wl || []) as WorklistItem[]);
+      // Worklist: Nếu có quyền tài chính, lấy đầy đủ từ RPC (có thông tin giá); ngược lại lấy từ view ops (che giá)
+      let wlData = [];
+      if (canViewFinancials) {
+        const { data, error } = await supabase.rpc('get_order_worklist_finance');
+        if (error) throw error;
+        wlData = data || [];
+      } else {
+        const { data, error } = await supabase.from('v_order_worklist_ops').select('*');
+        if (error) throw error;
+        wlData = data || [];
+      }
+      setWorklist(wlData as WorklistItem[]);
 
       // POs
       const { data: pos } = await supabase
@@ -159,7 +168,7 @@ export default function PurchasingModule({
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [canViewFinancials]);
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
