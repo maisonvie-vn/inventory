@@ -1404,8 +1404,9 @@ function SuppliersMgmtTab({ suppliers, onAddSupplier, onToggleActive, loading, c
         let cutoffTime = row[2] ? row[2].toString().trim() : null;
         if (cutoffTime) {
           const num = Number(cutoffTime);
-          if (!isNaN(num) && num >= 0 && num < 1) {
-            const totalSeconds = Math.round(num * 24 * 3600);
+          if (!isNaN(num)) {
+            const timeFraction = num % 1;
+            const totalSeconds = Math.round(timeFraction * 24 * 3600);
             const hours = Math.floor(totalSeconds / 3600);
             const minutes = Math.floor((totalSeconds % 3600) / 60);
             const seconds = totalSeconds % 60;
@@ -1437,6 +1438,7 @@ function SuppliersMgmtTab({ suppliers, onAddSupplier, onToggleActive, loading, c
         return;
       }
 
+      console.log('Inserting suppliers payload:', toInsert);
       const { error } = await supabase
         .from('suppliers')
         .insert(toInsert);
