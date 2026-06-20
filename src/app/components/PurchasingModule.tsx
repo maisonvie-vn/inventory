@@ -111,6 +111,12 @@ export default function PurchasingModule({
   const [importStatus, setImportStatus] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [searchText, setSearchText] = useState('');
+  const [selectedPOs, setSelectedPOs] = useState<Set<string>>(new Set());
+
+  // Reset selected POs when sub tab changes
+  useEffect(() => {
+    setSelectedPOs(new Set());
+  }, [activeSubTab]);
 
   // Badges liên quan PO
   const poBadges = badges.filter(b => b.badge_type === 'PO_PENDING_APPROVAL' || b.badge_type === 'ESCALATION');
@@ -472,43 +478,69 @@ export default function PurchasingModule({
   }, [fetchAll]);
 
   // In PDF (browser print)
-  const handlePrintPO = (po: PurchaseOrder) => {
+  const handlePrintPO = (poOrPos: PurchaseOrder | PurchaseOrder[]) => {
+    const pos = Array.isArray(poOrPos) ? poOrPos : [poOrPos];
+    if (pos.length === 0) return;
     const printContent = `
-      <html><head><title>PO ${po.po_no}</title>
+      <html><head><title>In Hàng Loạt Phiếu Đặt Hàng PO</title>
       <style>
-        body { font-family: Arial, sans-serif; color: #222; }
-        h1 { font-size: 18px; border-bottom: 2px solid #333; padding-bottom: 8px; }
+        body { font-family: Arial, sans-serif; color: #222; padding: 20px; }
+        .po-page { box-sizing: border-box; }
+        h1 { font-size: 18px; border-bottom: 2px solid #333; padding-bottom: 8px; margin-top: 0; }
         table { width: 100%; border-collapse: collapse; margin-top: 16px; }
         th, td { border: 1px solid #ccc; padding: 8px; text-align: left; font-size: 12px; }
         th { background: #f5f5f5; }
         .footer { margin-top: 40px; display: flex; justify-content: space-between; }
         .sign-box { border-top: 1px solid #333; padding-top: 8px; width: 180px; text-align: center; font-size: 11px; }
+        @media print {
+          body { padding: 0; }
+          .po-page { page-break-after: always; }
+          .po-page:last-child { page-break-after: avoid; }
+        }
+        @media screen {
+          .po-page {
+            border-bottom: 2px dashed #999;
+            padding-bottom: 40px;
+            margin-bottom: 40px;
+          }
+          .po-page:last-child {
+             border-bottom: none;
+             padding-bottom: 0;
+             margin-bottom: 0;
+          }
+        }
       </style></head><body>
-      <h1>PHIẾU ĐẶT HÀNG — ${po.po_no}</h1>
-      <p><strong>Nhà cung cấp:</strong> ${po.supplier_name || po.supplier_id}</p>
-      <p><strong>Ngày lập:</strong> ${new Date(po.created_at).toLocaleDateString('vi-VN')}</p>
-      <p><strong>Trạng thái:</strong> ${po.status}</p>
-      ${canViewFinancials ? `<p><strong>Tổng giá trị:</strong> ${po.total_value?.toLocaleString('vi-VN')} đ</p>` : ''}
-      <table>
-        <thead><tr><th>#</th><th>Mã hàng</th><th>Tên hàng</th><th>SL đặt</th><th>ĐVT</th>${canViewFinancials ? '<th>Đơn giá</th><th>Thành tiền</th>' : ''}</tr></thead>
-        <tbody>
-          ${(po.items || []).map((line, i) => `
-            <tr>
-              <td>${i + 1}</td>
-              <td>${line.ingredient_id}</td>
-              <td>${line.ingredient_name || ''}</td>
-              <td>${line.qty}</td>
-              <td>${line.purchase_uom}</td>
-              ${canViewFinancials ? `<td>${line.unit_price?.toLocaleString('vi-VN')}</td><td>${line.estimated_value?.toLocaleString('vi-VN')}</td>` : ''}
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-      <div class="footer">
-        <div class="sign-box">Người lập<br/><br/><br/></div>
-        <div class="sign-box">Kế toán<br/><br/><br/></div>
-        <div class="sign-box">Người duyệt<br/><br/><br/></div>
-      </div>
+      ${pos.map(po => `
+        <div class="po-page">
+          <h1>PHIẾU ĐẶT HÀNG — ${po.po_no}</h1>
+          <p><strong>Nhà cung cấp:</strong> ${po.supplier_name || po.supplier_id}</p>
+          <p><strong>Kho nhận hàng:</strong> ${po.location_id}</p>
+          <p><strong>Ngày lập:</strong> ${new Date(po.created_at).toLocaleDateString('vi-VN')}</p>
+          <p><strong>Trạng thái:</strong> ${po.status}</p>
+          ${po.notes ? `<p><strong>Ghi chú:</strong> ${po.notes}</p>` : ''}
+          ${canViewFinancials ? `<p><strong>Tổng giá trị:</strong> ${po.total_value?.toLocaleString('vi-VN')} đ</p>` : ''}
+          <table>
+            <thead><tr><th>#</th><th>Mã hàng</th><th>Tên hàng</th><th>SL đặt</th><th>ĐVT</th>${canViewFinancials ? '<th>Đơn giá</th><th>Thành tiền</th>' : ''}</tr></thead>
+            <tbody>
+              ${(po.items || []).map((line, i) => `
+                <tr>
+                  <td>${i + 1}</td>
+                  <td>${line.ingredient_id}</td>
+                  <td>${line.ingredient_name || ''}</td>
+                  <td>${line.qty}</td>
+                  <td>${line.purchase_uom}</td>
+                  ${canViewFinancials ? `<td>${line.unit_price?.toLocaleString('vi-VN')}</td><td>${line.estimated_value?.toLocaleString('vi-VN')}</td>` : ''}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div class="footer">
+            <div class="sign-box">Người lập<br/><br/><br/></div>
+            <div class="sign-box">Kế toán<br/><br/><br/></div>
+            <div class="sign-box">Người duyệt<br/><br/><br/></div>
+          </div>
+        </div>
+      `).join('')}
       </body></html>
     `;
     const w = window.open('', '_blank');
@@ -634,12 +666,48 @@ export default function PurchasingModule({
           poBadges={poBadges}
           canViewFinancials={canViewFinancials}
           userId={userId}
+          selectedPOs={selectedPOs}
+          onTogglePO={(id: string) => setSelectedPOs(prev => {
+            const s = new Set(prev);
+            s.has(id) ? s.delete(id) : s.add(id);
+            return s;
+          })}
+          onToggleAllPOs={(ids: string[]) => setSelectedPOs(prev => {
+            const allSelected = ids.every(id => prev.has(id));
+            const s = new Set(prev);
+            if (allSelected) {
+              ids.forEach(id => s.delete(id));
+            } else {
+              ids.forEach(id => s.add(id));
+            }
+            return s;
+          })}
         />
       )}
 
       {/* Tab: Lịch sử PO */}
       {activeSubTab === 'history' && (
-        <HistoryTab purchaseOrders={purchaseOrders} canViewFinancials={canViewFinancials} onPrint={handlePrintPO} />
+        <HistoryTab
+          purchaseOrders={purchaseOrders}
+          canViewFinancials={canViewFinancials}
+          onPrint={handlePrintPO}
+          selectedPOs={selectedPOs}
+          onTogglePO={(id: string) => setSelectedPOs(prev => {
+            const s = new Set(prev);
+            s.has(id) ? s.delete(id) : s.add(id);
+            return s;
+          })}
+          onToggleAllPOs={(ids: string[]) => setSelectedPOs(prev => {
+            const allSelected = ids.every(id => prev.has(id));
+            const s = new Set(prev);
+            if (allSelected) {
+              ids.forEach(id => s.delete(id));
+            } else {
+              ids.forEach(id => s.add(id));
+            }
+            return s;
+          })}
+        />
       )}
 
       {/* Tab: GRN nhập hàng hàng loạt */}
@@ -838,20 +906,61 @@ function WorklistTab({
 // -------------------------------------------------------------------
 // ApproveTab
 // -------------------------------------------------------------------
-function ApproveTab({ purchaseOrders, canApprove, onApprove, onSubmit, onPrint, poBadges, canViewFinancials, userId }: any) {
+function ApproveTab({
+  purchaseOrders,
+  canApprove,
+  onApprove,
+  onSubmit,
+  onPrint,
+  poBadges,
+  canViewFinancials,
+  userId,
+  selectedPOs,
+  onTogglePO,
+  onToggleAllPOs
+}: any) {
   return (
     <div>
-      <div className="mb-3 flex items-center gap-2">
-        <h3 className="text-[#FBF8F4] font-semibold">PO chờ xử lý</h3>
-        {poBadges.length > 0 && (
-          <span className="animate-pulse bg-[#D06A5C] text-white text-xs font-bold rounded-full px-2 py-0.5">
-            {poBadges.length} chờ duyệt
-          </span>
+      <div className="mb-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <h3 className="text-[#FBF8F4] font-semibold">PO chờ xử lý</h3>
+          {poBadges.length > 0 && (
+            <span className="animate-pulse bg-[#D06A5C] text-white text-xs font-bold rounded-full px-2 py-0.5">
+              {poBadges.length} chờ duyệt
+            </span>
+          )}
+        </div>
+        {purchaseOrders.length > 0 && (
+          <div className="flex items-center gap-3">
+            <label className="flex items-center gap-2 text-xs text-[#C9A581] cursor-pointer">
+              <input
+                type="checkbox"
+                checked={purchaseOrders.every((po: any) => selectedPOs.has(po.id))}
+                onChange={() => onToggleAllPOs(purchaseOrders.map((po: any) => po.id))}
+                className="accent-[#A8884E] cursor-pointer"
+              />
+              Chọn tất cả
+            </label>
+            {selectedPOs.size > 0 && (
+              <button
+                onClick={() => {
+                  const selectedList = purchaseOrders.filter((po: any) => selectedPOs.has(po.id));
+                  onPrint(selectedList);
+                }}
+                className="px-3 py-1.5 bg-[#A8884E] hover:bg-[#8C6F3C] text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5"
+              >
+                <Printer size={12} />
+                In hàng loạt ({selectedPOs.size} PO)
+              </button>
+            )}
+          </div>
         )}
       </div>
+
       {purchaseOrders.length === 0 && (
         <p className="text-[#C9A581] text-sm text-center py-8">Không có PO nào chờ xử lý ✓</p>
       )}
+
       <div className="space-y-3">
         {purchaseOrders.map((po: PurchaseOrder) => {
           const isBlinking = poBadges.some((b: NotificationBadge) => b.ref_id === po.id);
@@ -871,6 +980,12 @@ function ApproveTab({ purchaseOrders, canApprove, onApprove, onSubmit, onPrint, 
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedPOs.has(po.id)}
+                      onChange={() => onTogglePO(po.id)}
+                      className="accent-[#A8884E] w-4 h-4 cursor-pointer"
+                    />
                     <span className="font-mono font-bold text-[#C2A35A]">{po.po_no}</span>
                     <POStatusBadge status={po.status} />
                     {isEscalated && (
@@ -940,16 +1055,45 @@ function ApproveTab({ purchaseOrders, canApprove, onApprove, onSubmit, onPrint, 
 // -------------------------------------------------------------------
 // HistoryTab
 // -------------------------------------------------------------------
-function HistoryTab({ purchaseOrders, canViewFinancials, onPrint }: any) {
+function HistoryTab({
+  purchaseOrders,
+  canViewFinancials,
+  onPrint,
+  selectedPOs,
+  onTogglePO,
+  onToggleAllPOs
+}: any) {
   const statusFilter = ['APPROVED','SENT','PARTIAL','RECEIVED','CLOSED','CANCELLED'];
   const filtered = purchaseOrders.filter((p: PurchaseOrder) => statusFilter.includes(p.status));
   return (
     <div>
-      <h3 className="text-[#FBF8F4] font-semibold mb-3">Lịch sử PO</h3>
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-[#FBF8F4] font-semibold">Lịch sử PO</h3>
+        {filtered.length > 0 && selectedPOs.size > 0 && (
+          <button
+            onClick={() => {
+              const selectedList = filtered.filter((po: any) => selectedPOs.has(po.id));
+              onPrint(selectedList);
+            }}
+            className="px-3 py-1.5 bg-[#A8884E] hover:bg-[#8C6F3C] text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5"
+          >
+            <Printer size={12} />
+            In hàng loạt ({selectedPOs.size} PO)
+          </button>
+        )}
+      </div>
       <div className="overflow-x-auto rounded-xl border border-[#C9A581]/20">
         <table className="w-full text-xs">
           <thead>
             <tr className="bg-[#042726] text-[#C9A581] border-b border-[#C9A581]/20">
+              <th className="p-2 text-left w-8">
+                <input
+                  type="checkbox"
+                  checked={filtered.length > 0 && filtered.every((po: any) => selectedPOs.has(po.id))}
+                  onChange={() => onToggleAllPOs(filtered.map((po: any) => po.id))}
+                  className="accent-[#A8884E] cursor-pointer"
+                />
+              </th>
               <th className="p-2 text-left">Số PO</th>
               <th className="p-2 text-left">NCC</th>
               <th className="p-2 text-center">Trạng thái</th>
@@ -961,6 +1105,14 @@ function HistoryTab({ purchaseOrders, canViewFinancials, onPrint }: any) {
           <tbody>
             {filtered.map((po: PurchaseOrder) => (
               <tr key={po.id} className="border-b border-[#C9A581]/10 hover:bg-[#0d3330]">
+                <td className="p-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedPOs.has(po.id)}
+                    onChange={() => onTogglePO(po.id)}
+                    className="accent-[#A8884E] cursor-pointer"
+                  />
+                </td>
                 <td className="p-2 font-mono text-[#C2A35A]">{po.po_no}</td>
                 <td className="p-2 text-[#FBF8F4]">{po.supplier_name || po.supplier_id}</td>
                 <td className="p-2 text-center"><POStatusBadge status={po.status} /></td>

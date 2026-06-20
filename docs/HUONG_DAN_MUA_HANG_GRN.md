@@ -62,13 +62,17 @@ Tab này quản lý các đơn hàng đang ở trạng thái **DRAFT** (nháp) h
 2. Bấm nút **"Gửi duyệt"** để chuyển trạng thái sang `PENDING_APPROVAL`.
 3. Hệ thống sẽ tạo một **Badge nhấp nháy đỏ** trên màn hình của Quản lý/CFO/Admin để thông báo có đơn hàng mới cần duyệt.
 
-#### Thao tác phê duyệt (Dành cho Quản lý / CFO / Admin):
-1. Tìm PO ở trạng thái **PENDING_APPROVAL**. Bạn có thể bấm nút **In PDF (Biểu tượng máy in 🖨️)** để xem trước bản in hoặc tải file PDF về máy.
+#### Thao tác phê duyệt & In ấn (Dành cho Quản lý / CFO / Admin):
+1. Tìm PO ở trạng thái **PENDING_APPROVAL**. Bạn có thể bấm nút **In PDF (Biểu tượng máy in 🖨️)** của từng PO riêng lẻ để xem trước hoặc tải PDF.
 2. Bấm **"Duyệt"** (hoặc **"Từ chối"** - hệ thống sẽ yêu cầu nhập lý do từ chối).
 3. **Quy tắc phân tầng duyệt giá trị đơn hàng:**
    * **Đơn hàng dưới 10.000.000 đ:** Chỉ cần 1 Quản lý hoặc Kế toán trưởng duyệt → PO chuyển ngay sang trạng thái **APPROVED** (Đã duyệt).
    * **Đơn hàng từ 10.000.000 đ trở lên (Duyệt cấp 2):** Sau khi Quản lý duyệt cấp 1, PO sẽ chuyển sang trạng thái chờ duyệt cấp 2. Hệ thống sẽ bắn thông báo đỏ đến tài khoản của **Admin/CFO** yêu cầu duyệt lần cuối để chính thức phê duyệt PO.
    * **Cảnh báo quá hạn (Escalation):** Nếu PO ở trạng thái chờ duyệt quá **2 giờ** mà chưa được xử lý, hệ thống tự động đẩy cảnh báo khẩn cấp (Escalated) lên CFO.
+
+> [!TIP]
+> **In hàng loạt PO chờ duyệt:**  
+> Tại tab **Duyệt PO**, bạn có thể tích chọn nhiều đơn hàng bằng các checkbox bên cạnh mã đơn PO hoặc nhấn **"Chọn tất cả"** ở thanh công cụ phía trên. Sau đó bấm nút **"In hàng loạt (X PO)"** để gộp tất cả các đơn hàng đã chọn vào một tài liệu in duy nhất. Hệ thống tự động phân trang (mỗi PO một trang riêng biệt) giúp bạn in/tải PDF hàng loạt chỉ với 1 cú click.
 
 ---
 
@@ -79,6 +83,10 @@ Hiển thị toàn bộ các PO đã có kết quả (`APPROVED`, `SENT`, `CANCE
 * **Thời gian giao hàng:** Nếu bạn duyệt PO vào ban đêm (ví dụ: 22h00) và muốn yêu cầu giao hàng vào sáng hôm sau (ví dụ: 7h00 sáng):
   1. Ghi chú rõ mốc thời gian giao hàng vào phần **Ghi chú (Notes)** khi lập đơn PO hoặc gửi duyệt.
   2. Gửi file PDF PO đã duyệt kèm lời nhắn hẹn giờ giao cho Nhà cung cấp qua Zalo/Email.
+
+> [!TIP]
+> **In hàng loạt PO lịch sử:**  
+> Tại tab **Lịch sử PO**, bạn có thể tích chọn hàng loạt PO ở cột checkbox ngoài cùng bên trái (hoặc tích ở ô chọn tất cả trên dòng tiêu đề bảng) và click nút **"In hàng loạt (X PO)"** ở góc trên bên phải để gộp tất cả đơn đã chọn thành 1 file in phân trang tự động. Bạn không cần phải mở từng PO để in riêng lẻ nhiều lần nữa!
 
 ---
 
