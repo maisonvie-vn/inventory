@@ -72,7 +72,11 @@ Tab này quản lý các đơn hàng đang ở trạng thái **DRAFT** (nháp) h
 
 > [!TIP]
 > **In hàng loạt PO chờ duyệt:**  
-> Tại tab **Duyệt PO**, bạn có thể tích chọn nhiều đơn hàng bằng các checkbox bên cạnh mã đơn PO hoặc nhấn **"Chọn tất cả"** ở thanh công cụ phía trên. Sau đó bấm nút **"In hàng loạt (X PO)"** để gộp tất cả các đơn hàng đã chọn vào một tài liệu in duy nhất. Hệ thống tự động phân trang (mỗi PO một trang riêng biệt) giúp bạn in/tải PDF hàng loạt chỉ với 1 cú click.
+> Tại tab **Duyệt PO**, bạn có thể tích chọn nhiều đơn hàng bằng các checkbox bên cạnh mã đơn PO hoặc nhấn **"Chọn tất cả"** ở thanh công cụ phía trên. Sau đó bấm nút **"In hàng loạt (X PO)"**. Hệ thống sẽ tự động **gom nhóm các PO của cùng một Nhà cung cấp** vào chung một trang in (sheet) duy nhất.
+> * **Cấu trúc bảng in:** Hiển thị thứ tự các cột: `# (STT)` -> `Mã hàng` -> `Tên hàng` -> `SL đặt` -> `ĐVT` -> `Đơn giá` -> `Thành tiền` -> `Ghi chú` -> `SL tồn` (trong đó số lượng tồn được thiết lập ở cột cuối cùng sau cột ghi chú).
+> * **Thông tin chữ ký chân trang:** Tự động điền đầy đủ tên tương ứng:
+>   * **Người lập:** Điền tên nhân viên lập kèm bộ phận công tác tại thời điểm lập đơn (ví dụ: *Bar* hoặc *Bếp*).
+>   * **Người duyệt & Người duyệt cuối:** Gắn trực tiếp tên của người duyệt cấp 1 (Manager/Kế toán) và người duyệt cấp 2 (CFO/Admin) nếu đơn đã được duyệt (hoặc để trống dòng ký nếu chưa duyệt).
 
 ---
 
@@ -86,7 +90,7 @@ Hiển thị toàn bộ các PO đã có kết quả (`APPROVED`, `SENT`, `CANCE
 
 > [!TIP]
 > **In hàng loạt PO lịch sử:**  
-> Tại tab **Lịch sử PO**, bạn có thể tích chọn hàng loạt PO ở cột checkbox ngoài cùng bên trái (hoặc tích ở ô chọn tất cả trên dòng tiêu đề bảng) và click nút **"In hàng loạt (X PO)"** ở góc trên bên phải để gộp tất cả đơn đã chọn thành 1 file in phân trang tự động. Bạn không cần phải mở từng PO để in riêng lẻ nhiều lần nữa!
+> Tại tab **Lịch sử PO**, bạn có thể tích chọn hàng loạt PO ở cột checkbox ngoài cùng bên trái (hoặc tích ở ô chọn tất cả trên dòng tiêu đề bảng) và click nút **"In hàng loạt (X PO)"** ở góc trên bên phải để gộp tất cả đơn đã chọn thành các trang in gom theo từng nhà cung cấp. Các cột thông tin và chân chữ ký hoạt động tương tự như phần PO chờ duyệt.
 
 ---
 

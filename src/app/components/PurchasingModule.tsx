@@ -146,19 +146,32 @@ export default function PurchasingModule({
       // POs
       const { data: pos } = await supabase
         .from('purchase_orders')
-        .select('*, suppliers(name), po_lines(*, ingredients(ten_vi, code))')
+        .select(`
+          *,
+          suppliers(name),
+          po_lines(*, ingredients(ten_vi, code)),
+          creator:created_by(full_name),
+          requester:requested_by(full_name),
+          approver:approved_by(full_name),
+          second_approver_profile:second_approver(full_name)
+        `)
         .order('created_at', { ascending: false })
         .limit(100);
       setPurchaseOrders((pos || []).map((p: any) => ({
         ...p,
         supplier_name: p.suppliers?.name || p.supplier_id,
+        creator: p.creator,
+        requester: p.requester,
+        approver: p.approver,
+        second_approver_profile: p.second_approver_profile,
         items: (p.po_lines || []).map((line: any) => ({
           ingredient_id: line.ingredients?.code || line.ingredient_id,
           ingredient_name: line.ingredients?.ten_vi || '',
           qty: line.qty_ordered || line.qty || 0,
           purchase_uom: line.purchase_uom || 'UNIT',
           unit_price: line.unit_price || 0,
-          estimated_value: line.estimated_value || ((line.qty_ordered || line.qty || 0) * (line.unit_price || 0))
+          estimated_value: line.estimated_value || ((line.qty_ordered || line.qty || 0) * (line.unit_price || 0)),
+          stock_at_order: line.stock_at_order || 0
         }))
       })));
 
@@ -481,6 +494,23 @@ export default function PurchasingModule({
   const handlePrintPO = (poOrPos: PurchaseOrder | PurchaseOrder[]) => {
     const pos = Array.isArray(poOrPos) ? poOrPos : [poOrPos];
     if (pos.length === 0) return;
+
+    // Group selected POs by supplier_id
+    const groupedBySupplier: Record<string, PurchaseOrder[]> = {};
+    for (const po of pos) {
+      const sId = po.supplier_id || 'UNKNOWN';
+      if (!groupedBySupplier[sId]) {
+        groupedBySupplier[sId] = [];
+      }
+      groupedBySupplier[sId].push(po);
+    }
+
+    const locationMapping: Record<string, string> = {
+      'BAR': 'Bar',
+      'KITCHEN': 'Bếp',
+      'MAIN_STORE': 'Kho chính'
+    };
+
     const printContent = `
       <html><head><title>In Hàng Loạt Phiếu Đặt Hàng PO</title>
       <style>
@@ -510,37 +540,126 @@ export default function PurchasingModule({
           }
         }
       </style></head><body>
-      ${pos.map(po => `
-        <div class="po-page">
-          <h1>PHIẾU ĐẶT HÀNG — ${po.po_no}</h1>
-          <p><strong>Nhà cung cấp:</strong> ${po.supplier_name || po.supplier_id}</p>
-          <p><strong>Kho nhận hàng:</strong> ${po.location_id}</p>
-          <p><strong>Ngày lập:</strong> ${new Date(po.created_at).toLocaleDateString('vi-VN')}</p>
-          <p><strong>Trạng thái:</strong> ${po.status}</p>
-          ${po.notes ? `<p><strong>Ghi chú:</strong> ${po.notes}</p>` : ''}
-          ${canViewFinancials ? `<p><strong>Tổng giá trị:</strong> ${po.total_value?.toLocaleString('vi-VN')} đ</p>` : ''}
-          <table>
-            <thead><tr><th>#</th><th>Mã hàng</th><th>Tên hàng</th><th>SL đặt</th><th>ĐVT</th>${canViewFinancials ? '<th>Đơn giá</th><th>Thành tiền</th>' : ''}</tr></thead>
-            <tbody>
-              ${(po.items || []).map((line, i) => `
+      ${Object.entries(groupedBySupplier).map(([supplierId, supPos]) => {
+        const supplierName = supPos.find(p => p.supplier_name)?.supplier_name || supPos[0].supplier_name || supplierId;
+        const poNumbers = supPos.map(p => p.po_no).join(', ');
+        const locations = Array.from(new Set(supPos.map(p => locationMapping[p.location_id] || p.location_id))).join(', ');
+        const dates = Array.from(new Set(supPos.map(p => new Date(p.created_at).toLocaleDateString('vi-VN')))).join(', ');
+        const status = Array.from(new Set(supPos.map(p => p.status))).join(', ');
+        const notes = supPos.map(p => p.notes).filter(Boolean).join('; ');
+
+        // Creators, Approvers, and Second Approvers
+        const requesters = Array.from(new Set(supPos.map(p => {
+          const pany = p as any;
+          return pany.requester?.full_name || pany.creator?.full_name || '';
+        }).filter(Boolean)));
+        const requesterDisplay = requesters.length > 0 ? requesters.join(' & ') : 'Kế toán kho';
+
+        const approvers = Array.from(new Set(supPos.map(p => {
+          const pany = p as any;
+          return pany.approver?.full_name || '';
+        }).filter(Boolean)));
+        const approverDisplay = approvers.length > 0 ? approvers.join(' & ') : '';
+
+        const secondApprovers = Array.from(new Set(supPos.map(p => {
+          const pany = p as any;
+          return pany.second_approver_profile?.full_name || '';
+        }).filter(Boolean)));
+        const secondApproverDisplay = secondApprovers.length > 0 ? secondApprovers.join(' & ') : '';
+
+        // Merge items
+        const mergedItems: Record<string, {
+          ingredient_id: string;
+          ingredient_name: string;
+          qty: number;
+          purchase_uom: string;
+          unit_price: number;
+          estimated_value: number;
+          stock_at_order?: number;
+        }> = {};
+
+        for (const po of supPos) {
+          for (const item of po.items || []) {
+            const key = `${item.ingredient_id}:${item.purchase_uom}`;
+            const itemany = item as any;
+            if (mergedItems[key]) {
+              mergedItems[key].qty += item.qty;
+              mergedItems[key].estimated_value += item.estimated_value;
+            } else {
+              mergedItems[key] = {
+                ingredient_id: item.ingredient_id,
+                ingredient_name: item.ingredient_name || '',
+                qty: item.qty,
+                purchase_uom: item.purchase_uom,
+                unit_price: item.unit_price,
+                estimated_value: item.estimated_value,
+                stock_at_order: itemany.stock_at_order || 0
+              };
+            }
+          }
+        }
+
+        const itemsList = Object.values(mergedItems);
+        const totalValue = itemsList.reduce((sum, item) => sum + item.estimated_value, 0);
+
+        return `
+          <div class="po-page">
+            <h1>PHIẾU ĐẶT HÀNG — ${poNumbers}</h1>
+            <p><strong>Nhà cung cấp:</strong> ${supplierName}</p>
+            <p><strong>Bộ phận đặt:</strong> ${locations}</p>
+            <p><strong>Ngày lập:</strong> ${dates}</p>
+            <p><strong>Trạng thái:</strong> ${status}</p>
+            ${notes ? `<p><strong>Ghi chú:</strong> ${notes}</p>` : ''}
+            ${canViewFinancials ? `<p><strong>Tổng giá trị:</strong> ${totalValue?.toLocaleString('vi-VN')} đ</p>` : ''}
+            <table>
+              <thead>
                 <tr>
-                  <td>${i + 1}</td>
-                  <td>${line.ingredient_id}</td>
-                  <td>${line.ingredient_name || ''}</td>
-                  <td>${line.qty}</td>
-                  <td>${line.purchase_uom}</td>
-                  ${canViewFinancials ? `<td>${line.unit_price?.toLocaleString('vi-VN')}</td><td>${line.estimated_value?.toLocaleString('vi-VN')}</td>` : ''}
+                  <th>#</th>
+                  <th>Mã hàng</th>
+                  <th>Tên hàng</th>
+                  <th>SL đặt</th>
+                  <th>ĐVT</th>
+                  ${canViewFinancials ? '<th>Đơn giá</th><th>Thành tiền</th>' : ''}
+                  <th>Ghi chú</th>
+                  <th>SL tồn</th>
                 </tr>
-              `).join('')}
-            </tbody>
-          </table>
-          <div class="footer">
-            <div class="sign-box">Người lập<br/><br/><br/></div>
-            <div class="sign-box">Kế toán<br/><br/><br/></div>
-            <div class="sign-box">Người duyệt<br/><br/><br/></div>
+              </thead>
+              <tbody>
+                ${itemsList.map((line, i) => `
+                  <tr>
+                    <td>${i + 1}</td>
+                    <td>${line.ingredient_id}</td>
+                    <td>${line.ingredient_name || ''}</td>
+                    <td>${line.qty}</td>
+                    <td>${line.purchase_uom}</td>
+                    ${canViewFinancials ? `<td>${line.unit_price?.toLocaleString('vi-VN')}</td><td>${line.estimated_value?.toLocaleString('vi-VN')}</td>` : ''}
+                    <td></td>
+                    <td>${line.stock_at_order || 0}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+            <div class="footer">
+              <div class="sign-box">
+                <strong>Người lập</strong><br/>
+                <span style="font-size: 10px; color: #555; font-weight: normal;">(${locations})</span>
+                <br/><br/><br/><br/>
+                <strong>${requesterDisplay}</strong>
+              </div>
+              <div class="sign-box">
+                <strong>Người duyệt</strong>
+                <br/><br/><br/><br/><br/>
+                <strong>${approverDisplay || '___________________'}</strong>
+              </div>
+              <div class="sign-box">
+                <strong>Người duyệt cuối</strong>
+                <br/><br/><br/><br/><br/>
+                <strong>${secondApproverDisplay || '___________________'}</strong>
+              </div>
+            </div>
           </div>
-        </div>
-      `).join('')}
+        `;
+      }).join('')}
       </body></html>
     `;
     const w = window.open('', '_blank');
