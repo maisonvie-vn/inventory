@@ -106,6 +106,7 @@ export default function PurchasingModule({
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
   const [goodsReceipts, setGoodsReceipts] = useState<GoodsReceipt[]>([]);
   const [suppliers, setSuppliers] = useState<any[]>([]);
+  const [allIngredients, setAllIngredients] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [importStatus, setImportStatus] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -149,6 +150,10 @@ export default function PurchasingModule({
       // Suppliers
       const { data: sups } = await supabase.from('suppliers').select('id, name').eq('is_active', true);
       setSuppliers(sups || []);
+
+      // Ingredients
+      const { data: ings } = await supabase.from('ingredients').select('id, code, ten_vi, stock_uom, wac_price').eq('is_active', true);
+      setAllIngredients(ings || []);
     } catch (err) {
       console.error('[Purchasing] Fetch error:', err);
     } finally {
@@ -180,16 +185,24 @@ export default function PurchasingModule({
 
     // Gom theo supplier
     const bySupplier: Record<string, WorklistItem[]> = {};
+    const noSupplierItems: WorklistItem[] = [];
     for (const item of selected) {
-      const key = item.supplier_id || 'MANUAL';
-      if (!bySupplier[key]) bySupplier[key] = [];
-      bySupplier[key].push(item);
+      if (!item.supplier_id) {
+        noSupplierItems.push(item);
+      } else {
+        const key = item.supplier_id;
+        if (!bySupplier[key]) bySupplier[key] = [];
+        bySupplier[key].push(item);
+      }
+    }
+
+    if (noSupplierItems.length > 0) {
+      alert(`⚠️ Không thể tạo PO tự động cho các mặt hàng chưa có Nhà cung cấp ưu tiên:\n\n${noSupplierItems.map(i => `• ${i.code} - ${i.name}`).join('\n')}\n\nVui lòng gán NCC cho các mặt hàng này trước, hoặc sang tab "Tạo PO" để lập đơn thủ công chọn NCC.`);
+      return;
     }
 
     try {
       for (const [supplierId, items] of Object.entries(bySupplier)) {
-        if (supplierId === 'MANUAL') continue; // skip nếu không có NCC
-
         const lines = items.map(i => ({
           ingredient_id: i.ingredient_id,
           suggested_qty: i.suggested_order_qty,
@@ -207,14 +220,43 @@ export default function PurchasingModule({
         });
 
         if (error) throw error;
-        alert(`✅ Đã tạo PO thành công (ID: ${poId}). Submit để gửi duyệt.`);
+        alert(`✅ Đã lập PO nháp thành công (ID: ${poId}). Bạn hoặc người khác có thể Gửi duyệt PO này tại tab Duyệt PO.`);
       }
       setSelectedItems(new Set());
       fetchAll();
+      setActiveSubTab('approve'); // Chuyển sang tab duyệt để họ bấm gửi duyệt ngay!
     } catch (err: any) {
       alert(`❌ Lỗi tạo PO: ${err.message}`);
     }
   }, [worklist, selectedItems, fetchAll]);
+
+  // Tạo PO thủ công từ Form
+  const handleCreatePOManual = useCallback(async (supplierId: string, locationId: string, lines: any[], notes: string) => {
+    try {
+      const formattedLines = lines.map(l => ({
+        ingredient_id: l.ingredient_id,
+        suggested_qty: l.suggested_qty,
+        unit_price: l.unit_price,
+        uom: l.uom,
+        moq: l.moq || 1,
+        pack_size: l.pack_size || 1,
+      }));
+
+      const { data: poId, error } = await supabase.rpc('create_po_from_worklist', {
+        p_supplier_id: supplierId,
+        p_location_id: locationId,
+        p_lines: formattedLines,
+        p_notes: notes || `Tạo thủ công ngày ${new Date().toLocaleDateString('vi-VN')}`,
+      });
+
+      if (error) throw error;
+      alert(`✅ Đã lập PO nháp thành công (ID: ${poId}). Bạn hoặc người khác có thể Gửi duyệt PO này tại tab Duyệt PO.`);
+      fetchAll();
+      setActiveSubTab('approve'); // Chuyển sang tab duyệt để họ bấm gửi duyệt ngay!
+    } catch (err: any) {
+      alert(`❌ Lỗi tạo PO: ${err.message}`);
+    }
+  }, [fetchAll]);
 
   // Submit PO để duyệt
   const handleSubmitPO = useCallback(async (poId: string) => {
@@ -504,6 +546,16 @@ export default function PurchasingModule({
           />
         );
       })()}
+
+      {/* Tab: Tạo PO thủ công */}
+      {activeSubTab === 'create_po' && (
+        <CreatePOTab
+          suppliers={suppliers}
+          ingredients={allIngredients}
+          onCreatePO={handleCreatePOManual}
+          loading={loading}
+        />
+      )}
 
       {/* Tab: Duyệt PO */}
       {activeSubTab === 'approve' && (
@@ -968,5 +1020,222 @@ function ThreeWayBadge({ status }: { status: string }) {
     <span className={`text-xs font-bold ${colors[status] || ''}`}>
       {icons[status] || ''} {status.replace(/_/g, ' ')}
     </span>
+  );
+}
+
+// -------------------------------------------------------------------
+// CreatePOTab — Tạo PO thủ công
+// -------------------------------------------------------------------
+function CreatePOTab({ suppliers, ingredients, onCreatePO, loading }: any) {
+  const [supplierId, setSupplierId] = useState('');
+  const [locationId, setLocationId] = useState('MAIN_STORE');
+  const [lines, setLines] = useState<any[]>([]);
+  const [selIngId, setSelIngId] = useState('');
+  const [qty, setQty] = useState(1);
+  const [price, setPrice] = useState(0);
+  const [notes, setNotes] = useState('');
+  const [searchIngText, setSearchIngText] = useState('');
+
+  // Lọc nguyên liệu theo search
+  const filteredIngs = ingredients.filter((i: any) =>
+    i.code.toLowerCase().includes(searchIngText.toLowerCase()) ||
+    i.ten_vi.toLowerCase().includes(searchIngText.toLowerCase())
+  ).slice(0, 10);
+
+  const handleAddLine = () => {
+    if (!selIngId) return;
+    const ing = ingredients.find((i: any) => i.id === selIngId);
+    if (!ing) return;
+    
+    // Check trùng
+    if (lines.some(l => l.ingredient_id === selIngId)) {
+      alert('Mặt hàng này đã có trong đơn');
+      return;
+    }
+
+    setLines([...lines, {
+      ingredient_id: ing.id,
+      code: ing.code,
+      name: ing.ten_vi,
+      suggested_qty: qty,
+      unit_price: price || ing.wac_price || 0,
+      uom: ing.stock_uom,
+      moq: 1,
+      pack_size: 1
+    }]);
+
+    // Reset line input
+    setSelIngId('');
+    setSearchIngText('');
+    setQty(1);
+    setPrice(0);
+  };
+
+  const handleRemoveLine = (idx: number) => {
+    setLines(lines.filter((_, i) => i !== idx));
+  };
+
+  const handleSubmit = () => {
+    if (!supplierId) { alert('Vui lòng chọn Nhà cung cấp'); return; }
+    if (lines.length === 0) { alert('Vui lòng thêm ít nhất 1 mặt hàng'); return; }
+    
+    onCreatePO(supplierId, locationId, lines, notes);
+    
+    // Reset form
+    setSupplierId('');
+    setLines([]);
+    setNotes('');
+  };
+
+  return (
+    <div className="rounded-xl border border-[#C9A581]/30 bg-[#042726] p-4 space-y-4 text-xs">
+      <h3 className="text-[#FBF8F4] font-semibold text-sm">Lập phiếu đặt hàng PO thủ công</h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div>
+          <label className="block text-[#C9A581] mb-1 font-semibold">Nhà cung cấp *</label>
+          <select
+            value={supplierId}
+            onChange={(e) => setSupplierId(e.target.value)}
+            className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
+          >
+            <option value="">-- Chọn Nhà cung cấp --</option>
+            {suppliers.map((s: any) => (
+              <option key={s.id} value={s.id}>{s.name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-[#C9A581] mb-1 font-semibold">Kho nhận hàng *</label>
+          <select
+            value={locationId}
+            onChange={(e) => setLocationId(e.target.value)}
+            className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
+          >
+            <option value="MAIN_STORE">Kho chính (MAIN_STORE)</option>
+            <option value="BAR">Quầy Bar (BAR)</option>
+            <option value="KITCHEN">Bếp chính (KITCHEN)</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-[#C9A581] mb-1 font-semibold">Ghi chú PO</label>
+          <input
+            type="text"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Ví dụ: Đặt gấp cho cuối tuần..."
+            className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
+          />
+        </div>
+      </div>
+
+      {/* Form thêm mặt hàng */}
+      <div className="border-t border-[#C9A581]/20 pt-3 space-y-3">
+        <h4 className="text-[#C9A581] font-semibold">Thêm mặt hàng</h4>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
+          <div className="relative">
+            <label className="block text-[#C9A581] mb-1">Tìm nguyên liệu</label>
+            <input
+              type="text"
+              placeholder="Nhập mã hoặc tên..."
+              value={searchIngText}
+              onChange={(e) => setSearchIngText(e.target.value)}
+              className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
+            />
+            {searchIngText && (
+              <div className="absolute z-10 w-full mt-1 bg-[#03201E] border border-[#C9A581]/30 rounded-lg max-h-48 overflow-y-auto shadow-lg">
+                {filteredIngs.map((i: any) => (
+                  <div
+                    key={i.id}
+                    onClick={() => {
+                      setSelIngId(i.id);
+                      setSearchIngText(`[${i.code}] ${i.ten_vi}`);
+                      setPrice(i.wac_price || 0);
+                    }}
+                    className="p-2 hover:bg-[#A8884E]/20 text-[#FBF8F4] cursor-pointer"
+                  >
+                    [{i.code}] {i.ten_vi}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-[#C9A581] mb-1">Số lượng đặt</label>
+            <input
+              type="number"
+              min="1"
+              value={qty}
+              onChange={(e) => setQty(Number(e.target.value))}
+              className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[#C9A581] mb-1">Đơn giá dự kiến (VND)</label>
+            <input
+              type="number"
+              min="0"
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
+              className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none"
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={handleAddLine}
+            className="w-full py-2 bg-[#A8884E] hover:bg-[#8C6F3C] text-white rounded-lg font-medium transition-colors"
+          >
+            Thêm dòng
+          </button>
+        </div>
+      </div>
+
+      {/* Danh sách dòng PO đã thêm */}
+      {lines.length > 0 && (
+        <div className="border-t border-[#C9A581]/20 pt-3">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="bg-[#03201E] text-[#C9A581] border-b border-[#C9A581]/20">
+                <th className="p-2 text-left">Mã</th>
+                <th className="p-2 text-left">Tên hàng</th>
+                <th className="p-2 text-right">SL đặt</th>
+                <th className="p-2 text-right">Đơn giá</th>
+                <th className="p-2 text-right">Thành tiền</th>
+                <th className="p-2"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {lines.map((l, idx) => (
+                <tr key={l.ingredient_id} className="border-b border-[#C9A581]/10 hover:bg-[#0d3330]">
+                  <td className="p-2 font-mono text-[#C2A35A]">{l.code}</td>
+                  <td className="p-2 text-[#FBF8F4]">{l.name}</td>
+                  <td className="p-2 text-right text-[#FBF8F4]">{l.suggested_qty} {l.uom}</td>
+                  <td className="p-2 text-right text-[#C2A35A]">{l.unit_price.toLocaleString('vi-VN')}đ</td>
+                  <td className="p-2 text-right text-[#62A57C] font-semibold">{(l.suggested_qty * l.unit_price).toLocaleString('vi-VN')}đ</td>
+                  <td className="p-2 text-center">
+                    <button onClick={() => handleRemoveLine(idx)} className="text-[#D06A5C] hover:text-[#f87171]">Xóa</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="flex justify-end gap-2 mt-4">
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="px-4 py-2 bg-[#62A57C] hover:bg-[#4d8f66] text-white rounded-lg font-medium transition-colors"
+            >
+              Lập PO Nháp
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
