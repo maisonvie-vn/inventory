@@ -100,7 +100,7 @@ interface PurchasingModuleProps {
 export default function PurchasingModule({
   userRole, userId, badges, onResolveBadge, canViewFinancials
 }: PurchasingModuleProps) {
-  const [activeSubTab, setActiveSubTab] = useState<'worklist' | 'create_po' | 'approve' | 'history' | 'grn'>('worklist');
+  const [activeSubTab, setActiveSubTab] = useState<'worklist' | 'create_po' | 'approve' | 'history' | 'grn' | 'suppliers_mgmt'>('worklist');
   const [worklist, setWorklist] = useState<WorklistItem[]>([]);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
@@ -148,7 +148,7 @@ export default function PurchasingModule({
       setGoodsReceipts(grns || []);
 
       // Suppliers
-      const { data: sups } = await supabase.from('suppliers').select('id, name').eq('is_active', true);
+      const { data: sups } = await supabase.from('suppliers').select('*').order('name', { ascending: true });
       setSuppliers(sups || []);
 
       // Ingredients
@@ -269,6 +269,33 @@ export default function PurchasingModule({
       fetchAll(); // Tải lại để cập nhật danh sách
     } catch (err: any) {
       alert(`❌ Lỗi đặt NCC ưu tiên: ${err.message}`);
+    }
+  }, [fetchAll]);
+
+  // Thêm nhà cung cấp mới
+  const handleAddSupplier = useCallback(async (newSup: { name: string; lead_time_days: number; cutoff_time: string | null; contact: any }) => {
+    try {
+      const { error } = await supabase
+        .from('suppliers')
+        .insert([newSup]);
+      if (error) throw error;
+      fetchAll();
+    } catch (err: any) {
+      alert(`❌ Lỗi thêm nhà cung cấp: ${err.message}`);
+    }
+  }, [fetchAll]);
+
+  // Bật/tắt trạng thái hoạt động của nhà cung cấp
+  const handleToggleSupplierActive = useCallback(async (id: string, currentActive: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('suppliers')
+        .update({ is_active: !currentActive })
+        .eq('id', id);
+      if (error) throw error;
+      fetchAll();
+    } catch (err: any) {
+      alert(`❌ Lỗi cập nhật trạng thái: ${err.message}`);
     }
   }, [fetchAll]);
 
@@ -491,6 +518,7 @@ export default function PurchasingModule({
           },
           { key: 'history', label: 'Lịch sử PO', icon: <Clock size={14}/> },
           { key: 'grn', label: 'Nhập hàng (GRN)', icon: <Upload size={14}/> },
+          { key: 'suppliers_mgmt', label: 'Nhà cung cấp', icon: <Package size={14}/> },
         ].map((tab: any) => (
           <button
             key={tab.key}
@@ -603,6 +631,17 @@ export default function PurchasingModule({
           onExportTemplate={handleExportTemplate}
           onImport={handleBulkImport}
           onRefresh={fetchAll}
+        />
+      )}
+
+      {/* Tab: Quản lý Nhà cung cấp */}
+      {activeSubTab === 'suppliers_mgmt' && (
+        <SuppliersMgmtTab
+          suppliers={suppliers}
+          onAddSupplier={handleAddSupplier}
+          onToggleActive={handleToggleSupplierActive}
+          loading={loading}
+          canApprove={canApprove}
         />
       )}
     </div>
@@ -740,7 +779,7 @@ function WorklistTab({
                         className="bg-[#03201E] border border-[#C9A581]/30 rounded px-1 py-0.5 text-xs text-[#FBF8F4] focus:outline-none focus:border-[#A8884E] w-full max-w-[140px]"
                       >
                         <option value="">-- Chọn NCC --</option>
-                        {suppliers.map((s: any) => (
+                        {suppliers.filter((s: any) => s.is_active || s.id === item.supplier_id).map((s: any) => (
                           <option key={s.id} value={s.id}>{s.name}</option>
                         ))}
                       </select>
@@ -1132,7 +1171,7 @@ function CreatePOTab({ suppliers, ingredients, onCreatePO, loading }: any) {
             className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
           >
             <option value="">-- Chọn Nhà cung cấp --</option>
-            {suppliers.map((s: any) => (
+            {suppliers.filter((s: any) => s.is_active || s.id === supplierId).map((s: any) => (
               <option key={s.id} value={s.id}>{s.name}</option>
             ))}
           </select>
@@ -1268,6 +1307,224 @@ function CreatePOTab({ suppliers, ingredients, onCreatePO, loading }: any) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// -------------------------------------------------------------------
+// SuppliersMgmtTab — Quản lý Nhà cung cấp
+// -------------------------------------------------------------------
+function SuppliersMgmtTab({ suppliers, onAddSupplier, onToggleActive, loading, canApprove }: any) {
+  const [name, setName] = useState('');
+  const [leadTime, setLeadTime] = useState(1);
+  const [cutoffTime, setCutoffTime] = useState('17:00');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) {
+      alert('Vui lòng nhập tên nhà cung cấp');
+      return;
+    }
+    setSaving(true);
+    await onAddSupplier({
+      name: name.trim(),
+      lead_time_days: Number(leadTime),
+      cutoff_time: cutoffTime ? `${cutoffTime}:00` : null,
+      contact: {
+        phone: phone.trim() || null,
+        email: email.trim() || null,
+        address: address.trim() || null
+      },
+      is_active: true
+    });
+    setSaving(false);
+    // Reset form
+    setName('');
+    setLeadTime(1);
+    setCutoffTime('17:00');
+    setPhone('');
+    setEmail('');
+    setAddress('');
+  };
+
+  const filteredSuppliers = suppliers.filter((s: any) => {
+    const q = searchQuery.toLowerCase();
+    const contactStr = JSON.stringify(s.contact || {}).toLowerCase();
+    return s.name.toLowerCase().includes(q) || contactStr.includes(q);
+  });
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 text-xs">
+      {/* Form thêm NCC mới */}
+      {canApprove && (
+        <div className="lg:col-span-1 rounded-xl border border-[#C9A581]/30 bg-[#042726] p-4 space-y-4">
+          <h3 className="text-[#FBF8F4] font-semibold text-sm">Thêm nhà cung cấp mới</h3>
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div>
+              <label className="block text-[#C9A581] mb-1 font-semibold">Tên nhà cung cấp *</label>
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="VD: Công ty TNHH Thực Phẩm Sạch"
+                className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[#C9A581] mb-1 font-semibold">Thời gian giao (ngày)</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={leadTime}
+                  onChange={(e) => setLeadTime(Number(e.target.value))}
+                  className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
+                />
+              </div>
+              <div>
+                <label className="block text-[#C9A581] mb-1 font-semibold">Giờ chốt đơn (cutoff)</label>
+                <input
+                  type="time"
+                  value={cutoffTime}
+                  onChange={(e) => setCutoffTime(e.target.value)}
+                  className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[#C9A581] mb-1 font-semibold">Số điện thoại</label>
+              <input
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="VD: 0912345678"
+                className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[#C9A581] mb-1 font-semibold">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="VD: contact@supplier.com"
+                className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[#C9A581] mb-1 font-semibold">Địa chỉ</label>
+              <textarea
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Địa chỉ văn phòng / kho NCC..."
+                rows={2}
+                className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E] resize-none"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={saving}
+              className="w-full py-2 bg-[#A8884E] hover:bg-[#8C6F3C] disabled:bg-[#A8884E]/50 text-white rounded-lg font-medium transition-colors"
+            >
+              {saving ? 'Đang lưu...' : 'Lưu nhà cung cấp'}
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* Danh sách NCC */}
+      <div className={`${canApprove ? 'lg:col-span-2' : 'lg:col-span-3'} rounded-xl border border-[#C9A581]/30 bg-[#042726] p-4 space-y-3`}>
+        <div className="flex items-center justify-between">
+          <h3 className="text-[#FBF8F4] font-semibold text-sm">Danh sách nhà cung cấp</h3>
+          <span className="text-[#C9A581] text-xs">Tổng số: {suppliers.length}</span>
+        </div>
+
+        {/* Tìm kiếm */}
+        <input
+          type="text"
+          placeholder="🔍 Tìm theo tên hoặc thông tin liên hệ..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-3 py-2 bg-[#03201E] border border-[#C9A581]/30 rounded-lg text-[#FBF8F4] placeholder-[#C9A581]/50 focus:outline-none focus:border-[#A8884E] transition-all"
+        />
+
+        {filteredSuppliers.length === 0 ? (
+          <p className="text-[#C9A581] text-center py-8">Không tìm thấy nhà cung cấp nào</p>
+        ) : (
+          <div className="overflow-x-auto border border-[#C9A581]/10 rounded-lg">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="bg-[#03201E] text-[#C9A581] border-b border-[#C9A581]/20">
+                  <th className="p-2 text-left">Tên nhà cung cấp</th>
+                  <th className="p-2 text-left">Liên hệ</th>
+                  <th className="p-2 text-center">Giao hàng / Chốt đơn</th>
+                  <th className="p-2 text-center">Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredSuppliers.map((s: any) => {
+                  const phone = s.contact?.phone || '';
+                  const email = s.contact?.email || '';
+                  const address = s.contact?.address || '';
+
+                  return (
+                    <tr key={s.id} className="border-b border-[#C9A581]/10 hover:bg-[#0d3330]">
+                      <td className="p-2 font-medium text-[#FBF8F4]">
+                        {s.name}
+                      </td>
+                      <td className="p-2 text-[#C9A581] space-y-0.5">
+                        {phone && <div className="flex items-center gap-1">📞 {phone}</div>}
+                        {email && <div className="flex items-center gap-1">✉️ {email}</div>}
+                        {address && <div className="max-w-[200px] truncate" title={address}>📍 {address}</div>}
+                        {!phone && !email && !address && <span>–</span>}
+                      </td>
+                      <td className="p-2 text-center text-[#FBF8F4]">
+                        <div>{s.lead_time_days} ngày</div>
+                        {s.cutoff_time && <div className="text-[#C9A581] text-[10px]">Cutoff: {s.cutoff_time.slice(0, 5)}</div>}
+                      </td>
+                      <td className="p-2 text-center">
+                        {canApprove ? (
+                          <button
+                            onClick={() => onToggleActive(s.id, s.is_active)}
+                            className={`px-2 py-1 rounded text-[10px] font-bold transition-colors ${
+                              s.is_active
+                                ? 'bg-[#0C201F] text-[#62A57C] border border-[#62A57C]/30 hover:bg-[#62A57C] hover:text-white'
+                                : 'bg-[#3A1B17] text-[#D06A5C] border border-[#D06A5C]/30 hover:bg-[#D06A5C] hover:text-white'
+                            }`}
+                          >
+                            {s.is_active ? 'Hoạt động' : 'Tắt'}
+                          </button>
+                        ) : (
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                              s.is_active
+                                ? 'bg-[#0C201F] text-[#62A57C]'
+                                : 'bg-[#3A1B17] text-[#D06A5C]'
+                            }`}
+                          >
+                            {s.is_active ? 'Hoạt động' : 'Tắt'}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
