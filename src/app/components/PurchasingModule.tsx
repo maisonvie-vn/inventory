@@ -273,12 +273,15 @@ export default function PurchasingModule({
   }, [fetchAll]);
 
   // Thêm nhà cung cấp mới
-  const handleAddSupplier = useCallback(async (newSup: { name: string; lead_time_days: number; cutoff_time: string | null; contact: any }) => {
+  const handleAddSupplier = useCallback(async (newSup: { name: string; lead_time_days: number; cutoff_time: string | null; contact: any } | null) => {
     try {
-      const { error } = await supabase
-        .from('suppliers')
-        .insert([newSup]);
-      if (error) throw error;
+      if (newSup) {
+        const { error } = await supabase
+          .from('suppliers')
+          .insert([newSup]);
+        if (error) throw error;
+        alert('✅ Thêm nhà cung cấp thành công!');
+      }
       fetchAll();
     } catch (err: any) {
       alert(`❌ Lỗi thêm nhà cung cấp: ${err.message}`);
@@ -1323,6 +1326,7 @@ function SuppliersMgmtTab({ suppliers, onAddSupplier, onToggleActive, loading, c
   const [address, setAddress] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [saving, setSaving] = useState(false);
+  const [importStatus, setImportStatus] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1352,6 +1356,92 @@ function SuppliersMgmtTab({ suppliers, onAddSupplier, onToggleActive, loading, c
     setAddress('');
   };
 
+  const handleExportTemplate = () => {
+    const ws = XLSX.utils.aoa_to_sheet([
+      ['Tên nhà cung cấp', 'Thời gian giao (ngày)', 'Giờ chốt đơn (cutoff)', 'Số điện thoại', 'Email', 'Địa chỉ'],
+      ['Công ty Cổ phần Thực phẩm An Nam', 2, '17:00', '024-3718-6200', 'order@annam.vn', 'Số 1 Phố Test, Hà Nội'],
+      ['Nhà cung cấp Rau sạch Đà Lạt Hải Yến', 1, '20:00', '0912-345-678', 'sales@dalatyen.vn', 'Đà Lạt, Lâm Đồng'],
+    ]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Mẫu nhà cung cấp');
+    XLSX.writeFile(wb, 'MAU_NHAP_NHA_CUNG_CAP.xlsx');
+  };
+
+  const handleImportExcel = async (file: File) => {
+    setImportStatus('Đang đọc file...');
+    try {
+      const buf = await file.arrayBuffer();
+      const wb = XLSX.read(buf, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1 });
+      const dataRows = rows.slice(1).filter(r => r[0] && r[0].toString().trim());
+
+      if (dataRows.length === 0) {
+        setImportStatus('❌ File Excel không có dữ liệu nhà cung cấp.');
+        return;
+      }
+
+      // Check existing names to prevent duplicates
+      const names = dataRows.map(r => r[0].toString().trim());
+      const { data: existing } = await supabase
+        .from('suppliers')
+        .select('name')
+        .in('name', names);
+      
+      const existingNames = new Set((existing || []).map((s: any) => s.name.toLowerCase()));
+
+      const toInsert: any[] = [];
+      const skipped: string[] = [];
+
+      for (const row of dataRows) {
+        const name = row[0].toString().trim();
+        if (existingNames.has(name.toLowerCase())) {
+          skipped.push(name);
+          continue;
+        }
+
+        const leadTimeDays = isNaN(parseInt(row[1])) ? 1 : parseInt(row[1]);
+        let cutoffTime = row[2] ? row[2].toString().trim() : null;
+        if (cutoffTime && /^\d{1,2}:\d{2}$/.test(cutoffTime)) {
+          cutoffTime = `${cutoffTime}:00`;
+        }
+
+        const phone = row[3] ? row[3].toString().trim() : null;
+        const email = row[4] ? row[4].toString().trim() : null;
+        const address = row[5] ? row[5].toString().trim() : null;
+
+        toInsert.push({
+          name,
+          lead_time_days: leadTimeDays,
+          cutoff_time: cutoffTime,
+          contact: { phone, email, address },
+          is_active: true
+        });
+      }
+
+      if (toInsert.length === 0) {
+        setImportStatus(`⚠️ Không có nhà cung cấp mới được thêm (Tất cả ${dataRows.length} NCC đã tồn tại trên hệ thống).`);
+        return;
+      }
+
+      const { error } = await supabase
+        .from('suppliers')
+        .insert(toInsert);
+
+      if (error) throw error;
+
+      setImportStatus(
+        `✅ Nhập thành công ${toInsert.length} nhà cung cấp.` +
+        (skipped.length > 0 ? `\n⚠️ Bỏ qua ${skipped.length} NCC trùng tên: ${skipped.slice(0, 3).join(', ')}${skipped.length > 3 ? '...' : ''}` : '')
+      );
+      
+      // Refresh list
+      await onAddSupplier(null);
+    } catch (err: any) {
+      setImportStatus(`❌ Lỗi import: ${err.message}`);
+    }
+  };
+
   const filteredSuppliers = suppliers.filter((s: any) => {
     const q = searchQuery.toLowerCase();
     const contactStr = JSON.stringify(s.contact || {}).toLowerCase();
@@ -1360,6 +1450,48 @@ function SuppliersMgmtTab({ suppliers, onAddSupplier, onToggleActive, loading, c
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 text-xs">
+      {/* Excel bulk import uploader */}
+      {canApprove && (
+        <div className="lg:col-span-3 rounded-xl border border-[#C9A581]/30 bg-[#042726] p-4 space-y-3">
+          <h3 className="text-[#FBF8F4] font-semibold flex items-center gap-2">
+            <Upload size={16} className="text-[#A8884E]" />
+            Nhập nhà cung cấp hàng loạt (Excel)
+          </h3>
+          <p className="text-[#C9A581] text-xs">
+            Tải tệp Excel mẫu để chuẩn bị dữ liệu, sau đó tải lên để thêm hàng loạt nhà cung cấp vào hệ thống.
+          </p>
+          <div className="flex gap-2 flex-wrap">
+            <button
+              onClick={handleExportTemplate}
+              className="px-3 py-1.5 border border-[#A8884E] text-[#A8884E] hover:bg-[#A8884E]/10 rounded-lg text-xs flex items-center gap-2 transition-colors"
+            >
+              <FileText size={12} /> Tải mẫu Excel
+            </button>
+            <label className="px-3 py-1.5 bg-[#A8884E] hover:bg-[#8C6F3C] text-white rounded-lg text-xs flex items-center gap-2 cursor-pointer transition-colors">
+              <Upload size={12} /> Chọn file nhập hàng loạt
+              <input
+                type="file"
+                accept=".xlsx,.xls"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) { handleImportExcel(f); e.target.value = ''; }
+                }}
+              />
+            </label>
+          </div>
+          {importStatus && (
+            <div className={`rounded-lg p-3 text-[11px] whitespace-pre-line ${
+              importStatus.startsWith('✅') ? 'bg-[#0C201F] text-[#62A57C] border border-[#62A57C]/30' :
+              importStatus.startsWith('❌') ? 'bg-[#3A1B17] text-[#D06A5C] border border-[#D06A5C]/30' :
+              'bg-[#3A2C13] text-[#D8AA57] border border-[#D8AA57]/30'
+            }`}>
+              {importStatus}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Form thêm NCC mới */}
       {canApprove && (
         <div className="lg:col-span-1 rounded-xl border border-[#C9A581]/30 bg-[#042726] p-4 space-y-4">
