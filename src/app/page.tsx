@@ -2871,73 +2871,96 @@ export default function Home() {
           <head>
             <title>Phiếu Đặt Hàng - ${doc.doc_no}</title>
             <style>
-              body { font-family: 'Times New Roman', serif; background-color: #fff; color: #000; padding: 40px; }
-              .header { text-align: center; border-bottom: 2px solid #B08D4F; padding-bottom: 10px; margin-bottom: 30px; }
-              .title { font-size: 26px; font-weight: bold; letter-spacing: 2px; margin: 0; color: #2E3A2C; font-family: 'Cormorant Garamond', serif; }
-              .subtitle { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin: 5px 0 0 0; color: #6B7560; }
-              .meta-table { width: 100%; margin-bottom: 30px; font-size: 13px; }
-              .meta-table td { padding: 4px; vertical-align: top; }
-              .warn-box { border: 1px solid #B08D4F; padding: 10px; margin-bottom: 20px; font-size: 11px; display: flex; gap: 15px; background: #F6F1E4; }
-              .data-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 12px; }
-              .data-table th, .data-table td { border: 1px solid #D6CDB4; padding: 8px; text-align: left; }
-              .data-table th { background-color: #2E3A2C; color: #F1EAD9; font-weight: bold; font-family: 'Cormorant Garamond', serif; }
-              .group-header-row { background-color: #F6F1E4; color: #2E3A2C; font-weight: bold; font-size: 13px; }
+              body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #fff; color: #222; padding: 40px; font-size: 13px; line-height: 1.4; }
+              .header { text-align: center; border-bottom: 2px solid #1b3224; padding-bottom: 12px; margin-bottom: 25px; }
+              .title { font-size: 28px; font-weight: bold; letter-spacing: 2px; margin: 0; color: #1b3224; font-family: 'Cormorant Garamond', Georgia, serif; }
+              .subtitle { font-size: 12px; letter-spacing: 1px; margin: 5px 0; color: #555; }
+              .main-title { font-size: 20px; font-weight: bold; margin: 15px 0 5px 0; color: #1b3224; letter-spacing: 1px; }
+              .sub-title { font-size: 14px; font-weight: bold; margin: 0 0 10px 0; color: #444; letter-spacing: 0.5px; }
+              .hash-line { font-family: monospace; font-size: 11px; color: #666; margin: 5px 0; }
+              .note-line { font-size: 11px; font-style: italic; color: #777; margin: 5px 0 0 0; }
+              
+              .meta-table { width: 100%; margin-bottom: 25px; font-size: 13px; border-collapse: collapse; }
+              .meta-table td { padding: 6px 0; vertical-align: top; }
+              
+              .warn-box { border: 1px solid #1b3224; padding: 10px 15px; margin-bottom: 25px; font-size: 11px; display: flex; align-items: center; gap: 15px; background: #F6F1E4; border-radius: 4px; }
+              .warn-title { font-weight: bold; color: #1b3224; }
+              .warn-tag { padding: 3px 8px; border-radius: 3px; font-weight: bold; font-size: 10px; }
+              .warn-tag.warn-critical { background: #F3DAD3; border: 1px solid #b23a2e; color: #b23a2e; }
+              .warn-tag.warn-low { background: #F5E6C8; border: 1px solid #c08a1e; color: #c08a1e; }
+              .warn-tag.warn-ok { color: #1b3224; font-weight: bold; }
+              
+              .data-table { width: 100%; border-collapse: collapse; margin-bottom: 35px; font-size: 12px; }
+              .data-table th, .data-table td { border: 1px solid #C9A581; padding: 10px 12px; text-align: left; }
+              .data-table th { background-color: #1b3224; color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+              .group-header-row { background-color: #1b3224 !important; color: #ffffff !important; font-weight: bold; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+              .group-header-row td { border-color: #1b3224; padding: 10px 12px; }
               .row-critical { background-color: #F3DAD3 !important; }
               .row-low { background-color: #F5E6C8 !important; }
-              .footer-sigs { width: 100%; margin-top: 50px; text-align: center; font-size: 13px; }
-              .footer-sigs td { width: 33%; height: 100px; vertical-align: top; }
-              .hash-info { margin-top: 60px; border-top: 1px solid #D6CDB4; padding-top: 10px; font-family: monospace; font-size: 10px; color: #6B7560; text-align: right; }
+              .item-name { font-weight: bold; color: #1b3224; }
+              .row-critical .item-name { color: #b23a2e; }
+              .row-low .item-name { color: #c08a1e; }
+              
+              .footer-sigs { width: 100%; margin-top: 45px; text-align: center; font-size: 12px; border-collapse: collapse; }
+              .footer-sigs td { width: 33%; height: 110px; vertical-align: top; padding: 10px; }
+              .footer-sigs td strong { display: block; margin-bottom: 5px; color: #1b3224; font-size: 12px; }
+              .footer-sigs td span { font-size: 11px; color: #666; font-style: italic; }
+              
+              .hash-info { margin-top: 50px; border-top: 1px solid #C9A581; padding-top: 10px; font-family: monospace; font-size: 10px; color: #666; text-align: right; line-height: 1.5; }
             </style>
           </head>
           <body>
             <div class="header">
               <h1 class="title">MAISON VIE</h1>
-              <p class="subtitle">Hệ thống CRM/ERP Inventory & Finance</p>
-              <h2 style="font-size: 16px; margin: 15px 0 0 0; text-decoration: underline; color: #2E3A2C;">PHIẾU ĐỀ XUẤT ĐẶT HÀNG / PURCHASE ORDER</h2>
+              <p class="subtitle">Nhà hàng Pháp &middot; Hệ thống CRM/ERP Quản lý Kho</p>
+              <h2 class="main-title">PHIẾU ĐỀ XUẤT ĐẶT HÀNG</h2>
+              <h3 class="sub-title">TỔNG HỢP THEO NHÓM HÀNG</h3>
+              <p class="hash-line">Số CT: ${doc.doc_no} &nbsp;&middot;&nbsp; SHA-256: ${hash.substring(0, 32)}...</p>
+              <p class="note-line">Bản chủ để review & duyệt — khi gửi sẽ lọc theo cột Nhà cung cấp. Chỉ có hiệu lực sau khi DUYỆT & ký.</p>
             </div>
             
             <table class="meta-table">
               <tr>
-                <td><strong>Số chứng từ:</strong> ${doc.doc_no}</td>
-                <td><strong>Nhà cung cấp:</strong> ${doc.supplier_name}</td>
+                <td style="width: 50%;"><strong>SỐ CHỨNG TỪ:</strong> ${doc.doc_no}</td>
+                <td style="width: 50%;"><strong>NGÀY LẬP:</strong> ${new Date(doc.business_date).toLocaleDateString('vi-VN')}</td>
               </tr>
               <tr>
-                <td><strong>Ngày chốt sổ:</strong> ${doc.business_date}</td>
-                <td><strong>Bộ phận yêu cầu:</strong> ${doc.location_id}</td>
+                <td style="width: 50%;"><strong>PHẠM VI:</strong> TỔNG HỢP (Bếp + Bar)</td>
+                <td style="width: 50%;"><strong>NGƯỜI LẬP:</strong> Nguyễn Văn A — Thủ kho</td>
               </tr>
             </table>
 
             <div class="warn-box">
-              <span>Chú giải cảnh báo (Nền dòng):</span>
-              <span style="background: #F3DAD3; padding: 2px 6px; border: 1px solid #b23a2e;">🔴 KHẨN CẤP (Tồn &le; An toàn)</span>
-              <span style="background: #F5E6C8; padding: 2px 6px; border: 1px solid #c08a1e;">🟡 SẮP HẾT (Tồn &le; Tối thiểu)</span>
-              <span style="padding: 2px 6px;">🟢 ĐỦ TỒN (Không tô)</span>
+              <span class="warn-title">MỨC CẢNH BÁO (tô nền dòng):</span>
+              <span class="warn-tag warn-critical">🔴 KHẨN CẤP</span>
+              <span class="warn-tag warn-low">🟡 SẮP HẾT</span>
+              <span class="warn-tag warn-ok">🟢 ĐỦ TỒN = không tô nền</span>
             </div>
 
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>Mã</th>
-                  <th>Tên hàng</th>
-                  <th>SL tồn</th>
-                  <th>SL cần</th>
-                  <th>Nhà cung cấp</th>
-                  <th>Ghi chú</th>
+                  <th style="width: 10%;">Mã</th>
+                  <th style="width: 30%;">Tên hàng</th>
+                  <th style="width: 12%;">SL cần</th>
+                  <th style="width: 23%;">Nhà cung cấp</th>
+                  <th style="width: 15%;">Ghi chú</th>
+                  <th style="width: 10%;">SL tồn</th>
                 </tr>
               </thead>
               <tbody>
                 ${Object.entries(groupedItems).map(([groupName, items]) => `
                   <tr class="group-header-row">
-                    <td colspan="6" style="padding: 10px 8px;">📊 Nhóm: ${groupName}</td>
+                    <td colspan="6" style="padding: 10px 12px;">${groupName.toUpperCase().replace('/', ' / ')}</td>
                   </tr>
                   ${items.map((it: any) => `
                     <tr ${rowClass(it.warning || '')}>
                       <td>${it.ingId}</td>
-                      <td>${it.name}</td>
-                      <td>${it.onHand} ${it.unit || ''}</td>
+                      <td class="item-name">${it.name}</td>
                       <td><strong>${it.slDat}</strong> ${it.unit || ''}</td>
                       <td>${doc.supplier_name || '—'}</td>
                       <td>${it.note || '—'}</td>
+                      <td>${it.onHand} ${it.unit || ''}</td>
                     </tr>
                   `).join('')}
                 `).join('')}
@@ -2946,9 +2969,18 @@ export default function Home() {
 
             <table class="footer-sigs">
               <tr>
-                <td><strong>Người lập phiếu</strong><br/><span style="font-size:11px; color:#555;">(Ký, ghi rõ họ tên)</span></td>
-                <td><strong>Trưởng bộ phận kho</strong><br/><span style="font-size:11px; color:#555;">(Ký, duyệt tồn ca)</span></td>
-                <td><strong>Phê duyệt (CFO)</strong><br/><span style="font-size:11px; color:#555;">(Ký, duyệt ngân sách)</span></td>
+                <td>
+                  <strong>NGƯỜI LẬP PHIẾU</strong>
+                  <span>(Ký, ghi rõ họ tên)</span>
+                </td>
+                <td>
+                  <strong>DUYỆT KHO / TRƯỞNG BỘ PHẬN</strong>
+                  <span>(Ký, ghi rõ họ tên)</span>
+                </td>
+                <td>
+                  <strong>PHÊ DUYỆT (KT / CFO)</strong>
+                  <span>(Ký, ghi rõ họ tên)</span>
+                </td>
               </tr>
             </table>
 

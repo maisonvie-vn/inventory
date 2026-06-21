@@ -528,14 +528,22 @@ export default function PurchasingModule({
     const printContent = `
       <html><head><title>In Hàng Loạt Phiếu Đặt Hàng PO</title>
       <style>
-        body { font-family: Arial, sans-serif; color: #222; padding: 20px; }
-        .po-page { box-sizing: border-box; }
-        h1 { font-size: 18px; border-bottom: 2px solid #333; padding-bottom: 8px; margin-top: 0; }
-        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; font-size: 12px; }
-        th { background: #f5f5f5; }
-        .footer { margin-top: 40px; display: flex; justify-content: space-between; }
-        .sign-box { border-top: 1px solid #333; padding-top: 8px; width: 180px; text-align: center; font-size: 11px; }
+        body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #222; padding: 30px; font-size: 13px; line-height: 1.4; }
+        .po-page { box-sizing: border-box; margin-bottom: 40px; }
+        .header { text-align: center; border-bottom: 2px solid #1b3224; padding-bottom: 12px; margin-bottom: 25px; }
+        .title { font-size: 28px; font-weight: bold; letter-spacing: 2px; margin: 0; color: #1b3224; font-family: 'Cormorant Garamond', Georgia, serif; }
+        .subtitle { font-size: 12px; letter-spacing: 1px; margin: 5px 0; color: #555; }
+        .main-title { font-size: 20px; font-weight: bold; margin: 15px 0 5px 0; color: #1b3224; letter-spacing: 1px; }
+        .meta-table { width: 100%; margin-bottom: 25px; font-size: 13px; border-collapse: collapse; }
+        .meta-table td { padding: 6px 0; vertical-align: top; }
+        table { width: 100%; border-collapse: collapse; margin-top: 16px; margin-bottom: 30px; font-size: 12px; }
+        th, td { border: 1px solid #C9A581; padding: 10px 12px; text-align: left; }
+        th { background: #1b3224; color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        .item-name { font-weight: bold; color: #1b3224; }
+        .footer { margin-top: 45px; display: flex; justify-content: space-between; text-align: center; font-size: 12px; }
+        .sign-box { border-top: 1px solid #C9A581; padding-top: 10px; width: 180px; text-align: center; }
+        .sign-box strong { display: block; margin-bottom: 5px; color: #1b3224; font-size: 12px; }
+        .sign-box span { font-size: 11px; color: #666; font-style: italic; display: block; }
         @media print {
           body { padding: 0; }
           .po-page {
@@ -619,7 +627,7 @@ export default function PurchasingModule({
             } else {
               mergedItems[key] = {
                 ingredient_id: item.ingredient_id,
-                ingredient_code: item.ingredient_code || itemany.ingredient_code || '',
+                ingredient_code: itemany.ingredient_code || '',
                 ingredient_name: item.ingredient_name || '',
                 qty: item.qty,
                 purchase_uom: item.purchase_uom,
@@ -636,24 +644,42 @@ export default function PurchasingModule({
 
         return `
           <div class="po-page">
-            <h1>PHIẾU ĐẶT HÀNG — ${poNumbers}</h1>
-            <p><strong>Nhà cung cấp:</strong> ${supplierName}</p>
-            <p><strong>Bộ phận đặt:</strong> ${locations}</p>
-            <p><strong>Ngày lập:</strong> ${dates}</p>
-            <p><strong>Trạng thái:</strong> ${status}</p>
-            ${notes ? `<p><strong>Ghi chú:</strong> ${notes}</p>` : ''}
-            ${canViewFinancials ? `<p><strong>Tổng giá trị:</strong> ${totalValue?.toLocaleString('vi-VN')} đ</p>` : ''}
+            <div class="header">
+              <h1 class="title">MAISON VIE</h1>
+              <p class="subtitle">Nhà hàng Pháp &middot; Hệ thống CRM/ERP Quản lý Kho</p>
+              <h2 class="main-title">PHIẾU ĐẶT HÀNG</h2>
+            </div>
+            
+            <table class="meta-table">
+              <tr>
+                <td style="width: 50%;"><strong>SỐ CHỨNG TỪ:</strong> ${poNumbers}</td>
+                <td style="width: 50%;"><strong>NGÀY LẬP:</strong> ${dates}</td>
+              </tr>
+              <tr>
+                <td style="width: 50%;"><strong>NHÀ CUNG CẤP:</strong> ${supplierName}</td>
+                <td style="width: 50%;"><strong>BỘ PHẬN ĐẶT:</strong> ${locations}</td>
+              </tr>
+              <tr>
+                <td style="width: 50%;"><strong>TRẠNG THÁI:</strong> ${status}</td>
+                <td style="width: 50%;">${notes ? `<strong>GHI CHÚ:</strong> ${notes}` : ''}</td>
+              </tr>
+              ${canViewFinancials ? `
+              <tr>
+                <td colspan="2"><strong>TỔNG GIÁ TRỊ ƯỚC TÍNH:</strong> ${totalValue?.toLocaleString('vi-VN')} đ</td>
+              </tr>` : ''}
+            </table>
+
             <table>
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Mã hàng</th>
-                  <th>Tên hàng</th>
-                  <th>SL đặt</th>
-                  <th>ĐVT</th>
-                  ${canViewFinancials ? '<th>Đơn giá</th><th>Thành tiền</th>' : ''}
-                  <th>Ghi chú</th>
-                  <th>SL tồn</th>
+                  <th style="width: 5%;">#</th>
+                  <th style="width: 10%;">Mã hàng</th>
+                  <th style="width: 30%;">Tên hàng</th>
+                  <th style="width: 10%;">SL đặt</th>
+                  <th style="width: 8%;">ĐVT</th>
+                  ${canViewFinancials ? '<th style="width: 12%;">Đơn giá</th><th style="width: 13%;">Thành tiền</th>' : ''}
+                  <th style="width: 12%;">Ghi chú</th>
+                  <th style="width: 10%;">SL tồn</th>
                 </tr>
               </thead>
               <tbody>
@@ -661,8 +687,8 @@ export default function PurchasingModule({
                   <tr>
                     <td>${i + 1}</td>
                     <td>${line.ingredient_code || ''}</td>
-                    <td>${line.ingredient_name || ''}</td>
-                    <td>${line.qty}</td>
+                    <td class="item-name">${line.ingredient_name || ''}</td>
+                    <td><strong>${line.qty}</strong></td>
                     <td>${line.purchase_uom}</td>
                     ${canViewFinancials ? `<td>${line.unit_price?.toLocaleString('vi-VN')}</td><td>${line.estimated_value?.toLocaleString('vi-VN')}</td>` : ''}
                     <td></td>
@@ -671,21 +697,24 @@ export default function PurchasingModule({
                 `).join('')}
               </tbody>
             </table>
+            
             <div class="footer">
               <div class="sign-box">
-                <strong>Người lập</strong><br/>
-                <span style="font-size: 10px; color: #555; font-weight: normal;">(${locations})</span>
-                <br/><br/><br/><br/>
+                <strong>NGƯỜI LẬP</strong>
+                <span>(Ký, ghi rõ họ tên)</span>
+                <br/>
                 <strong>${locations} - ${requesterDisplay}</strong>
               </div>
               <div class="sign-box">
-                <strong>Người duyệt</strong>
-                <br/><br/><br/><br/><br/>
+                <strong>NGƯỜI DUYỆT</strong>
+                <span>(Ký, ghi rõ họ tên)</span>
+                <br/>
                 <strong>${approverDisplay}</strong>
               </div>
               <div class="sign-box">
-                <strong>Người duyệt cuối</strong>
-                <br/><br/><br/><br/><br/>
+                <strong>NGƯỜI DUYỆT CUỐI</strong>
+                <span>(Ký, ghi rõ họ tên)</span>
+                <br/>
                 <strong>${secondApproverDisplay}</strong>
               </div>
             </div>
