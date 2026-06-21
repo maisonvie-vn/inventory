@@ -3556,16 +3556,53 @@ export default function Home() {
       return 'Quốc gia khác';
     };
 
-    // Helper to get structured category group
+    // Helper to get structured category group based on category and code prefixes
     const getIngredientGroup = (ing: any) => {
-      const code = ing.code || ing.id || '';
+      const code = (ing.code || ing.id || '').toUpperCase();
       const category = ing.category || 'Khác';
       const name = (ing.vi_name || ing.en_name || ing.fr_name || '').toLowerCase();
 
-      if (category === 'Meat') return '1. Hàng thịt';
-      if (category === 'Seafood') return '2. Hàng cá & hải sản';
-      if (category === 'Dairy') return '3. Hàng dairy bơ sữa';
-      
+      // 1. Meat (Hàng thịt)
+      // Check category Meat or code prefixes representing raw meat (NVLC1: Beef, NVLC2: Lamb, NVLC3: Pork, NVLC4: Poultry, NVLC7: Veal)
+      // and rabbit codes NVLC6010, NVLC6022, plus NLP2 (cured meats, ham, sausage, bacon) except NLP2021 (Egg)
+      if (
+        category === 'Meat' || 
+        code.startsWith('NVLC1') || 
+        code.startsWith('NVLC2') || 
+        code.startsWith('NVLC3') || 
+        code.startsWith('NVLC4') || 
+        code.startsWith('NVLC7') || 
+        code === 'NVLC6010' || 
+        code === 'NVLC6022' || 
+        (code.startsWith('NLP2') && code !== 'NLP2021')
+      ) {
+        return '1. Hàng thịt';
+      }
+
+      // 2. Seafood (Hàng cá & hải sản)
+      // Check category Seafood or code prefixes representing seafood (NVLC5: Fish, NVLC6: Seafood except rabbit codes)
+      // and NLP8015/NLP815 (black caviar)
+      if (
+        category === 'Seafood' || 
+        ((code.startsWith('NVLC5') || code.startsWith('NVLC6')) && code !== 'NVLC6010' && code !== 'NVLC6022') ||
+        code === 'NLP8015' || 
+        code === 'NLP815'
+      ) {
+        return '2. Hàng cá & hải sản';
+      }
+
+      // 3. Dairy (Hàng dairy bơ sữa)
+      // Check category Dairy or code prefixes representing dairy/cheese (NLP1: Cheeses, NLP3010: Margarine, NLP3029: Greek yogurt)
+      if (
+        category === 'Dairy' || 
+        code.startsWith('NLP1') || 
+        code === 'NLP3010' || 
+        code === 'NLP3029'
+      ) {
+        return '3. Hàng dairy bơ sữa';
+      }
+
+      // 4. Wine and 5. Spirits
       if (category === 'Alcohol') {
         if (code.startsWith('V')) {
           const country = getWineCountry(ing.vi_name || ing.en_name || ing.fr_name || '');
@@ -3577,14 +3614,80 @@ export default function Home() {
         return '4. Hàng rượu mạnh';
       }
 
-      if (category === 'Beverage') return '7. Bia & Nước giải khát';
-      if (['Vegetable', 'Herb', 'Fruit'].includes(category)) return '6. Rau củ quả tươi';
-      
+      // 7. Beer and Softdrinks (Bia & Nước giải khát)
+      // Match category Beverage or code starting with B (Beers) or beverage keywords in code/name
+      if (
+        category === 'Beverage' || 
+        code.startsWith('B') || 
+        name.includes('beer') || 
+        name.includes('bia') || 
+        name.includes('coke') || 
+        name.includes('cola') || 
+        name.includes('sprite') || 
+        name.includes('fanta') || 
+        name.includes('soda') || 
+        name.includes('schweppes') || 
+        name.includes('lavie') || 
+        name.includes('aquafina') || 
+        name.includes('perrier') || 
+        name.includes('evian') || 
+        name.includes('san benedetto') || 
+        name.includes('pepsi') || 
+        name.includes('7up') || 
+        name.includes('water') || 
+        name.includes('nước ngọt') || 
+        name.includes('nước suối')
+      ) {
+        return '7. Bia & Nước giải khát';
+      }
+
+      // 6. Fresh produce (Rau củ quả tươi)
+      // Match category Vegetable/Herb/Fruit or fresh fruits range in NLP6 (NLP60036 to NLP60053, excluding frozen/packaged)
+      if (
+        ['Vegetable', 'Herb', 'Fruit'].includes(category) || 
+        (code.startsWith('NLP6') && parseInt(code.replace(/\D/g, '')) >= 60036 && parseInt(code.replace(/\D/g, '')) <= 60053)
+      ) {
+        return '6. Rau củ quả tươi';
+      }
+
+      // 8. Dry goods & Spices (Hàng khô & Gia vị)
       return '8. Hàng khô & Gia vị';
     };
 
-    // Sort ingredients by group and then by name
-    const sortedIngredients = [...ingredients].sort((a, b) => {
+    // Filter out finished products, set menus, portion glasses, and dummy/process items
+    const rawFilteredIngredients = roleFilteredIngredients.filter(ing => {
+      const code = (ing.code || ing.id || '').toUpperCase();
+      const name = (ing.vi_name || ing.en_name || ing.fr_name || '').toUpperCase();
+      const unit = (ing.unit || '').toUpperCase();
+      
+      // Exclude codes starting with R or DE (recipes and finished POS dishes)
+      if (code.startsWith('R') || code.startsWith('DE')) return false;
+      
+      // Exclude dummy POS codes
+      if (code === '000' || code === '0001' || code === '001' || code === '002') return false;
+      
+      // Exclude dummy items representing cooking/beverage preparation processes
+      if (name.includes('NGUYÊN LIỆU CHẾ BIẾN') || name.includes('KO NHẬP')) return false;
+      
+      // Exclude set menus
+      if (
+        code.includes('SET') || 
+        name.includes('SET MENU') || 
+        name.includes('SETMENU') || 
+        name.includes('SET MNU') || 
+        name.includes('SETMNU') || 
+        name.includes('TASTING MENU')
+      ) return false;
+      
+      // Exclude portion units representing prepared dishes/servings
+      const excludedUnits = ['GLASS', 'PLATE', 'BOWL', 'PAX', 'CUP'];
+      if (excludedUnits.includes(unit)) return false;
+      
+      return true;
+    });
+
+    // Sort filtered ingredients by group and then by name
+    const sortedIngredients = [...rawFilteredIngredients].sort((a, b) => {
       const groupA = getIngredientGroup(a);
       const groupB = getIngredientGroup(b);
       if (groupA !== groupB) {
