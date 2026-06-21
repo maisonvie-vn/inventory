@@ -27,6 +27,11 @@ declare
   v_standard_price numeric(12, 2);
   v_po_fully_received boolean;
 begin
+  -- Validate user id, if it doesn't exist in profiles, set it to null
+  if p_user_id is not null and not exists (select 1 from profiles where id = p_user_id) then
+    p_user_id := null;
+  end if;
+
   -- 1. Fetch Goods Receipt Details
   select * into r_grn from goods_receipts where id = p_grn_id;
   if r_grn is null then
@@ -117,9 +122,9 @@ begin
     -- Tạo lô hàng mới (lots) nếu bật theo dõi FEFO
     v_lot_id := null;
     if r_line.track_lot then
-      insert into lots (ingredient_id, grn_id, qty_remaining, expiry_date)
+      insert into lots (ingredient_id, grn_id, qty_received, qty_remaining, expiry_date)
       -- Mặc định hạn sử dụng là 30 ngày nếu không có thông tin (có thể cập nhật sau)
-      values (r_line.ingredient_id, p_grn_id, v_qty_received_stock_uom, current_date + interval '30 days')
+      values (r_line.ingredient_id, p_grn_id, v_qty_received_stock_uom, v_qty_received_stock_uom, current_date + interval '30 days')
       returning id into v_lot_id;
     end if;
 
@@ -189,6 +194,11 @@ declare
   v_lot_deduct numeric(12, 4);
   v_remaining_deduct numeric(12, 4);
 begin
+  -- Validate user id, if it doesn't exist in profiles, set it to null
+  if p_user_id is not null and not exists (select 1 from profiles where id = p_user_id) then
+    p_user_id := null;
+  end if;
+
   -- 1. Loop through sales imported for the given date that are not yet processed
   for r_sale in 
     select s.id, s.menu_item_id, s.qty_sold, s.void_qty, s.comp_qty, m.is_set_menu, m.name 
@@ -448,6 +458,11 @@ declare
   v_po_num varchar;
   v_detail_count integer;
 begin
+  -- Validate user id, if it doesn't exist in profiles, set it to null
+  if p_user_id is not null and not exists (select 1 from profiles where id = p_user_id) then
+    p_user_id := null;
+  end if;
+
   -- Tạo bảng tạm gom các dòng cần đặt
   create temp table temp_auto_po_items (
     ingredient_id varchar(50),
@@ -669,6 +684,11 @@ declare
   v_transfer_id uuid;
   v_wac numeric(12, 2);
 begin
+  -- Validate user id, if it doesn't exist in profiles, set it to null
+  if p_user_id is not null and not exists (select 1 from profiles where id = p_user_id) then
+    p_user_id := null;
+  end if;
+
   -- Validate quantity
   if p_qty <= 0 then
     raise exception 'Số lượng chuyển kho phải lớn hơn 0.';
@@ -717,6 +737,11 @@ declare
   v_issues_confirmed boolean;
   v_snapshot jsonb;
 begin
+  -- Validate user id, if it doesn't exist in profiles, set it to null
+  if p_user_id is not null and not exists (select 1 from profiles where id = p_user_id) then
+    p_user_id := null;
+  end if;
+
   if p_type = 'IMPORT' then
     insert into daily_stock_movement (business_date, location_id, imports_confirmed, imports_confirmed_by, imports_confirmed_at)
     values (p_date, p_loc_id, true, p_user_id, now())

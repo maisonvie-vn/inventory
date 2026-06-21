@@ -566,7 +566,7 @@ export default function ManualForms({
         if (linesErr) throw linesErr;
 
         const { data: { user } } = await supabase.auth.getUser();
-        const userId = user?.id || currentUser?.id || '00000000-0000-0000-0000-000000000000';
+        const userId = user?.id || currentUser?.id || null;
 
         const { error: approveErr } = await supabase.rpc('approve_goods_receipt', {
           p_grn_id: grnResult.id,

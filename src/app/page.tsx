@@ -2374,7 +2374,7 @@ export default function Home() {
     if (isSupabaseConfigured()) {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        const userId = session?.user.id || '00000000-0000-0000-0000-000000000000';
+        const userId = session?.user.id || currentUser?.id || null;
         
         const { error } = await supabase.rpc('approve_goods_receipt', {
           p_grn_id: grnId,
@@ -2466,7 +2466,7 @@ export default function Home() {
     if (isSupabaseConfigured()) {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        const userId = session?.user.id || '00000000-0000-0000-0000-000000000000';
+        const userId = session?.user.id || currentUser?.id || null;
         
         // Log to non_sale_consumption in Supabase
         const { error: err1 } = await supabase
@@ -2606,7 +2606,7 @@ export default function Home() {
     if (isSupabaseConfigured()) {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        const userId = session?.user.id || '00000000-0000-0000-0000-000000000000';
+        const userId = session?.user.id || currentUser?.id || null;
         const nowStr = new Date().toISOString().split('T')[0];
 
         const { error } = await supabase.rpc('generate_auto_po', {
@@ -3064,7 +3064,7 @@ export default function Home() {
             try {
               // 1. Lấy thông tin user hiện tại
               const { data: { session } } = await supabase.auth.getSession();
-              const userId = session?.user.id || '00000000-0000-0000-0000-000000000000';
+              const userId = session?.user.id || currentUser?.id || null;
 
               // 2. Tự động upsert menu_items chưa tồn tại để tránh vi phạm khóa ngoại
               const uniqueCodes = Array.from(new Set(updatedSales.map(s => s.code)));
