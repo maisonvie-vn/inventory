@@ -2897,7 +2897,7 @@ export default function Home() {
         let bestMatch = '';
         let accuracy = 0;
         
-        if (code.startsWith('R') || code.startsWith('M') || code.startsWith('B')) {
+        if (code.startsWith('R') || code.startsWith('M') || code.startsWith('B') || code.startsWith('V')) {
           const keys = Object.keys(recipes);
           const found = keys.find(k => k.toLowerCase().includes(code.toLowerCase().slice(0, 3)));
           if (found) {
@@ -3691,8 +3691,8 @@ export default function Home() {
       // Exclude raw kitchen process codes listed by user
       if (excludedProcessCodes.includes(code)) return false;
       
-      // Always include B and M codes for actual stocktake (unless they are dummy codes)
-      if (code.startsWith('B') || code.startsWith('M')) {
+      // Always include B, M and V codes for actual stocktake (unless they are dummy codes)
+      if (code.startsWith('B') || code.startsWith('M') || code.startsWith('V')) {
         if (code === '000' || code === '0001' || code === '001' || code === '002') return false;
         if (name.includes('NGUYÊN LIỆU CHẾ BIẾN') || name.includes('KO NHẬP')) return false;
         return true;
