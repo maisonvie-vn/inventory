@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 /**
  * PurchasingModule — Tab Mua hàng & Nhập kho v3.0
@@ -341,6 +341,39 @@ export default function PurchasingModule({
       fetchAll();
     } catch (err: any) {
       alert(`❌ Lỗi cập nhật trạng thái: ${err.message}`);
+    }
+  }, [fetchAll]);
+
+  // Xóa nhà cung cấp
+  const handleDeleteSupplier = useCallback(async (id: string, name: string) => {
+    if (!window.confirm(`Bạn có chắc muốn XÓA nhà cung cấp "${name}" không?\nHành động này không thể hoàn tác.`)) return;
+    try {
+      // Xóa supplier_ingredients trước
+      await supabase.from('supplier_ingredients').delete().eq('supplier_id', id);
+      const { error } = await supabase.from('suppliers').delete().eq('id', id);
+      if (error) throw error;
+      alert('✅ Đã xóa nhà cung cấp thành công!');
+      fetchAll();
+    } catch (err: any) {
+      alert(`❌ Lỗi xóa nhà cung cấp: ${err.message}`);
+    }
+  }, [fetchAll]);
+
+  // Lưu danh sách sản phẩm của NCC vào supplier_ingredients
+  const handleSaveSupplierIngredients = useCallback(async (supplierId: string, ingredientIds: string[]) => {
+    try {
+      // Xóa hết mapping cũ
+      await supabase.from('supplier_ingredients').delete().eq('supplier_id', supplierId);
+      // Insert mapping mới
+      if (ingredientIds.length > 0) {
+        const rows = ingredientIds.map(ingId => ({ supplier_id: supplierId, ingredient_id: ingId }));
+        const { error } = await supabase.from('supplier_ingredients').insert(rows);
+        if (error) throw error;
+      }
+      alert(`✅ Đã lưu ${ingredientIds.length} sản phẩm cho nhà cung cấp!`);
+      fetchAll();
+    } catch (err: any) {
+      alert(`❌ Lỗi lưu sản phẩm NCC: ${err.message}`);
     }
   }, [fetchAll]);
 
@@ -741,8 +774,12 @@ export default function PurchasingModule({
       {activeSubTab === 'suppliers_mgmt' && (
         <SuppliersMgmtTab
           suppliers={suppliers}
+          allIngredients={allIngredients}
+          supplierIngredients={supplierIngredients}
           onAddSupplier={handleAddSupplier}
           onToggleActive={handleToggleSupplierActive}
+          onDeleteSupplier={handleDeleteSupplier}
+          onSaveSupplierIngredients={handleSaveSupplierIngredients}
           loading={loading}
           canApprove={canApprove}
         />
@@ -1552,51 +1589,68 @@ function CreatePOTab({ suppliers, ingredients, supplierIngredients = [], onCreat
 // -------------------------------------------------------------------
 // SuppliersMgmtTab — Quản lý Nhà cung cấp
 // -------------------------------------------------------------------
-function SuppliersMgmtTab({ suppliers, onAddSupplier, onToggleActive, loading, canApprove }: any) {
+function SuppliersMgmtTab({ suppliers, allIngredients, supplierIngredients, onAddSupplier, onToggleActive, onDeleteSupplier, onSaveSupplierIngredients, loading, canApprove }: any) {
+  // Form thêm NCC mới
   const [name, setName] = useState('');
   const [leadTime, setLeadTime] = useState(1);
   const [cutoffTime, setCutoffTime] = useState('17:00');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
   const [saving, setSaving] = useState(false);
   const [importStatus, setImportStatus] = useState<string | null>(null);
 
+  // Tìm kiếm + panel sản phẩm NCC
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSupplier, setSelectedSupplier] = useState<any>(null); // NCC đang chỉnh sửa sản phẩm
+  const [ingSearchQuery, setIngSearchQuery] = useState(''); // tìm nguyên liệu trong panel
+  const [editingIngIds, setEditingIngIds] = useState<Set<string>>(new Set()); // IDs đã tích trong panel
+  const [savingIngs, setSavingIngs] = useState(false);
+
+  // Khi chọn NCC để sửa sản phẩm → load danh sách hiện tại
+  const openIngPanel = (sup: any) => {
+    const currentIds = new Set<string>(
+      supplierIngredients
+        .filter((si: any) => si.supplier_id === sup.id)
+        .map((si: any) => si.ingredient_id)
+    );
+    setEditingIngIds(currentIds);
+    setIngSearchQuery('');
+    setSelectedSupplier(sup);
+  };
+
+  const handleSaveIngs = async () => {
+    if (!selectedSupplier) return;
+    setSavingIngs(true);
+    await onSaveSupplierIngredients(selectedSupplier.id, Array.from(editingIngIds));
+    setSavingIngs(false);
+    setSelectedSupplier(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) {
-      alert('Vui lòng nhập tên nhà cung cấp');
-      return;
-    }
+    if (!name.trim()) { alert('Vui lòng nhập tên nhà cung cấp'); return; }
     setSaving(true);
     await onAddSupplier({
       name: name.trim(),
       lead_time_days: Number(leadTime),
       cutoff_time: cutoffTime ? `${cutoffTime}:00` : null,
-      contact: {
-        phone: phone.trim() || null,
-        email: email.trim() || null,
-        address: address.trim() || null
-      },
+      contact: { phone: phone.trim() || null, email: email.trim() || null, address: address.trim() || null },
       is_active: true
     });
     setSaving(false);
-    // Reset form
-    setName('');
-    setLeadTime(1);
-    setCutoffTime('17:00');
-    setPhone('');
-    setEmail('');
-    setAddress('');
+    setName(''); setLeadTime(1); setCutoffTime('17:00'); setPhone(''); setEmail(''); setAddress('');
   };
 
+  // File Excel mẫu — bao gồm cột mã sản phẩm NCC
   const handleExportTemplate = () => {
     const ws = XLSX.utils.aoa_to_sheet([
-      ['Tên nhà cung cấp', 'Thời gian giao (ngày)', 'Giờ chốt đơn (cutoff)', 'Số điện thoại', 'Email', 'Địa chỉ'],
-      ['Công ty Cổ phần Thực phẩm An Nam', 2, '17:00', '024-3718-6200', 'order@annam.vn', 'Số 1 Phố Test, Hà Nội'],
-      ['Nhà cung cấp Rau sạch Đà Lạt Hải Yến', 1, '20:00', '0912-345-678', 'sales@dalatyen.vn', 'Đà Lạt, Lâm Đồng'],
+      ['Tên nhà cung cấp', 'Thời gian giao (ngày)', 'Giờ chốt đơn', 'Số điện thoại', 'Email', 'Địa chỉ', 'Mã sản phẩm (cách nhau bằng dấu phẩy)'],
+      ['Cty TNHH Đầu tư phát triển TM TH Việt Nam', 2, '17:00', '024-3718-6200', 'order@company.vn', 'Hà Nội', 'V6027,V6028,B5001,M4012'],
+      ['Nhà cung cấp Rau sạch Đà Lạt Hải Yến', 1, '20:00', '0912-345-678', 'sales@haiyenvn.vn', 'Đà Lạt, Lâm Đồng', 'NLP6001,NLP6002,NLP6010'],
     ]);
+    // Đặt độ rộng cột
+    ws['!cols'] = [{ wch: 45 }, { wch: 18 }, { wch: 14 }, { wch: 16 }, { wch: 25 }, { wch: 20 }, { wch: 40 }];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Mẫu nhà cung cấp');
     XLSX.writeFile(wb, 'MAU_NHAP_NHA_CUNG_CAP.xlsx');
@@ -1610,82 +1664,85 @@ function SuppliersMgmtTab({ suppliers, onAddSupplier, onToggleActive, loading, c
       const ws = wb.Sheets[wb.SheetNames[0]];
       const rows: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1 });
       const dataRows = rows.slice(1).filter(r => r[0] && r[0].toString().trim());
+      if (dataRows.length === 0) { setImportStatus('❌ File Excel không có dữ liệu nhà cung cấp.'); return; }
 
-      if (dataRows.length === 0) {
-        setImportStatus('❌ File Excel không có dữ liệu nhà cung cấp.');
-        return;
-      }
-
-      // Check existing names to prevent duplicates
       const names = dataRows.map(r => r[0].toString().trim());
-      const { data: existing } = await supabase
-        .from('suppliers')
-        .select('name')
-        .in('name', names);
-      
-      const existingNames = new Set((existing || []).map((s: any) => s.name.toLowerCase()));
+      const { data: existing } = await supabase.from('suppliers').select('id, name').in('name', names);
+      const existingMap = new Map((existing || []).map((s: any) => [s.name.toLowerCase(), s.id]));
 
       const toInsert: any[] = [];
       const skipped: string[] = [];
+      const productMappings: { name: string; codes: string[] }[] = [];
 
       for (const row of dataRows) {
-        const name = row[0].toString().trim();
-        if (existingNames.has(name.toLowerCase())) {
-          skipped.push(name);
+        const supName = row[0].toString().trim();
+        const productCodesStr = row[6] ? row[6].toString().trim() : '';
+        const productCodes = productCodesStr ? productCodesStr.split(',').map((c: string) => c.trim()).filter(Boolean) : [];
+
+        if (existingMap.has(supName.toLowerCase())) {
+          skipped.push(supName);
+          // Vẫn xử lý sản phẩm cho NCC đã tồn tại nếu có
+          if (productCodes.length > 0) productMappings.push({ name: supName, codes: productCodes });
           continue;
         }
 
-        const leadTimeDays = isNaN(parseInt(row[1])) ? 1 : parseInt(row[1]);
-        let cutoffTime = row[2] ? row[2].toString().trim() : null;
-        if (cutoffTime) {
-          const num = Number(cutoffTime);
+        let ct = row[2] ? row[2].toString().trim() : null;
+        if (ct) {
+          const num = Number(ct);
           if (!isNaN(num)) {
-            const timeFraction = num % 1;
-            const totalSeconds = Math.round(timeFraction * 24 * 3600);
-            const hours = Math.floor(totalSeconds / 3600);
-            const minutes = Math.floor((totalSeconds % 3600) / 60);
-            const seconds = totalSeconds % 60;
-            cutoffTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-          } else if (/^\d{1,2}:\d{2}$/.test(cutoffTime)) {
-            cutoffTime = `${cutoffTime}:00`;
-          } else if (/^\d{1,2}:\d{2}:\d{2}$/.test(cutoffTime)) {
-            // Already in HH:MM:SS format, keep it
-          } else {
-            cutoffTime = null; // Invalid time format, set to null
-          }
+            const tot = Math.round((num % 1) * 86400);
+            ct = `${String(Math.floor(tot/3600)).padStart(2,'0')}:${String(Math.floor((tot%3600)/60)).padStart(2,'0')}:${String(tot%60).padStart(2,'0')}`;
+          } else if (/^\d{1,2}:\d{2}$/.test(ct)) { ct = `${ct}:00`; }
+          else if (!/^\d{1,2}:\d{2}:\d{2}$/.test(ct)) { ct = null; }
         }
-
-        const phone = row[3] ? row[3].toString().trim() : null;
-        const email = row[4] ? row[4].toString().trim() : null;
-        const address = row[5] ? row[5].toString().trim() : null;
-
         toInsert.push({
-          name,
-          lead_time_days: leadTimeDays,
-          cutoff_time: cutoffTime,
-          contact: { phone, email, address },
+          name: supName,
+          lead_time_days: isNaN(parseInt(row[1])) ? 1 : parseInt(row[1]),
+          cutoff_time: ct,
+          contact: { phone: row[3]?.toString().trim() || null, email: row[4]?.toString().trim() || null, address: row[5]?.toString().trim() || null },
           is_active: true
         });
+        if (productCodes.length > 0) productMappings.push({ name: supName, codes: productCodes });
       }
 
-      if (toInsert.length === 0) {
-        setImportStatus(`⚠️ Không có nhà cung cấp mới được thêm (Tất cả ${dataRows.length} NCC đã tồn tại trên hệ thống).`);
+      if (toInsert.length === 0 && productMappings.length === 0) {
+        setImportStatus(`⚠️ Không có dữ liệu mới (${dataRows.length} NCC đã tồn tại và không có sản phẩm nào cần cập nhật).`);
         return;
       }
 
-      console.log('Inserting suppliers payload:', toInsert);
-      const { error } = await supabase
-        .from('suppliers')
-        .insert(toInsert);
+      // Insert NCC mới
+      let insertedSupIds: Record<string, string> = {};
+      if (toInsert.length > 0) {
+        const { data: inserted, error } = await supabase.from('suppliers').insert(toInsert).select('id, name');
+        if (error) throw error;
+        (inserted || []).forEach((s: any) => { insertedSupIds[s.name.toLowerCase()] = s.id; });
+      }
 
-      if (error) throw error;
+      // Gán sản phẩm vào supplier_ingredients
+      let productsMapped = 0;
+      if (productMappings.length > 0) {
+        const { data: allSups } = await supabase.from('suppliers').select('id, name');
+        const supMap = new Map((allSups || []).map((s: any) => [s.name.toLowerCase(), s.id]));
+        const { data: allIngs } = await supabase.from('ingredients').select('id, code').eq('is_active', true);
+        const ingCodeMap = new Map((allIngs || []).map((i: any) => [i.code.toUpperCase(), i.id]));
+        const siRows: any[] = [];
+        for (const pm of productMappings) {
+          const supId = supMap.get(pm.name.toLowerCase());
+          if (!supId) continue;
+          for (const code of pm.codes) {
+            const ingId = ingCodeMap.get(code.toUpperCase());
+            if (ingId) { siRows.push({ supplier_id: supId, ingredient_id: ingId }); productsMapped++; }
+          }
+        }
+        if (siRows.length > 0) {
+          await supabase.from('supplier_ingredients').upsert(siRows, { onConflict: 'supplier_id,ingredient_id' });
+        }
+      }
 
       setImportStatus(
-        `✅ Nhập thành công ${toInsert.length} nhà cung cấp.` +
+        `✅ Nhập thành công ${toInsert.length} nhà cung cấp mới${productsMapped > 0 ? ` + ${productsMapped} liên kết sản phẩm` : ''}.` +
         (skipped.length > 0 ? `\n⚠️ Bỏ qua ${skipped.length} NCC trùng tên: ${skipped.slice(0, 3).join(', ')}${skipped.length > 3 ? '...' : ''}` : '')
       );
-      
-      // Refresh list
       await onAddSupplier(null);
     } catch (err: any) {
       setImportStatus(`❌ Lỗi import: ${err.message}`);
@@ -1694,40 +1751,124 @@ function SuppliersMgmtTab({ suppliers, onAddSupplier, onToggleActive, loading, c
 
   const filteredSuppliers = suppliers.filter((s: any) => {
     const q = searchQuery.toLowerCase();
-    const contactStr = JSON.stringify(s.contact || {}).toLowerCase();
-    return s.name.toLowerCase().includes(q) || contactStr.includes(q);
+    return s.name.toLowerCase().includes(q) || JSON.stringify(s.contact || {}).toLowerCase().includes(q);
   });
 
+  // Nguyên liệu hiển thị trong panel gán sản phẩm
+  const filteredIngsForPanel = useMemo(() => {
+    const q = ingSearchQuery.toLowerCase().trim();
+    const list: any[] = allIngredients || [];
+    if (!q) return list.slice(0, 60);
+    return list.filter((ing: any) =>
+      (ing.code || '').toLowerCase().includes(q) ||
+      (ing.ten_vi || ing.vi_name || '').toLowerCase().includes(q)
+    ).slice(0, 60);
+  }, [allIngredients, ingSearchQuery]);
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 text-xs">
-      {/* Excel bulk import uploader */}
+    <div className="space-y-4 text-xs">
+
+      {/* === PANEL GÁN SẢN PHẨM CHO NCC (mở khi click "Sản phẩm") === */}
+      {selectedSupplier && (
+        <div className="rounded-xl border border-[#A8884E] bg-[#042726] p-4 space-y-3 animate-fadeIn">
+          <div className="flex items-center justify-between">
+            <h3 className="text-[#FBF8F4] font-semibold text-sm flex items-center gap-2">
+              <Package size={16} className="text-[#A8884E]" />
+              Gán sản phẩm / nguyên liệu cho: <span className="text-[#C2A35A]">{selectedSupplier.name}</span>
+            </h3>
+            <button onClick={() => setSelectedSupplier(null)} className="text-gray-400 hover:text-gray-200 text-xs cursor-pointer">✕ Đóng</button>
+          </div>
+          <p className="text-[#C9A581] text-[11px]">
+            Tích chọn các sản phẩm / nguyên liệu mà nhà cung cấp này cung ứng. Danh sách này sẽ được dùng để lọc khi tạo phiếu nhập GRN và PO.
+          </p>
+
+          {/* Tìm kiếm nguyên liệu */}
+          <input
+            type="text"
+            placeholder="🔍 Tìm mã NVL hoặc tên sản phẩm..."
+            value={ingSearchQuery}
+            onChange={(e) => setIngSearchQuery(e.target.value)}
+            className="w-full px-3 py-2 bg-[#03201E] border border-[#C9A581]/30 rounded-lg text-[#FBF8F4] placeholder-[#C9A581]/50 focus:outline-none focus:border-[#A8884E] transition-all"
+          />
+
+          <div className="flex items-center gap-3 text-[11px] text-[#C9A581]">
+            <span>Đã chọn: <strong className="text-[#C2A35A]">{editingIngIds.size}</strong> sản phẩm</span>
+            <button onClick={() => setEditingIngIds(new Set())} className="underline hover:text-[#FBF8F4] cursor-pointer">Bỏ chọn tất cả</button>
+            <button onClick={() => setEditingIngIds(new Set((allIngredients || []).map((i: any) => i.id)))} className="underline hover:text-[#FBF8F4] cursor-pointer">Chọn tất cả</button>
+          </div>
+
+          {/* Grid sản phẩm */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 max-h-72 overflow-y-auto pr-1">
+            {filteredIngsForPanel.map((ing: any) => {
+              const ingId = ing.id;
+              const ingCode = ing.code || '';
+              const ingName = ing.ten_vi || ing.vi_name || '';
+              const checked = editingIngIds.has(ingId);
+              return (
+                <label
+                  key={ingId}
+                  className={`flex items-center gap-2 p-2 rounded cursor-pointer border transition-all ${
+                    checked
+                      ? 'bg-[#C2A35A]/15 border-[#C2A35A]/50 text-[#C2A35A]'
+                      : 'bg-[#03201E] border-[#C9A581]/20 text-[#C9A581] hover:border-[#C9A581]/50'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => {
+                      setEditingIngIds(prev => {
+                        const next = new Set(prev);
+                        if (next.has(ingId)) next.delete(ingId); else next.add(ingId);
+                        return next;
+                      });
+                    }}
+                    className="accent-[#A8884E] shrink-0"
+                  />
+                  <div className="min-w-0">
+                    <div className="font-mono text-[10px] font-bold truncate">{ingCode}</div>
+                    <div className="text-[10px] truncate text-gray-300">{ingName}</div>
+                  </div>
+                </label>
+              );
+            })}
+            {filteredIngsForPanel.length === 0 && (
+              <div className="col-span-3 text-center text-gray-500 italic py-6">Không tìm thấy nguyên liệu</div>
+            )}
+          </div>
+
+          <div className="flex justify-end gap-2 pt-2 border-t border-[#C9A581]/20">
+            <button onClick={() => setSelectedSupplier(null)} className="px-4 py-2 border border-[#C9A581]/30 text-[#C9A581] rounded-lg hover:bg-[#C9A581]/10 transition-colors cursor-pointer">
+              Hủy
+            </button>
+            <button
+              onClick={handleSaveIngs}
+              disabled={savingIngs}
+              className="px-4 py-2 bg-[#A8884E] hover:bg-[#8C6F3C] disabled:opacity-60 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+            >
+              {savingIngs ? 'Đang lưu...' : `💾 Lưu ${editingIngIds.size} sản phẩm cho NCC`}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* === EXCEL BULK IMPORT === */}
       {canApprove && (
-        <div className="lg:col-span-3 rounded-xl border border-[#C9A581]/30 bg-[#042726] p-4 space-y-3">
+        <div className="rounded-xl border border-[#C9A581]/30 bg-[#042726] p-4 space-y-3">
           <h3 className="text-[#FBF8F4] font-semibold flex items-center gap-2">
             <Upload size={16} className="text-[#A8884E]" />
             Nhập nhà cung cấp hàng loạt (Excel)
           </h3>
           <p className="text-[#C9A581] text-xs">
-            Tải tệp Excel mẫu để chuẩn bị dữ liệu, sau đó tải lên để thêm hàng loạt nhà cung cấp vào hệ thống.
+            File mẫu bao gồm cột <strong>Mã sản phẩm</strong> — bạn có thể điền mã code (cách nhau bằng dấu phẩy) để gán sản phẩm cho NCC ngay khi nhập.
           </p>
           <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={handleExportTemplate}
-              className="px-3 py-1.5 border border-[#A8884E] text-[#A8884E] hover:bg-[#A8884E]/10 rounded-lg text-xs flex items-center gap-2 transition-colors"
-            >
-              <FileText size={12} /> Tải mẫu Excel
+            <button onClick={handleExportTemplate} className="px-3 py-1.5 border border-[#A8884E] text-[#A8884E] hover:bg-[#A8884E]/10 rounded-lg text-xs flex items-center gap-2 transition-colors">
+              <FileText size={12} /> Tải mẫu Excel (có cột Sản phẩm)
             </button>
             <label className="px-3 py-1.5 bg-[#A8884E] hover:bg-[#8C6F3C] text-white rounded-lg text-xs flex items-center gap-2 cursor-pointer transition-colors">
               <Upload size={12} /> Chọn file nhập hàng loạt
-              <input
-                type="file"
-                accept=".xlsx,.xls"
-                className="hidden"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) { handleImportExcel(f); e.target.value = ''; }
-                }}
-              />
+              <input type="file" accept=".xlsx,.xls" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) { handleImportExcel(f); e.target.value = ''; } }} />
             </label>
           </div>
           {importStatus && (
@@ -1742,171 +1883,158 @@ function SuppliersMgmtTab({ suppliers, onAddSupplier, onToggleActive, loading, c
         </div>
       )}
 
-      {/* Form thêm NCC mới */}
-      {canApprove && (
-        <div className="lg:col-span-1 rounded-xl border border-[#C9A581]/30 bg-[#042726] p-4 space-y-4">
-          <h3 className="text-[#FBF8F4] font-semibold text-sm">Thêm nhà cung cấp mới</h3>
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <div>
-              <label className="block text-[#C9A581] mb-1 font-semibold">Tên nhà cung cấp *</label>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="VD: Công ty TNHH Thực Phẩm Sạch"
-                className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
-              />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-2">
+      {/* === LAYOUT: FORM THÊM + DANH SÁCH === */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+        {/* Form thêm NCC mới */}
+        {canApprove && (
+          <div className="lg:col-span-1 rounded-xl border border-[#C9A581]/30 bg-[#042726] p-4 space-y-3">
+            <h3 className="text-[#FBF8F4] font-semibold text-sm">Thêm nhà cung cấp mới</h3>
+            <form onSubmit={handleSubmit} className="space-y-3">
               <div>
-                <label className="block text-[#C9A581] mb-1 font-semibold">Thời gian giao (ngày)</label>
+                <label className="block text-[#C9A581] mb-1 font-semibold">Tên nhà cung cấp *</label>
                 <input
-                  type="number"
-                  min="0"
-                  value={leadTime}
-                  onChange={(e) => setLeadTime(Number(e.target.value))}
+                  type="text" required value={name} onChange={(e) => setName(e.target.value)}
+                  placeholder="VD: Công ty TNHH Thực Phẩm Sạch"
                   className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
                 />
               </div>
-              <div>
-                <label className="block text-[#C9A581] mb-1 font-semibold">Giờ chốt đơn (cutoff)</label>
-                <input
-                  type="time"
-                  value={cutoffTime}
-                  onChange={(e) => setCutoffTime(e.target.value)}
-                  className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
-                />
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[#C9A581] mb-1 font-semibold">Giao hàng (ngày)</label>
+                  <input type="number" min="0" value={leadTime} onChange={(e) => setLeadTime(Number(e.target.value))}
+                    className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]" />
+                </div>
+                <div>
+                  <label className="block text-[#C9A581] mb-1 font-semibold">Giờ chốt đơn</label>
+                  <input type="time" value={cutoffTime} onChange={(e) => setCutoffTime(e.target.value)}
+                    className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]" />
+                </div>
               </div>
-            </div>
-
-            <div>
-              <label className="block text-[#C9A581] mb-1 font-semibold">Số điện thoại</label>
-              <input
-                type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="VD: 0912345678"
-                className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[#C9A581] mb-1 font-semibold">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="VD: contact@supplier.com"
-                className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[#C9A581] mb-1 font-semibold">Địa chỉ</label>
-              <textarea
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Địa chỉ văn phòng / kho NCC..."
-                rows={2}
-                className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E] resize-none"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={saving}
-              className="w-full py-2 bg-[#A8884E] hover:bg-[#8C6F3C] disabled:bg-[#A8884E]/50 text-white rounded-lg font-medium transition-colors"
-            >
-              {saving ? 'Đang lưu...' : 'Lưu nhà cung cấp'}
-            </button>
-          </form>
-        </div>
-      )}
-
-      {/* Danh sách NCC */}
-      <div className={`${canApprove ? 'lg:col-span-2' : 'lg:col-span-3'} rounded-xl border border-[#C9A581]/30 bg-[#042726] p-4 space-y-3`}>
-        <div className="flex items-center justify-between">
-          <h3 className="text-[#FBF8F4] font-semibold text-sm">Danh sách nhà cung cấp</h3>
-          <span className="text-[#C9A581] text-xs">Tổng số: {suppliers.length}</span>
-        </div>
-
-        {/* Tìm kiếm */}
-        <input
-          type="text"
-          placeholder="🔍 Tìm theo tên hoặc thông tin liên hệ..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-3 py-2 bg-[#03201E] border border-[#C9A581]/30 rounded-lg text-[#FBF8F4] placeholder-[#C9A581]/50 focus:outline-none focus:border-[#A8884E] transition-all"
-        />
-
-        {filteredSuppliers.length === 0 ? (
-          <p className="text-[#C9A581] text-center py-8">Không tìm thấy nhà cung cấp nào</p>
-        ) : (
-          <div className="overflow-x-auto border border-[#C9A581]/10 rounded-lg">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="bg-[#03201E] text-[#C9A581] border-b border-[#C9A581]/20">
-                  <th className="p-2 text-left">Tên nhà cung cấp</th>
-                  <th className="p-2 text-left">Liên hệ</th>
-                  <th className="p-2 text-center">Giao hàng / Chốt đơn</th>
-                  <th className="p-2 text-center">Trạng thái</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredSuppliers.map((s: any) => {
-                  const phone = s.contact?.phone || '';
-                  const email = s.contact?.email || '';
-                  const address = s.contact?.address || '';
-
-                  return (
-                    <tr key={s.id} className="border-b border-[#C9A581]/10 hover:bg-[#0d3330]">
-                      <td className="p-2 font-medium text-[#FBF8F4]">
-                        {s.name}
-                      </td>
-                      <td className="p-2 text-[#C9A581] space-y-0.5">
-                        {phone && <div className="flex items-center gap-1">📞 {phone}</div>}
-                        {email && <div className="flex items-center gap-1">✉️ {email}</div>}
-                        {address && <div className="max-w-[200px] truncate" title={address}>📍 {address}</div>}
-                        {!phone && !email && !address && <span>–</span>}
-                      </td>
-                      <td className="p-2 text-center text-[#FBF8F4]">
-                        <div>{s.lead_time_days} ngày</div>
-                        {s.cutoff_time && <div className="text-[#C9A581] text-[10px]">Cutoff: {s.cutoff_time.slice(0, 5)}</div>}
-                      </td>
-                      <td className="p-2 text-center">
-                        {canApprove ? (
-                          <button
-                            onClick={() => onToggleActive(s.id, s.is_active)}
-                            className={`px-2 py-1 rounded text-[10px] font-bold transition-colors ${
-                              s.is_active
-                                ? 'bg-[#0C201F] text-[#62A57C] border border-[#62A57C]/30 hover:bg-[#62A57C] hover:text-white'
-                                : 'bg-[#3A1B17] text-[#D06A5C] border border-[#D06A5C]/30 hover:bg-[#D06A5C] hover:text-white'
-                            }`}
-                          >
-                            {s.is_active ? 'Hoạt động' : 'Tắt'}
-                          </button>
-                        ) : (
-                          <span
-                            className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                              s.is_active
-                                ? 'bg-[#0C201F] text-[#62A57C]'
-                                : 'bg-[#3A1B17] text-[#D06A5C]'
-                            }`}
-                          >
-                            {s.is_active ? 'Hoạt động' : 'Tắt'}
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+              <div>
+                <label className="block text-[#C9A581] mb-1 font-semibold">Số điện thoại</label>
+                <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="VD: 0912345678"
+                  className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]" />
+              </div>
+              <div>
+                <label className="block text-[#C9A581] mb-1 font-semibold">Email</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="VD: contact@supplier.com"
+                  className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]" />
+              </div>
+              <div>
+                <label className="block text-[#C9A581] mb-1 font-semibold">Địa chỉ</label>
+                <textarea value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Địa chỉ văn phòng / kho NCC..." rows={2}
+                  className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E] resize-none" />
+              </div>
+              <button type="submit" disabled={saving}
+                className="w-full py-2 bg-[#A8884E] hover:bg-[#8C6F3C] disabled:opacity-50 text-white rounded-lg font-medium transition-colors">
+                {saving ? 'Đang lưu...' : '+ Lưu nhà cung cấp'}
+              </button>
+              <p className="text-[10px] text-[#C9A581]/60 italic text-center">Sau khi lưu, nhấn nút "Sản phẩm" để gán nguyên liệu cho NCC này</p>
+            </form>
           </div>
         )}
+
+        {/* Danh sách NCC */}
+        <div className={`${canApprove ? 'lg:col-span-2' : 'lg:col-span-3'} rounded-xl border border-[#C9A581]/30 bg-[#042726] p-4 space-y-3`}>
+          <div className="flex items-center justify-between">
+            <h3 className="text-[#FBF8F4] font-semibold text-sm">Danh sách nhà cung cấp</h3>
+            <span className="text-[#C9A581] text-xs">Tổng số: {suppliers.length}</span>
+          </div>
+
+          <input type="text" placeholder="🔍 Tìm theo tên hoặc thông tin liên hệ..."
+            value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-3 py-2 bg-[#03201E] border border-[#C9A581]/30 rounded-lg text-[#FBF8F4] placeholder-[#C9A581]/50 focus:outline-none focus:border-[#A8884E] transition-all"
+          />
+
+          {filteredSuppliers.length === 0 ? (
+            <p className="text-[#C9A581] text-center py-8">Không tìm thấy nhà cung cấp nào</p>
+          ) : (
+            <div className="overflow-x-auto border border-[#C9A581]/10 rounded-lg">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="bg-[#03201E] text-[#C9A581] border-b border-[#C9A581]/20">
+                    <th className="p-2 text-left">Tên nhà cung cấp</th>
+                    <th className="p-2 text-left">Liên hệ</th>
+                    <th className="p-2 text-center">Giao hàng</th>
+                    <th className="p-2 text-center">Sản phẩm</th>
+                    <th className="p-2 text-center">Trạng thái</th>
+                    {canApprove && <th className="p-2 text-center">Thao tác</th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredSuppliers.map((s: any) => {
+                    const sPhone = s.contact?.phone || '';
+                    const sEmail = s.contact?.email || '';
+                    const sAddress = s.contact?.address || '';
+                    const prodCount = supplierIngredients.filter((si: any) => si.supplier_id === s.id).length;
+                    const isSelected = selectedSupplier?.id === s.id;
+                    return (
+                      <tr key={s.id} className={`border-b border-[#C9A581]/10 transition-colors ${isSelected ? 'bg-[#A8884E]/10' : 'hover:bg-[#0d3330]'}`}>
+                        <td className="p-2 font-medium text-[#FBF8F4]">{s.name}</td>
+                        <td className="p-2 text-[#C9A581] space-y-0.5">
+                          {sPhone && <div>📞 {sPhone}</div>}
+                          {sEmail && <div>✉️ {sEmail}</div>}
+                          {sAddress && <div className="max-w-[160px] truncate" title={sAddress}>📍 {sAddress}</div>}
+                          {!sPhone && !sEmail && !sAddress && <span>–</span>}
+                        </td>
+                        <td className="p-2 text-center text-[#FBF8F4]">
+                          <div>{s.lead_time_days} ngày</div>
+                          {s.cutoff_time && <div className="text-[#C9A581] text-[10px]">Cutoff: {s.cutoff_time.slice(0, 5)}</div>}
+                        </td>
+                        <td className="p-2 text-center">
+                          <button
+                            onClick={() => isSelected ? setSelectedSupplier(null) : openIngPanel(s)}
+                            className={`px-2 py-1 rounded text-[10px] font-bold transition-colors cursor-pointer ${
+                              isSelected
+                                ? 'bg-[#A8884E] text-white'
+                                : prodCount > 0
+                                  ? 'bg-[#0C201F] text-[#62A57C] border border-[#62A57C]/30 hover:bg-[#62A57C] hover:text-white'
+                                  : 'bg-[#3A2C13] text-[#D8AA57] border border-[#D8AA57]/30 hover:bg-[#D8AA57] hover:text-white'
+                            }`}
+                          >
+                            {isSelected ? '✓ Đang sửa' : prodCount > 0 ? `📦 ${prodCount} SP` : '+ Thêm SP'}
+                          </button>
+                        </td>
+                        <td className="p-2 text-center">
+                          {canApprove ? (
+                            <button
+                              onClick={() => onToggleActive(s.id, s.is_active)}
+                              className={`px-2 py-1 rounded text-[10px] font-bold transition-colors cursor-pointer ${
+                                s.is_active
+                                  ? 'bg-[#0C201F] text-[#62A57C] border border-[#62A57C]/30 hover:bg-[#62A57C] hover:text-white'
+                                  : 'bg-[#3A1B17] text-[#D06A5C] border border-[#D06A5C]/30 hover:bg-[#D06A5C] hover:text-white'
+                              }`}
+                            >
+                              {s.is_active ? 'Hoạt động' : 'Tắt'}
+                            </button>
+                          ) : (
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${s.is_active ? 'bg-[#0C201F] text-[#62A57C]' : 'bg-[#3A1B17] text-[#D06A5C]'}`}>
+                              {s.is_active ? 'Hoạt động' : 'Tắt'}
+                            </span>
+                          )}
+                        </td>
+                        {canApprove && (
+                          <td className="p-2 text-center">
+                            <button
+                              onClick={() => onDeleteSupplier(s.id, s.name)}
+                              className="px-2 py-1 rounded text-[10px] font-bold bg-[#3A1B17] text-[#D06A5C] border border-[#D06A5C]/30 hover:bg-[#D06A5C] hover:text-white transition-colors cursor-pointer"
+                              title="Xóa nhà cung cấp"
+                            >
+                              🗑 Xóa
+                            </button>
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 }
+
