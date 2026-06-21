@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 /**
  * PurchasingModule — Tab Mua hàng & Nhập kho v3.0
@@ -348,8 +348,13 @@ export default function PurchasingModule({
   const handleDeleteSupplier = useCallback(async (id: string, name: string) => {
     if (!window.confirm(`Bạn có chắc muốn XÓA nhà cung cấp "${name}" không?\nHành động này không thể hoàn tác.`)) return;
     try {
-      // Xóa supplier_ingredients trước
+      // Xóa tất cả bảng con có FK trỏ về suppliers (theo thứ tự)
+      await supabase.from('supplier_prices').delete().eq('supplier_id', id);
       await supabase.from('supplier_ingredients').delete().eq('supplier_id', id);
+      // Đặt preferred_supplier = null trên ingredients trỏ về NCC này
+      await supabase.from('ingredients').update({ preferred_supplier_id: null }).eq('preferred_supplier_id', id);
+      // Xóa purchase_order_lines liên quan (nếu có PO nháp)
+      // Không xóa PO đã duyệt - để nguyên lịch sử
       const { error } = await supabase.from('suppliers').delete().eq('id', id);
       if (error) throw error;
       alert('✅ Đã xóa nhà cung cấp thành công!');
