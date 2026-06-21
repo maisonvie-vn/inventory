@@ -965,6 +965,7 @@ export default function PurchasingModule({
         <EditPOPanel
           po={editingPO}
           ingredients={allIngredients}
+          supplierIngredients={supplierIngredients}
           suppliers={suppliers}
           onSave={handleSavePO}
           onCancel={() => setEditingPO(null)}
@@ -2534,12 +2535,14 @@ function SuppliersMgmtTab({ suppliers, allIngredients, supplierIngredients, onAd
 function EditPOPanel({
   po,
   ingredients,
+  supplierIngredients = [],
   onSave,
   onCancel,
   suppliers
 }: {
   po: PurchaseOrder;
   ingredients: any[];
+  supplierIngredients?: any[];
   onSave: (poId: string, updatedLines: any[], notes: string, locationId: string) => Promise<void>;
   onCancel: () => void;
   suppliers: any[];
@@ -2571,8 +2574,46 @@ function EditPOPanel({
     }
   }, [po, ingredients]);
 
+  // Lọc nguyên liệu theo nhà cung cấp của PO
+  const filteredIngs = useMemo(() => {
+    const supplierId = po.supplier_id;
+    if (!supplierId) return ingredients;
+    const allowedIds = new Set(
+      supplierIngredients
+        .filter((si: any) => si.supplier_id === supplierId)
+        .map((si: any) => si.ingredient_id)
+    );
+
+    if (allowedIds.size === 0) {
+      // Fallback matching by code prefixes based on supplier name
+      const supplier = suppliers.find((s: any) => s.id === supplierId);
+      const sName = supplier?.name?.toLowerCase() || '';
+      if (sName.includes('đa lộc') || sName.includes('việt nam')) {
+        return ingredients.filter((ing: any) => {
+          const code = (ing.code || ing.id || '').toUpperCase();
+          return code.startsWith('V') || code.startsWith('B') || code.startsWith('M');
+        });
+      } else if (sName.includes('hải yến') || sName.includes('rau')) {
+        return ingredients.filter((ing: any) => {
+          const code = (ing.code || ing.id || '').toUpperCase();
+          return code.startsWith('NLP6');
+        });
+      } else if (sName.includes('an nam')) {
+        return ingredients.filter((ing: any) => {
+          const code = (ing.code || ing.id || '').toUpperCase();
+          const isBar = code.startsWith('V') || code.startsWith('B') || code.startsWith('M');
+          const isVeg = code.startsWith('NLP6');
+          return !isBar && !isVeg;
+        });
+      }
+      return ingredients;
+    }
+
+    return ingredients.filter((ing: any) => allowedIds.has(ing.id));
+  }, [ingredients, po.supplier_id, supplierIngredients, suppliers]);
+
   const searchIngredientsFormat = useMemo(() => {
-    return ingredients.map((ing: any) => ({
+    return filteredIngs.map((ing: any) => ({
       id: ing.id,
       code: ing.code,
       vi_name: ing.ten_vi || ing.vi_name || '',
@@ -2582,7 +2623,7 @@ function EditPOPanel({
       price: ing.wac_price || ing.price || 0,
       wac_price: ing.wac_price || ing.price || 0
     }));
-  }, [ingredients]);
+  }, [filteredIngs]);
 
   const handleAddLine = () => {
     if (!selIngId || !selectedIng) return;
@@ -2682,7 +2723,7 @@ function EditPOPanel({
                 setSelectedIng(ing);
                 setPrice(ing.wac_price || 0);
               }}
-              placeholder="Nhập mã hoặc tên..."
+              placeholder={po.supplier_id ? "Mã NVL hoặc tên của NCC..." : "Nhập mã hoặc tên..."}
             />
           </div>
 
