@@ -76,6 +76,8 @@ interface POLine {
   unit_price: number;
   estimated_value: number;
   suggested_qty: number;
+  moq?: number;
+  pack_size?: number;
 }
 
 interface GoodsReceipt {
@@ -104,6 +106,7 @@ export default function PurchasingModule({
   userRole, userId, badges, onResolveBadge, canViewFinancials
 }: PurchasingModuleProps) {
   const [activeSubTab, setActiveSubTab] = useState<'worklist' | 'create_po' | 'approve' | 'history' | 'grn' | 'suppliers_mgmt'>('worklist');
+  const [editingPO, setEditingPO] = useState<PurchaseOrder | null>(null);
   const [worklist, setWorklist] = useState<WorklistItem[]>([]);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
@@ -396,20 +399,110 @@ export default function PurchasingModule({
     }
   }, [fetchAll]);
 
-  // Rút lại PO về DRAFT (từ PENDING_APPROVAL)
-  const handleRecallPO = useCallback(async (poId: string) => {
-    if (!window.confirm('Rút lại PO này về trạng thái Nháp để chỉnh sửa? Bạn sẽ cần gửi duyệt lại sau khi sửa xong.')) return;
+  // Rút lại PO về DRAFT (từ PENDING_APPROVAL, APPROVED, hoặc SENT)
+  const handleRecallPO = useCallback(async (poId: string, currentStatus: string) => {
+    if (!window.confirm(`Rút lại PO này từ trạng thái "${currentStatus}" về trạng thái Nháp để chỉnh sửa? Bạn sẽ cần gửi duyệt lại sau khi sửa xong.`)) return;
     try {
       const { error } = await supabase
         .from('purchase_orders')
         .update({ status: 'DRAFT', approved_by: null, second_approver: null, approved_at: null })
         .eq('id', poId)
-        .in('status', ['PENDING_APPROVAL']);
+        .in('status', ['PENDING_APPROVAL', 'APPROVED', 'SENT']);
       if (error) throw error;
       alert('✅ Đã rút lại PO về Nháp! Bạn có thể chỉnh sửa và gửi duyệt lại.');
       fetchAll();
     } catch (err: any) {
       alert(`❌ Lỗi rút lại PO: ${err.message}`);
+    }
+  }, [fetchAll]);
+
+  // Xóa PO hoàn toàn (chỉ khi ở DRAFT)
+  const handleDeletePO = useCallback(async (poId: string, poNo: string) => {
+    if (!window.confirm(`Bạn có chắc muốn XÓA hoàn toàn phiếu đặt hàng ${poNo} không?\nHành động này không thể hoàn tác.`)) return;
+    try {
+      const { error } = await supabase
+        .from('purchase_orders')
+        .delete()
+        .eq('id', poId);
+      if (error) throw error;
+      alert('✅ Đã xóa PO thành công!');
+      onResolveBadge(poId);
+      fetchAll();
+    } catch (err: any) {
+      alert(`❌ Lỗi xóa PO: ${err.message}`);
+    }
+  }, [fetchAll, onResolveBadge]);
+
+  // Lưu PO sau khi chỉnh sửa
+  const handleSavePO = useCallback(async (poId: string, updatedLines: any[], notes: string, locationId: string) => {
+    try {
+      setLoading(true);
+      const newTotal = updatedLines.reduce((sum, line) => sum + (line.suggested_qty * line.unit_price), 0);
+
+      // Cập nhật PO Header
+      const { error: poErr } = await supabase
+        .from('purchase_orders')
+        .update({
+          notes: notes,
+          location_id: locationId,
+          total_value: Math.round(newTotal)
+        })
+        .eq('id', poId);
+      
+      if (poErr) throw poErr;
+
+      // Xóa lines cũ
+      const { error: delLinesErr } = await supabase
+        .from('po_lines')
+        .delete()
+        .eq('po_id', poId);
+
+      if (delLinesErr) throw delLinesErr;
+
+      // Chèn lines mới
+      const formattedLines = await Promise.all(updatedLines.map(async (line) => {
+        let stockAtOrder = 0;
+        try {
+          const { data: stockData } = await supabase
+            .from('v_stock_on_hand')
+            .select('qty_on_hand')
+            .eq('ingredient_id', line.ingredient_id)
+            .eq('location_id', locationId)
+            .maybeSingle();
+          stockAtOrder = stockData?.qty_on_hand || 0;
+        } catch (e) {
+          console.warn('Error fetching stock_at_order:', e);
+        }
+
+        return {
+          po_id: poId,
+          ingredient_id: line.ingredient_id,
+          qty: line.suggested_qty,
+          qty_ordered: line.suggested_qty,
+          uom: line.uom,
+          purchase_uom: line.uom,
+          unit_price: line.unit_price,
+          suggested_qty: line.suggested_qty,
+          moq_applied: line.moq || 1,
+          pack_size_applied: line.pack_size || 1,
+          estimated_value: line.suggested_qty * line.unit_price,
+          stock_at_order: stockAtOrder
+        };
+      }));
+
+      const { error: insLinesErr } = await supabase
+        .from('po_lines')
+        .insert(formattedLines);
+
+      if (insLinesErr) throw insLinesErr;
+
+      alert('✅ Đã cập nhật phiếu đặt hàng PO thành công!');
+      setEditingPO(null);
+      fetchAll();
+    } catch (err: any) {
+      alert(`❌ Lỗi lưu PO: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
   }, [fetchAll]);
 
@@ -656,15 +749,15 @@ export default function PurchasingModule({
         const stockAtOrder = (item as any).stock_at_order || 0;
 
         dataRows.push([
-          internalCode,                              // Mã hàng
-          ingredientName,                            // Tên hàng
-          item.qty,                                  // SL nhận
-          item.purchase_uom || 'UNIT',               // ĐVT mua
-          item.unit_price || matchingIng?.wac_price || matchingIng?.standard_price || 0, // Đơn giá (VND)
-          po.po_no,                                  // Số HĐ
-          todayStr,                                  // Ngày nhận
-          po.notes || '',                            // Ghi chú
-          stockAtOrder                               // SL tồn
+          internalCode,
+          ingredientName,
+          item.qty,
+          item.purchase_uom || 'UNIT',
+          item.unit_price || matchingIng?.wac_price || matchingIng?.standard_price || 0,
+          po.po_no,
+          todayStr,
+          po.notes || '',
+          stockAtOrder
         ]);
       }
     }
@@ -673,20 +766,211 @@ export default function PurchasingModule({
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'GRN_PO_Import');
 
-    // Name file based on PO numbers
     const fileSuffix = pos.length === 1 ? pos[0].po_no : `BULK_${pos.length}_POs`;
     const excelFileName = `GRN_PO_Import_${fileSuffix}.xlsx`;
 
     XLSX.writeFile(wb, excelFileName);
-    
     alert(`Đã xuất dữ liệu đặt hàng thành công ra file Excel nhập kho: ${excelFileName}\nBạn có thể sửa số lượng thực nhận, đơn giá trực tiếp trên file này và upload vào tab "Nhập hàng".`);
   };
+
+  // Xuất PDF Purchase Order gửi NCC — dùng browser print
+  const handleExportPDF = (poOrPos: PurchaseOrder | PurchaseOrder[]) => {
+    const pos = Array.isArray(poOrPos) ? poOrPos : [poOrPos];
+    if (pos.length === 0) return;
+
+    const today = new Date().toLocaleDateString('vi-VN');
+    const todayISO = new Date().toISOString().split('T')[0];
+
+    // Tạo HTML cho mỗi PO (mỗi PO 1 trang)
+    const pages = pos.map((po) => {
+      const supplier = suppliers.find((s: any) => s.id === po.supplier_id);
+      const supPhone = supplier?.contact?.phone || '';
+      const supEmail = supplier?.contact?.email || '';
+      const supAddress = supplier?.contact?.address || '';
+
+      const lines = (po.items || []).map((item, idx) => {
+        const matchingIng = allIngredients.find((ing: any) =>
+          ing.id === item.ingredient_id || ing.code === item.ingredient_id
+        );
+        const code = matchingIng?.code || item.ingredient_id || '';
+        const name = item.ingredient_name || matchingIng?.ten_vi || '';
+        const qty = item.qty || (item as any).suggested_qty || 0;
+        const uom = item.purchase_uom || 'UNIT';
+        const price = item.unit_price || matchingIng?.wac_price || 0;
+        const total = qty * price;
+        return `
+          <tr>
+            <td style="text-align:center;border:1px solid #ccc;padding:6px 4px;">${idx + 1}</td>
+            <td style="font-family:monospace;border:1px solid #ccc;padding:6px 4px;">${code}</td>
+            <td style="border:1px solid #ccc;padding:6px 8px;">${name}</td>
+            <td style="text-align:center;border:1px solid #ccc;padding:6px 4px;">${uom}</td>
+            <td style="text-align:right;border:1px solid #ccc;padding:6px 4px;">${qty.toLocaleString('vi-VN')}</td>
+            <td style="text-align:right;border:1px solid #ccc;padding:6px 4px;">${price > 0 ? price.toLocaleString('vi-VN') : '—'}</td>
+            <td style="text-align:right;border:1px solid #ccc;padding:6px 4px;font-weight:600;">${price > 0 ? total.toLocaleString('vi-VN') + ' ₫' : '—'}</td>
+          </tr>`;
+      }).join('');
+
+      const grandTotal = (po.items || []).reduce((sum, item) => {
+        const qty = item.qty || (item as any).suggested_qty || 0;
+        const price = item.unit_price || 0;
+        return sum + qty * price;
+      }, 0);
+
+      const deliveryDate = new Date(Date.now() + ((po as any).lead_time_days || 2) * 86400000).toLocaleDateString('vi-VN');
+
+      return `
+        <div class="po-page">
+          <!-- Header -->
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;">
+            <div>
+              <div style="font-size:22px;font-weight:800;color:#1a3a38;letter-spacing:1px;">MAISON VIE</div>
+              <div style="font-size:11px;color:#555;margin-top:2px;">Nhà hàng – Fine Dining</div>
+              <div style="font-size:10px;color:#777;margin-top:6px;">📍 28 Tăng Bạt Hổ, Hai Bà Trưng, Hà Nội</div>
+              <div style="font-size:10px;color:#777;">📞 024 3633 8828 &nbsp; ✉️ info@maisonvie.vn</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:20px;font-weight:800;color:#7a5c2e;letter-spacing:2px;">PURCHASE ORDER</div>
+              <div style="font-size:11px;color:#333;margin-top:4px;">PHIẾU ĐẶT HÀNG</div>
+              <table style="margin-top:8px;font-size:11px;border-collapse:collapse;">
+                <tr><td style="color:#777;padding:2px 8px 2px 0;">Số PO:</td><td style="font-weight:700;color:#1a3a38;">${po.po_no}</td></tr>
+                <tr><td style="color:#777;padding:2px 8px 2px 0;">Ngày lập:</td><td>${today}</td></tr>
+                <tr><td style="color:#777;padding:2px 8px 2px 0;">Giao hàng trước:</td><td style="font-weight:600;color:#c0392b;">${deliveryDate}</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <hr style="border:none;border-top:2px solid #7a5c2e;margin-bottom:16px;"/>
+
+          <!-- Supplier Info -->
+          <div style="background:#f9f6f0;border:1px solid #e8d5b0;border-radius:6px;padding:12px 16px;margin-bottom:20px;">
+            <div style="font-size:11px;font-weight:700;color:#7a5c2e;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Kính gửi Nhà Cung Cấp:</div>
+            <div style="font-size:14px;font-weight:700;color:#1a3a38;">${po.supplier_name || po.supplier_id}</div>
+            ${supPhone ? `<div style="font-size:11px;color:#555;margin-top:3px;">📞 ${supPhone}</div>` : ''}
+            ${supEmail ? `<div style="font-size:11px;color:#555;">✉️ ${supEmail}</div>` : ''}
+            ${supAddress ? `<div style="font-size:11px;color:#555;">📍 ${supAddress}</div>` : ''}
+          </div>
+
+          <!-- Items Table -->
+          <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px;">
+            <thead>
+              <tr style="background:#1a3a38;color:white;">
+                <th style="padding:8px 4px;text-align:center;border:1px solid #1a3a38;width:32px;">STT</th>
+                <th style="padding:8px 4px;text-align:left;border:1px solid #1a3a38;width:80px;">Mã hàng</th>
+                <th style="padding:8px 8px;text-align:left;border:1px solid #1a3a38;">Tên sản phẩm / Nguyên liệu</th>
+                <th style="padding:8px 4px;text-align:center;border:1px solid #1a3a38;width:50px;">ĐVT</th>
+                <th style="padding:8px 4px;text-align:right;border:1px solid #1a3a38;width:65px;">SL đặt</th>
+                <th style="padding:8px 4px;text-align:right;border:1px solid #1a3a38;width:90px;">Đơn giá (₫)</th>
+                <th style="padding:8px 4px;text-align:right;border:1px solid #1a3a38;width:100px;">Thành tiền (₫)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${lines}
+            </tbody>
+            <tfoot>
+              <tr style="background:#f0ece3;">
+                <td colspan="6" style="text-align:right;border:1px solid #ccc;padding:8px;font-weight:700;">TỔNG CỘNG:</td>
+                <td style="text-align:right;border:1px solid #ccc;padding:8px;font-weight:800;color:#7a5c2e;font-size:13px;">
+                  ${grandTotal > 0 ? grandTotal.toLocaleString('vi-VN') + ' ₫' : '(Giá TBD)'}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <!-- Notes -->
+          ${po.notes ? `
+          <div style="background:#fff8e8;border-left:3px solid #e8b84b;padding:8px 12px;font-size:11px;margin-bottom:16px;">
+            <strong>Ghi chú:</strong> ${po.notes}
+          </div>` : ''}
+
+          <!-- Terms -->
+          <div style="font-size:10px;color:#777;border:1px solid #eee;border-radius:4px;padding:10px 12px;margin-bottom:20px;">
+            <strong style="color:#333;">Điều kiện giao hàng:</strong>
+            Vui lòng giao hàng đúng số lượng, chủng loại, chất lượng theo yêu cầu. Hàng hóa cần kèm theo hóa đơn VAT hợp lệ.
+            Mọi thắc mắc vui lòng liên hệ bộ phận thu mua trước khi giao hàng.
+          </div>
+
+          <!-- Signatures -->
+          <div style="display:flex;justify-content:space-between;margin-top:24px;">
+            <div style="text-align:center;width:30%;">
+              <div style="font-size:11px;font-weight:700;color:#333;margin-bottom:48px;">NGƯỜI LẬP PHIẾU</div>
+              <div style="border-top:1px solid #999;padding-top:4px;font-size:10px;color:#777;">(Ký, họ tên)</div>
+            </div>
+            <div style="text-align:center;width:30%;">
+              <div style="font-size:11px;font-weight:700;color:#333;margin-bottom:48px;">TRƯỞNG BỘ PHẬN</div>
+              <div style="border-top:1px solid #999;padding-top:4px;font-size:10px;color:#777;">(Ký, họ tên)</div>
+            </div>
+            <div style="text-align:center;width:30%;">
+              <div style="font-size:11px;font-weight:700;color:#333;margin-bottom:48px;">NHÀ CUNG CẤP XÁC NHẬN</div>
+              <div style="border-top:1px solid #999;padding-top:4px;font-size:10px;color:#777;">(Ký, đóng dấu)</div>
+            </div>
+          </div>
+
+          <div style="text-align:center;font-size:9px;color:#aaa;margin-top:16px;border-top:1px solid #eee;padding-top:8px;">
+            Maison Vie · Purchase Order ${po.po_no} · Xuất ngày ${today}
+          </div>
+        </div>`;
+    });
+
+    // Tạo cửa sổ in
+    const printWin = window.open('', '_blank', 'width=900,height=700');
+    if (!printWin) { alert('Trình duyệt đã chặn popup. Vui lòng cho phép popup cho trang này.'); return; }
+
+    printWin.document.write(`<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Purchase Order – ${pos.map(p => p.po_no).join(', ')}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #222; background: #fff; }
+    .po-page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 20mm 18mm;
+      page-break-after: always;
+    }
+    .po-page:last-child { page-break-after: avoid; }
+    @media print {
+      body { margin: 0; }
+      .po-page { margin: 0; padding: 15mm 14mm; }
+      .no-print { display: none !important; }
+    }
+    @page { size: A4; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="no-print" style="background:#1a3a38;color:white;padding:12px 20px;display:flex;gap:12px;align-items:center;position:sticky;top:0;z-index:99;">
+    <span style="font-weight:700;">📄 Purchase Order PDF Preview</span>
+    <button onclick="window.print()" style="background:#c0a050;color:white;border:none;padding:8px 20px;border-radius:6px;font-weight:700;cursor:pointer;font-size:14px;">🖨️ In / Lưu PDF</button>
+    <button onclick="window.close()" style="background:transparent;color:#aaa;border:1px solid #aaa;padding:8px 14px;border-radius:6px;cursor:pointer;">Đóng</button>
+    <span style="font-size:12px;color:#aaa;margin-left:8px;">Tip: Chọn "Lưu thành PDF" trong hộp thoại in để xuất file PDF</span>
+  </div>
+  ${pages.join('\n')}
+</body>
+</html>`);
+    printWin.document.close();
+    // Tự động mở print dialog sau khi load xong
+    printWin.onload = () => { printWin.focus(); };
+  };
+
+
 
   // -------------------------------------------------------------------
   // Render
   // -------------------------------------------------------------------
   return (
     <div className="space-y-4">
+      {editingPO ? (
+        <EditPOPanel
+          po={editingPO}
+          ingredients={allIngredients}
+          suppliers={suppliers}
+          onSave={handleSavePO}
+          onCancel={() => setEditingPO(null)}
+        />
+      ) : (
+        <>
       {/* Sub-navigation */}
       <div className="flex gap-2 flex-wrap">
         {[
@@ -801,6 +1085,9 @@ export default function PurchasingModule({
           onRecall={handleRecallPO}
           onCancel={handleCancelPO}
           onPrint={handlePrintPO}
+          onExportPDF={handleExportPDF}
+          onEdit={setEditingPO}
+          onDelete={handleDeletePO}
           poBadges={poBadges}
           canViewFinancials={canViewFinancials}
           userId={userId}
@@ -831,6 +1118,8 @@ export default function PurchasingModule({
           onPrint={handlePrintPO}
           onCancel={handleCancelPO}
           onClone={handleClonePO}
+          onExportPDF={handleExportPDF}
+          onRecall={handleRecallPO}
           selectedPOs={selectedPOs}
           onTogglePO={(id: string) => setSelectedPOs(prev => {
             const s = new Set(prev);
@@ -875,6 +1164,8 @@ export default function PurchasingModule({
           loading={loading}
           canApprove={canApprove}
         />
+      )}
+        </>
       )}
     </div>
   );
@@ -1058,6 +1349,9 @@ function ApproveTab({
   onRecall,
   onCancel,
   onPrint,
+  onExportPDF,
+  onEdit,
+  onDelete,
   poBadges,
   canViewFinancials,
   userId,
@@ -1088,16 +1382,28 @@ function ApproveTab({
               Chọn tất cả
             </label>
             {selectedPOs.size > 0 && (
-              <button
-                onClick={() => {
-                  const selectedList = purchaseOrders.filter((po: any) => selectedPOs.has(po.id));
-                  onPrint(selectedList);
-                }}
-                className="px-3 py-1.5 bg-[#A8884E] hover:bg-[#8C6F3C] text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5"
-              >
-                <Upload size={12} className="rotate-180" />
-                Xuất Excel hàng loạt ({selectedPOs.size} PO)
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    const selectedList = purchaseOrders.filter((po: any) => selectedPOs.has(po.id));
+                    onPrint(selectedList);
+                  }}
+                  className="px-3 py-1.5 bg-[#A8884E] hover:bg-[#8C6F3C] text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5"
+                >
+                  <Upload size={12} className="rotate-180" />
+                  Xuất Excel hàng loạt ({selectedPOs.size} PO)
+                </button>
+                <button
+                  onClick={() => {
+                    const selectedList = purchaseOrders.filter((po: any) => selectedPOs.has(po.id));
+                    onExportPDF(selectedList);
+                  }}
+                  className="px-3 py-1.5 bg-[#0C201F] border border-[#62A57C]/50 text-[#62A57C] hover:bg-[#62A57C] hover:text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5"
+                >
+                  <Printer size={12} />
+                  Xuất PDF hàng loạt ({selectedPOs.size} PO)
+                </button>
+              </div>
             )}
           </div>
         )}
@@ -1154,6 +1460,9 @@ function ApproveTab({
                   <button onClick={() => onPrint(po)} className="p-2 rounded border border-[#C9A581]/30 text-[#C9A581] hover:text-white hover:border-[#A8884E] transition-colors" title="Xuất Excel Nhập Kho">
                     <Upload size={14} className="rotate-180" />
                   </button>
+                  <button onClick={() => onExportPDF(po)} className="p-2 rounded border border-[#C9A581]/30 text-[#C9A581] hover:text-white hover:border-[#A8884E] transition-colors" title="Xuất PDF Gửi NCC">
+                    <Printer size={14} />
+                  </button>
                 </div>
               </div>
 
@@ -1170,13 +1479,31 @@ function ApproveTab({
                 {po.status === 'DRAFT' && isSelfRequested && (
                   <span className="text-xs text-[#C9A581] italic">Bạn là người tạo — cần người khác gửi duyệt</span>
                 )}
-                {/* Nút Rút lại: người tạo có thể rút lại PO đang chờ duyệt */}
-                {po.status === 'PENDING_APPROVAL' && isSelfRequested && (
+                {po.status === 'DRAFT' && (
+                  <>
+                    <button
+                      onClick={() => onEdit(po)}
+                      className="px-3 py-1.5 bg-[#0C201F] border border-[#C9A581]/50 text-[#C9A581] hover:bg-[#A8884E] hover:text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1"
+                      title="Chỉnh sửa nội dung PO"
+                    >
+                      ✏️ Sửa PO
+                    </button>
+                    <button
+                      onClick={() => onDelete(po.id, po.po_no)}
+                      className="px-3 py-1.5 bg-[#3A1B17] border border-[#D06A5C]/50 text-[#D06A5C] hover:bg-[#D06A5C] hover:text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1"
+                      title="Xóa PO vĩnh viễn"
+                    >
+                      🗑️ Xóa PO
+                    </button>
+                  </>
+                )}
+                {/* Nút Rút lại: người tạo hoặc admin/manager có thể rút lại PO đang chờ duyệt */}
+                {po.status === 'PENDING_APPROVAL' && (isSelfRequested || canApprove) && (
                   <button
-                    onClick={() => onRecall(po.id)}
+                    onClick={() => onRecall(po.id, po.status)}
                     className="px-3 py-1.5 bg-[#3A2C13] border border-[#D8AA57] text-[#D8AA57] hover:bg-[#D8AA57] hover:text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1"
                   >
-                    ↩ Rút lại để sửa
+                    ↩ Rút lại về Nháp
                   </button>
                 )}
                 {po.status === 'PENDING_APPROVAL' && canApprove && !isSelfRequested && (
@@ -1225,6 +1552,8 @@ function HistoryTab({
   onPrint,
   onCancel,
   onClone,
+  onExportPDF,
+  onRecall,
   selectedPOs,
   onTogglePO,
   onToggleAllPOs
@@ -1236,16 +1565,28 @@ function HistoryTab({
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-[#FBF8F4] font-semibold">Lịch sử PO</h3>
         {filtered.length > 0 && selectedPOs.size > 0 && (
-          <button
-            onClick={() => {
-              const selectedList = filtered.filter((po: any) => selectedPOs.has(po.id));
-              onPrint(selectedList);
-            }}
-            className="px-3 py-1.5 bg-[#A8884E] hover:bg-[#8C6F3C] text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5"
-          >
-            <Upload size={12} className="rotate-180" />
-            Xuất Excel hàng loạt ({selectedPOs.size} PO)
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                const selectedList = filtered.filter((po: any) => selectedPOs.has(po.id));
+                onPrint(selectedList);
+              }}
+              className="px-3 py-1.5 bg-[#A8884E] hover:bg-[#8C6F3C] text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5"
+            >
+              <Upload size={12} className="rotate-180" />
+              Xuất Excel hàng loạt ({selectedPOs.size} PO)
+            </button>
+            <button
+              onClick={() => {
+                const selectedList = filtered.filter((po: any) => selectedPOs.has(po.id));
+                onExportPDF(selectedList);
+              }}
+              className="px-3 py-1.5 bg-[#0C201F] border border-[#62A57C]/50 text-[#62A57C] hover:bg-[#62A57C] hover:text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5"
+            >
+              <Printer size={12} />
+              Xuất PDF hàng loạt ({selectedPOs.size} PO)
+            </button>
+          </div>
         )}
       </div>
       <div className="overflow-x-auto rounded-xl border border-[#C9A581]/20">
@@ -1293,6 +1634,19 @@ function HistoryTab({
                     <button onClick={() => onPrint(po)} className="p-1 text-[#C9A581] hover:text-white transition-colors" title="Xuất Excel Nhập Kho">
                       <Upload size={12} className="rotate-180" />
                     </button>
+                    <button onClick={() => onExportPDF(po)} className="p-1 text-[#C9A581] hover:text-white transition-colors" title="Xuất PDF Gửi NCC">
+                      <Printer size={12} />
+                    </button>
+                    {/* Rút lại về Nháp để sửa (cho phép nếu là APPROVED hoặc SENT) */}
+                    {['APPROVED', 'SENT'].includes(po.status) && onRecall && (
+                      <button
+                        onClick={() => onRecall(po.id, po.status)}
+                        title="Rút lại PO này về trạng thái Nháp để chỉnh sửa"
+                        className="p-1 text-[#D8AA57] hover:text-[#D8AA57] transition-colors text-[10px] cursor-pointer"
+                      >
+                        ↩️
+                      </button>
+                    )}
                     {/* Nhân bản PO để sửa (tạo DRAFT mới) */}
                     {!['CANCELLED'].includes(po.status) && onClone && (
                       <button
@@ -2168,6 +2522,269 @@ function SuppliersMgmtTab({ suppliers, allIngredients, supplierIngredients, onAd
               </table>
             </div>
           )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// -------------------------------------------------------------------
+// EditPOPanel — Chỉnh sửa PO DRAFT
+// -------------------------------------------------------------------
+function EditPOPanel({
+  po,
+  ingredients,
+  onSave,
+  onCancel,
+  suppliers
+}: {
+  po: PurchaseOrder;
+  ingredients: any[];
+  onSave: (poId: string, updatedLines: any[], notes: string, locationId: string) => Promise<void>;
+  onCancel: () => void;
+  suppliers: any[];
+}) {
+  const [lines, setLines] = useState<any[]>([]);
+  const [notes, setNotes] = useState(po.notes || '');
+  const [locationId, setLocationId] = useState(po.location_id || 'MAIN_STORE');
+  const [selIngId, setSelIngId] = useState('');
+  const [selectedIng, setSelectedIng] = useState<any>(null);
+  const [qty, setQty] = useState(1);
+  const [price, setPrice] = useState(0);
+
+  // Khởi tạo lines từ PO items
+  useEffect(() => {
+    if (po && po.items) {
+      setLines(po.items.map(item => {
+        const ing = ingredients.find(i => i.id === item.ingredient_id || i.code === item.ingredient_id);
+        return {
+          ingredient_id: ing?.id || item.ingredient_id,
+          code: ing?.code || item.ingredient_id,
+          name: item.ingredient_name || ing?.ten_vi || '',
+          suggested_qty: item.qty || 0,
+          unit_price: item.unit_price || 0,
+          uom: item.purchase_uom || ing?.stock_uom || 'kg',
+          moq: item.moq || 1,
+          pack_size: item.pack_size || 1
+        };
+      }));
+    }
+  }, [po, ingredients]);
+
+  const searchIngredientsFormat = useMemo(() => {
+    return ingredients.map((ing: any) => ({
+      id: ing.id,
+      code: ing.code,
+      vi_name: ing.ten_vi || ing.vi_name || '',
+      fr_name: ing.nom_fr || '',
+      category: ing.category || 'Nguyên liệu',
+      unit: ing.stock_uom || ing.unit || 'kg',
+      price: ing.wac_price || ing.price || 0,
+      wac_price: ing.wac_price || ing.price || 0
+    }));
+  }, [ingredients]);
+
+  const handleAddLine = () => {
+    if (!selIngId || !selectedIng) return;
+    if (lines.some(l => l.ingredient_id === selIngId)) {
+      alert('Mặt hàng này đã có trong đơn');
+      return;
+    }
+    const rawIng = ingredients.find((i: any) => i.id === selIngId);
+    setLines([...lines, {
+      ingredient_id: selectedIng.id,
+      code: selectedIng.code,
+      name: rawIng?.ten_vi || selectedIng.vi_name || '',
+      suggested_qty: qty,
+      unit_price: price || selectedIng.wac_price || rawIng?.wac_price || 0,
+      uom: selectedIng.unit || rawIng?.stock_uom || 'kg',
+      moq: 1,
+      pack_size: 1
+    }]);
+    setSelIngId('');
+    setSelectedIng(null);
+    setQty(1);
+    setPrice(0);
+  };
+
+  const handleRemoveLine = (idx: number) => {
+    setLines(lines.filter((_, i) => i !== idx));
+  };
+
+  const handleUpdateLineQty = (idx: number, newQty: number) => {
+    setLines(lines.map((l, i) => i === idx ? { ...l, suggested_qty: newQty } : l));
+  };
+
+  const handleUpdateLinePrice = (idx: number, newPrice: number) => {
+    setLines(lines.map((l, i) => i === idx ? { ...l, unit_price: newPrice } : l));
+  };
+
+  const handleSubmit = () => {
+    if (lines.length === 0) {
+      alert('Vui lòng thêm ít nhất 1 mặt hàng');
+      return;
+    }
+    onSave(po.id, lines, notes, locationId);
+  };
+
+  const supplier = suppliers.find(s => s.id === po.supplier_id);
+
+  return (
+    <div className="rounded-xl border border-[#A8884E] bg-[#042726] p-4 space-y-4 text-xs">
+      <div className="flex items-center justify-between border-b border-[#C9A581]/20 pb-2">
+        <h3 className="text-[#FBF8F4] font-semibold text-sm">Chỉnh sửa đơn đặt hàng: <span className="text-[#C2A35A] font-mono">{po.po_no}</span></h3>
+        <button onClick={onCancel} className="text-gray-400 hover:text-gray-200 text-sm">✕ Đóng</button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div>
+          <label className="block text-[#C9A581] mb-1 font-semibold font-mono text-[10px]">NHÀ CUNG CẤP</label>
+          <div className="bg-[#03201E] border border-[#C9A581]/20 rounded-lg p-2 text-[#FBF8F4] font-semibold">
+            {supplier?.name || po.supplier_name || po.supplier_id}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-[#C9A581] mb-1 font-semibold font-mono text-[10px]">KHO NHẬN HÀNG *</label>
+          <select
+            value={locationId}
+            onChange={(e) => setLocationId(e.target.value)}
+            className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
+          >
+            <option value="MAIN_STORE">Kho chính (MAIN_STORE)</option>
+            <option value="BAR">Quầy Bar (BAR)</option>
+            <option value="KITCHEN">Bếp chính (KITCHEN)</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-[#C9A581] mb-1 font-semibold font-mono text-[10px]">GHI CHÚ PO</label>
+          <input
+            type="text"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Ghi chú đơn hàng..."
+            className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
+          />
+        </div>
+      </div>
+
+      {/* Form thêm mặt hàng */}
+      <div className="border-t border-[#C9A581]/20 pt-3 space-y-3">
+        <h4 className="text-[#C9A581] font-semibold">Thêm mặt hàng mới vào đơn</h4>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
+          <div className="relative">
+            <label className="block text-[#C9A581] mb-1">Tìm nguyên liệu</label>
+            <UniversalSearch
+              ingredients={searchIngredientsFormat}
+              onSelect={(ing) => {
+                setSelIngId(ing.id);
+                setSelectedIng(ing);
+                setPrice(ing.wac_price || 0);
+              }}
+              placeholder="Nhập mã hoặc tên..."
+            />
+          </div>
+
+          <div>
+            <label className="block text-[#C9A581] mb-1">Số lượng đặt</label>
+            <input
+              type="number"
+              min="1"
+              value={qty}
+              onChange={(e) => setQty(Number(e.target.value))}
+              className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[#C9A581] mb-1">Đơn giá dự kiến (VND)</label>
+            <input
+              type="number"
+              min="0"
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
+              className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none"
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={handleAddLine}
+            disabled={!selIngId}
+            className="w-full py-2 bg-[#A8884E] hover:bg-[#8C6F3C] disabled:bg-[#A8884E]/40 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+          >
+            Thêm dòng
+          </button>
+        </div>
+      </div>
+
+      {/* Danh sách dòng hàng */}
+      <div className="border-t border-[#C9A581]/20 pt-3">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="bg-[#03201E] text-[#C9A581] border-b border-[#C9A581]/20">
+              <th className="p-2 text-left">Mã</th>
+              <th className="p-2 text-left">Tên hàng</th>
+              <th className="p-2 text-right w-24">SL đặt</th>
+              <th className="p-2 text-right w-32">Đơn giá</th>
+              <th className="p-2 text-right">Thành tiền</th>
+              <th className="p-2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {lines.map((l, idx) => (
+              <tr key={l.ingredient_id} className="border-b border-[#C9A581]/10 hover:bg-[#0d3330]">
+                <td className="p-2 font-mono text-[#C2A35A]">{l.code}</td>
+                <td className="p-2 text-[#FBF8F4]">{l.name}</td>
+                <td className="p-2 text-right">
+                  <div className="flex items-center justify-end gap-1">
+                    <input
+                      type="number"
+                      min="0.0001"
+                      step="any"
+                      value={l.suggested_qty}
+                      onChange={(e) => handleUpdateLineQty(idx, Number(e.target.value))}
+                      className="bg-[#03201E] border border-[#C9A581]/30 rounded p-1 text-right text-[#FBF8F4] w-16"
+                    />
+                    <span className="text-[#C9A581]">{l.uom}</span>
+                  </div>
+                </td>
+                <td className="p-2 text-right">
+                  <input
+                    type="number"
+                    min="0"
+                    value={l.unit_price}
+                    onChange={(e) => handleUpdateLinePrice(idx, Number(e.target.value))}
+                    className="bg-[#03201E] border border-[#C9A581]/30 rounded p-1 text-right text-[#C2A35A] w-24"
+                  />
+                  <span className="text-gray-400 text-[10px] ml-1">đ</span>
+                </td>
+                <td className="p-2 text-right text-[#62A57C] font-semibold">{(l.suggested_qty * l.unit_price).toLocaleString('vi-VN')}đ</td>
+                <td className="p-2 text-center">
+                  <button onClick={() => handleRemoveLine(idx)} className="text-[#D06A5C] hover:text-[#f87171]">Xóa</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <div className="flex justify-end items-center gap-4 mt-4 pt-3 border-t border-[#C9A581]/20">
+          <div className="text-right">
+            <span className="text-gray-400">TỔNG CỘNG: </span>
+            <strong className="text-lg text-[#C2A35A] font-bold">
+              {lines.reduce((sum, l) => sum + (l.suggested_qty * l.unit_price), 0).toLocaleString('vi-VN')} đ
+            </strong>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={onCancel} className="px-4 py-2 border border-[#C9A581]/30 text-[#C9A581] rounded-lg hover:bg-[#C9A581]/10">Hủy</button>
+            <button
+              onClick={handleSubmit}
+              className="px-4 py-2 bg-[#62A57C] hover:bg-[#4d8f66] text-white rounded-lg font-medium transition-colors"
+            >
+              Lưu thay đổi
+            </button>
+          </div>
         </div>
       </div>
     </div>
