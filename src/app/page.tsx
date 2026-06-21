@@ -1188,9 +1188,35 @@ export default function Home() {
         viewName = 'v_inventory_cost';
       }
       
-      const { data: ingData, error: ingError } = await supabase
-        .from(viewName)
-        .select('*');
+      let ingData: any[] = [];
+      let from = 0;
+      let to = 999;
+      let hasMore = true;
+      let ingError = null;
+
+      while (hasMore) {
+        const { data, error } = await supabase
+          .from(viewName)
+          .select('*')
+          .range(from, to);
+
+        if (error) {
+          ingError = error;
+          break;
+        }
+
+        if (data) {
+          ingData.push(...data);
+          if (data.length < 1000) {
+            hasMore = false;
+          } else {
+            from += 1000;
+            to += 1000;
+          }
+        } else {
+          hasMore = false;
+        }
+      }
 
       if (ingError) {
         console.error("Error fetching ingredients view:", ingError);
