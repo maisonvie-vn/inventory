@@ -52,6 +52,7 @@ interface WorklistItem {
 interface PurchaseOrder {
   id: string;
   po_no: string;
+  po_reference?: string;
   supplier_id: string;
   supplier_name?: string;
   status: string;
@@ -60,6 +61,7 @@ interface PurchaseOrder {
   requested_by?: string;
   approved_by?: string;
   second_approver?: string;
+  approved_at?: string;
   escalation_level: number;
   location_id: string;
   notes?: string;
@@ -394,6 +396,77 @@ export default function PurchasingModule({
     }
   }, [fetchAll]);
 
+  // Rút lại PO về DRAFT (từ PENDING_APPROVAL)
+  const handleRecallPO = useCallback(async (poId: string) => {
+    if (!window.confirm('Rút lại PO này về trạng thái Nháp để chỉnh sửa? Bạn sẽ cần gửi duyệt lại sau khi sửa xong.')) return;
+    try {
+      const { error } = await supabase
+        .from('purchase_orders')
+        .update({ status: 'DRAFT', approved_by: null, second_approver: null, approved_at: null })
+        .eq('id', poId)
+        .in('status', ['PENDING_APPROVAL']);
+      if (error) throw error;
+      alert('✅ Đã rút lại PO về Nháp! Bạn có thể chỉnh sửa và gửi duyệt lại.');
+      fetchAll();
+    } catch (err: any) {
+      alert(`❌ Lỗi rút lại PO: ${err.message}`);
+    }
+  }, [fetchAll]);
+
+  // Hủy PO (bất kỳ trạng thái nào trước RECEIVED)
+  const handleCancelPO = useCallback(async (poId: string, poRef: string) => {
+    const reason = window.prompt(`Lý do hủy PO "${poRef}":\n(Bắt buộc)`);
+    if (reason === null) return; // User clicked Cancel
+    if (!reason.trim()) { alert('Vui lòng nhập lý do hủy!'); return; }
+    try {
+      const { error } = await supabase
+        .from('purchase_orders')
+        .update({ status: 'CANCELLED', notes: `[HỦY] ${reason.trim()}` })
+        .eq('id', poId)
+        .not('status', 'in', '("RECEIVED","CLOSED","CANCELLED")');
+      if (error) throw error;
+      alert('✅ Đã hủy PO thành công!');
+      fetchAll();
+    } catch (err: any) {
+      alert(`❌ Lỗi hủy PO: ${err.message}`);
+    }
+  }, [fetchAll]);
+
+  // Nhân bản PO (để sửa): tạo DRAFT mới sao chép từ PO cũ
+  const handleClonePO = useCallback(async (po: PurchaseOrder) => {
+    if (!window.confirm(`Tạo Phiếu Đặt Hàng mới sao chép từ PO này?\n(PO cũ giữ nguyên, PO mới sẽ ở trạng thái Nháp để bạn chỉnh sửa rồi gửi duyệt lại.)`)) return;
+    try {
+      // Lấy các dòng của PO gốc
+      const { data: lines, error: lErr } = await supabase
+        .from('purchase_order_lines')
+        .select('ingredient_id, suggested_qty, unit_price, uom, moq, pack_size')
+        .eq('po_id', po.id);
+      if (lErr) throw lErr;
+
+      const formattedLines = (lines || []).map((l: any) => ({
+        ingredient_id: l.ingredient_id,
+        suggested_qty: l.suggested_qty,
+        unit_price: l.unit_price,
+        uom: l.uom,
+        moq: l.moq || 1,
+        pack_size: l.pack_size || 1,
+      }));
+
+      const { data: newPoId, error } = await supabase.rpc('create_po_from_worklist', {
+        p_supplier_id: po.supplier_id,
+        p_location_id: po.location_id || 'MAIN_STORE',
+        p_lines: formattedLines,
+        p_notes: `[SAO CHÉP từ PO] ${po.po_reference || po.id.slice(0,8)} - Chỉnh sửa lại`,
+      });
+      if (error) throw error;
+      alert(`✅ Đã tạo PO mới (Nháp) từ bản sao chép!\nID: ${newPoId}\n\nVui lòng vào tab "Duyệt PO" để xem và gửi duyệt.`);
+      fetchAll();
+      setActiveSubTab('approve');
+    } catch (err: any) {
+      alert(`❌ Lỗi sao chép PO: ${err.message}`);
+    }
+  }, [fetchAll]);
+
   // Duyệt / Từ chối PO
   const handleApprovePO = useCallback(async (poId: string, approve: boolean) => {
     const note = approve ? undefined : prompt('Lý do từ chối:') || 'Không phê duyệt';
@@ -715,6 +788,8 @@ export default function PurchasingModule({
           canApprove={canApprove}
           onApprove={handleApprovePO}
           onSubmit={handleSubmitPO}
+          onRecall={handleRecallPO}
+          onCancel={handleCancelPO}
           onPrint={handlePrintPO}
           poBadges={poBadges}
           canViewFinancials={canViewFinancials}
@@ -744,6 +819,8 @@ export default function PurchasingModule({
           purchaseOrders={purchaseOrders}
           canViewFinancials={canViewFinancials}
           onPrint={handlePrintPO}
+          onCancel={handleCancelPO}
+          onClone={handleClonePO}
           selectedPOs={selectedPOs}
           onTogglePO={(id: string) => setSelectedPOs(prev => {
             const s = new Set(prev);
@@ -968,6 +1045,8 @@ function ApproveTab({
   canApprove,
   onApprove,
   onSubmit,
+  onRecall,
+  onCancel,
   onPrint,
   poBadges,
   canViewFinancials,
@@ -1081,6 +1160,15 @@ function ApproveTab({
                 {po.status === 'DRAFT' && isSelfRequested && (
                   <span className="text-xs text-[#C9A581] italic">Bạn là người tạo — cần người khác gửi duyệt</span>
                 )}
+                {/* Nút Rút lại: người tạo có thể rút lại PO đang chờ duyệt */}
+                {po.status === 'PENDING_APPROVAL' && isSelfRequested && (
+                  <button
+                    onClick={() => onRecall(po.id)}
+                    className="px-3 py-1.5 bg-[#3A2C13] border border-[#D8AA57] text-[#D8AA57] hover:bg-[#D8AA57] hover:text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1"
+                  >
+                    ↩ Rút lại để sửa
+                  </button>
+                )}
                 {po.status === 'PENDING_APPROVAL' && canApprove && !isSelfRequested && (
                   <>
                     <button
@@ -1097,8 +1185,17 @@ function ApproveTab({
                     </button>
                   </>
                 )}
-                {po.status === 'PENDING_APPROVAL' && isSelfRequested && (
-                  <span className="text-xs text-[#D8AA57] italic">⚠ Bạn là người tạo PO này — không được tự duyệt (segregation of duties)</span>
+                {po.status === 'PENDING_APPROVAL' && !isSelfRequested && !canApprove && (
+                  <span className="text-xs text-[#D8AA57] italic">⚠ Đang chờ người có quyền duyệt...</span>
+                )}
+                {/* Nút Hủy PO (chỉ admin/manager) */}
+                {canApprove && !['RECEIVED','CLOSED','CANCELLED'].includes(po.status) && (
+                  <button
+                    onClick={() => onCancel(po.id, po.po_reference || po.po_no || po.id.slice(0,8))}
+                    className="px-3 py-1.5 bg-[#3A1B17] border border-[#D06A5C]/50 text-[#D06A5C] hover:bg-[#D06A5C] hover:text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1"
+                  >
+                    <XCircle size={12} /> Hủy PO
+                  </button>
                 )}
               </div>
             </div>
@@ -1116,6 +1213,8 @@ function HistoryTab({
   purchaseOrders,
   canViewFinancials,
   onPrint,
+  onCancel,
+  onClone,
   selectedPOs,
   onTogglePO,
   onToggleAllPOs
@@ -1180,9 +1279,31 @@ function HistoryTab({
                 )}
                 <td className="p-2 text-[#C9A581]">{new Date(po.created_at).toLocaleDateString('vi-VN')}</td>
                 <td className="p-2">
-                  <button onClick={() => onPrint(po)} className="p-1 text-[#C9A581] hover:text-white transition-colors" title="Xuất Excel Nhập Kho">
-                    <Upload size={12} className="rotate-180" />
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <button onClick={() => onPrint(po)} className="p-1 text-[#C9A581] hover:text-white transition-colors" title="Xuất Excel Nhập Kho">
+                      <Upload size={12} className="rotate-180" />
+                    </button>
+                    {/* Nhân bản PO để sửa (tạo DRAFT mới) */}
+                    {!['CANCELLED'].includes(po.status) && onClone && (
+                      <button
+                        onClick={() => onClone(po)}
+                        title="Sao chép PO này để tạo đơn mới (có thể chỉnh sửa)"
+                        className="p-1 text-[#C9A581] hover:text-[#A8884E] transition-colors text-[10px] font-bold cursor-pointer"
+                      >
+                        📋
+                      </button>
+                    )}
+                    {/* Hủy PO */}
+                    {!['RECEIVED','CLOSED','CANCELLED'].includes(po.status) && onCancel && (
+                      <button
+                        onClick={() => onCancel(po.id, po.po_reference || po.po_no || po.id.slice(0,8))}
+                        title="Hủy PO này"
+                        className="p-1 text-[#D06A5C] hover:text-[#f87171] transition-colors text-[10px] cursor-pointer"
+                      >
+                        ⛔
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
