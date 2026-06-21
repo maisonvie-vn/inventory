@@ -13,7 +13,7 @@
  * 7. Badge nhấp nháy đỏ khi có PO chờ duyệt
  */
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import * as XLSX from 'xlsx';
 import {
   ShoppingCart, CheckCircle, XCircle, AlertTriangle, Upload,
@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../../lib/supabaseClient';
 import { NotificationBadge } from '../../lib/useRealtimeBadges';
+import UniversalSearch from './UniversalSearch';
 
 // -------------------------------------------------------------------
 // Types
@@ -107,6 +108,7 @@ export default function PurchasingModule({
   const [goodsReceipts, setGoodsReceipts] = useState<GoodsReceipt[]>([]);
   const [suppliers, setSuppliers] = useState<any[]>([]);
   const [allIngredients, setAllIngredients] = useState<any[]>([]);
+  const [supplierIngredients, setSupplierIngredients] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [importStatus, setImportStatus] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -190,6 +192,10 @@ export default function PurchasingModule({
       // Ingredients
       const { data: ings } = await supabase.from('ingredients').select('id, code, ten_vi, stock_uom, wac_price').eq('is_active', true);
       setAllIngredients(ings || []);
+
+      // Supplier Ingredients
+      const { data: supIngs } = await supabase.from('supplier_ingredients').select('*');
+      setSupplierIngredients(supIngs || []);
     } catch (err) {
       console.error('[Purchasing] Fetch error:', err);
     } finally {
@@ -656,6 +662,7 @@ export default function PurchasingModule({
         <CreatePOTab
           suppliers={suppliers}
           ingredients={allIngredients}
+          supplierIngredients={supplierIngredients}
           onCreatePO={handleCreatePOManual}
           loading={loading}
         />
@@ -1277,21 +1284,72 @@ function ThreeWayBadge({ status }: { status: string }) {
 // -------------------------------------------------------------------
 // CreatePOTab — Tạo PO thủ công
 // -------------------------------------------------------------------
-function CreatePOTab({ suppliers, ingredients, onCreatePO, loading }: any) {
+function CreatePOTab({ suppliers, ingredients, supplierIngredients = [], onCreatePO, loading }: any) {
   const [supplierId, setSupplierId] = useState('');
   const [locationId, setLocationId] = useState('MAIN_STORE');
   const [lines, setLines] = useState<any[]>([]);
   const [selIngId, setSelIngId] = useState('');
+  const [selectedIng, setSelectedIng] = useState<any>(null);
   const [qty, setQty] = useState(1);
   const [price, setPrice] = useState(0);
   const [notes, setNotes] = useState('');
-  const [searchIngText, setSearchIngText] = useState('');
 
-  // Lọc nguyên liệu theo search
-  const filteredIngs = ingredients.filter((i: any) =>
-    i.code.toLowerCase().includes(searchIngText.toLowerCase()) ||
-    i.ten_vi.toLowerCase().includes(searchIngText.toLowerCase())
-  ).slice(0, 10);
+  // Reset selected ingredient when supplier changes
+  useEffect(() => {
+    setSelIngId('');
+    setSelectedIng(null);
+  }, [supplierId]);
+
+  // Lọc nguyên liệu theo nhà cung cấp được chọn
+  const filteredIngsForPo = useMemo(() => {
+    if (!supplierId) return ingredients;
+    const allowedIds = new Set(
+      supplierIngredients
+        .filter((si: any) => si.supplier_id === supplierId)
+        .map((si: any) => si.ingredient_id)
+    );
+
+    if (allowedIds.size === 0) {
+      // Fallback matching by code prefixes based on supplier name
+      const supplier = suppliers.find((s: any) => s.id === supplierId);
+      const sName = supplier?.name?.toLowerCase() || '';
+      if (sName.includes('đa lộc') || sName.includes('việt nam')) {
+        return ingredients.filter((ing: any) => {
+          const code = (ing.code || ing.id || '').toUpperCase();
+          return code.startsWith('V') || code.startsWith('B') || code.startsWith('M');
+        });
+      } else if (sName.includes('hải yến') || sName.includes('rau')) {
+        return ingredients.filter((ing: any) => {
+          const code = (ing.code || ing.id || '').toUpperCase();
+          return code.startsWith('NLP6');
+        });
+      } else if (sName.includes('an nam')) {
+        return ingredients.filter((ing: any) => {
+          const code = (ing.code || ing.id || '').toUpperCase();
+          const isBar = code.startsWith('V') || code.startsWith('B') || code.startsWith('M');
+          const isVeg = code.startsWith('NLP6');
+          return !isBar && !isVeg;
+        });
+      }
+      return ingredients;
+    }
+
+    return ingredients.filter((ing: any) => allowedIds.has(ing.id));
+  }, [ingredients, supplierId, supplierIngredients, suppliers]);
+
+  // Map to UniversalSearch format
+  const searchIngredientsFormat = useMemo(() => {
+    return filteredIngsForPo.map((ing: any) => ({
+      id: ing.id,
+      code: ing.code,
+      vi_name: ing.ten_vi || ing.vi_name || '',
+      fr_name: ing.nom_fr || '',
+      category: ing.category || 'Nguyên liệu',
+      unit: ing.stock_uom || ing.unit || 'kg',
+      price: ing.wac_price || ing.price || 0,
+      wac_price: ing.wac_price || ing.price || 0
+    }));
+  }, [filteredIngsForPo]);
 
   const handleAddLine = () => {
     if (!selIngId) return;
@@ -1317,7 +1375,7 @@ function CreatePOTab({ suppliers, ingredients, onCreatePO, loading }: any) {
 
     // Reset line input
     setSelIngId('');
-    setSearchIngText('');
+    setSelectedIng(null);
     setQty(1);
     setPrice(0);
   };
@@ -1388,30 +1446,15 @@ function CreatePOTab({ suppliers, ingredients, onCreatePO, loading }: any) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
           <div className="relative">
             <label className="block text-[#C9A581] mb-1">Tìm nguyên liệu</label>
-            <input
-              type="text"
-              placeholder="Nhập mã hoặc tên..."
-              value={searchIngText}
-              onChange={(e) => setSearchIngText(e.target.value)}
-              className="w-full bg-[#03201E] border border-[#C9A581]/30 rounded-lg p-2 text-[#FBF8F4] focus:outline-none focus:border-[#A8884E]"
+            <UniversalSearch
+              ingredients={searchIngredientsFormat}
+              onSelect={(ing) => {
+                setSelIngId(ing.id);
+                setSelectedIng(ing);
+                setPrice(ing.wac_price || 0);
+              }}
+              placeholder={supplierId ? "Mã NVL hoặc tên của NCC..." : "Nhập mã hoặc tên..."}
             />
-            {searchIngText && (
-              <div className="absolute z-10 w-full mt-1 bg-[#03201E] border border-[#C9A581]/30 rounded-lg max-h-48 overflow-y-auto shadow-lg">
-                {filteredIngs.map((i: any) => (
-                  <div
-                    key={i.id}
-                    onClick={() => {
-                      setSelIngId(i.id);
-                      setSearchIngText(`[${i.code}] ${i.ten_vi}`);
-                      setPrice(i.wac_price || 0);
-                    }}
-                    className="p-2 hover:bg-[#A8884E]/20 text-[#FBF8F4] cursor-pointer"
-                  >
-                    [{i.code}] {i.ten_vi}
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
 
           <div>
@@ -1439,10 +1482,22 @@ function CreatePOTab({ suppliers, ingredients, onCreatePO, loading }: any) {
           <button
             type="button"
             onClick={handleAddLine}
-            className="w-full py-2 bg-[#A8884E] hover:bg-[#8C6F3C] text-white rounded-lg font-medium transition-colors"
+            disabled={!selIngId}
+            className="w-full py-2 bg-[#A8884E] hover:bg-[#8C6F3C] disabled:bg-[#A8884E]/40 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
           >
             Thêm dòng
           </button>
+
+          {selectedIng && (
+            <div className="bg-[#03201E] border border-[#A8884E]/40 p-2.5 rounded text-[11px] text-[#FBF8F4] flex flex-col gap-1 mt-2 animate-fadeIn col-span-full md:col-span-4">
+              <div className="flex justify-between">
+                <span>Mã: <strong className="text-[#C2A35A]">{selectedIng.code}</strong></span>
+                <span className="text-gray-400">ĐVT: {selectedIng.unit}</span>
+              </div>
+              <div className="truncate">Tên: <strong className="text-gray-100">{selectedIng.vi_name}</strong></div>
+              <div>WAC hiện tại: <span className="font-mono text-[#62A57C]">{selectedIng.wac_price.toLocaleString()}đ</span></div>
+            </div>
+          )}
         </div>
       </div>
 

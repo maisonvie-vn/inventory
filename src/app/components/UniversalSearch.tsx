@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Search, X } from 'lucide-react';
+import { Search, X, ChevronDown } from 'lucide-react';
 
 interface Ingredient {
   id: string;
@@ -49,7 +49,7 @@ export default function UniversalSearch({
 
   // Filter ingredients based on query
   const suggestions = useMemo(() => {
-    if (!query.trim()) return [];
+    if (!query.trim()) return ingredients.slice(0, 100);
     
     const lowerQuery = query.toLowerCase().trim();
 
@@ -126,13 +126,21 @@ export default function UniversalSearch({
           placeholder={placeholder}
           className="w-full bg-[#102B2A] border border-[#C9A581] hover:border-[#A8884E] focus:border-[#C2A35A] pl-10 pr-9 py-2 rounded text-xs text-[#FBF8F4] placeholder-[#C9A581]/50 focus:outline-none transition-all font-sans"
         />
-        {query && (
+        {query ? (
           <button
             type="button"
             onClick={handleClear}
             className="absolute right-3 text-[#C9A581] hover:text-[#FBF8F4] transition-colors"
           >
             <X size={14} />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setIsOpen(!isOpen)}
+            className="absolute right-3 text-[#C9A581] hover:text-[#FBF8F4] transition-colors"
+          >
+            <ChevronDown size={14} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
           </button>
         )}
       </div>
