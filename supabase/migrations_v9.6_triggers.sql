@@ -262,7 +262,7 @@ for each row execute function trg_sales_imports_process();
 -- 3. DUYỆT NHẬN HÀNG (Trigger on goods_receipts)
 -- ---------------------------------------------------------------------
 create or replace function process_goods_receipt_approve()
-returns trigger as $$
+returns trigger language plpgsql security definer as $$
 declare
   r_line record;
   v_total_val_vnd numeric(12, 2);
@@ -414,7 +414,7 @@ begin
   end if;
   return new;
 end;
-$$ language plpgsql;
+$$;
 
 drop trigger if exists trg_goods_receipt_approve_trigger on goods_receipts;
 create trigger trg_goods_receipt_approve_trigger

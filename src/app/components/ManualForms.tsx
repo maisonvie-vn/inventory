@@ -492,10 +492,13 @@ export default function ManualForms({
         const { error: linesErr } = await supabase.from('grn_lines').insert(grnLinesToInsert);
         if (linesErr) throw linesErr;
 
-        const { error: approveErr } = await supabase
-          .from('goods_receipts')
-          .update({ status: 'approved' })
-          .eq('id', grnResult.id);
+        const { data: { user } } = await supabase.auth.getUser();
+        const userId = user?.id || currentUser?.id || '00000000-0000-0000-0000-000000000000';
+
+        const { error: approveErr } = await supabase.rpc('approve_goods_receipt', {
+          p_grn_id: grnResult.id,
+          p_user_id: userId
+        });
         
         if (approveErr) throw approveErr;
 

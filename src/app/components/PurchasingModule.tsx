@@ -436,15 +436,30 @@ export default function PurchasingModule({
         byInvoice[invNo].push(row);
       }
 
+      // Lookup purchase orders matching the invoice/PO numbers
+      const invoiceKeys = Object.keys(byInvoice);
+      const { data: matchedPOs } = await supabase
+        .from('purchase_orders')
+        .select('id, po_no, supplier_id')
+        .in('po_no', invoiceKeys);
+
+      const poMap = new Map((matchedPOs || []).map(p => [p.po_no, p]));
+
       let created = 0;
       for (const [invNo, rows2] of Object.entries(byInvoice)) {
         const totalInvoice = rows2.reduce((s, r) => s + parseFloat(r[2]) * parseFloat(r[4]), 0);
+        
+        const matchedPO = poMap.get(invNo);
+        const poId = matchedPO ? matchedPO.id : null;
+        const supplierId = matchedPO ? matchedPO.supplier_id : null;
 
         // Tạo GRN header
         const { data: grn, error: grnErr } = await supabase
           .from('goods_receipts')
           .insert({
             invoice_no: invNo,
+            po_id: poId,
+            supplier_id: supplierId,
             invoice_amount: Math.round(totalInvoice),
             status: 'pending',
             match_status: 'PENDING',
@@ -470,13 +485,17 @@ export default function PurchasingModule({
         });
         await supabase.from('grn_lines').insert(grnLines);
 
-        // Auto-approve → trigger WAC + 3-way match
-        await supabase
-          .from('goods_receipts')
-          .update({ status: 'approved' })
-          .eq('id', grn!.id);
+        // Auto-approve → trigger WAC + 3-way match via RPC
+        const { error: approveErr } = await supabase.rpc('approve_goods_receipt', {
+          p_grn_id: grn!.id,
+          p_user_id: userId
+        });
 
-        created++;
+        if (approveErr) {
+          errors.push(`Approve error ${invNo}: ${approveErr.message}`);
+        } else {
+          created++;
+        }
       }
 
       setImportStatus(
