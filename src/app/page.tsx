@@ -3943,13 +3943,19 @@ export default function Home() {
           if (row && row.some(cell => {
             if (!cell) return false;
             const str = String(cell).toLowerCase();
-            return str.includes('ngày') || str.includes('date') || str.includes('hóa đơn') || str.includes('invoice');
+            return str.includes('ngày') || str.includes('date') || str.includes('hóa đơn') || str.includes('invoice') || str.includes('số hđ') || str.includes('ngày nhận');
           })) {
             let matches = 0;
             row.forEach(cell => {
               if (!cell) return;
               const str = String(cell).toLowerCase();
-              if (str.includes('ngày') || str.includes('date') || str.includes('hóa đơn') || str.includes('invoice') || str.includes('mã nvl') || str.includes('số lượng') || str.includes('đơn giá')) {
+              if (
+                str.includes('ngày') || str.includes('date') || 
+                str.includes('hóa đơn') || str.includes('invoice') || str.includes('số hđ') ||
+                str.includes('mã nvl') || str.includes('mã hàng') ||
+                str.includes('số lượng') || str.includes('sl nhận') ||
+                str.includes('đơn giá')
+              ) {
                 matches++;
               }
             });
@@ -3970,17 +3976,17 @@ export default function Home() {
         const rows = data.slice(headerRowIdx + 1) as any[][];
 
         const idxDate = headers.findIndex(h => h && (h.toLowerCase().includes('ngày') || h.toLowerCase().includes('date')));
-        const idxInvoice = headers.findIndex(h => h && (h.toLowerCase().includes('hóa đơn') || h.toLowerCase().includes('invoice')));
+        const idxInvoice = headers.findIndex(h => h && (h.toLowerCase().includes('hóa đơn') || h.toLowerCase().includes('invoice') || h.toLowerCase().includes('số hđ') || h.toLowerCase().includes('số hd')));
         const idxSupplier = headers.findIndex(h => h && (h.toLowerCase().includes('nhà cung cấp') || h.toLowerCase().includes('supplier')));
-        const idxIngCode = headers.findIndex(h => h && (h.toLowerCase().includes('mã nvl') || h.toLowerCase().includes('mã nguyên liệu') || h.toLowerCase().includes('code')));
-        const idxQty = headers.findIndex(h => h && (h.toLowerCase().includes('số lượng') || h.toLowerCase().includes('qty') || h.toLowerCase().includes('lượng')));
-        const idxUom = headers.findIndex(h => h && (h.toLowerCase().includes('đơn vị') || h.toLowerCase().includes('đvt') || h.toLowerCase().includes('uom')));
+        const idxIngCode = headers.findIndex(h => h && (h.toLowerCase().includes('mã nvl') || h.toLowerCase().includes('mã nguyên liệu') || h.toLowerCase().includes('code') || h.toLowerCase().includes('mã hàng')));
+        const idxQty = headers.findIndex(h => h && (h.toLowerCase().includes('số lượng') || h.toLowerCase().includes('qty') || h.toLowerCase().includes('lượng') || h.toLowerCase().includes('sl nhận') || h.toLowerCase().includes('sl thực')));
+        const idxUom = headers.findIndex(h => h && (h.toLowerCase().includes('đơn vị') || h.toLowerCase().includes('đvt') || h.toLowerCase().includes('uom') || h.toLowerCase().includes('đvt mua')));
         const idxPrice = headers.findIndex(h => h && (h.toLowerCase().includes('đơn giá') || h.toLowerCase().includes('price') || h.toLowerCase().includes('giá')));
         const idxFreight = headers.findIndex(h => h && (h.toLowerCase().includes('cước') || h.toLowerCase().includes('vận chuyển') || h.toLowerCase().includes('freight')));
         const idxDuty = headers.findIndex(h => h && (h.toLowerCase().includes('thuế') || h.toLowerCase().includes('duty') || h.toLowerCase().includes('tax')));
 
         if (idxDate === -1 || idxInvoice === -1 || idxIngCode === -1 || idxQty === -1 || idxPrice === -1) {
-          alert('File Excel thiếu các cột bắt buộc: Ngày nhập, Số hóa đơn, Mã NVL, Số lượng, Đơn giá.');
+          alert('File Excel thiếu các cột bắt buộc: Ngày nhập/Ngày nhận, Số hóa đơn/Số HĐ, Mã NVL/Mã hàng, Số lượng/SL nhận, Đơn giá.');
           setIsImporting(false);
           return;
         }
@@ -4092,19 +4098,40 @@ export default function Home() {
           }
 
           let supplierId: string | null = null;
-          const matchedSup = supabaseSuppliers.find(s => 
-            s.name.toLowerCase().trim() === inv.supplierName.toLowerCase().trim() ||
-            s.name.toLowerCase().includes(inv.supplierName.toLowerCase())
-          );
-          if (matchedSup) {
-            supplierId = matchedSup.id;
-          } else {
-            if (inv.supplierName.toLowerCase().includes('đà lộc')) {
-              supplierId = '90000000-0000-0000-0000-000000000003';
-            } else if (inv.supplierName.toLowerCase().includes('hải yến') || inv.supplierName.toLowerCase().includes('rau')) {
-              supplierId = '90000000-0000-0000-0000-000000000002';
-            } else if (supabaseSuppliers.length > 0) {
-              supplierId = supabaseSuppliers[0].id;
+          let poId: string | null = null;
+          let poNumber = '';
+
+          // 1. Thử tìm PO tương thích bằng invoiceNo (ví dụ: PO-2026-0615-KHO-001 hoặc tương tự)
+          if (isSupabaseConfigured() && inv.invoiceNo.trim().toUpperCase().startsWith('PO-')) {
+            const cleanPoNum = inv.invoiceNo.trim();
+            const { data: poData } = await supabase
+              .from('purchase_orders')
+              .select('id, supplier_id, po_number')
+              .eq('po_number', cleanPoNum)
+              .limit(1);
+            if (poData && poData.length > 0) {
+              poId = poData[0].id;
+              supplierId = poData[0].supplier_id;
+              poNumber = poData[0].po_number;
+            }
+          }
+
+          // 2. Nếu chưa tìm được supplierId, tìm theo tên nhà cung cấp
+          if (!supplierId) {
+            const matchedSup = supabaseSuppliers.find(s => 
+              s.name.toLowerCase().trim() === inv.supplierName.toLowerCase().trim() ||
+              s.name.toLowerCase().includes(inv.supplierName.toLowerCase())
+            );
+            if (matchedSup) {
+              supplierId = matchedSup.id;
+            } else {
+              if (inv.supplierName.toLowerCase().includes('đà lộc')) {
+                supplierId = '90000000-0000-0000-0000-000000000003';
+              } else if (inv.supplierName.toLowerCase().includes('hải yến') || inv.supplierName.toLowerCase().includes('rau')) {
+                supplierId = '90000000-0000-0000-0000-000000000002';
+              } else if (supabaseSuppliers.length > 0) {
+                supplierId = supabaseSuppliers[0].id;
+              }
             }
           }
 
@@ -4129,8 +4156,8 @@ export default function Home() {
 
           const grnRecord = {
             id: grnId,
-            poId: null,
-            poNumber: '',
+            poId: poId,
+            poNumber: poNumber,
             supplierName: inv.supplierName,
             invoiceNo: inv.invoiceNo,
             invoiceAmount: totalRawValue + inv.freight + inv.duty,
@@ -4150,6 +4177,7 @@ export default function Home() {
               .from('goods_receipts')
               .insert({
                 id: grnId,
+                po_id: poId,
                 supplier_id: supplierId,
                 invoice_no: inv.invoiceNo,
                 invoice_amount: grnRecord.invoiceAmount,
@@ -4217,6 +4245,24 @@ export default function Home() {
                 continue;
               }
 
+              // Cập nhật PO line nếu có link PO
+              if (poId) {
+                const { data: currentPoLine } = await supabase
+                  .from('po_lines')
+                  .select('qty_received')
+                  .eq('po_id', poId)
+                  .eq('ingredient_id', dbIngredientId)
+                  .limit(1);
+                
+                const currentQtyRec = currentPoLine && currentPoLine.length > 0 ? (parseFloat(currentPoLine[0].qty_received as any) || 0) : 0;
+
+                await supabase
+                  .from('po_lines')
+                  .update({ qty_received: currentQtyRec + line.qtyReceived })
+                  .eq('po_id', poId)
+                  .eq('ingredient_id', dbIngredientId);
+              }
+
               const isShared = ["NLP60032", "NLP60033", "NLP3016", "NLP3021"].includes(line.ingredientId);
               const locationId = isBar || isShared ? 'BAR' : 'MAIN_STORE';
 
@@ -4246,6 +4292,24 @@ export default function Home() {
             }
           } else {
             successfullyInsertedLines = [...finalLines];
+          }
+
+          // Cập nhật trạng thái của PO liên kết nếu đã nhận đủ hàng
+          if (poId) {
+            const { data: poLinesData } = await supabase
+              .from('po_lines')
+              .select('qty_ordered, qty_received')
+              .eq('po_id', poId);
+            
+            if (poLinesData && poLinesData.length > 0) {
+              const isFullyReceived = poLinesData.every(pl => 
+                (parseFloat(pl.qty_received as any) || 0) >= (parseFloat(pl.qty_ordered as any) || 0)
+              );
+              await supabase
+                .from('purchase_orders')
+                .update({ status: isFullyReceived ? 'RECEIVED' : 'PARTIAL' })
+                .eq('id', poId);
+            }
           }
 
           if (successfullyInsertedLines.length > 0) {
