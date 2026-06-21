@@ -2146,6 +2146,7 @@ export default function Home() {
     return roleFilteredIngredients.filter(ing => {
       const matchesSearch = ing.vi_name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                             ing.fr_name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            (ing.code || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
                             ing.id.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = categoryFilter === 'ALL' || ing.category === categoryFilter;
       return matchesSearch && matchesCategory;
@@ -2157,6 +2158,7 @@ export default function Home() {
     return roleFilteredIngredients.filter(ing => {
       const matchesSearch = ing.vi_name.toLowerCase().includes(stockCountSearch.toLowerCase()) || 
                             ing.id.toLowerCase().includes(stockCountSearch.toLowerCase()) ||
+                            (ing.code || '').toLowerCase().includes(stockCountSearch.toLowerCase()) ||
                             ing.fr_name.toLowerCase().includes(stockCountSearch.toLowerCase());
       
       if (
