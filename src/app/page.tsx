@@ -2817,187 +2817,40 @@ export default function Home() {
     alert(`Đã xác nhận trạng thái ${type === 'IMPORT' ? 'Đã Nhập hàng' : 'Đã Xuất tiêu hao'} cho địa điểm ${locId}.`);
   };
 
-  // v9.1 PO Approve & PDF Export Handler (Grouped by Category, 6 fixed columns, warning bg-colors)
   const handleApproveAndPrintPO = (doc: any) => {
     const hash = 'SHA256-' + Math.random().toString(36).substring(2, 10).toUpperCase() + Math.random().toString(36).substring(2, 10).toUpperCase();
     
     // Update document status
     setOrderDocuments(prev => prev.map(d => d.id === doc.id ? { ...d, status: 'APPROVED', content_hash: hash } : d));
     
-    const getItemGroup = (ingId: string) => {
-      const ing = ingredients.find(i => i.id === ingId || i.code === ingId);
-      if (!ing) return 'Khác';
-      const cat = ing.category || '';
-      const name = (ing.vi_name || '').toLowerCase();
-      const codeVal = ing.code || ing.id;
-      
-      if (codeVal === 'ING-070' || codeVal === 'ING-071' || name.includes('vang')) return 'Rượu vang';
-      if (codeVal === 'ING-072' || name.includes('cognac') || name.includes('whisky') || name.includes('vodka') || name.includes('rum') || name.includes('tequila') || ['alcohol', 'wine'].includes(cat.toLowerCase())) {
-        if (name.includes('vang')) return 'Rượu vang';
-        return 'Rượu mạnh';
-      }
-      if (name.includes('bia') || name.includes('coke') || name.includes('soda') || name.includes('tonic') || name.includes('sprite') || name.includes('fanta') || name.includes('nước ngọt') || name.includes('syrup') || name.includes('siro') || name.includes('trà') || name.includes('cafe') || name.includes('cà phê') || name.includes('perrier') || name.includes('evian')) return 'Bia & Nước ngọt';
-      if (cat === 'Seafood' || name.includes('cá') || name.includes('hàu') || name.includes('sò') || name.includes('tôm')) return 'Hải sản';
-      if (cat === 'Meat' || name.includes('thịt') || name.includes('bò') || name.includes('trâu') || name.includes('vịt') || name.includes('cừu') || name.includes('gà')) return 'Thịt tươi';
-      if (name.includes('bơ') || name.includes('sữa') || name.includes('phô mai') || name.includes('cream') || name.includes('cheese')) return 'Đồ bơ sữa';
-      if (cat === 'Vegetable' || cat === 'Herb' || cat === 'Fruit' || name.includes('rau') || name.includes('nấm') || name.includes('chanh') || name.includes('cam') || name.includes('bưởi') || name.includes('dưa') || name.includes('xoài')) return 'Rau củ/Trang trí';
-      return cat || 'Khác';
-    };
-
-    const groupedItems: Record<string, any[]> = {};
-    doc.items.forEach((item: any) => {
-      const group = getItemGroup(item.ingId);
-      if (!groupedItems[group]) {
-        groupedItems[group] = [];
-      }
-      groupedItems[group].push(item);
+    // Generate Excel file matching GRN import structure (8 standard + 1 stock column)
+    const headers = [['Mã hàng', 'Tên hàng', 'SL nhận', 'ĐVT mua', 'Đơn giá (VND)', 'Số HĐ', 'Ngày nhận', 'Ghi chú', 'SL tồn']];
+    const todayStr = new Date().toISOString().split('T')[0];
+    
+    const dataRows = doc.items.map((it: any) => {
+      const ing = ingredients.find(i => i.id === it.ingId || i.code === it.ingId);
+      const internalCode = ing?.code || it.ingId;
+      return [
+        internalCode,                                // Mã hàng
+        it.name,                                     // Tên hàng
+        it.slDat,                                    // SL nhận
+        it.unit || 'UNIT',                           // ĐVT mua
+        ing?.price || 0,                             // Đơn giá (VND)
+        doc.doc_no,                                  // Số HĐ
+        todayStr,                                    // Ngày nhận
+        it.note || '',                               // Ghi chú
+        it.onHand                                    // SL tồn
+      ];
     });
 
-    const rowClass = (warning: string) => {
-      if (warning.includes('CRITICAL') || warning.includes('đỏ') || warning.includes('Khẩn cấp')) {
-        return 'class="row-critical"';
-      }
-      if (warning.includes('LOW') || warning.includes('vàng') || warning.includes('Sắp hết')) {
-        return 'class="row-low"';
-      }
-      return '';
-    };
-
-    // Trigger styled Neoclassical print popup layout
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>Phiếu Đặt Hàng - ${doc.doc_no}</title>
-            <style>
-              body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #fff; color: #222; padding: 40px; font-size: 13px; line-height: 1.4; }
-              .header { text-align: center; border-bottom: 2px solid #1b3224; padding-bottom: 12px; margin-bottom: 25px; }
-              .title { font-size: 28px; font-weight: bold; letter-spacing: 2px; margin: 0; color: #1b3224; font-family: 'Cormorant Garamond', Georgia, serif; }
-              .subtitle { font-size: 12px; letter-spacing: 1px; margin: 5px 0; color: #555; }
-              .main-title { font-size: 20px; font-weight: bold; margin: 15px 0 5px 0; color: #1b3224; letter-spacing: 1px; }
-              .sub-title { font-size: 14px; font-weight: bold; margin: 0 0 10px 0; color: #444; letter-spacing: 0.5px; }
-              .hash-line { font-family: monospace; font-size: 11px; color: #666; margin: 5px 0; }
-              .note-line { font-size: 11px; font-style: italic; color: #777; margin: 5px 0 0 0; }
-              
-              .meta-table { width: 100%; margin-bottom: 25px; font-size: 13px; border-collapse: collapse; }
-              .meta-table td { padding: 6px 0; vertical-align: top; }
-              
-              .warn-box { border: 1px solid #1b3224; padding: 10px 15px; margin-bottom: 25px; font-size: 11px; display: flex; align-items: center; gap: 15px; background: #F6F1E4; border-radius: 4px; }
-              .warn-title { font-weight: bold; color: #1b3224; }
-              .warn-tag { padding: 3px 8px; border-radius: 3px; font-weight: bold; font-size: 10px; }
-              .warn-tag.warn-critical { background: #F3DAD3; border: 1px solid #b23a2e; color: #b23a2e; }
-              .warn-tag.warn-low { background: #F5E6C8; border: 1px solid #c08a1e; color: #c08a1e; }
-              .warn-tag.warn-ok { color: #1b3224; font-weight: bold; }
-              
-              .data-table { width: 100%; border-collapse: collapse; margin-bottom: 35px; font-size: 12px; }
-              .data-table th, .data-table td { border: 1px solid #C9A581; padding: 10px 12px; text-align: left; }
-              .data-table th { background-color: #1b3224; color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-              .group-header-row { background-color: #1b3224 !important; color: #ffffff !important; font-weight: bold; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
-              .group-header-row td { border-color: #1b3224; padding: 10px 12px; }
-              .row-critical { background-color: #F3DAD3 !important; }
-              .row-low { background-color: #F5E6C8 !important; }
-              .item-name { font-weight: bold; color: #1b3224; }
-              .row-critical .item-name { color: #b23a2e; }
-              .row-low .item-name { color: #c08a1e; }
-              
-              .footer-sigs { width: 100%; margin-top: 45px; text-align: center; font-size: 12px; border-collapse: collapse; }
-              .footer-sigs td { width: 33%; height: 110px; vertical-align: top; padding: 10px; }
-              .footer-sigs td strong { display: block; margin-bottom: 5px; color: #1b3224; font-size: 12px; }
-              .footer-sigs td span { font-size: 11px; color: #666; font-style: italic; }
-              
-              .hash-info { margin-top: 50px; border-top: 1px solid #C9A581; padding-top: 10px; font-family: monospace; font-size: 10px; color: #666; text-align: right; line-height: 1.5; }
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <h1 class="title">MAISON VIE</h1>
-              <p class="subtitle">Nhà hàng Pháp &middot; Hệ thống CRM/ERP Quản lý Kho</p>
-              <h2 class="main-title">PHIẾU ĐỀ XUẤT ĐẶT HÀNG</h2>
-              <h3 class="sub-title">TỔNG HỢP THEO NHÓM HÀNG</h3>
-              <p class="hash-line">Số CT: ${doc.doc_no} &nbsp;&middot;&nbsp; SHA-256: ${hash.substring(0, 32)}...</p>
-              <p class="note-line">Bản chủ để review & duyệt — khi gửi sẽ lọc theo cột Nhà cung cấp. Chỉ có hiệu lực sau khi DUYỆT & ký.</p>
-            </div>
-            
-            <table class="meta-table">
-              <tr>
-                <td style="width: 50%;"><strong>SỐ CHỨNG TỪ:</strong> ${doc.doc_no}</td>
-                <td style="width: 50%;"><strong>NGÀY LẬP:</strong> ${new Date(doc.business_date).toLocaleDateString('vi-VN')}</td>
-              </tr>
-              <tr>
-                <td style="width: 50%;"><strong>PHẠM VI:</strong> TỔNG HỢP (Bếp + Bar)</td>
-                <td style="width: 50%;"><strong>NGƯỜI LẬP:</strong> Nguyễn Văn A — Thủ kho</td>
-              </tr>
-            </table>
-
-            <div class="warn-box">
-              <span class="warn-title">MỨC CẢNH BÁO (tô nền dòng):</span>
-              <span class="warn-tag warn-critical">🔴 KHẨN CẤP</span>
-              <span class="warn-tag warn-low">🟡 SẮP HẾT</span>
-              <span class="warn-tag warn-ok">🟢 ĐỦ TỒN = không tô nền</span>
-            </div>
-
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th style="width: 10%;">Mã hàng</th>
-                  <th style="width: 30%;">Tên hàng</th>
-                  <th style="width: 12%;">SL cần</th>
-                  <th style="width: 23%;">Nhà cung cấp</th>
-                  <th style="width: 15%;">Ghi chú</th>
-                  <th style="width: 10%;">SL tồn</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${Object.entries(groupedItems).map(([groupName, items]) => `
-                  <tr class="group-header-row">
-                    <td colspan="6" style="padding: 10px 12px;">${groupName.toUpperCase().replace('/', ' / ')}</td>
-                  </tr>
-                  ${items.map((it: any) => {
-                    const ing = ingredients.find(i => i.id === it.ingId || i.code === it.ingId);
-                    const internalCode = ing?.code || it.ingId;
-                    return `
-                      <tr ${rowClass(it.warning || '')}>
-                        <td>${internalCode}</td>
-                        <td class="item-name">${it.name}</td>
-                        <td><strong>${it.slDat}</strong> ${it.unit || ''}</td>
-                        <td>${doc.supplier_name || '—'}</td>
-                        <td>${it.note || '—'}</td>
-                        <td>${it.onHand} ${it.unit || ''}</td>
-                      </tr>
-                    `;
-                  }).join('')}
-                `).join('')}
-              </tbody>
-            </table>
-
-            <table class="footer-sigs">
-              <tr>
-                <td>
-                  <strong>NGƯỜI LẬP PHIẾU</strong>
-                  <span>(Ký, ghi rõ họ tên)</span>
-                </td>
-                <td>
-                  <strong>DUYỆT KHO / TRƯỞNG BỘ PHẬN</strong>
-                  <span>(Ký, ghi rõ họ tên)</span>
-                </td>
-                <td>
-                  <strong>PHÊ DUYỆT (KT / CFO)</strong>
-                  <span>(Ký, ghi rõ họ tên)</span>
-                </td>
-              </tr>
-            </table>
-
-            <div class="hash-info">
-              Document SHA-256: ${hash.substring(0, 32)}...<br/>
-              *Bản nháp được hệ thống chốt tự động. Có hiệu lực pháp lý khi đủ chữ ký duyệt.
-            </div>
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
-    }
+    const ws = XLSX.utils.aoa_to_sheet([...headers, ...dataRows]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'GRN_PO_Import');
+    
+    const excelFileName = `GRN_PO_Import_${doc.doc_no}.xlsx`;
+    XLSX.writeFile(wb, excelFileName);
+    
+    alert(`Đã duyệt PO thành công và tải xuống file Excel nhập kho: ${excelFileName}\nBạn có thể sửa số lượng thực nhận, đơn giá trực tiếp trên file này và upload vào tab "Nhập hàng".`);
   };
 
   // Mapping Modal Effects & Logic
@@ -7104,7 +6957,7 @@ export default function Home() {
                                 className="bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-[10px] px-3.5 py-1.5 rounded shadow active:scale-95 transition-all flex items-center gap-1"
                               >
                                 <FileText size={12} />
-                                <span>{doc.status === 'APPROVED' ? 'IN LẠI PDF' : 'DUYỆT & XUẤT PO PDF'}</span>
+                                <span>{doc.status === 'APPROVED' ? 'XUẤT EXCEL NHẬP KHO' : 'DUYỆT & XUẤT EXCEL'}</span>
                               </button>
                             </div>
                           </div>

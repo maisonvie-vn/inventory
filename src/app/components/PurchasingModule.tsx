@@ -491,242 +491,49 @@ export default function PurchasingModule({
   }, [fetchAll]);
 
   // In PDF (browser print)
+  // Export PO data to Excel in GRN import structure (8 standard + 1 stock column)
   const handlePrintPO = (poOrPos: PurchaseOrder | PurchaseOrder[]) => {
     const pos = Array.isArray(poOrPos) ? poOrPos : [poOrPos];
     if (pos.length === 0) return;
 
-    // Group selected POs by supplier_id
-    const groupedBySupplier: Record<string, PurchaseOrder[]> = {};
+    // Generate Excel file matching GRN import structure
+    const headers = [['Mã hàng', 'Tên hàng', 'SL nhận', 'ĐVT mua', 'Đơn giá (VND)', 'Số HĐ', 'Ngày nhận', 'Ghi chú', 'SL tồn']];
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    const dataRows: any[][] = [];
+
     for (const po of pos) {
-      const sId = po.supplier_id || 'UNKNOWN';
-      if (!groupedBySupplier[sId]) {
-        groupedBySupplier[sId] = [];
+      for (const item of po.items || []) {
+        const matchingIng = allIngredients.find((ing: any) => ing.id === item.ingredient_id || ing.code === item.ingredient_id);
+        const internalCode = matchingIng?.code || item.ingredient_id || '';
+        const ingredientName = item.ingredient_name || matchingIng?.ten_vi || '';
+        const stockAtOrder = (item as any).stock_at_order || 0;
+
+        dataRows.push([
+          internalCode,                              // Mã hàng
+          ingredientName,                            // Tên hàng
+          item.qty,                                  // SL nhận
+          item.purchase_uom || 'UNIT',               // ĐVT mua
+          item.unit_price || matchingIng?.wac_price || matchingIng?.standard_price || 0, // Đơn giá (VND)
+          po.po_no,                                  // Số HĐ
+          todayStr,                                  // Ngày nhận
+          po.notes || '',                            // Ghi chú
+          stockAtOrder                               // SL tồn
+        ]);
       }
-      groupedBySupplier[sId].push(po);
     }
 
-    const locationMapping: Record<string, string> = {
-      'BAR': 'Bar',
-      'KITCHEN': 'Bếp',
-      'MAIN_STORE': 'Kho chính'
-    };
+    const ws = XLSX.utils.aoa_to_sheet([...headers, ...dataRows]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'GRN_PO_Import');
 
-    const formatStaffName = (name: string) => {
-      if (!name) return '';
-      const clean = name.trim().toLowerCase();
-      if (clean === 'chef' || clean === 'head_chef' || clean === 'headchef') return 'Bếp trưởng';
-      if (clean === 'bar_supervisor' || clean === 'bar') return 'Giám sát Bar';
-      if (clean === 'restaurant_manager' || clean === 'rm') return 'Quản lý Nhà hàng';
-      if (clean === 'senior_accountant' || clean === 'senior.accountant') return 'Kế toán kho';
-      if (clean === 'junior' || clean === 'storekeeper' || clean === 'junior_accountant') return 'Thủ kho';
-      if (clean === 'cfo') return 'CFO';
-      if (clean === 'director' || clean === 'dir') return 'Giám đốc';
-      // Capitalize normal names
-      return name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    };
+    // Name file based on PO numbers
+    const fileSuffix = pos.length === 1 ? pos[0].po_no : `BULK_${pos.length}_POs`;
+    const excelFileName = `GRN_PO_Import_${fileSuffix}.xlsx`;
 
-    const poNumbers = pos.map(p => p.po_no).join(', ');
-    const locations = Array.from(new Set(pos.map(p => locationMapping[p.location_id] || p.location_id))).join(', ');
-    const dates = Array.from(new Set(pos.map(p => new Date(p.created_at).toLocaleDateString('vi-VN')))).join(', ');
-    const statuses = Array.from(new Set(pos.map(p => p.status))).join(', ');
-    const notes = pos.map(p => p.notes).filter(Boolean).join('; ');
-
-    // Creators, Approvers, and Second Approvers
-    const requesters = Array.from(new Set(pos.map(p => {
-      const pany = p as any;
-      return pany.requester?.full_name || pany.creator?.full_name || '';
-    }).filter(Boolean)));
-    const requesterDisplay = requesters.length > 0 
-      ? requesters.map(formatStaffName).join(' & ') 
-      : 'Kế toán kho';
-
-    const approvers = Array.from(new Set(pos.map(p => {
-      const pany = p as any;
-      return pany.approver?.full_name || '';
-    }).filter(Boolean)));
-    const approverDisplay = approvers.length > 0 
-      ? approvers.map(formatStaffName).join(' & ') 
-      : 'Bếp trưởng / Quản lý';
-
-    const secondApprovers = Array.from(new Set(pos.map(p => {
-      const pany = p as any;
-      return pany.second_approver_profile?.full_name || '';
-    }).filter(Boolean)));
-    const secondApproverDisplay = secondApprovers.length > 0 
-      ? secondApprovers.map(formatStaffName).join(' & ') 
-      : 'CFO / Ban Giám đốc';
-
-    let sttCounter = 1;
-    let grandTotalValue = 0;
-    const colSpan = canViewFinancials ? 9 : 7;
-
-    const supplierBlocksHTML = Object.entries(groupedBySupplier).map(([supplierId, supPos], supplierIdx) => {
-      const supplierName = supPos.find(p => p.supplier_name)?.supplier_name || supPos[0].supplier_name || supplierId;
-      
-      // Merge items for this supplier
-      const mergedItems: Record<string, {
-        ingredient_id: string;
-        ingredient_code: string;
-        ingredient_name: string;
-        qty: number;
-        purchase_uom: string;
-        unit_price: number;
-        estimated_value: number;
-        stock_at_order?: number;
-      }> = {};
-
-      for (const po of supPos) {
-        for (const item of po.items || []) {
-          const key = `${item.ingredient_id}:${item.purchase_uom}`;
-          const itemany = item as any;
-          const matchingIng = allIngredients.find((ing: any) => ing.id === item.ingredient_id || ing.code === item.ingredient_id);
-          const internalCode = matchingIng?.code || item.ingredient_id || '';
-          const ingredientName = item.ingredient_name || matchingIng?.ten_vi || '';
-          
-          if (mergedItems[key]) {
-            mergedItems[key].qty += item.qty;
-            mergedItems[key].estimated_value += item.estimated_value;
-          } else {
-            mergedItems[key] = {
-              ingredient_id: item.ingredient_id,
-              ingredient_code: internalCode,
-              ingredient_name: ingredientName,
-              qty: item.qty,
-              purchase_uom: item.purchase_uom,
-              unit_price: item.unit_price,
-              estimated_value: item.estimated_value,
-              stock_at_order: itemany.stock_at_order || 0
-            };
-          }
-        }
-      }
-
-      const itemsList = Object.values(mergedItems);
-      const supplierTotal = itemsList.reduce((sum, item) => sum + item.estimated_value, 0);
-      grandTotalValue += supplierTotal;
-
-      const itemsRowsHTML = itemsList.map((line) => `
-        <tr>
-          <td>${sttCounter++}</td>
-          <td>${line.ingredient_code || ''}</td>
-          <td class="item-name">${line.ingredient_name || ''}</td>
-          <td><strong>${line.qty}</strong></td>
-          <td>${line.purchase_uom}</td>
-          ${canViewFinancials ? `<td>${line.unit_price?.toLocaleString('vi-VN')}</td><td>${line.estimated_value?.toLocaleString('vi-VN')}</td>` : ''}
-          <td></td>
-          <td>${line.stock_at_order || 0}</td>
-        </tr>
-      `).join('');
-
-      const emptyRow = supplierIdx > 0 
-        ? `<tr class="empty-row"><td colspan="${colSpan}"></td></tr>` 
-        : '';
-
-      return `
-        ${emptyRow}
-        <tr class="supplier-header-row">
-          <td colspan="${colSpan}">🏢 Nhà cung cấp: ${supplierName}</td>
-        </tr>
-        ${itemsRowsHTML}
-      `;
-    }).join('');
-
-    const printContent = `
-      <html><head><title>In Hàng Loạt Phiếu Đặt Hàng PO</title>
-      <style>
-        body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #222; padding: 30px; font-size: 13px; line-height: 1.4; }
-        .po-page { box-sizing: border-box; margin-bottom: 40px; }
-        .header { text-align: center; border-bottom: 2px solid #1b3224; padding-bottom: 12px; margin-bottom: 25px; }
-        .title { font-size: 28px; font-weight: bold; letter-spacing: 2px; margin: 0; color: #1b3224; font-family: 'Cormorant Garamond', Georgia, serif; }
-        .subtitle { font-size: 12px; letter-spacing: 1px; margin: 5px 0; color: #555; }
-        .main-title { font-size: 20px; font-weight: bold; margin: 15px 0 5px 0; color: #1b3224; letter-spacing: 1px; }
-        .meta-table { width: 100%; margin-bottom: 25px; font-size: 13px; border-collapse: collapse; }
-        .meta-table td { padding: 6px 0; vertical-align: top; }
-        table { width: 100%; border-collapse: collapse; margin-top: 16px; margin-bottom: 30px; font-size: 12px; }
-        th, td { border: 1px solid #C9A581; padding: 10px 12px; text-align: left; }
-        th { background: #1b3224; color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-        .supplier-header-row { background-color: #F6F1E4 !important; }
-        .supplier-header-row td { color: #1b3224 !important; font-weight: bold; font-size: 12px; border-color: #C9A581; padding: 10px 12px; }
-        .empty-row td { border: none !important; background: transparent !important; height: 15px; }
-        .item-name { font-weight: bold; color: #1b3224; }
-        .footer { margin-top: 45px; display: flex; justify-content: space-between; text-align: center; font-size: 12px; page-break-inside: avoid; }
-        .sign-box { border-top: 1px solid #C9A581; padding-top: 10px; width: 180px; text-align: center; }
-        .sign-box strong { display: block; margin-bottom: 5px; color: #1b3224; font-size: 12px; }
-        .sign-box span { font-size: 11px; color: #666; font-style: italic; display: block; }
-        @media print {
-          body { padding: 0; }
-          tr { page-break-inside: avoid; }
-        }
-      </style></head><body>
-      <div class="po-page">
-        <div class="header">
-          <h1 class="title">MAISON VIE</h1>
-          <p class="subtitle">Nhà hàng Pháp &middot; Hệ thống CRM/ERP Quản lý Kho</p>
-          <h2 class="main-title">PHIẾU TỔNG HỢP ĐẶT HÀNG / PURCHASE ORDERS SUMMARY</h2>
-        </div>
-        
-        <table class="meta-table">
-          <tr>
-            <td style="width: 50%;"><strong>DANH SÁCH PO:</strong> ${poNumbers}</td>
-            <td style="width: 50%;"><strong>NGÀY LẬP:</strong> ${dates}</td>
-          </tr>
-          <tr>
-            <td style="width: 50%;"><strong>BỘ PHẬN ĐẶT:</strong> ${locations}</td>
-            <td style="width: 50%;"><strong>TRẠNG THÁI PO:</strong> ${statuses}</td>
-          </tr>
-          ${notes ? `
-          <tr>
-            <td colspan="2"><strong>GHI CHÚ:</strong> ${notes}</td>
-          </tr>` : ''}
-          ${canViewFinancials ? `
-          <tr>
-            <td colspan="2"><strong>TỔNG GIÁ TRỊ ƯỚC TÍNH:</strong> ${grandTotalValue.toLocaleString('vi-VN')} đ</td>
-          </tr>` : ''}
-        </table>
-
-        <table>
-          <thead>
-            <tr>
-              <th style="width: 5%;">#</th>
-              <th style="width: 10%;">Mã hàng</th>
-              <th style="width: 30%;">Tên hàng</th>
-              <th style="width: 10%;">SL đặt</th>
-              <th style="width: 8%;">ĐVT</th>
-              ${canViewFinancials ? '<th style="width: 12%;">Đơn giá</th><th style="width: 13%;">Thành tiền</th>' : ''}
-              <th style="width: 12%;">Ghi chú</th>
-              <th style="width: 10%;">SL tồn</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${supplierBlocksHTML}
-          </tbody>
-        </table>
-        
-        <div class="footer">
-          <div class="sign-box">
-            <strong>NGƯỜI LẬP</strong>
-            <span>(Ký, ghi rõ họ tên)</span>
-            <br/>
-            <strong>${locations} - ${requesterDisplay}</strong>
-          </div>
-          <div class="sign-box">
-            <strong>NGƯỜI DUYỆT</strong>
-            <span>(Ký, ghi rõ họ tên)</span>
-            <br/>
-            <strong>${approverDisplay}</strong>
-          </div>
-          <div class="sign-box">
-            <strong>NGƯỜI DUYỆT CUỐI</strong>
-            <span>(Ký, ghi rõ họ tên)</span>
-            <br/>
-            <strong>${secondApproverDisplay}</strong>
-          </div>
-        </div>
-      </div>
-      </body></html>
-    `;
-    const w = window.open('', '_blank');
-    if (w) { w.document.write(printContent); w.document.close(); w.print(); }
+    XLSX.writeFile(wb, excelFileName);
+    
+    alert(`Đã xuất dữ liệu đặt hàng thành công ra file Excel nhập kho: ${excelFileName}\nBạn có thể sửa số lượng thực nhận, đơn giá trực tiếp trên file này và upload vào tab "Nhập hàng".`);
   };
 
   // -------------------------------------------------------------------
@@ -1131,8 +938,8 @@ function ApproveTab({
                 }}
                 className="px-3 py-1.5 bg-[#A8884E] hover:bg-[#8C6F3C] text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5"
               >
-                <Printer size={12} />
-                In hàng loạt ({selectedPOs.size} PO)
+                <Upload size={12} className="rotate-180" />
+                Xuất Excel hàng loạt ({selectedPOs.size} PO)
               </button>
             )}
           </div>
@@ -1187,8 +994,8 @@ function ApproveTab({
                   )}
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => onPrint(po)} className="p-2 rounded border border-[#C9A581]/30 text-[#C9A581] hover:text-white hover:border-[#A8884E] transition-colors" title="In PDF">
-                    <Printer size={14} />
+                  <button onClick={() => onPrint(po)} className="p-2 rounded border border-[#C9A581]/30 text-[#C9A581] hover:text-white hover:border-[#A8884E] transition-colors" title="Xuất Excel Nhập Kho">
+                    <Upload size={14} className="rotate-180" />
                   </button>
                 </div>
               </div>
@@ -1259,8 +1066,8 @@ function HistoryTab({
             }}
             className="px-3 py-1.5 bg-[#A8884E] hover:bg-[#8C6F3C] text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5"
           >
-            <Printer size={12} />
-            In hàng loạt ({selectedPOs.size} PO)
+            <Upload size={12} className="rotate-180" />
+            Xuất Excel hàng loạt ({selectedPOs.size} PO)
           </button>
         )}
       </div>
@@ -1305,8 +1112,8 @@ function HistoryTab({
                 )}
                 <td className="p-2 text-[#C9A581]">{new Date(po.created_at).toLocaleDateString('vi-VN')}</td>
                 <td className="p-2">
-                  <button onClick={() => onPrint(po)} className="p-1 text-[#C9A581] hover:text-white transition-colors">
-                    <Printer size={12} />
+                  <button onClick={() => onPrint(po)} className="p-1 text-[#C9A581] hover:text-white transition-colors" title="Xuất Excel Nhập Kho">
+                    <Upload size={12} className="rotate-180" />
                   </button>
                 </td>
               </tr>
