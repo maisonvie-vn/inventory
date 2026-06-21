@@ -541,8 +541,8 @@ export default function PurchasingModule({
     try {
       // Lấy các dòng của PO gốc
       const { data: lines, error: lErr } = await supabase
-        .from('purchase_order_lines')
-        .select('ingredient_id, suggested_qty, unit_price, uom, moq, pack_size')
+        .from('po_lines')
+        .select('ingredient_id, suggested_qty, unit_price, uom, moq_applied, pack_size_applied')
         .eq('po_id', po.id);
       if (lErr) throw lErr;
 
@@ -551,8 +551,8 @@ export default function PurchasingModule({
         suggested_qty: l.suggested_qty,
         unit_price: l.unit_price,
         uom: l.uom,
-        moq: l.moq || 1,
-        pack_size: l.pack_size || 1,
+        moq: l.moq_applied || 1,
+        pack_size: l.pack_size_applied || 1,
       }));
 
       const { data: newPoId, error } = await supabase.rpc('create_po_from_worklist', {
