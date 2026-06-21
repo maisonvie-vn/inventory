@@ -2940,7 +2940,7 @@ export default function Home() {
             <table class="data-table">
               <thead>
                 <tr>
-                  <th style="width: 10%;">Mã</th>
+                  <th style="width: 10%;">Mã hàng</th>
                   <th style="width: 30%;">Tên hàng</th>
                   <th style="width: 12%;">SL cần</th>
                   <th style="width: 23%;">Nhà cung cấp</th>
@@ -2953,16 +2953,20 @@ export default function Home() {
                   <tr class="group-header-row">
                     <td colspan="6" style="padding: 10px 12px;">${groupName.toUpperCase().replace('/', ' / ')}</td>
                   </tr>
-                  ${items.map((it: any) => `
-                    <tr ${rowClass(it.warning || '')}>
-                      <td>${it.ingId}</td>
-                      <td class="item-name">${it.name}</td>
-                      <td><strong>${it.slDat}</strong> ${it.unit || ''}</td>
-                      <td>${doc.supplier_name || '—'}</td>
-                      <td>${it.note || '—'}</td>
-                      <td>${it.onHand} ${it.unit || ''}</td>
-                    </tr>
-                  `).join('')}
+                  ${items.map((it: any) => {
+                    const ing = ingredients.find(i => i.id === it.ingId || i.code === it.ingId);
+                    const internalCode = ing?.code || it.ingId;
+                    return `
+                      <tr ${rowClass(it.warning || '')}>
+                        <td>${internalCode}</td>
+                        <td class="item-name">${it.name}</td>
+                        <td><strong>${it.slDat}</strong> ${it.unit || ''}</td>
+                        <td>${doc.supplier_name || '—'}</td>
+                        <td>${it.note || '—'}</td>
+                        <td>${it.onHand} ${it.unit || ''}</td>
+                      </tr>
+                    `;
+                  }).join('')}
                 `).join('')}
               </tbody>
             </table>

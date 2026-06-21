@@ -579,14 +579,18 @@ export default function PurchasingModule({
         for (const item of po.items || []) {
           const key = `${item.ingredient_id}:${item.purchase_uom}`;
           const itemany = item as any;
+          const matchingIng = allIngredients.find((ing: any) => ing.id === item.ingredient_id || ing.code === item.ingredient_id);
+          const internalCode = matchingIng?.code || item.ingredient_id || '';
+          const ingredientName = item.ingredient_name || matchingIng?.ten_vi || '';
+          
           if (mergedItems[key]) {
             mergedItems[key].qty += item.qty;
             mergedItems[key].estimated_value += item.estimated_value;
           } else {
             mergedItems[key] = {
               ingredient_id: item.ingredient_id,
-              ingredient_code: itemany.ingredient_code || '',
-              ingredient_name: item.ingredient_name || '',
+              ingredient_code: internalCode,
+              ingredient_name: ingredientName,
               qty: item.qty,
               purchase_uom: item.purchase_uom,
               unit_price: item.unit_price,
