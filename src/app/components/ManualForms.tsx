@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   DollarSign, 
   Plus, 
@@ -167,6 +167,14 @@ export default function ManualForms({
         }));
         setWasteLogs(mappedWastes);
       }
+
+      // Fetch suppliers
+      const { data: sups } = await supabase.from('suppliers').select('*').order('name', { ascending: true });
+      if (sups) setSuppliers(sups);
+
+      // Fetch supplier ingredients mapping
+      const { data: supIngs } = await supabase.from('supplier_ingredients').select('*');
+      if (supIngs) setSupplierIngredients(supIngs);
     } catch (err) {
       console.error("Lỗi đồng bộ dữ liệu Supabase:", err);
     }
@@ -367,12 +375,85 @@ export default function ManualForms({
   // ==========================================
   // TAB 2: MANUAL GRN STATES
   // ==========================================
+  const [suppliers, setSuppliers] = useState<any[]>([]);
+  const [supplierIngredients, setSupplierIngredients] = useState<any[]>([]);
   const [manualGrnSupplier, setManualGrnSupplier] = useState('');
+  const [manualGrnSupplierId, setManualGrnSupplierId] = useState('');
   const [manualGrnInvoiceNo, setManualGrnInvoiceNo] = useState('');
   const [manualGrnDate, setManualGrnDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [manualGrnFreight, setManualGrnFreight] = useState('0');
   const [manualGrnDuty, setManualGrnDuty] = useState('0');
   const [manualGrnLines, setManualGrnLines] = useState<{ ingredientId: string; qty: number; unit: string; price: number; name: string; code: string }[]>([]);
+
+  // Fetch suppliers and supplier ingredients
+  useEffect(() => {
+    const initSuppliers = async () => {
+      if (isSupabaseConfigured()) {
+        try {
+          const { data: sups } = await supabase.from('suppliers').select('*').order('name', { ascending: true });
+          if (sups) setSuppliers(sups);
+          const { data: supIngs } = await supabase.from('supplier_ingredients').select('*');
+          if (supIngs) setSupplierIngredients(supIngs);
+        } catch (err) {
+          console.error("Error loading suppliers:", err);
+        }
+      } else {
+        // Fallback mock suppliers for Sandbox mode
+        setSuppliers([
+          { id: '90000000-0000-0000-0000-000000000001', name: 'Công ty Cổ phần Thực phẩm An Nam (Imported Premium)' },
+          { id: '90000000-0000-0000-0000-000000000002', name: 'Nhà cung cấp Rau sạch Đà Lạt Hải Yến' },
+          { id: '90000000-0000-0000-0000-000000000003', name: 'Tổng kho Rượu vang Đa Lộc' },
+          { id: '90000000-0000-0000-0000-000000000004', name: 'Cty TNHH Đầu tư phát triển TM TH Việt Nam' }
+        ]);
+      }
+    };
+    initSuppliers();
+  }, []);
+
+  // Reset selected ingredient when supplier changes
+  useEffect(() => {
+    setSelectedGrnIng(null);
+  }, [manualGrnSupplierId]);
+
+  // Filter ingredients for GRN by selected supplier
+  const filteredIngredientsForGrn = useMemo(() => {
+    if (!manualGrnSupplierId) return ingredients;
+    const allowedIds = new Set(
+      supplierIngredients
+        .filter(si => si.supplier_id === manualGrnSupplierId)
+        .map(si => si.ingredient_id)
+    );
+
+    if (allowedIds.size === 0) {
+      // Fallback categorization based on selected supplier name
+      const supplier = suppliers.find(s => s.id === manualGrnSupplierId);
+      const sName = supplier?.name?.toLowerCase() || '';
+      if (sName.includes('đa lộc') || sName.includes('việt nam')) {
+        return ingredients.filter(ing => {
+          const code = (ing.code || ing.id || '').toUpperCase();
+          const cat = (ing.category || '').toLowerCase();
+          return code.startsWith('V') || code.startsWith('B') || code.startsWith('M') || cat === 'alcohol' || cat === 'beverage';
+        });
+      } else if (sName.includes('hải yến') || sName.includes('rau')) {
+        return ingredients.filter(ing => {
+          const code = (ing.code || ing.id || '').toUpperCase();
+          const cat = (ing.category || '').toLowerCase();
+          return code.startsWith('NLP6') || ['vegetable', 'herb', 'fruit'].includes(cat);
+        });
+      } else if (sName.includes('an nam')) {
+        return ingredients.filter(ing => {
+          const code = (ing.code || ing.id || '').toUpperCase();
+          const cat = (ing.category || '').toLowerCase();
+          const isBar = code.startsWith('V') || code.startsWith('B') || code.startsWith('M') || cat === 'alcohol' || cat === 'beverage';
+          const isVeg = code.startsWith('NLP6') || ['vegetable', 'herb', 'fruit'].includes(cat);
+          return !isBar && !isVeg;
+        });
+      }
+      return ingredients;
+    }
+
+    return ingredients.filter(ing => allowedIds.has(ing.id));
+  }, [ingredients, manualGrnSupplierId, supplierIngredients, suppliers]);
   
   const [selectedGrnIng, setSelectedGrnIng] = useState<any>(null);
   const [manualGrnQtyInput, setManualGrnQtyInput] = useState('');
@@ -453,15 +534,7 @@ export default function ManualForms({
 
     if (isSupabaseConfigured()) {
       try {
-        let supplierId = '90000000-0000-0000-0000-000000000001'; 
-        const { data: supData } = await supabase
-          .from('suppliers')
-          .select('id')
-          .ilike('name', `%${manualGrnSupplier.trim()}%`)
-          .limit(1);
-        if (supData && supData.length > 0) {
-          supplierId = supData[0].id;
-        }
+        const supplierId = manualGrnSupplierId || '90000000-0000-0000-0000-000000000001';
 
         const { data: grnResult, error: grnErr } = await supabase
           .from('goods_receipts')
@@ -506,6 +579,7 @@ export default function ManualForms({
         setManualGrnLines([]);
         setManualGrnInvoiceNo('');
         setManualGrnSupplier('');
+        setManualGrnSupplierId('');
         setManualGrnFreight('0');
         setManualGrnDuty('0');
         alert(`Đã nhập kho và tự động phân bổ Landed Cost, Moving WAC thành công phiếu nhập ${manualGrnInvoiceNo} trên Supabase!`);
@@ -591,6 +665,7 @@ export default function ManualForms({
     setManualGrnLines([]);
     setManualGrnInvoiceNo('');
     setManualGrnSupplier('');
+    setManualGrnSupplierId('');
     setManualGrnFreight('0');
     setManualGrnDuty('0');
     alert(`Đã lập và duyệt thành công phiếu nhập kho thủ công ${manualGrnInvoiceNo}! Cập nhật WAC của các nguyên liệu liên quan (Sandbox).`);
@@ -1105,14 +1180,24 @@ export default function ManualForms({
 
             <div className="flex flex-col gap-1">
               <label className="text-[10px] uppercase font-semibold text-gray-300">Nhà cung cấp *</label>
-              <input 
-                type="text"
-                placeholder="VD: Tổng kho Đa Lộc"
-                value={manualGrnSupplier}
-                onChange={(e) => setManualGrnSupplier(e.target.value)}
+              <select 
+                value={manualGrnSupplierId}
+                onChange={(e) => {
+                  const selId = e.target.value;
+                  setManualGrnSupplierId(selId);
+                  const matched = suppliers.find(s => s.id === selId);
+                  setManualGrnSupplier(matched ? matched.name : '');
+                }}
                 required
-                className="bg-[#102B2A] border border-[#C9A581]/60 focus:border-[#C2A35A] p-2 rounded text-xs text-[#FBF8F4] focus:outline-none"
-              />
+                className="bg-[#102B2A] border border-[#C9A581]/60 focus:border-[#C2A35A] p-2 rounded text-xs text-[#FBF8F4] focus:outline-none cursor-pointer"
+              >
+                <option value="">-- Chọn Nhà cung cấp --</option>
+                {suppliers.map(sup => (
+                  <option key={sup.id} value={sup.id} className="bg-[#042726] text-[#FBF8F4]">
+                    {sup.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="flex flex-col gap-1">
@@ -1179,9 +1264,9 @@ export default function ManualForms({
               <div className="flex flex-col gap-1">
                 <label className="text-[9px] uppercase text-gray-400">Nguyên liệu</label>
                 <UniversalSearch 
-                  ingredients={ingredients}
+                  ingredients={filteredIngredientsForGrn}
                   onSelect={handleSelectIngredientForGrn}
-                  placeholder="Mã NVL (ING-001) hoặc tên..."
+                  placeholder={manualGrnSupplierId ? "Mã NVL hoặc tên của NCC..." : "Mã NVL (ING-001) hoặc tên..."}
                 />
               </div>
 
