@@ -1352,23 +1352,26 @@ function CreatePOTab({ suppliers, ingredients, supplierIngredients = [], onCreat
   }, [filteredIngsForPo]);
 
   const handleAddLine = () => {
-    if (!selIngId) return;
-    const ing = ingredients.find((i: any) => i.id === selIngId);
-    if (!ing) return;
-    
+    if (!selIngId || !selectedIng) return;
+
     // Check trùng
     if (lines.some(l => l.ingredient_id === selIngId)) {
       alert('Mặt hàng này đã có trong đơn');
       return;
     }
 
+    // Use selectedIng directly (already stored from onSelect, has all fields)
+    // Also try raw ingredients as fallback for ten_vi
+    const rawIng = ingredients.find((i: any) => i.id === selIngId);
+    const ingName = rawIng?.ten_vi || selectedIng.vi_name || selectedIng.fr_name || '';
+
     setLines([...lines, {
-      ingredient_id: ing.id,
-      code: ing.code,
-      name: ing.ten_vi,
+      ingredient_id: selectedIng.id,
+      code: selectedIng.code,
+      name: ingName,
       suggested_qty: qty,
-      unit_price: price || ing.wac_price || 0,
-      uom: ing.stock_uom,
+      unit_price: price || selectedIng.wac_price || rawIng?.wac_price || 0,
+      uom: selectedIng.unit || rawIng?.stock_uom || 'kg',
       moq: 1,
       pack_size: 1
     }]);
@@ -1495,7 +1498,7 @@ function CreatePOTab({ suppliers, ingredients, supplierIngredients = [], onCreat
                 <span className="text-gray-400">ĐVT: {selectedIng.unit}</span>
               </div>
               <div className="truncate">Tên: <strong className="text-gray-100">{selectedIng.vi_name}</strong></div>
-              <div>WAC hiện tại: <span className="font-mono text-[#62A57C]">{selectedIng.wac_price.toLocaleString()}đ</span></div>
+              <div>WAC hiện tại: <span className="font-mono text-[#62A57C]">{(selectedIng.wac_price || 0).toLocaleString()}đ</span></div>
             </div>
           )}
         </div>
