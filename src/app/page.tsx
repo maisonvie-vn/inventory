@@ -2034,8 +2034,13 @@ export default function Home() {
     return ingredients.filter(ing => {
       const depts = ingredientDepartments[ing.id] || ['KITCHEN'];
       
-      if (userRole === 'admin') {
-        return true; // CFO/Owner/Admin sees everything
+      if (
+        userRole === 'admin' || 
+        userRole === 'senior_accountant' || 
+        userRole === 'junior_accountant' || 
+        userRole === 'restaurant_manager'
+      ) {
+        return true; // CFO, Accountants, Stockkeeper, and Manager see everything
       } else if (userRole === 'BAR_SUPERVISOR' || userRole === 'BARTENDER') {
         return depts.includes('BAR'); // Bar role sees items belonging to BAR department
       } else {
@@ -2128,7 +2133,12 @@ export default function Home() {
                             ing.id.toLowerCase().includes(stockCountSearch.toLowerCase()) ||
                             ing.fr_name.toLowerCase().includes(stockCountSearch.toLowerCase());
       
-      if (userRole === 'admin') {
+      if (
+        userRole === 'admin' ||
+        userRole === 'senior_accountant' ||
+        userRole === 'junior_accountant' ||
+        userRole === 'restaurant_manager'
+      ) {
         const depts = ingredientDepartments[ing.id] || ['KITCHEN'];
         let matchesFilter = true;
         if (stockCountFilter === 'BAR') {
@@ -6033,7 +6043,10 @@ export default function Home() {
                     />
                   </div>
 
-                  {userRole === 'admin' && (
+                  {(userRole === 'admin' || 
+                    userRole === 'senior_accountant' || 
+                    userRole === 'junior_accountant' || 
+                    userRole === 'restaurant_manager') && (
                     <div className="flex items-center gap-1.5 bg-moss-dark/60 p-1.5 rounded border border-border-cream text-xs font-sans">
                       <span className="text-gray-400 px-2 font-sans">Loại kho lọc:</span>
                       <button 
