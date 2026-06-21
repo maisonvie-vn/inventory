@@ -3526,14 +3526,97 @@ export default function Home() {
   };
 
   const downloadStockTakeTemplate = () => {
-    const headers = [['Mã NVL', 'Tên nguyên liệu', 'ĐVT', 'Tồn thực tế đếm tay']];
-    const sampleData = ingredients.map(ing => [
-      ing.id,
-      ing.vi_name,
-      ing.unit,
-      actualStocks[ing.id] || ''
+    // Helper to detect country of wine
+    const getWineCountry = (name: string): string => {
+      const n = name.toLowerCase();
+      if (n.includes('pháp') || n.includes('france') || n.includes('bordeaux') || n.includes('burgundy') || n.includes('chablis') || n.includes('champagne') || n.includes('sauternes') || n.includes('rhône') || n.includes('loire')) {
+        return 'Pháp';
+      }
+      if (n.includes('ý') || n.includes('italy') || n.includes('toscana') || n.includes('tuscany') || n.includes('puglia') || n.includes('veneto') || n.includes('sicilia') || n.includes('sicily') || n.includes('moscato') || n.includes('chianti') || n.includes('bottega') || n.includes('pitars') || n.includes('masi')) {
+        return 'Ý';
+      }
+      if (n.includes('chile') || n.includes('chilean') || n.includes('yali') || n.includes('montes') || n.includes('concha') || n.includes('diablo') || n.includes('valle') || n.includes('boldos') || n.includes('mapu') || n.includes('palma')) {
+        return 'Chile';
+      }
+      if (n.includes('tây ban nha') || n.includes('spain') || n.includes('rioja') || n.includes('portia')) {
+        return 'Tây Ban Nha';
+      }
+      if (n.includes('úc') || n.includes('australia') || n.includes('shiraz') || n.includes('jacob') || n.includes('penfolds')) {
+        return 'Úc';
+      }
+      if (n.includes('mỹ') || n.includes('usa') || n.includes('california') || n.includes('napavalley') || n.includes('napa')) {
+        return 'Mỹ';
+      }
+      if (n.includes('new zealand') || n.includes('nz') || n.includes('marlborough')) {
+        return 'New Zealand';
+      }
+      if (n.includes('argentina') || n.includes('malbec') || n.includes('mendoza') || n.includes('tribu')) {
+        return 'Argentina';
+      }
+      return 'Quốc gia khác';
+    };
+
+    // Helper to get structured category group
+    const getIngredientGroup = (ing: any) => {
+      const code = ing.code || ing.id || '';
+      const category = ing.category || 'Khác';
+      const name = (ing.vi_name || ing.en_name || ing.fr_name || '').toLowerCase();
+
+      if (category === 'Meat') return '1. Hàng thịt';
+      if (category === 'Seafood') return '2. Hàng cá & hải sản';
+      if (category === 'Dairy') return '3. Hàng dairy bơ sữa';
+      
+      if (category === 'Alcohol') {
+        if (code.startsWith('V')) {
+          const country = getWineCountry(ing.vi_name || ing.en_name || ing.fr_name || '');
+          return `5. Rượu vang - ${country}`;
+        }
+        if (code.startsWith('B') || name.includes('beer') || name.includes('bia')) {
+          return '7. Bia & Nước giải khát';
+        }
+        return '4. Hàng rượu mạnh';
+      }
+
+      if (category === 'Beverage') return '7. Bia & Nước giải khát';
+      if (['Vegetable', 'Herb', 'Fruit'].includes(category)) return '6. Rau củ quả tươi';
+      
+      return '8. Hàng khô & Gia vị';
+    };
+
+    // Sort ingredients by group and then by name
+    const sortedIngredients = [...ingredients].sort((a, b) => {
+      const groupA = getIngredientGroup(a);
+      const groupB = getIngredientGroup(b);
+      if (groupA !== groupB) {
+        return groupA.localeCompare(groupB);
+      }
+      const nameA = a.vi_name || a.en_name || a.fr_name || '';
+      const nameB = b.vi_name || b.en_name || b.fr_name || '';
+      return nameA.localeCompare(nameB, 'vi');
+    });
+
+    const headers = [['Mã NVL', 'Nhóm', 'Mã chính', 'Tên nguyên liệu', 'ĐVT', 'Tồn thực tế đếm tay']];
+    const sampleData = sortedIngredients.map(ing => [
+      ing.id,                                          // Column A: UUID (hidden)
+      getIngredientGroup(ing).substring(3),            // Column B: Nhóm
+      ing.code || ing.id,                              // Column C: Mã chính
+      ing.vi_name || ing.en_name || ing.fr_name || '', // Column D: Tên nguyên liệu
+      ing.unit || '',                                  // Column E: ĐVT
+      actualStocks[ing.id] || ''                       // Column F: Tồn thực tế đếm tay
     ]);
+
     const ws = XLSX.utils.aoa_to_sheet([...headers, ...sampleData]);
+    
+    // Hide column A (Mã NVL / UUID) and set auto-widths for other columns
+    ws['!cols'] = [
+      { hidden: true }, // Column A: Mã NVL (UUID)
+      { wch: 25 },      // Column B: Nhóm
+      { wch: 15 },      // Column C: Mã chính
+      { wch: 45 },      // Column D: Tên nguyên liệu
+      { wch: 10 },      // Column E: ĐVT
+      { wch: 22 }       // Column F: Tồn thực tế đếm tay
+    ];
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'StockTake_Template');
     XLSX.writeFile(wb, 'Maison_Vie_Kiem_Kho_Template.xlsx');
@@ -3554,23 +3637,30 @@ export default function Home() {
         let headerRowIdx = -1;
         for (let i = 0; i < data.length; i++) {
           const row = data[i] as any[];
-          if (row && (row.includes('Mã NVL') || row.includes('Mã'))) {
+          if (row && (row.includes('Mã NVL') || row.includes('Mã chính') || row.includes('Mã'))) {
             headerRowIdx = i;
             break;
           }
         }
 
         if (headerRowIdx === -1) {
-          alert('Không tìm thấy cột "Mã NVL" trong file Excel.');
+          alert('Không tìm thấy cột mã nguyên vật liệu trong file Excel.');
           return;
         }
 
         const headers = data[headerRowIdx] as any[];
-        const codeIdx = headers.findIndex(h => String(h).includes('Mã'));
+        
+        const uuidIdx = headers.findIndex(h => String(h).includes('Mã NVL'));
+        const codeIdx = headers.findIndex(h => String(h).includes('Mã chính') || String(h).trim() === 'Mã');
+        const nameIdx = headers.findIndex(h => String(h).includes('Tên'));
         const qtyIdx = headers.findIndex(h => String(h).includes('Tồn thực tế') || String(h).includes('Thực tế'));
 
-        if (codeIdx === -1 || qtyIdx === -1) {
-          alert('Cần có cột "Mã NVL" và "Tồn thực tế đếm tay" trong file Excel.');
+        if (uuidIdx === -1 && codeIdx === -1 && nameIdx === -1) {
+          alert('Cần có cột định danh nguyên liệu ("Mã NVL", "Mã chính" hoặc "Tên nguyên liệu") trong file Excel.');
+          return;
+        }
+        if (qtyIdx === -1) {
+          alert('Cần có cột nhập tồn thực tế ("Tồn thực tế đếm tay") trong file Excel.');
           return;
         }
 
@@ -3579,24 +3669,56 @@ export default function Home() {
 
         for (let i = headerRowIdx + 1; i < data.length; i++) {
           const row = data[i] as any[];
-          if (!row || row.length <= Math.max(codeIdx, qtyIdx)) continue;
+          if (!row) continue;
 
-          const code = strVal(row[codeIdx]).trim();
-          const qtyStr = strVal(row[qtyIdx]).trim();
-          if (!code || qtyStr === '') continue;
+          let targetId = '';
 
-          const qty = parseFloat(qtyStr);
-          if (isNaN(qty)) continue;
+          // 1. Khớp theo UUID ẩn (nếu có cột và khớp format UUID)
+          if (uuidIdx !== -1 && row[uuidIdx]) {
+            const val = strVal(row[uuidIdx]).trim();
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+            if (uuidRegex.test(val)) {
+              targetId = val;
+            }
+          }
 
-          newActualStocks[code] = String(qty);
-          count++;
+          // 2. Khớp theo Mã chính (ví dụ: NLP60034)
+          if (!targetId && codeIdx !== -1 && row[codeIdx]) {
+            const val = strVal(row[codeIdx]).trim();
+            const found = ingredients.find(ing => ing.code === val);
+            if (found) {
+              targetId = found.id;
+            }
+          }
+
+          // 3. Khớp theo Tên gọi của NVL
+          if (!targetId && nameIdx !== -1 && row[nameIdx]) {
+            const val = strVal(row[nameIdx]).trim();
+            const found = ingredients.find(ing => (ing.vi_name || ing.en_name || ing.fr_name || '') === val);
+            if (found) {
+              targetId = found.id;
+            }
+          }
+
+          if (!targetId) continue;
+
+          // Đọc số lượng kiểm kho thực tế
+          if (row.length > qtyIdx && row[qtyIdx] !== undefined) {
+            const qtyStr = strVal(row[qtyIdx]).trim();
+            if (qtyStr === '') continue;
+            const qty = parseFloat(qtyStr);
+            if (!isNaN(qty)) {
+              newActualStocks[targetId] = String(qty);
+              count++;
+            }
+          }
         }
 
         if (count > 0) {
           setActualStocks(newActualStocks);
           alert(`Đã cập nhật số lượng kiểm kho thực tế cho ${count} nguyên liệu từ file Excel!`);
         } else {
-          alert('Không tìm thấy bản ghi kiểm kho hợp lệ.');
+          alert('Không tìm thấy bản ghi kiểm kho hợp lệ trong file Excel.');
         }
       } catch (err) {
         alert('Lỗi nhập file kiểm kho: ' + (err as Error).message);
