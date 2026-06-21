@@ -706,9 +706,11 @@ export default function PurchasingModule({
         await supabase.from('grn_lines').insert(grnLines);
 
         // Auto-approve → trigger WAC + 3-way match via RPC
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        const validUserId = (userId && uuidRegex.test(userId)) ? userId : null;
         const { error: approveErr } = await supabase.rpc('approve_goods_receipt', {
           p_grn_id: grn!.id,
-          p_user_id: userId
+          p_user_id: validUserId
         });
 
         if (approveErr) {

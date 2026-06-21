@@ -2374,11 +2374,13 @@ export default function Home() {
     if (isSupabaseConfigured()) {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        const userId = session?.user.id || currentUser?.id || null;
+        const rawUserId = session?.user.id || currentUser?.id || null;
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        const validUserId = (rawUserId && uuidRegex.test(rawUserId)) ? rawUserId : null;
         
         const { error } = await supabase.rpc('approve_goods_receipt', {
           p_grn_id: grnId,
-          p_user_id: userId
+          p_user_id: validUserId
         });
 
         if (error) {
