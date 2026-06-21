@@ -186,13 +186,17 @@ export default function ClosedInventory({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [periodRange.startStr, periodRange.endStr]);
 
-  // Find if current period range is locked
-  const currentPeriodStatus = useMemo(() => {
-    const match = closedPeriods.find(
-      p => p.period_type === periodType && p.period_end === periodRange.endStr && p.status === 'CLOSED'
+  // Find if current period range is locked (latest version is CLOSED)
+  const isPeriodLocked = useMemo(() => {
+    const periodVersions = closedPeriods.filter(
+      p => p.period_type === periodType && p.period_end === periodRange.endStr
     );
-    return match ? 'LOCKED' : 'OPEN';
+    if (periodVersions.length === 0) return false;
+    const latest = periodVersions.reduce((max, p) => p.version > max.version ? p : max, periodVersions[0]);
+    return latest.status === 'CLOSED';
   }, [closedPeriods, periodType, periodRange]);
+
+  const currentPeriodStatus = isPeriodLocked ? 'LOCKED' : 'OPEN';
 
   // Period checklist checks
   const checklist = useMemo(() => {
@@ -231,11 +235,7 @@ export default function ClosedInventory({
   // Calculate stock table data: from RPC data (bypasses RLS) or snapshots
   const closedInventoryData = useMemo(() => {
     // If period is closed and snapshots exist, read from snapshot
-    const closedRecord = closedPeriods.find(
-      p => p.period_type === periodType && p.period_end === periodRange.endStr && p.status === 'CLOSED'
-    );
-    
-    if (closedRecord && snapshots.length > 0) {
+    if (isPeriodLocked && snapshots.length > 0) {
       const periodSnaps = snapshots.filter(
         s => s.period_type === periodType && s.period_end === periodRange.endStr
       );
@@ -513,11 +513,11 @@ export default function ClosedInventory({
             <button
               onClick={() => {
                 if (currentPeriodStatus === 'LOCKED') {
-                  setSelectedPeriodToReopen(
-                    closedPeriods.find(
-                      p => p.period_type === periodType && p.period_end === periodRange.endStr && p.status === 'CLOSED'
-                    )
+                  const periodVersions = closedPeriods.filter(
+                    p => p.period_type === periodType && p.period_end === periodRange.endStr
                   );
+                  const latestClosed = periodVersions.reduce((max, p) => p.version > max.version ? p : max, periodVersions[0]);
+                  setSelectedPeriodToReopen(latestClosed);
                   setShowReopenModal(true);
                 } else {
                   setShowChecklistModal(true);
