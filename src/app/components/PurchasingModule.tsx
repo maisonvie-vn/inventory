@@ -413,20 +413,30 @@ export default function PurchasingModule({
     }
   }, [fetchAll]);
 
-  // Hủy PO (bất kỳ trạng thái nào trước RECEIVED)
+  // Hủy PO (bất kỳ trạng thái nào trước RECEIVED/CLOSED)
   const handleCancelPO = useCallback(async (poId: string, poRef: string) => {
     const reason = window.prompt(`Lý do hủy PO "${poRef}":\n(Bắt buộc)`);
-    if (reason === null) return; // User clicked Cancel
+    if (reason === null) return; // User nhấn Cancel
     if (!reason.trim()) { alert('Vui lòng nhập lý do hủy!'); return; }
     try {
+      // Kiểm tra trạng thái hiện tại trước
+      const { data: po, error: fetchErr } = await supabase
+        .from('purchase_orders')
+        .select('id, status')
+        .eq('id', poId)
+        .single();
+      if (fetchErr) throw fetchErr;
+      if (['RECEIVED', 'CLOSED', 'CANCELLED'].includes(po.status)) {
+        alert(`⚠️ PO này đang ở trạng thái "${po.status}" — không thể hủy.`);
+        return;
+      }
       const { error } = await supabase
         .from('purchase_orders')
         .update({ status: 'CANCELLED', notes: `[HỦY] ${reason.trim()}` })
-        .eq('id', poId)
-        .not('status', 'in', '("RECEIVED","CLOSED","CANCELLED")');
+        .eq('id', poId);
       if (error) throw error;
       alert('✅ Đã hủy PO thành công!');
-      fetchAll();
+      await fetchAll();
     } catch (err: any) {
       alert(`❌ Lỗi hủy PO: ${err.message}`);
     }
