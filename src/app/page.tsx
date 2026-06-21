@@ -3665,7 +3665,8 @@ export default function Home() {
     };
 
     // Filter out finished products, set menus, portion glasses, and dummy/process items
-    const rawFilteredIngredients = roleFilteredIngredients.filter(ing => {
+    // Use full ingredients list so the Excel template always has both Bar and Kitchen items
+    const rawFilteredIngredients = ingredients.filter(ing => {
       const code = (ing.code || ing.id || '').toUpperCase();
       const name = (ing.vi_name || ing.en_name || ing.fr_name || '').toUpperCase();
       const unit = (ing.unit || '').toUpperCase();
