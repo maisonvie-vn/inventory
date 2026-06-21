@@ -3612,23 +3612,37 @@ export default function Home() {
         return '3. Hàng dairy bơ sữa';
       }
 
-      // 4. Wine and 5. Spirits
+      // 4. Wine, Spirits and Beers/Softdrinks starting with B or M
+      if (code.startsWith('B')) {
+        return '7. Bia & Nước giải khát';
+      }
+      if (code.startsWith('M')) {
+        if (
+          category === 'Alcohol' || 
+          code.startsWith('M94') || 
+          code.startsWith('M95') || 
+          code.startsWith('M96') || 
+          code.startsWith('M97') || 
+          code.startsWith('M98')
+        ) {
+          return '4. Hàng rượu mạnh';
+        }
+        return '7. Bia & Nước giải khát';
+      }
+
+      // Wine from category Alcohol (usually starting with V)
       if (category === 'Alcohol') {
         if (code.startsWith('V')) {
           const country = getWineCountry(ing.vi_name || ing.en_name || ing.fr_name || '');
           return `5. Rượu vang - ${country}`;
         }
-        if (code.startsWith('B') || name.includes('beer') || name.includes('bia')) {
-          return '7. Bia & Nước giải khát';
-        }
         return '4. Hàng rượu mạnh';
       }
 
       // 7. Beer and Softdrinks (Bia & Nước giải khát)
-      // Match category Beverage or code starting with B (Beers) or beverage keywords in code/name
+      // Match category Beverage or beverage keywords in code/name
       if (
         category === 'Beverage' || 
-        code.startsWith('B') || 
         name.includes('beer') || 
         name.includes('bia') || 
         name.includes('coke') || 
@@ -3664,12 +3678,25 @@ export default function Home() {
       return '8. Hàng khô & Gia vị';
     };
 
+    // Kitchen process codes to exclude from stocktake
+    const excludedProcessCodes = ['ING-101', 'ING-102', 'ING-103', 'ING-104', 'ING-105', 'ING-106', 'ING-107', 'ING-108', 'ING-109', 'ING-111', 'ING-112'];
+
     // Filter out finished products, set menus, portion glasses, and dummy/process items
     // Use full ingredients list so the Excel template always has both Bar and Kitchen items
     const rawFilteredIngredients = ingredients.filter(ing => {
       const code = (ing.code || ing.id || '').toUpperCase();
       const name = (ing.vi_name || ing.en_name || ing.fr_name || '').toUpperCase();
       const unit = (ing.unit || '').toUpperCase();
+      
+      // Exclude raw kitchen process codes listed by user
+      if (excludedProcessCodes.includes(code)) return false;
+      
+      // Always include B and M codes for actual stocktake (unless they are dummy codes)
+      if (code.startsWith('B') || code.startsWith('M')) {
+        if (code === '000' || code === '0001' || code === '001' || code === '002') return false;
+        if (name.includes('NGUYÊN LIỆU CHẾ BIẾN') || name.includes('KO NHẬP')) return false;
+        return true;
+      }
       
       // Exclude codes starting with R or DE (recipes and finished POS dishes)
       if (code.startsWith('R') || code.startsWith('DE')) return false;
@@ -3690,7 +3717,7 @@ export default function Home() {
         name.includes('TASTING MENU')
       ) return false;
       
-      // Exclude portion units representing prepared dishes/servings
+      // Exclude portion units representing prepared dishes/servings for other items
       const excludedUnits = ['GLASS', 'PLATE', 'BOWL', 'PAX', 'CUP'];
       if (excludedUnits.includes(unit)) return false;
       
