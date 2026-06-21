@@ -525,6 +525,108 @@ export default function PurchasingModule({
       return name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
     };
 
+    const poNumbers = pos.map(p => p.po_no).join(', ');
+    const locations = Array.from(new Set(pos.map(p => locationMapping[p.location_id] || p.location_id))).join(', ');
+    const dates = Array.from(new Set(pos.map(p => new Date(p.created_at).toLocaleDateString('vi-VN')))).join(', ');
+    const statuses = Array.from(new Set(pos.map(p => p.status))).join(', ');
+    const notes = pos.map(p => p.notes).filter(Boolean).join('; ');
+
+    // Creators, Approvers, and Second Approvers
+    const requesters = Array.from(new Set(pos.map(p => {
+      const pany = p as any;
+      return pany.requester?.full_name || pany.creator?.full_name || '';
+    }).filter(Boolean)));
+    const requesterDisplay = requesters.length > 0 
+      ? requesters.map(formatStaffName).join(' & ') 
+      : 'Kế toán kho';
+
+    const approvers = Array.from(new Set(pos.map(p => {
+      const pany = p as any;
+      return pany.approver?.full_name || '';
+    }).filter(Boolean)));
+    const approverDisplay = approvers.length > 0 
+      ? approvers.map(formatStaffName).join(' & ') 
+      : 'Bếp trưởng / Quản lý';
+
+    const secondApprovers = Array.from(new Set(pos.map(p => {
+      const pany = p as any;
+      return pany.second_approver_profile?.full_name || '';
+    }).filter(Boolean)));
+    const secondApproverDisplay = secondApprovers.length > 0 
+      ? secondApprovers.map(formatStaffName).join(' & ') 
+      : 'CFO / Ban Giám đốc';
+
+    let sttCounter = 1;
+    let grandTotalValue = 0;
+    const colSpan = canViewFinancials ? 9 : 7;
+
+    const supplierBlocksHTML = Object.entries(groupedBySupplier).map(([supplierId, supPos], supplierIdx) => {
+      const supplierName = supPos.find(p => p.supplier_name)?.supplier_name || supPos[0].supplier_name || supplierId;
+      
+      // Merge items for this supplier
+      const mergedItems: Record<string, {
+        ingredient_id: string;
+        ingredient_code: string;
+        ingredient_name: string;
+        qty: number;
+        purchase_uom: string;
+        unit_price: number;
+        estimated_value: number;
+        stock_at_order?: number;
+      }> = {};
+
+      for (const po of supPos) {
+        for (const item of po.items || []) {
+          const key = `${item.ingredient_id}:${item.purchase_uom}`;
+          const itemany = item as any;
+          if (mergedItems[key]) {
+            mergedItems[key].qty += item.qty;
+            mergedItems[key].estimated_value += item.estimated_value;
+          } else {
+            mergedItems[key] = {
+              ingredient_id: item.ingredient_id,
+              ingredient_code: itemany.ingredient_code || '',
+              ingredient_name: item.ingredient_name || '',
+              qty: item.qty,
+              purchase_uom: item.purchase_uom,
+              unit_price: item.unit_price,
+              estimated_value: item.estimated_value,
+              stock_at_order: itemany.stock_at_order || 0
+            };
+          }
+        }
+      }
+
+      const itemsList = Object.values(mergedItems);
+      const supplierTotal = itemsList.reduce((sum, item) => sum + item.estimated_value, 0);
+      grandTotalValue += supplierTotal;
+
+      const itemsRowsHTML = itemsList.map((line) => `
+        <tr>
+          <td>${sttCounter++}</td>
+          <td>${line.ingredient_code || ''}</td>
+          <td class="item-name">${line.ingredient_name || ''}</td>
+          <td><strong>${line.qty}</strong></td>
+          <td>${line.purchase_uom}</td>
+          ${canViewFinancials ? `<td>${line.unit_price?.toLocaleString('vi-VN')}</td><td>${line.estimated_value?.toLocaleString('vi-VN')}</td>` : ''}
+          <td></td>
+          <td>${line.stock_at_order || 0}</td>
+        </tr>
+      `).join('');
+
+      const emptyRow = supplierIdx > 0 
+        ? `<tr class="empty-row"><td colspan="${colSpan}"></td></tr>` 
+        : '';
+
+      return `
+        ${emptyRow}
+        <tr class="supplier-header-row">
+          <td colspan="${colSpan}">🏢 Nhà cung cấp: ${supplierName}</td>
+        </tr>
+        ${itemsRowsHTML}
+      `;
+    }).join('');
+
     const printContent = `
       <html><head><title>In Hàng Loạt Phiếu Đặt Hàng PO</title>
       <style>
@@ -539,188 +641,84 @@ export default function PurchasingModule({
         table { width: 100%; border-collapse: collapse; margin-top: 16px; margin-bottom: 30px; font-size: 12px; }
         th, td { border: 1px solid #C9A581; padding: 10px 12px; text-align: left; }
         th { background: #1b3224; color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        .supplier-header-row { background-color: #F6F1E4 !important; }
+        .supplier-header-row td { color: #1b3224 !important; font-weight: bold; font-size: 12px; border-color: #C9A581; padding: 10px 12px; }
+        .empty-row td { border: none !important; background: transparent !important; height: 15px; }
         .item-name { font-weight: bold; color: #1b3224; }
-        .footer { margin-top: 45px; display: flex; justify-content: space-between; text-align: center; font-size: 12px; }
+        .footer { margin-top: 45px; display: flex; justify-content: space-between; text-align: center; font-size: 12px; page-break-inside: avoid; }
         .sign-box { border-top: 1px solid #C9A581; padding-top: 10px; width: 180px; text-align: center; }
         .sign-box strong { display: block; margin-bottom: 5px; color: #1b3224; font-size: 12px; }
         .sign-box span { font-size: 11px; color: #666; font-style: italic; display: block; }
         @media print {
           body { padding: 0; }
-          .po-page {
-            page-break-inside: avoid;
-            border-bottom: 1px dashed #333;
-            padding-bottom: 30px;
-            margin-bottom: 30px;
-          }
-          .po-page:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 0;
-            page-break-after: avoid;
-          }
-        }
-        @media screen {
-          .po-page {
-            border-bottom: 2px dashed #999;
-            padding-bottom: 40px;
-            margin-bottom: 40px;
-          }
-          .po-page:last-child {
-             border-bottom: none;
-             padding-bottom: 0;
-             margin-bottom: 0;
-          }
+          tr { page-break-inside: avoid; }
         }
       </style></head><body>
-      ${Object.entries(groupedBySupplier).map(([supplierId, supPos]) => {
-        const supplierName = supPos.find(p => p.supplier_name)?.supplier_name || supPos[0].supplier_name || supplierId;
-        const poNumbers = supPos.map(p => p.po_no).join(', ');
-        const locations = Array.from(new Set(supPos.map(p => locationMapping[p.location_id] || p.location_id))).join(', ');
-        const dates = Array.from(new Set(supPos.map(p => new Date(p.created_at).toLocaleDateString('vi-VN')))).join(', ');
-        const status = Array.from(new Set(supPos.map(p => p.status))).join(', ');
-        const notes = supPos.map(p => p.notes).filter(Boolean).join('; ');
+      <div class="po-page">
+        <div class="header">
+          <h1 class="title">MAISON VIE</h1>
+          <p class="subtitle">Nhà hàng Pháp &middot; Hệ thống CRM/ERP Quản lý Kho</p>
+          <h2 class="main-title">PHIẾU TỔNG HỢP ĐẶT HÀNG / PURCHASE ORDERS SUMMARY</h2>
+        </div>
+        
+        <table class="meta-table">
+          <tr>
+            <td style="width: 50%;"><strong>DANH SÁCH PO:</strong> ${poNumbers}</td>
+            <td style="width: 50%;"><strong>NGÀY LẬP:</strong> ${dates}</td>
+          </tr>
+          <tr>
+            <td style="width: 50%;"><strong>BỘ PHẬN ĐẶT:</strong> ${locations}</td>
+            <td style="width: 50%;"><strong>TRẠNG THÁI PO:</strong> ${statuses}</td>
+          </tr>
+          ${notes ? `
+          <tr>
+            <td colspan="2"><strong>GHI CHÚ:</strong> ${notes}</td>
+          </tr>` : ''}
+          ${canViewFinancials ? `
+          <tr>
+            <td colspan="2"><strong>TỔNG GIÁ TRỊ ƯỚC TÍNH:</strong> ${grandTotalValue.toLocaleString('vi-VN')} đ</td>
+          </tr>` : ''}
+        </table>
 
-        // Creators, Approvers, and Second Approvers
-        const requesters = Array.from(new Set(supPos.map(p => {
-          const pany = p as any;
-          return pany.requester?.full_name || pany.creator?.full_name || '';
-        }).filter(Boolean)));
-        const requesterDisplay = requesters.length > 0 
-          ? requesters.map(formatStaffName).join(' & ') 
-          : 'Kế toán kho';
-
-        const approvers = Array.from(new Set(supPos.map(p => {
-          const pany = p as any;
-          return pany.approver?.full_name || '';
-        }).filter(Boolean)));
-        const approverDisplay = approvers.length > 0 
-          ? approvers.map(formatStaffName).join(' & ') 
-          : 'Bếp trưởng / Quản lý';
-
-        const secondApprovers = Array.from(new Set(supPos.map(p => {
-          const pany = p as any;
-          return pany.second_approver_profile?.full_name || '';
-        }).filter(Boolean)));
-        const secondApproverDisplay = secondApprovers.length > 0 
-          ? secondApprovers.map(formatStaffName).join(' & ') 
-          : 'CFO / Ban Giám đốc';
-
-        // Merge items
-        const mergedItems: Record<string, {
-          ingredient_id: string;
-          ingredient_code: string;
-          ingredient_name: string;
-          qty: number;
-          purchase_uom: string;
-          unit_price: number;
-          estimated_value: number;
-          stock_at_order?: number;
-        }> = {};
-
-        for (const po of supPos) {
-          for (const item of po.items || []) {
-            const key = `${item.ingredient_id}:${item.purchase_uom}`;
-            const itemany = item as any;
-            if (mergedItems[key]) {
-              mergedItems[key].qty += item.qty;
-              mergedItems[key].estimated_value += item.estimated_value;
-            } else {
-              mergedItems[key] = {
-                ingredient_id: item.ingredient_id,
-                ingredient_code: itemany.ingredient_code || '',
-                ingredient_name: item.ingredient_name || '',
-                qty: item.qty,
-                purchase_uom: item.purchase_uom,
-                unit_price: item.unit_price,
-                estimated_value: item.estimated_value,
-                stock_at_order: itemany.stock_at_order || 0
-              };
-            }
-          }
-        }
-
-        const itemsList = Object.values(mergedItems);
-        const totalValue = itemsList.reduce((sum, item) => sum + item.estimated_value, 0);
-
-        return `
-          <div class="po-page">
-            <div class="header">
-              <h1 class="title">MAISON VIE</h1>
-              <p class="subtitle">Nhà hàng Pháp &middot; Hệ thống CRM/ERP Quản lý Kho</p>
-              <h2 class="main-title">PHIẾU ĐẶT HÀNG</h2>
-            </div>
-            
-            <table class="meta-table">
-              <tr>
-                <td style="width: 50%;"><strong>SỐ CHỨNG TỪ:</strong> ${poNumbers}</td>
-                <td style="width: 50%;"><strong>NGÀY LẬP:</strong> ${dates}</td>
-              </tr>
-              <tr>
-                <td style="width: 50%;"><strong>NHÀ CUNG CẤP:</strong> ${supplierName}</td>
-                <td style="width: 50%;"><strong>BỘ PHẬN ĐẶT:</strong> ${locations}</td>
-              </tr>
-              <tr>
-                <td style="width: 50%;"><strong>TRẠNG THÁI:</strong> ${status}</td>
-                <td style="width: 50%;">${notes ? `<strong>GHI CHÚ:</strong> ${notes}` : ''}</td>
-              </tr>
-              ${canViewFinancials ? `
-              <tr>
-                <td colspan="2"><strong>TỔNG GIÁ TRỊ ƯỚC TÍNH:</strong> ${totalValue?.toLocaleString('vi-VN')} đ</td>
-              </tr>` : ''}
-            </table>
-
-            <table>
-              <thead>
-                <tr>
-                  <th style="width: 5%;">#</th>
-                  <th style="width: 10%;">Mã hàng</th>
-                  <th style="width: 30%;">Tên hàng</th>
-                  <th style="width: 10%;">SL đặt</th>
-                  <th style="width: 8%;">ĐVT</th>
-                  ${canViewFinancials ? '<th style="width: 12%;">Đơn giá</th><th style="width: 13%;">Thành tiền</th>' : ''}
-                  <th style="width: 12%;">Ghi chú</th>
-                  <th style="width: 10%;">SL tồn</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${itemsList.map((line, i) => `
-                  <tr>
-                    <td>${i + 1}</td>
-                    <td>${line.ingredient_code || ''}</td>
-                    <td class="item-name">${line.ingredient_name || ''}</td>
-                    <td><strong>${line.qty}</strong></td>
-                    <td>${line.purchase_uom}</td>
-                    ${canViewFinancials ? `<td>${line.unit_price?.toLocaleString('vi-VN')}</td><td>${line.estimated_value?.toLocaleString('vi-VN')}</td>` : ''}
-                    <td></td>
-                    <td>${line.stock_at_order || 0}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-            
-            <div class="footer">
-              <div class="sign-box">
-                <strong>NGƯỜI LẬP</strong>
-                <span>(Ký, ghi rõ họ tên)</span>
-                <br/>
-                <strong>${locations} - ${requesterDisplay}</strong>
-              </div>
-              <div class="sign-box">
-                <strong>NGƯỜI DUYỆT</strong>
-                <span>(Ký, ghi rõ họ tên)</span>
-                <br/>
-                <strong>${approverDisplay}</strong>
-              </div>
-              <div class="sign-box">
-                <strong>NGƯỜI DUYỆT CUỐI</strong>
-                <span>(Ký, ghi rõ họ tên)</span>
-                <br/>
-                <strong>${secondApproverDisplay}</strong>
-              </div>
-            </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 5%;">#</th>
+              <th style="width: 10%;">Mã hàng</th>
+              <th style="width: 30%;">Tên hàng</th>
+              <th style="width: 10%;">SL đặt</th>
+              <th style="width: 8%;">ĐVT</th>
+              ${canViewFinancials ? '<th style="width: 12%;">Đơn giá</th><th style="width: 13%;">Thành tiền</th>' : ''}
+              <th style="width: 12%;">Ghi chú</th>
+              <th style="width: 10%;">SL tồn</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${supplierBlocksHTML}
+          </tbody>
+        </table>
+        
+        <div class="footer">
+          <div class="sign-box">
+            <strong>NGƯỜI LẬP</strong>
+            <span>(Ký, ghi rõ họ tên)</span>
+            <br/>
+            <strong>${locations} - ${requesterDisplay}</strong>
           </div>
-        `;
-      }).join('')}
+          <div class="sign-box">
+            <strong>NGƯỜI DUYỆT</strong>
+            <span>(Ký, ghi rõ họ tên)</span>
+            <br/>
+            <strong>${approverDisplay}</strong>
+          </div>
+          <div class="sign-box">
+            <strong>NGƯỜI DUYỆT CUỐI</strong>
+            <span>(Ký, ghi rõ họ tên)</span>
+            <br/>
+            <strong>${secondApproverDisplay}</strong>
+          </div>
+        </div>
+      </div>
       </body></html>
     `;
     const w = window.open('', '_blank');
