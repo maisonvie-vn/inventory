@@ -16,6 +16,9 @@ export interface Ingredient {
   stock_to_recipe_factor?: number;
   tolerance_percent?: number;
   tare_weight_grams?: number;
+  min_stock?: number;
+  max_stock?: number;
+  safety_stock?: number;
 }
 
 export interface RecipeIngredient {

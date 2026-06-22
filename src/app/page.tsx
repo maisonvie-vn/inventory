@@ -1286,7 +1286,10 @@ export default function Home() {
           recipe_uom: item.recipe_uom,
           stock_to_recipe_factor: parseFloat(item.stock_to_recipe_factor) || 1,
           tolerance_percent: parseFloat(item.tolerance_percent) || 5.0,
-          tare_weight_grams: parseFloat(item.tare_weight_grams) || 0
+          tare_weight_grams: parseFloat(item.tare_weight_grams) || 0,
+          min_stock: item.min_stock !== undefined ? parseFloat(item.min_stock) : 15,
+          max_stock: item.max_stock !== undefined ? parseFloat(item.max_stock) : 50,
+          safety_stock: item.safety_stock !== undefined ? parseFloat(item.safety_stock) : 10
         }));
         setIngredients(mappedIngs as any[]);
 
@@ -5412,28 +5415,30 @@ export default function Home() {
                     <p className="text-[11px] text-gray-400">Đã bao gồm tỷ lệ hao hụt Yield % và 10% bù bếp</p>
                   </div>
                   
-                  {/* Custom SVG Bar Chart (Scrollable on mobile) */}
-                  <div className="overflow-x-auto overflow-y-hidden w-full min-w-0 max-w-full pb-2">
-                    <div className="h-44 min-w-[500px] lg:min-w-0 w-full bg-moss-dark/50 rounded border border-border-moss p-4 flex items-end justify-between gap-2">
-                      {roleFilteredConsumptionData.slice(0, 10).map((item, idx) => {
-                        const maxVal = Math.max(...roleFilteredConsumptionData.slice(0, 10).map(c => c.totalCost));
-                        const barHeight = maxVal > 0 ? (item.totalCost / maxVal) * 100 : 0;
-                        return (
-                           <div key={item.id} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
-                            <div className="w-full flex items-end justify-center h-28 relative">
-                              {/* Hover cost value */}
-                              <span className="absolute -top-6 text-[9px] text-accent-gold opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1.5 py-0.5 rounded border border-border-cream whitespace-nowrap">
-                                {Math.round(item.totalCost).toLocaleString()}đ
-                              </span>
-                              <div 
-                                style={{ height: `${Math.max(5, barHeight)}%` }}
-                                className="w-4 sm:w-6 bg-gradient-to-t from-amber-600 via-amber-400 to-[#f3e5ab] rounded-t-sm transition-all duration-500 hover:shadow-lg hover:shadow-amber-500/20 group-hover:scale-x-110"
-                              ></div>
+                  {/* Custom SVG Bar Chart (Scrollable inside the gold border box on mobile to prevent overflow) */}
+                  <div className="w-full min-w-0 max-w-full pb-2">
+                    <div className="h-44 w-full bg-moss-dark/50 rounded border border-border-moss p-4 overflow-x-auto flex items-end">
+                      <div className="flex items-end justify-between min-w-[500px] md:min-w-0 w-full h-full gap-2 pb-1">
+                        {roleFilteredConsumptionData.slice(0, 10).map((item, idx) => {
+                          const maxVal = Math.max(...roleFilteredConsumptionData.slice(0, 10).map(c => c.totalCost));
+                          const barHeight = maxVal > 0 ? (item.totalCost / maxVal) * 100 : 0;
+                          return (
+                            <div key={item.id} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer min-w-[44px]">
+                              <div className="w-full flex items-end justify-center h-28 relative">
+                                {/* Hover cost value */}
+                                <span className="absolute -top-6 text-[9px] text-accent-gold opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1.5 py-0.5 rounded border border-border-cream whitespace-nowrap z-10 font-mono">
+                                  {Math.round(item.totalCost).toLocaleString()}đ
+                                </span>
+                                <div 
+                                  style={{ height: `${Math.max(5, barHeight)}%` }}
+                                  className="w-4 sm:w-6 bg-gradient-to-t from-amber-600 via-amber-400 to-[#f3e5ab] rounded-t-sm transition-all duration-500 hover:shadow-lg hover:shadow-amber-500/20 group-hover:scale-x-110"
+                                ></div>
+                              </div>
+                              <span className="text-[9px] text-gray-400 group-hover:text-text-light w-12 text-center truncate">{item.name}</span>
                             </div>
-                            <span className="text-[9px] text-gray-400 group-hover:text-text-light w-12 text-center truncate">{item.name}</span>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
 
@@ -6068,11 +6073,11 @@ export default function Home() {
                       <tr>
                         <th className="px-4 py-3">Mã NVL</th>
                         <th className="px-4 py-3">Tên tiếng Việt</th>
-                        <th className="px-4 py-3">Tên tiếng Pháp</th>
                         <th className="px-4 py-3">Danh mục</th>
                         <th className="px-4 py-3 text-center">ĐVT</th>
                         <th className="px-4 py-3 text-right">Giá vốn chuẩn</th>
                         <th className="px-4 py-3 text-center">Yield % (CONFIG)</th>
+                        <th className="px-4 py-3 text-center w-24">Tồn tối thiểu</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-amber-500/5">
@@ -6080,11 +6085,42 @@ export default function Home() {
                         <tr key={ing.id} className="hover:bg-moss-light/30">
                           <td className="px-4 py-3 font-mono text-accent-gold/70 font-semibold">{ing.code && ing.code.length < 20 ? ing.code : '—'}</td>
                           <td className="px-4 py-3 font-medium text-gray-100">{ing.vi_name}</td>
-                          <td className="px-4 py-3 text-gray-400 italic">{ing.fr_name}</td>
                           <td className="px-4 py-3 text-gray-400">{ing.category}</td>
                           <td className="px-4 py-3 text-center text-gray-300 font-medium">{ing.unit}</td>
                           <td className="px-4 py-3 text-right font-mono font-semibold text-accent-gold/80">{ing.price.toLocaleString()} đ</td>
                           <td className="px-4 py-3 text-center font-mono text-gray-300">{(ing.yield_rate * 100).toFixed(0)}%</td>
+                          <td className="px-4 py-3 text-center">
+                            <input
+                              type="number"
+                              min="0"
+                              step="any"
+                              className="w-16 bg-[#042726] border border-border-cream/50 rounded px-1.5 py-0.5 text-center text-text-light font-mono text-xs focus:outline-none focus:border-accent-gold"
+                              value={ing.min_stock !== undefined ? ing.min_stock : 15}
+                              onChange={async (e) => {
+                                const valStr = e.target.value;
+                                const valNum = valStr === '' ? 0 : parseFloat(valStr);
+                                if (isNaN(valNum)) return;
+                                
+                                // Cập nhật local state
+                                setIngredients(prev => prev.map(item => item.id === ing.id ? { ...item, min_stock: valNum } : item));
+                                
+                                // Cập nhật DB Supabase nếu được cấu hình
+                                if (isSupabaseConfigured()) {
+                                  try {
+                                    const { error } = await supabase
+                                      .from('ingredients')
+                                      .update({ min_stock: valNum })
+                                      .eq('id', ing.id);
+                                    if (error) {
+                                      console.error("Lỗi cập nhật min_stock:", error);
+                                    }
+                                  } catch (err) {
+                                    console.error("Lỗi kết nối Supabase:", err);
+                                  }
+                                }
+                              }}
+                            />
+                          </td>
                         </tr>
                       ))}
                     </tbody>
