@@ -1101,8 +1101,26 @@ export default function Home() {
         if (localUser) {
           try {
             const parsed = JSON.parse(localUser);
-            setCurrentUser(parsed);
-            setUserRole(parsed.role);
+            let healed = parsed;
+            if (parsed && (!parsed.id || parsed.id.startsWith('90000000-0000-0000-0000-'))) {
+              let dummyId = '90000000-0000-0000-0000-000000000001';
+              const role = parsed.role || 'admin';
+              if (role === 'restaurant_manager') dummyId = '90000000-0000-0000-0000-000000000002';
+              else if (role === 'head_chef') dummyId = '90000000-0000-0000-0000-000000000003';
+              else if (role === 'senior_accountant') dummyId = '90000000-0000-0000-0000-000000000004';
+              else if (role === 'foh_supervisor') dummyId = '90000000-0000-0000-0000-000000000005';
+              else if (role === 'sous_chef') dummyId = '90000000-0000-0000-0000-000000000006';
+              else if (role === 'junior_accountant') dummyId = '90000000-0000-0000-0000-000000000007';
+              else if (role === 'BAR_SUPERVISOR') dummyId = '90000000-0000-0000-0000-000000000008';
+              else if (role === 'BARTENDER') dummyId = '90000000-0000-0000-0000-000000000009';
+              
+              if (parsed.id !== dummyId) {
+                healed = { ...parsed, id: dummyId };
+                localStorage.setItem('mv_local_user', JSON.stringify(healed));
+              }
+            }
+            setCurrentUser(healed);
+            setUserRole(healed.role);
           } catch (e) {
             console.error("Error parsing local user", e);
           }
@@ -1163,8 +1181,26 @@ export default function Home() {
             if (localUser) {
               try {
                 const parsed = JSON.parse(localUser);
-                setCurrentUser(parsed);
-                setUserRole(parsed.role);
+                let healed = parsed;
+                if (parsed && (!parsed.id || parsed.id.startsWith('90000000-0000-0000-0000-'))) {
+                  let dummyId = '90000000-0000-0000-0000-000000000001';
+                  const role = parsed.role || 'admin';
+                  if (role === 'restaurant_manager') dummyId = '90000000-0000-0000-0000-000000000002';
+                  else if (role === 'head_chef') dummyId = '90000000-0000-0000-0000-000000000003';
+                  else if (role === 'senior_accountant') dummyId = '90000000-0000-0000-0000-000000000004';
+                  else if (role === 'foh_supervisor') dummyId = '90000000-0000-0000-0000-000000000005';
+                  else if (role === 'sous_chef') dummyId = '90000000-0000-0000-0000-000000000006';
+                  else if (role === 'junior_accountant') dummyId = '90000000-0000-0000-0000-000000000007';
+                  else if (role === 'BAR_SUPERVISOR') dummyId = '90000000-0000-0000-0000-000000000008';
+                  else if (role === 'BARTENDER') dummyId = '90000000-0000-0000-0000-000000000009';
+                  
+                  if (parsed.id !== dummyId) {
+                    healed = { ...parsed, id: dummyId };
+                    localStorage.setItem('mv_local_user', JSON.stringify(healed));
+                  }
+                }
+                setCurrentUser(healed);
+                setUserRole(healed.role);
               } catch (e) {
                 setCurrentUser(null);
               }
@@ -4580,7 +4616,26 @@ export default function Home() {
                 <span className="text-[10px] text-gray-400 font-sans uppercase">Test vai trò:</span>
                 <select 
                   value={userRole}
-                  onChange={(e) => setUserRole(e.target.value as any)}
+                  onChange={(e) => {
+                    const newRole = e.target.value as any;
+                    setUserRole(newRole);
+                    if (currentUser && currentUser.id && currentUser.id.startsWith('90000000-0000-0000-0000-')) {
+                      let dummyId = '90000000-0000-0000-0000-000000000001';
+                      let name = 'Quản trị viên (CFO)';
+                      if (newRole === 'restaurant_manager') { dummyId = '90000000-0000-0000-0000-000000000002'; name = 'Quản lý Nhà hàng'; }
+                      else if (newRole === 'head_chef') { dummyId = '90000000-0000-0000-0000-000000000003'; name = 'Bếp trưởng'; }
+                      else if (newRole === 'senior_accountant') { dummyId = '90000000-0000-0000-0000-000000000004'; name = 'Kế toán kho cấp cao'; }
+                      else if (newRole === 'foh_supervisor') { dummyId = '90000000-0000-0000-0000-000000000005'; name = 'Giám sát Sảnh'; }
+                      else if (newRole === 'sous_chef') { dummyId = '90000000-0000-0000-0000-000000000006'; name = 'Bếp phó'; }
+                      else if (newRole === 'junior_accountant') { dummyId = '90000000-0000-0000-0000-000000000007'; name = 'Thủ kho / Kế toán phụ'; }
+                      else if (newRole === 'BAR_SUPERVISOR') { dummyId = '90000000-0000-0000-0000-000000000008'; name = 'Trưởng Bar / Giám sát'; }
+                      else if (newRole === 'BARTENDER') { dummyId = '90000000-0000-0000-0000-000000000009'; name = 'Nhân viên Bar (Bartender)'; }
+                      
+                      const updatedUser = { ...currentUser, id: dummyId, role: newRole, name };
+                      localStorage.setItem('mv_local_user', JSON.stringify(updatedUser));
+                      setCurrentUser(updatedUser);
+                    }
+                  }}
                   className="bg-transparent border-none text-xs text-accent-gold focus:outline-none cursor-pointer font-semibold"
                 >
                   <option value="admin" className="bg-[#090d16] text-gray-300">Owner/CFO/Admin</option>
@@ -4701,7 +4756,26 @@ export default function Home() {
                 <span className="text-[10px] text-gray-400 font-sans uppercase">Test vai trò:</span>
                 <select 
                   value={userRole}
-                  onChange={(e) => setUserRole(e.target.value as any)}
+                  onChange={(e) => {
+                    const newRole = e.target.value as any;
+                    setUserRole(newRole);
+                    if (currentUser && currentUser.id && currentUser.id.startsWith('90000000-0000-0000-0000-')) {
+                      let dummyId = '90000000-0000-0000-0000-000000000001';
+                      let name = 'Quản trị viên (CFO)';
+                      if (newRole === 'restaurant_manager') { dummyId = '90000000-0000-0000-0000-000000000002'; name = 'Quản lý Nhà hàng'; }
+                      else if (newRole === 'head_chef') { dummyId = '90000000-0000-0000-0000-000000000003'; name = 'Bếp trưởng'; }
+                      else if (newRole === 'senior_accountant') { dummyId = '90000000-0000-0000-0000-000000000004'; name = 'Kế toán kho cấp cao'; }
+                      else if (newRole === 'foh_supervisor') { dummyId = '90000000-0000-0000-0000-000000000005'; name = 'Giám sát Sảnh'; }
+                      else if (newRole === 'sous_chef') { dummyId = '90000000-0000-0000-0000-000000000006'; name = 'Bếp phó'; }
+                      else if (newRole === 'junior_accountant') { dummyId = '90000000-0000-0000-0000-000000000007'; name = 'Thủ kho / Kế toán phụ'; }
+                      else if (newRole === 'BAR_SUPERVISOR') { dummyId = '90000000-0000-0000-0000-000000000008'; name = 'Trưởng Bar / Giám sát'; }
+                      else if (newRole === 'BARTENDER') { dummyId = '90000000-0000-0000-0000-000000000009'; name = 'Nhân viên Bar (Bartender)'; }
+                      
+                      const updatedUser = { ...currentUser, id: dummyId, role: newRole, name };
+                      localStorage.setItem('mv_local_user', JSON.stringify(updatedUser));
+                      setCurrentUser(updatedUser);
+                    }
+                  }}
                   className="bg-[#090d16] border border-border-moss text-xs text-accent-gold rounded px-2 py-1 focus:outline-none font-semibold"
                 >
                   <option value="admin">Owner/CFO/Admin</option>
