@@ -6071,30 +6071,35 @@ export default function Home() {
                   <table className="w-full text-xs text-left text-gray-300 bg-moss-dark/20 table-fixed">
                     <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss text-[10px] sm:text-xs">
                       <tr>
-                        <th className="px-2 py-2 w-16 sm:w-20">Mã NVL</th>
-                        <th className="px-2 py-2 w-32 sm:w-auto">Tên tiếng Việt</th>
-                        <th className="px-2 py-2 w-20 sm:w-28">Danh mục</th>
-                        <th className="px-2 py-2 text-center w-12 sm:w-16">ĐVT</th>
-                        <th className="px-2 py-2 text-right w-20 sm:w-28">Giá vốn chuẩn</th>
-                        <th className="px-2 py-2 text-center w-16 sm:w-24">Yield %</th>
-                        <th className="px-2 py-2 text-center w-20 sm:w-24">Tồn tối thiểu</th>
+                        <th className="px-2 py-2 w-16">Mã NVL</th>
+                        <th className="px-2 py-2">Tên tiếng Việt</th>
+                        <th className="px-2 py-2 w-20 sm:w-24">Danh mục</th>
+                        <th className="px-2 py-2 text-center w-10 sm:w-12">ĐVT</th>
+                        <th className="px-2 py-2 text-right w-20 sm:w-24">Giá vốn</th>
+                        <th className="px-2 py-2 text-center w-14">Yield</th>
+                        <th className="px-2 py-2 text-center w-20">Tồn tối thiểu</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-amber-500/5 text-[11px] sm:text-xs">
                       {filteredIngredients.map((ing) => (
                         <tr key={ing.id} className="hover:bg-moss-light/30">
                           <td className="px-2 py-2 font-mono text-accent-gold/70 font-semibold truncate" title={ing.code || ing.id}>{ing.code && ing.code.length < 20 ? ing.code : '—'}</td>
-                          <td className="px-2 py-2 font-medium text-gray-100 truncate" title={ing.vi_name}>{ing.vi_name}</td>
+                          <td className="px-2 py-2 font-medium text-gray-100 whitespace-normal break-words">{ing.vi_name}</td>
                           <td className="px-2 py-2 text-gray-400 truncate" title={ing.category}>{ing.category}</td>
                           <td className="px-2 py-2 text-center text-gray-300 font-medium truncate">{ing.unit}</td>
                           <td className="px-2 py-2 text-right font-mono font-semibold text-accent-gold/80 truncate">{ing.price.toLocaleString()} đ</td>
-                          <td className="px-2 py-2 text-center font-mono text-gray-300 truncate">{(ing.yield_rate * 100).toFixed(0)}%</td>
+                          <td className="px-2 py-2 text-center font-mono text-gray-300 truncate">
+                            {(() => {
+                              const displayYield = ing.yield_rate > 2 ? Math.round(ing.yield_rate) : Math.round(ing.yield_rate * 100);
+                              return `${displayYield}%`;
+                            })()}
+                          </td>
                           <td className="px-2 py-2 text-center">
                             <input
                               type="number"
                               min="0"
                               step="any"
-                              className="w-14 sm:w-16 bg-[#042726] border border-border-cream/50 rounded px-1 py-0.5 text-center text-text-light font-mono text-xs focus:outline-none focus:border-accent-gold"
+                              className="w-14 bg-[#042726] border border-border-cream/50 rounded px-1 py-0.5 text-center text-text-light font-mono text-xs focus:outline-none focus:border-accent-gold"
                               value={ing.min_stock !== undefined ? ing.min_stock : 15}
                               onChange={async (e) => {
                                 const valStr = e.target.value;
