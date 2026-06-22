@@ -97,13 +97,14 @@ interface PurchasingModuleProps {
   badges: NotificationBadge[];
   onResolveBadge: (refId: string) => void;
   canViewFinancials: boolean;
+  checkInputGuardRail?: (ingredientId: string, type: 'qty' | 'price', value: number, txnType?: string) => { warning: boolean; msg?: string };
 }
 
 // -------------------------------------------------------------------
 // Component chính
 // -------------------------------------------------------------------
 export default function PurchasingModule({
-  userRole, userId, badges, onResolveBadge, canViewFinancials
+  userRole, userId, badges, onResolveBadge, canViewFinancials, checkInputGuardRail
 }: PurchasingModuleProps) {
   const [activeSubTab, setActiveSubTab] = useState<'worklist' | 'create_po' | 'approve' | 'history' | 'grn' | 'suppliers_mgmt'>('worklist');
   const [editingPO, setEditingPO] = useState<PurchaseOrder | null>(null);
@@ -776,30 +777,86 @@ export default function PurchasingModule({
   };
 
   // Xuất PDF Purchase Order gửi NCC — dùng browser print
+  // Xuất PDF Purchase Order gửi NCC — dùng browser print
   const handleExportPDF = (poOrPos: PurchaseOrder | PurchaseOrder[]) => {
     const pos = Array.isArray(poOrPos) ? poOrPos : [poOrPos];
     if (pos.length === 0) return;
 
     const today = new Date().toLocaleDateString('vi-VN');
-    const todayISO = new Date().toISOString().split('T')[0];
 
-    // Tạo HTML cho mỗi PO (mỗi PO 1 trang)
-    const pages = pos.map((po) => {
+    // Group POs by Supplier (NCC)
+    const groups: Record<string, {
+      supplierId: string;
+      supplierName: string;
+      poNumbers: string[];
+      items: {
+        ingredient_id: string;
+        ingredient_name: string;
+        qty: number;
+        purchase_uom: string;
+        unit_price: number;
+        stock_at_order: number;
+      }[];
+      notes: string[];
+      leadTimeDays: number;
+    }> = {};
+
+    pos.forEach((po) => {
+      const supId = po.supplier_id || 'UNKNOWN';
       const supplier = suppliers.find((s: any) => s.id === po.supplier_id);
+      const supName = po.supplier_name || supplier?.name || supId;
+      
+      if (!groups[supId]) {
+        groups[supId] = {
+          supplierId: supId,
+          supplierName: supName,
+          poNumbers: [],
+          items: [],
+          notes: [],
+          leadTimeDays: (po as any).lead_time_days || supplier?.lead_time_days || 2
+        };
+      }
+
+      groups[supId].poNumbers.push(po.po_no);
+      if (po.notes && po.notes.trim()) {
+        groups[supId].notes.push(`${po.po_no}: ${po.notes}`);
+      }
+
+      (po.items || []).forEach((item) => {
+        const existing = groups[supId].items.find(i => i.ingredient_id === item.ingredient_id);
+        if (existing) {
+          existing.qty += item.qty;
+        } else {
+          groups[supId].items.push({
+            ingredient_id: item.ingredient_id,
+            ingredient_name: item.ingredient_name || '',
+            qty: item.qty,
+            purchase_uom: item.purchase_uom,
+            unit_price: item.unit_price,
+            stock_at_order: (item as any).stock_at_order || 0
+          });
+        }
+      });
+    });
+
+    const pages = Object.values(groups).map((group) => {
+      const supplier = suppliers.find((s: any) => s.id === group.supplierId);
       const supPhone = supplier?.contact?.phone || '';
       const supEmail = supplier?.contact?.email || '';
       const supAddress = supplier?.contact?.address || '';
 
-      const lines = (po.items || []).map((item, idx) => {
+      const lines = group.items.map((item, idx) => {
         const matchingIng = allIngredients.find((ing: any) =>
           ing.id === item.ingredient_id || ing.code === item.ingredient_id
         );
         const code = matchingIng?.code || item.ingredient_id || '';
         const name = item.ingredient_name || matchingIng?.ten_vi || '';
-        const qty = item.qty || (item as any).suggested_qty || 0;
+        const qty = item.qty || 0;
         const uom = item.purchase_uom || 'UNIT';
         const price = item.unit_price || matchingIng?.wac_price || 0;
         const total = qty * price;
+        const stock = item.stock_at_order || 0;
+
         return `
           <tr>
             <td style="text-align:center;border:1px solid #ccc;padding:6px 4px;">${idx + 1}</td>
@@ -809,19 +866,21 @@ export default function PurchasingModule({
             <td style="text-align:right;border:1px solid #ccc;padding:6px 4px;">${qty.toLocaleString('vi-VN')}</td>
             <td style="text-align:right;border:1px solid #ccc;padding:6px 4px;">${price > 0 ? price.toLocaleString('vi-VN') : '—'}</td>
             <td style="text-align:right;border:1px solid #ccc;padding:6px 4px;font-weight:600;">${price > 0 ? total.toLocaleString('vi-VN') + ' ₫' : '—'}</td>
+            <td style="text-align:right;border:1px solid #ccc;padding:6px 4px;color:#c0392b;">${stock.toFixed(2)}</td>
           </tr>`;
       }).join('');
 
-      const grandTotal = (po.items || []).reduce((sum, item) => {
-        const qty = item.qty || (item as any).suggested_qty || 0;
+      const grandTotal = group.items.reduce((sum, item) => {
+        const qty = item.qty || 0;
         const price = item.unit_price || 0;
         return sum + qty * price;
       }, 0);
 
-      const deliveryDate = new Date(Date.now() + ((po as any).lead_time_days || 2) * 86400000).toLocaleDateString('vi-VN');
+      const deliveryDate = new Date(Date.now() + (group.leadTimeDays * 86400000)).toLocaleDateString('vi-VN');
+      const poNumbersStr = group.poNumbers.join(', ');
 
       return `
-        <div class="po-page">
+        <div class="po-page" style="page-break-inside:avoid;margin-bottom:50px;border-bottom:3px double #7a5c2e;padding-bottom:30px;">
           <!-- Header -->
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;">
             <div>
@@ -833,10 +892,10 @@ export default function PurchasingModule({
             <div style="text-align:right;">
               <div style="font-size:20px;font-weight:800;color:#7a5c2e;letter-spacing:2px;">PURCHASE ORDER</div>
               <div style="font-size:11px;color:#333;margin-top:4px;">PHIẾU ĐẶT HÀNG</div>
-              <table style="margin-top:8px;font-size:11px;border-collapse:collapse;">
-                <tr><td style="color:#777;padding:2px 8px 2px 0;">Số PO:</td><td style="font-weight:700;color:#1a3a38;">${po.po_no}</td></tr>
-                <tr><td style="color:#777;padding:2px 8px 2px 0;">Ngày lập:</td><td>${today}</td></tr>
-                <tr><td style="color:#777;padding:2px 8px 2px 0;">Giao hàng trước:</td><td style="font-weight:600;color:#c0392b;">${deliveryDate}</td></tr>
+              <table style="margin-top:8px;font-size:11px;border-collapse:collapse;margin-left:auto;">
+                <tr><td style="color:#777;padding:2px 8px 2px 0;text-align:right;">Số PO:</td><td style="font-weight:700;color:#1a3a38;text-align:left;">${poNumbersStr}</td></tr>
+                <tr><td style="color:#777;padding:2px 8px 2px 0;text-align:right;">Ngày lập:</td><td style="text-align:left;">${today}</td></tr>
+                <tr><td style="color:#777;padding:2px 8px 2px 0;text-align:right;">Giao trước:</td><td style="font-weight:600;color:#c0392b;text-align:left;">${deliveryDate}</td></tr>
               </table>
             </div>
           </div>
@@ -846,7 +905,7 @@ export default function PurchasingModule({
           <!-- Supplier Info -->
           <div style="background:#f9f6f0;border:1px solid #e8d5b0;border-radius:6px;padding:12px 16px;margin-bottom:20px;">
             <div style="font-size:11px;font-weight:700;color:#7a5c2e;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Kính gửi Nhà Cung Cấp:</div>
-            <div style="font-size:14px;font-weight:700;color:#1a3a38;">${po.supplier_name || po.supplier_id}</div>
+            <div style="font-size:14px;font-weight:700;color:#1a3a38;">${group.supplierName}</div>
             ${supPhone ? `<div style="font-size:11px;color:#555;margin-top:3px;">📞 ${supPhone}</div>` : ''}
             ${supEmail ? `<div style="font-size:11px;color:#555;">✉️ ${supEmail}</div>` : ''}
             ${supAddress ? `<div style="font-size:11px;color:#555;">📍 ${supAddress}</div>` : ''}
@@ -863,6 +922,7 @@ export default function PurchasingModule({
                 <th style="padding:8px 4px;text-align:right;border:1px solid #1a3a38;width:65px;">SL đặt</th>
                 <th style="padding:8px 4px;text-align:right;border:1px solid #1a3a38;width:90px;">Đơn giá (₫)</th>
                 <th style="padding:8px 4px;text-align:right;border:1px solid #1a3a38;width:100px;">Thành tiền (₫)</th>
+                <th style="padding:8px 4px;text-align:right;border:1px solid #1a3a38;width:80px;">SL tồn</th>
               </tr>
             </thead>
             <tbody>
@@ -871,7 +931,7 @@ export default function PurchasingModule({
             <tfoot>
               <tr style="background:#f0ece3;">
                 <td colspan="6" style="text-align:right;border:1px solid #ccc;padding:8px;font-weight:700;">TỔNG CỘNG:</td>
-                <td style="text-align:right;border:1px solid #ccc;padding:8px;font-weight:800;color:#7a5c2e;font-size:13px;">
+                <td colspan="2" style="text-align:right;border:1px solid #ccc;padding:8px;font-weight:800;color:#7a5c2e;font-size:13px;">
                   ${grandTotal > 0 ? grandTotal.toLocaleString('vi-VN') + ' ₫' : '(Giá TBD)'}
                 </td>
               </tr>
@@ -879,9 +939,10 @@ export default function PurchasingModule({
           </table>
 
           <!-- Notes -->
-          ${po.notes ? `
+          ${group.notes.length > 0 ? `
           <div style="background:#fff8e8;border-left:3px solid #e8b84b;padding:8px 12px;font-size:11px;margin-bottom:16px;">
-            <strong>Ghi chú:</strong> ${po.notes}
+            <strong>Ghi chú đơn hàng:</strong><br/>
+            ${group.notes.map(n => `• ${n}`).join('<br/>')}
           </div>` : ''}
 
           <!-- Terms -->
@@ -908,7 +969,7 @@ export default function PurchasingModule({
           </div>
 
           <div style="text-align:center;font-size:9px;color:#aaa;margin-top:16px;border-top:1px solid #eee;padding-top:8px;">
-            Maison Vie · Purchase Order ${po.po_no} · Xuất ngày ${today}
+            Maison Vie · Purchase Order ${poNumbersStr} · Xuất ngày ${today}
           </div>
         </div>`;
     });
@@ -921,7 +982,7 @@ export default function PurchasingModule({
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Purchase Order – ${pos.map(p => p.po_no).join(', ')}</title>
+  <title>Purchase Order – Consolidated PDF</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Arial, sans-serif; color: #222; background: #fff; }
@@ -943,7 +1004,7 @@ export default function PurchasingModule({
 </head>
 <body>
   <div class="no-print" style="background:#1a3a38;color:white;padding:12px 20px;display:flex;gap:12px;align-items:center;position:sticky;top:0;z-index:99;">
-    <span style="font-weight:700;">📄 Purchase Order PDF Preview</span>
+    <span style="font-weight:700;">📄 Purchase Order PDF Preview (NCC Grouped)</span>
     <button onclick="window.print()" style="background:#c0a050;color:white;border:none;padding:8px 20px;border-radius:6px;font-weight:700;cursor:pointer;font-size:14px;">🖨️ In / Lưu PDF</button>
     <button onclick="window.close()" style="background:transparent;color:#aaa;border:1px solid #aaa;padding:8px 14px;border-radius:6px;cursor:pointer;">Đóng</button>
     <span style="font-size:12px;color:#aaa;margin-left:8px;">Tip: Chọn "Lưu thành PDF" trong hộp thoại in để xuất file PDF</span>
@@ -1073,6 +1134,7 @@ export default function PurchasingModule({
           supplierIngredients={supplierIngredients}
           onCreatePO={handleCreatePOManual}
           loading={loading}
+          checkInputGuardRail={checkInputGuardRail}
         />
       )}
 
@@ -1814,7 +1876,7 @@ function ThreeWayBadge({ status }: { status: string }) {
 // -------------------------------------------------------------------
 // CreatePOTab — Tạo PO thủ công
 // -------------------------------------------------------------------
-function CreatePOTab({ suppliers, ingredients, supplierIngredients = [], onCreatePO, loading }: any) {
+function CreatePOTab({ suppliers, ingredients, supplierIngredients = [], onCreatePO, loading, checkInputGuardRail }: any) {
   const [supplierId, setSupplierId] = useState('');
   const [locationId, setLocationId] = useState('MAIN_STORE');
   const [lines, setLines] = useState<any[]>([]);
@@ -1888,6 +1950,20 @@ function CreatePOTab({ suppliers, ingredients, supplierIngredients = [], onCreat
     if (lines.some(l => l.ingredient_id === selIngId)) {
       alert('Mặt hàng này đã có trong đơn');
       return;
+    }
+
+    if (checkInputGuardRail) {
+      const qtyRes = checkInputGuardRail(selIngId, 'qty', qty, 'IMPORT');
+      if (qtyRes.warning) {
+        const ok = window.confirm(`${qtyRes.msg}\n\nBạn có chắc chắn muốn thêm dòng này không?`);
+        if (!ok) return;
+      }
+      
+      const priceRes = checkInputGuardRail(selIngId, 'price', price || selectedIng.wac_price || 0, 'IMPORT');
+      if (priceRes.warning) {
+        const ok = window.confirm(`${priceRes.msg}\n\nBạn có chắc chắn muốn thêm dòng này không?`);
+        if (!ok) return;
+      }
     }
 
     // Use selectedIng directly (already stored from onSelect, has all fields)

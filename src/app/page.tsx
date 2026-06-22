@@ -23,7 +23,8 @@ import {
   Download,
   Cpu,
   Wine,
-  Bell
+  Bell,
+  AlertOctagon
 } from 'lucide-react';
 
 import * as XLSX from 'xlsx';
@@ -51,7 +52,7 @@ import { useWebPush } from '../lib/useWebPush';
 import { useRealtimeBadges } from '../lib/useRealtimeBadges';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation' | 'purchasing' | 'unmapped' | 'closedinventory' | 'manualforms'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation' | 'purchasing' | 'unmapped' | 'closedinventory' | 'manualforms' | 'negative'>('dashboard');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [isMobileMetaOpen, setIsMobileMetaOpen] = useState(false);
@@ -1007,23 +1008,34 @@ export default function Home() {
     items: { ingId: string; name: string; qtyNeeded: number; unit: string; estCost: number }[];
   }[]>([]);
 
+  // State for Quick Adjust Modal
+  const [showQuickAdjustModal, setShowQuickAdjustModal] = useState(false);
+  const [quickAdjustIng, setQuickAdjustIng] = useState<any>(null);
+  const [quickAdjustNegativeStock, setQuickAdjustNegativeStock] = useState<number>(0);
+  const [quickAdjustQty, setQuickAdjustQty] = useState<string>('');
+  const [quickAdjustPrice, setQuickAdjustPrice] = useState<string>('');
+  const [quickAdjustType, setQuickAdjustType] = useState<'IMPORT' | 'STOCK_TAKE_ADJ'>('IMPORT');
+  const [quickAdjustLocation, setQuickAdjustLocation] = useState<'MAIN_STORE' | 'KITCHEN' | 'BAR'>('MAIN_STORE');
+  const [quickAdjustNote, setQuickAdjustNote] = useState<string>('Nhập bù nhanh tồn âm');
+  const [quickAdjustLoading, setQuickAdjustLoading] = useState<boolean>(false);
+
   const hasTabAccess = (role: string, tab: string) => {
     if (role === 'admin') return true;
     switch (role) {
       case 'restaurant_manager':
-        return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing', 'unmapped', 'closedinventory', 'manualforms'].includes(tab);
+        return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing', 'unmapped', 'closedinventory', 'manualforms', 'negative'].includes(tab);
       case 'head_chef':
         return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'unmapped', 'manualforms'].includes(tab);
       case 'senior_accountant':
-        return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing', 'unmapped', 'closedinventory', 'manualforms'].includes(tab);
+        return ['dashboard', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing', 'unmapped', 'closedinventory', 'manualforms', 'negative'].includes(tab);
       case 'foh_supervisor':
         return ['recipes', 'manualforms'].includes(tab);
       case 'sous_chef':
         return ['recipes', 'stockcount', 'subrecipes', 'manualforms'].includes(tab);
       case 'junior_accountant':
-        return ['inventory', 'purchasing', 'closedinventory', 'manualforms'].includes(tab);
+        return ['inventory', 'purchasing', 'closedinventory', 'manualforms', 'negative'].includes(tab);
       case 'BAR_SUPERVISOR':
-        return ['dashboard', 'inventory', 'stockcount', 'purchasing', 'unmapped', 'manualforms'].includes(tab);
+        return ['dashboard', 'inventory', 'stockcount', 'purchasing', 'unmapped', 'manualforms', 'negative'].includes(tab);
       case 'BARTENDER':
         return ['stockcount', 'manualforms'].includes(tab);
       default:
@@ -1032,8 +1044,8 @@ export default function Home() {
   };
 
   React.useEffect(() => {
-    const tabs: ('dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation' | 'purchasing' | 'unmapped' | 'closedinventory' | 'manualforms')[] = [
-      'dashboard', 'sales', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing', 'unmapped', 'closedinventory', 'manualforms'
+    const tabs: ('dashboard' | 'sales' | 'inventory' | 'recipes' | 'stockcount' | 'subrecipes' | 'reconciliation' | 'purchasing' | 'unmapped' | 'closedinventory' | 'manualforms' | 'negative')[] = [
+      'dashboard', 'sales', 'inventory', 'recipes', 'stockcount', 'subrecipes', 'reconciliation', 'purchasing', 'unmapped', 'closedinventory', 'manualforms', 'negative'
     ];
     if (!hasTabAccess(userRole, activeTab)) {
       const firstAccessible = tabs.find(t => hasTabAccess(userRole, t));
@@ -2133,6 +2145,219 @@ export default function Home() {
       }
     });
   }, [ingredients, userRole, ingredientDepartments]);
+
+  // Helper function to compute transaction-aware theoretical stock (raw/no buffer/no floor at 0)
+  const getTheoreticalStockNoMax = (ingId: string, locationId?: string) => {
+    if (!locationId && actualStocks[ingId] !== undefined && actualStocks[ingId] !== '') {
+      const dbStock = parseFloat(actualStocks[ingId]);
+      if (!isNaN(dbStock)) return dbStock;
+    }
+
+    let stock = 0;
+    transactions.forEach(t => {
+      if (t.ingredientId === ingId && t.status === 'approved') {
+        const txLoc = t.locationId || t.location_id || 'MAIN_STORE';
+        if (!locationId || txLoc === locationId) {
+          const txType = t.txn_type || '';
+          const type = t.type || '';
+          if (type === 'import' || type === 'transfer_in' || txType === 'TRANSFER_IN' || txType === 'IMPORT' || txType === 'STOCK_TAKE_ADJ') {
+            stock += t.qty;
+          }
+          else if (
+            type === 'consumption' || type === 'waste' || type === 'transfer_out' || type === 'sale_depletion' ||
+            txType === 'TRANSFER_OUT' || txType === 'ISSUE' || txType === 'WASTE' ||
+            txType === 'SALE_DEPLETION' || txType === 'NON_SALE'
+          ) {
+            stock -= t.qty;
+          }
+        }
+      }
+    });
+
+    const consumed = consumptionData.find(c => c.id === ingId)?.qty || 0;
+    const ing = ingredients.find(i => i.id === ingId);
+    const isBarItem = ing?.category && ['Wine', 'Alcohol', 'beverage', 'Beverage'].includes(ing.category);
+
+    const hasSaleDepletionTx = transactions.some(t => t.ingredientId === ingId && (t.txn_type === 'SALE_DEPLETION' || t.type === 'sale_depletion'));
+    if (!hasSaleDepletionTx) {
+      if (!locationId) {
+        stock -= consumed;
+      } else if (locationId === 'BAR' && isBarItem) {
+        stock -= consumed;
+      } else if (locationId === 'KITCHEN' && !isBarItem) {
+        stock -= consumed;
+      }
+    }
+
+    const unTransactionedWaste = wasteLogs
+      .filter(w => w.ingredientId === ingId && w.status === 'approved' && !w.is_processed)
+      .reduce((sum, w) => {
+        if (!locationId || (locationId === 'BAR' && isBarItem) || (locationId === 'KITCHEN' && !isBarItem)) {
+          return sum + w.qty;
+        }
+        return sum;
+      }, 0);
+    
+    stock -= unTransactionedWaste;
+    return stock;
+  };
+
+  // Count number of negative ingredients
+  const negativeStockCount = useMemo(() => {
+    return roleFilteredIngredients.filter(ing => getTheoreticalStockNoMax(ing.id) < 0).length;
+  }, [roleFilteredIngredients, actualStocks, transactions, consumptionData, wasteLogs]);
+
+  // Count number of aging POs (older than 3 days)
+  const agingPOCount = useMemo(() => {
+    return purchaseOrders.filter(po => {
+      if (po.status !== 'APPROVED' && po.status !== 'PENDING_APPROVAL') return false;
+      const createdAt = new Date(po.created_at || po.created_at_time);
+      const threeDaysAgo = new Date();
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+      return createdAt < threeDaysAgo;
+    }).length;
+  }, [purchaseOrders]);
+
+  // Input guard-rail checker
+  const checkInputGuardRail = useCallback((ingredientId: string, type: 'qty' | 'price', value: number, txnType?: string) => {
+    const ingTrans = transactions.filter(t => t.ingredientId === ingredientId && t.status === 'approved');
+    let filteredTrans = ingTrans;
+    if (txnType) {
+      if (txnType === 'IMPORT' || txnType === 'import') {
+        filteredTrans = ingTrans.filter(t => t.txn_type === 'IMPORT' || t.type === 'import');
+      } else if (txnType === 'ISSUE' || txnType === 'consumption' || txnType === 'waste') {
+        filteredTrans = ingTrans.filter(t => t.txn_type === 'ISSUE' || t.type === 'consumption' || t.type === 'waste' || t.txn_type === 'WASTE');
+      }
+    }
+    
+    const sorted = [...filteredTrans].sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      return dateB - dateA;
+    });
+
+    const last3 = sorted.slice(0, 3);
+    if (last3.length === 0) return { warning: false };
+
+    if (type === 'qty') {
+      const avgQty = last3.reduce((sum, t) => sum + Math.abs(t.qty), 0) / last3.length;
+      if (avgQty > 0) {
+        if (value > avgQty * 3) {
+          return {
+            warning: true,
+            msg: `Số lượng nhập (${value}) lệch lớn hơn gấp 3 lần so với trung bình 3 lần gần nhất (${avgQty.toFixed(2)}).`
+          };
+        }
+        if (value < avgQty / 3) {
+          return {
+            warning: true,
+            msg: `Số lượng nhập (${value}) lệch nhỏ hơn 1/3 lần so với trung bình 3 lần gần nhất (${avgQty.toFixed(2)}).`
+          };
+        }
+      }
+    } else if (type === 'price') {
+      const avgPrice = last3.reduce((sum, t) => sum + (t.unit_price || (t as any).unit_cost || 0), 0) / last3.length;
+      if (avgPrice > 0) {
+        if (value > avgPrice * 3) {
+          return {
+            warning: true,
+            msg: `Đơn giá (${value.toLocaleString()}đ) lệch lớn hơn gấp 3 lần so với trung bình 3 lần gần nhất (${Math.round(avgPrice).toLocaleString()}đ).`
+          };
+        }
+        if (value < avgPrice / 3) {
+          return {
+            warning: true,
+            msg: `Đơn giá (${value.toLocaleString()}đ) lệch nhỏ hơn 1/3 lần so với trung bình 3 lần gần nhất (${Math.round(avgPrice).toLocaleString()}đ).`
+          };
+        }
+      }
+    }
+    return { warning: false };
+  }, [transactions]);
+
+  // Open quick adjust form
+  const openQuickAdjust = (ing: any, stock: number) => {
+    setQuickAdjustIng(ing);
+    setQuickAdjustNegativeStock(stock);
+    setQuickAdjustQty(Math.abs(stock).toString());
+    setQuickAdjustPrice(ing.price?.toString() || '0');
+    setQuickAdjustType('IMPORT');
+    const isBeverage = ing.is_beverage || (ing.category && ['Wine', 'Alcohol', 'beverage', 'Beverage'].includes(ing.category));
+    setQuickAdjustLocation(isBeverage ? 'BAR' : 'MAIN_STORE');
+    setQuickAdjustNote(`Nhập bù tồn âm tự động cho ${ing.code || ing.id}`);
+    setShowQuickAdjustModal(true);
+  };
+
+  // Submit quick adjust
+  const handleQuickAdjustSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const qty = parseFloat(quickAdjustQty);
+    const price = parseFloat(quickAdjustPrice) || 0;
+    if (isNaN(qty) || qty <= 0) {
+      alert('Vui lòng nhập số lượng hợp lệ.');
+      return;
+    }
+    if (!quickAdjustIng) return;
+
+    setQuickAdjustLoading(true);
+    const nowStr = new Date().toISOString().split('T')[0];
+    const newTx = {
+      id: `quick-adj-tx-${Date.now()}`,
+      ingredientId: quickAdjustIng.id,
+      type: (quickAdjustType === 'IMPORT' ? 'import' : 'transfer_in') as any,
+      txn_type: quickAdjustType,
+      qty: qty,
+      unit_price: price,
+      status: 'approved' as const,
+      date: nowStr,
+      note: quickAdjustNote,
+      locationId: quickAdjustLocation
+    };
+
+    if (isSupabaseConfigured()) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const userId = session?.user.id || currentUser?.id || null;
+        
+        const { error } = await supabase
+          .from('inventory_transactions')
+          .insert({
+            ingredient_id: quickAdjustIng.id,
+            txn_type: quickAdjustType,
+            qty: qty,
+            unit_cost: price,
+            business_date: nowStr,
+            location_id: quickAdjustLocation,
+            status: 'approved',
+            note: quickAdjustNote,
+            created_by: userId
+          });
+          
+        if (error) {
+          throw error;
+        }
+
+        const currentVal = parseFloat(actualStocks[quickAdjustIng.id] || '0');
+        const newVal = currentVal + qty;
+        setActualStocks(prev => ({
+          ...prev,
+          [quickAdjustIng.id]: newVal.toString()
+        }));
+
+        await fetchSupabaseData();
+      } catch (err: any) {
+        console.error("Supabase operation failed:", err);
+        alert(`Lỗi lưu giao dịch vào database: ${err.message || err}`);
+        setQuickAdjustLoading(false);
+        return;
+      }
+    }
+
+    setTransactions(prev => [...prev, newTx]);
+    setShowQuickAdjustModal(false);
+    setQuickAdjustLoading(false);
+    alert(`Đã thực hiện nhập bù nhanh ${qty} ${quickAdjustIng.unit} cho ${quickAdjustIng.vi_name} thành công!`);
+  };
 
   // v9.4 Calculate total costs and metrics filtered by role/department
   const metrics = useMemo(() => {
@@ -4936,14 +5161,23 @@ export default function Home() {
                 <DollarSign size={18} className={activeTab === 'purchasing' ? 'text-accent-gold' : ''} />
                 {!isSidebarCollapsed && <span>Mua hàng & Nhập kho</span>}
               </div>
-              {/* Badge nhấp nháy đỏ khi có PO chờ duyệt hoặc escalation */}
-              {(pendingApprovalCount > 0 || escalationCount > 0) && (
-                <span className="relative flex h-4 w-4 ml-auto">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D06A5C] opacity-75"/>
-                  <span className="relative inline-flex items-center justify-center rounded-full h-4 w-4 bg-[#D06A5C] text-white text-[9px] font-bold">
-                    {pendingApprovalCount + escalationCount}
-                  </span>
-                </span>
+              {/* Badge nhấp nháy đỏ khi có PO chờ duyệt, quá hạn hoặc escalation */}
+              {(pendingApprovalCount > 0 || escalationCount > 0 || agingPOCount > 0) && (
+                <div className="flex items-center gap-1.5 ml-auto">
+                  {!isSidebarCollapsed && agingPOCount > 0 && (
+                    <span className="inline-flex items-center justify-center rounded-full px-1.5 py-0.5 bg-[#D8AA57] text-[#090d16] text-[9px] font-bold" title={`${agingPOCount} PO quá hạn 3 ngày`}>
+                      {agingPOCount}h
+                    </span>
+                  )}
+                  {(pendingApprovalCount > 0 || escalationCount > 0) && (
+                    <span className="relative flex h-4 w-4">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D06A5C] opacity-75"/>
+                      <span className="relative inline-flex items-center justify-center rounded-full h-4 w-4 bg-[#D06A5C] text-white text-[9px] font-bold">
+                        {pendingApprovalCount + escalationCount}
+                      </span>
+                    </span>
+                  )}
+                </div>
               )}
             </button>
           )}
@@ -5000,6 +5234,28 @@ export default function Home() {
             </button>
           )}
 
+          {hasTabAccess(userRole, 'negative') && (
+            <button 
+              onClick={() => setActiveTab('negative')}
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                activeTab === 'negative' 
+                  ? 'bg-moss-dark text-text-light font-medium border-border-moss' 
+                  : 'border-transparent text-text-dark/70 hover:text-text-light hover:bg-moss-dark'
+              }`}
+              title="Worklist Tồn Âm"
+            >
+              <div className="flex items-center gap-3">
+                <AlertOctagon size={18} className={activeTab === 'negative' ? 'text-rose-400' : 'text-rose-400'} />
+                {!isSidebarCollapsed && <span className="text-rose-400 font-semibold">Worklist Tồn Âm</span>}
+              </div>
+              {!isSidebarCollapsed && negativeStockCount > 0 && (
+                <span className="bg-[#D06A5C] text-white text-xs font-semibold px-2 py-0.5 rounded-full ml-auto">
+                  {negativeStockCount}
+                </span>
+              )}
+            </button>
+          )}
+
 
 
           {!isSidebarCollapsed && (
@@ -5015,60 +5271,74 @@ export default function Home() {
         <main className="flex-1 min-w-0 flex flex-col gap-6">
 
           {/* 3. Global Stats Grid */}
-          <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <section className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
             
             {userRole === 'admin' && (
-              <div className="glass-panel rounded-md p-5 relative overflow-hidden">
+              <div className="glass-panel rounded-md p-4 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-accent-gold/5 rounded-full blur-2xl"></div>
-                <div className="flex items-center justify-between text-gray-400 mb-2">
-                  <span className="text-xs uppercase tracking-wider font-sans">Tổng Doanh thu POS</span>
+                <div className="flex items-center justify-between text-gray-400 mb-1.5">
+                  <span className="text-[10px] sm:text-xs uppercase tracking-wider font-sans">Tổng Doanh thu POS</span>
                   <DollarSign size={16} className="text-accent-gold" />
                 </div>
-                <div className="text-2xl font-bold text-gray-100">
+                <div className="text-lg sm:text-xl font-bold text-gray-100">
                   {metrics.salesRevenue.toLocaleString()} đ
                 </div>
-                <div className="text-[10px] text-gray-400 mt-1">
+                <div className="text-[9px] sm:text-[10px] text-gray-400 mt-1">
                   Nửa đầu tháng 6 (Chưa trừ CK: {metrics.salesDiscount.toLocaleString()}đ)
                 </div>
               </div>
             )}
 
-            <div className="glass-panel rounded-md p-5 relative overflow-hidden">
+            <div className="glass-panel rounded-md p-4 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-accent-gold/5 rounded-full blur-2xl"></div>
-              <div className="flex items-center justify-between text-gray-400 mb-2">
-                <span className="text-xs uppercase tracking-wider font-sans">Chi phí Tiêu hao (Cost)</span>
+              <div className="flex items-center justify-between text-gray-400 mb-1.5">
+                <span className="text-[10px] sm:text-xs uppercase tracking-wider font-sans">Chi phí Tiêu hao (Cost)</span>
                 <TrendingUp size={16} className="text-accent-gold" />
               </div>
-              <div className="text-2xl font-bold text-gray-100">
+              <div className="text-lg sm:text-xl font-bold text-gray-100">
                 {canViewFinancials ? `${metrics.ingredientCost.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
               </div>
-              <div className="text-[10px] text-gray-400 mt-1">
-                Food Cost lý thuyết: <span className="text-accent-gold font-semibold">{canViewFinancials ? `${metrics.foodCostPct.toFixed(1)}%` : '🔒 Chỉ CFO'}</span>
+              <div className="text-[9px] sm:text-[10px] text-gray-400 mt-1">
+                Chi phí nguyên liệu tiêu hao theo định mức
               </div>
             </div>
 
-            <div className="glass-panel rounded-md p-5 relative overflow-hidden">
+            <div className="glass-panel rounded-md p-4 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-accent-gold/5 rounded-full blur-2xl"></div>
-              <div className="flex items-center justify-between text-gray-400 mb-2">
-                <span className="text-xs uppercase tracking-wider font-sans">Giá trị Tồn kho Ước tính</span>
+              <div className="flex items-center justify-between text-gray-400 mb-1.5">
+                <span className="text-[10px] sm:text-xs uppercase tracking-wider font-sans">Giá trị Tồn kho Ước tính</span>
                 <Package size={16} className="text-accent-gold" />
               </div>
-              <div className="text-2xl font-bold text-gray-100">
+              <div className="text-lg sm:text-xl font-bold text-gray-100">
                 {canViewFinancials ? `${metrics.inventoryValue.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
               </div>
-              <div className="text-[10px] text-gray-400 mt-1">Tổng giá trị kho nguyên liệu tĩnh tại quầy</div>
+              <div className="text-[9px] sm:text-[10px] text-gray-400 mt-1">Tổng giá trị kho nguyên liệu tĩnh tại quầy</div>
             </div>
 
-            <div className="glass-panel rounded-md p-5 relative overflow-hidden">
+            <div className="glass-panel rounded-md p-4 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-accent-gold/5 rounded-full blur-2xl"></div>
-              <div className="flex items-center justify-between text-gray-400 mb-2">
-                <span className="text-xs uppercase tracking-wider font-sans">Lệch kho (Variance)</span>
+              <div className="flex items-center justify-between text-gray-400 mb-1.5">
+                <span className="text-[10px] sm:text-xs uppercase tracking-wider font-sans">Lệch kho (Variance)</span>
                 <AlertTriangle size={16} className={metrics.varianceCost < 0 ? "text-rose-500 animate-pulse" : "text-accent-gold"} />
               </div>
-              <div className={`text-2xl font-bold ${canViewFinancials ? (metrics.varianceCost < 0 ? "text-rose-400" : "text-emerald-400") : "text-gray-400"}`}>
+              <div className={`text-lg sm:text-xl font-bold ${canViewFinancials ? (metrics.varianceCost < 0 ? "text-rose-400" : "text-emerald-400") : "text-gray-400"}`}>
                 {canViewFinancials ? `${metrics.varianceCost > 0 ? "+" : ""}${metrics.varianceCost.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
               </div>
-              <div className="text-[10px] text-gray-400 mt-1">Tính theo chênh lệch các món đã kiểm kê thực tế</div>
+              <div className="text-[9px] sm:text-[10px] text-gray-400 mt-1">Tính theo chênh lệch các món đã kiểm kê thực tế</div>
+            </div>
+
+            <div className="glass-panel rounded-md p-4 relative overflow-hidden border border-accent-gold/30 bg-accent-gold/5 shadow-[0_0_15px_rgba(216,170,87,0.1)] col-span-2 md:col-span-1">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-accent-gold/10 rounded-full blur-2xl"></div>
+              <div className="flex items-center justify-between text-accent-gold mb-1.5 font-semibold">
+                <span className="text-[10px] sm:text-xs uppercase tracking-wider font-sans">Food Cost Lý Thuyết</span>
+                <TrendingUp size={16} className="text-accent-gold animate-pulse" />
+              </div>
+              <div className="text-2xl sm:text-3xl font-serif font-extrabold text-accent-gold tracking-tight py-0.5">
+                {canViewFinancials ? `${metrics.foodCostPct.toFixed(1)}%` : '🔒 Khóa (Cấp 1)'}
+              </div>
+              <div className="text-[9px] sm:text-[10px] text-gray-400 mt-1">
+                Tỷ lệ chi phí tiêu hao / doanh thu thuần
+              </div>
             </div>
           </section>
 
@@ -5136,7 +5406,7 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Simulated Consumption list */}
-                <div className="glass-panel rounded-md p-6 lg:col-span-2 flex flex-col gap-4">
+                <div className="glass-panel rounded-md p-4 sm:p-6 lg:col-span-2 min-w-0 w-full overflow-hidden flex flex-col gap-4">
                   <div>
                     <h3 className="text-xl font-semibold text-accent-gold font-serif">Nguyên liệu tiêu hao nhiều nhất (01/06 - 13/06)</h3>
                     <p className="text-[11px] text-gray-400">Đã bao gồm tỷ lệ hao hụt Yield % và 10% bù bếp</p>
@@ -5149,7 +5419,7 @@ export default function Home() {
                         const maxVal = Math.max(...roleFilteredConsumptionData.slice(0, 10).map(c => c.totalCost));
                         const barHeight = maxVal > 0 ? (item.totalCost / maxVal) * 100 : 0;
                         return (
-                          <div key={item.id} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
+                           <div key={item.id} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
                             <div className="w-full flex items-end justify-center h-28 relative">
                               {/* Hover cost value */}
                               <span className="absolute -top-6 text-[9px] text-accent-gold opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1.5 py-0.5 rounded border border-border-cream whitespace-nowrap">
@@ -5167,25 +5437,25 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-xs text-left text-gray-300">
-                      <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
+                  <div className="overflow-x-auto -mx-4 sm:mx-0">
+                    <table className="w-full text-xs text-left text-gray-300 min-w-[450px] sm:min-w-0">
+                      <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss text-[10px] sm:text-xs">
                         <tr>
-                          <th className="px-4 py-2">Mã</th>
-                          <th className="px-4 py-2">Tên Nguyên Liệu</th>
-                          <th className="px-4 py-2 text-right">Lượng tiêu thụ</th>
-                          <th className="px-4 py-2 text-right">Đơn giá mua</th>
-                          <th className="px-4 py-2 text-right">Thành tiền (VND)</th>
+                          <th className="px-2 sm:px-4 py-2">Mã</th>
+                          <th className="px-2 sm:px-4 py-2">Tên Nguyên Liệu</th>
+                          <th className="px-2 sm:px-4 py-2 text-right">Lượng tiêu thụ</th>
+                          <th className="px-2 sm:px-4 py-2 text-right">Đơn giá</th>
+                          <th className="px-2 sm:px-4 py-2 text-right">Thành tiền</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-amber-500/5">
+                      <tbody className="divide-y divide-amber-500/5 text-[11px] sm:text-xs">
                         {roleFilteredConsumptionData.slice(0, 15).map((item) => (
                           <tr key={item.id} className="hover:bg-moss-light/30">
-                            <td className="px-4 py-2 font-mono text-accent-gold/70">{item.code && item.code.length < 20 ? item.code : '—'}</td>
-                            <td className="px-4 py-2 font-medium">{item.name}</td>
-                            <td className="px-4 py-2 text-right">{item.qty.toFixed(3)} {item.unit}</td>
-                            <td className="px-4 py-2 text-right">{item.unitPrice.toLocaleString()} đ</td>
-                            <td className="px-4 py-2 text-right font-semibold text-gray-200">{Math.round(item.totalCost).toLocaleString()} đ</td>
+                            <td className="px-2 sm:px-4 py-2 font-mono text-accent-gold/70">{item.code && item.code.length < 20 ? item.code : '—'}</td>
+                            <td className="px-2 sm:px-4 py-2 font-medium truncate max-w-[120px] sm:max-w-none">{item.name}</td>
+                            <td className="px-2 sm:px-4 py-2 text-right font-mono">{item.qty.toFixed(2)} {item.unit}</td>
+                            <td className="px-2 sm:px-4 py-2 text-right font-mono">{item.unitPrice.toLocaleString()} đ</td>
+                            <td className="px-2 sm:px-4 py-2 text-right font-semibold text-gray-200 font-mono">{Math.round(item.totalCost).toLocaleString()} đ</td>
                           </tr>
                         ))}
                       </tbody>
@@ -5194,7 +5464,7 @@ export default function Home() {
                 </div>
 
                 {/* Live Warnings and Alerts */}
-                <div className="glass-panel rounded-md p-6 flex flex-col gap-4">
+                <div className="glass-panel rounded-md p-4 sm:p-6 min-w-0 flex flex-col gap-4">
                   <div>
                     <h3 className="text-xl font-semibold text-accent-gold font-serif">Cảnh báo Tồn kho tối thiểu</h3>
                     <p className="text-[11px] text-gray-400">Nguyên liệu sắp chạm mốc cần đặt hàng</p>
@@ -6971,6 +7241,7 @@ export default function Home() {
                   badges={badges}
                   onResolveBadge={resolveBadgesByRef}
                   canViewFinancials={canViewFinancials}
+                  checkInputGuardRail={checkInputGuardRail}
                 />
 
                 {/* v3.0: Stock Alert Panel */}
@@ -7681,6 +7952,7 @@ export default function Home() {
               posMappings={posMappings}
               currentUser={currentUser}
               locations={locations}
+              checkInputGuardRail={checkInputGuardRail}
             />
           )}
 
@@ -7696,6 +7968,72 @@ export default function Home() {
               posMappings={posMappings}
               locations={locations}
             />
+          )}
+
+          {activeTab === 'negative' && (
+            <div className="glass-panel rounded-md p-6 flex flex-col gap-6 font-sans">
+              <div className="border-b border-border-cream pb-4">
+                <h3 className="text-xl font-semibold text-accent-gold font-serif flex items-center gap-2">
+                  <AlertOctagon size={24} className="text-[#D06A5C]" />
+                  <span>Worklist Tồn Âm - Xử lý lệch kho & Nhập bù nhanh</span>
+                </h3>
+                <p className="text-xs text-gray-400 mt-1">
+                  Danh sách nguyên liệu có số tồn lý thuyết bị âm do thiếu chứng từ nhập kho hoặc định mức trừ nhiều hơn số lượng nhập thực tế.
+                </p>
+              </div>
+
+              <div className="overflow-x-auto rounded border border-border-moss bg-moss-dark/20">
+                <table className="w-full text-xs text-left text-gray-300">
+                  <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
+                    <tr>
+                      <th className="px-4 py-3">Mã NVL</th>
+                      <th className="px-4 py-3">Tên nguyên liệu</th>
+                      <th className="px-4 py-3 text-center">ĐVT</th>
+                      <th className="px-4 py-3 text-right">Tồn âm thực tế</th>
+                      <th className="px-4 py-3 text-right">Giá vốn chuẩn</th>
+                      <th className="px-4 py-3 text-right">Giá trị âm ước tính</th>
+                      <th className="px-4 py-3 text-center">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-amber-500/5">
+                    {(() => {
+                      const negativeIngs = roleFilteredIngredients.filter(ing => getTheoreticalStockNoMax(ing.id) < 0);
+                      if (negativeIngs.length === 0) {
+                        return (
+                          <tr>
+                            <td colSpan={7} className="text-center py-12 text-gray-500 italic">
+                              🎉 Tuyệt vời! Không có nguyên liệu nào bị tồn âm.
+                            </td>
+                          </tr>
+                        );
+                      }
+                      return negativeIngs.map((ing) => {
+                        const stock = getTheoreticalStockNoMax(ing.id);
+                        const valueVal = Math.round(stock * ing.price);
+                        return (
+                          <tr key={ing.id} className="hover:bg-moss-light/30 transition-colors">
+                            <td className="px-4 py-3 font-mono text-[#D06A5C] font-semibold">{ing.code || ing.id}</td>
+                            <td className="px-4 py-3 font-medium text-gray-100">{ing.vi_name}</td>
+                            <td className="px-4 py-3 text-center text-gray-300 font-medium">{ing.unit || 'kg'}</td>
+                            <td className="px-4 py-3 text-right font-mono font-bold text-rose-400">{stock.toFixed(3)}</td>
+                            <td className="px-4 py-3 text-right font-mono text-gray-300">{ing.price.toLocaleString()} đ</td>
+                            <td className="px-4 py-3 text-right font-mono text-rose-300">{valueVal.toLocaleString()} đ</td>
+                            <td className="px-4 py-3 text-center">
+                              <button
+                                onClick={() => openQuickAdjust(ing, stock)}
+                                className="bg-[#A8884E]/10 hover:bg-[#A8884E] text-[#A8884E] hover:text-white border border-[#A8884E]/50 px-2.5 py-1.5 rounded transition-all text-xs font-semibold"
+                              >
+                                Nhập bù nhanh
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      });
+                    })()}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           )}
 
         </main>
@@ -7887,6 +8225,109 @@ export default function Home() {
                   className="bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-xs px-5 py-2 rounded shadow flex items-center gap-1.5"
                 >
                   {isPasswordLoading ? "Đang xử lý..." : "Cập nhật mật khẩu"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Quick Adjust Modal for Negative Stock */}
+      {showQuickAdjustModal && quickAdjustIng && (
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-moss-dark border border-border-moss w-full max-w-md rounded-md p-6 flex flex-col gap-5 shadow-2xl relative font-sans text-text-light">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-accent-gold/5 rounded-full blur-2xl"></div>
+            
+            <div className="border-b border-border-cream pb-3">
+              <h3 className="text-lg font-semibold text-accent-gold font-serif">⚡ NHẬP BÙ NHANH TỒN ÂM</h3>
+              <p className="text-[11px] text-gray-400 mt-1">Ghi nhận giao dịch nhập bù hoặc điều chỉnh tăng để triệt tiêu lượng tồn âm.</p>
+            </div>
+
+            <div className="bg-moss-light p-3.5 rounded border border-border-moss flex flex-col gap-1.5 text-xs text-text-light">
+              <p><strong>Nguyên liệu:</strong> <span className="text-gray-100 font-semibold">{quickAdjustIng.vi_name}</span></p>
+              <p><strong>Mã hàng:</strong> <span className="font-mono text-accent-gold/80">{quickAdjustIng.code || quickAdjustIng.id}</span></p>
+              <p><strong>Số lượng âm hiện tại:</strong> <span className="font-mono text-rose-400 font-bold">{quickAdjustNegativeStock.toFixed(3)} {quickAdjustIng.unit || 'kg'}</span></p>
+            </div>
+
+            <form onSubmit={handleQuickAdjustSubmit} className="flex flex-col gap-4 text-xs">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] uppercase text-gray-400 font-semibold">Loại giao dịch</label>
+                  <select
+                    value={quickAdjustType}
+                    onChange={(e) => setQuickAdjustType(e.target.value as any)}
+                    className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full"
+                  >
+                    <option value="IMPORT">Nhập kho bù (IMPORT)</option>
+                    <option value="STOCK_TAKE_ADJ">Điều chỉnh tăng (STOCK_TAKE_ADJ)</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] uppercase text-gray-400 font-semibold">Kho lưu trữ</label>
+                  <select
+                    value={quickAdjustLocation}
+                    onChange={(e) => setQuickAdjustLocation(e.target.value as any)}
+                    className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full"
+                  >
+                    <option value="MAIN_STORE">Kho tổng (MAIN_STORE)</option>
+                    <option value="KITCHEN">Bếp (KITCHEN)</option>
+                    <option value="BAR">Quầy Bar (BAR)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] uppercase text-gray-400 font-semibold">Số lượng bù *</label>
+                  <input
+                    type="number"
+                    step="0.001"
+                    min="0.001"
+                    required
+                    value={quickAdjustQty}
+                    onChange={(e) => setQuickAdjustQty(e.target.value)}
+                    className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold font-mono w-full"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] uppercase text-gray-400 font-semibold">Đơn giá vốn (VND)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={quickAdjustPrice}
+                    onChange={(e) => setQuickAdjustPrice(e.target.value)}
+                    className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold font-mono w-full"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] uppercase text-gray-400 font-semibold">Ghi chú</label>
+                <input
+                  type="text"
+                  required
+                  value={quickAdjustNote}
+                  onChange={(e) => setQuickAdjustNote(e.target.value)}
+                  className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 border-t border-border-cream pt-4 mt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowQuickAdjustModal(false)}
+                  className="px-4 py-2 border border-border-cream hover:bg-moss-light text-text-light rounded-sm font-semibold transition-all active:scale-95"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={quickAdjustLoading}
+                  className="bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold px-5 py-2 rounded-sm shadow transition-all active:scale-95"
+                >
+                  {quickAdjustLoading ? 'Đang xử lý...' : 'Xác nhận Nhập bù'}
                 </button>
               </div>
             </form>
@@ -8362,7 +8803,15 @@ export default function Home() {
             onClick={() => setActiveTab('purchasing')}
             className={`flex flex-col items-center gap-1 ${activeTab === 'purchasing' ? 'text-accent-gold' : 'text-text-light/60'}`}
           >
-            <DollarSign size={20} />
+            <div className="relative">
+              <DollarSign size={20} />
+              {(pendingApprovalCount > 0 || escalationCount > 0 || agingPOCount > 0) && (
+                <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D06A5C] opacity-75"/>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#D06A5C]"/>
+                </span>
+              )}
+            </div>
             <span className="text-[9px]">Mua hàng</span>
           </button>
         )}
@@ -8478,12 +8927,28 @@ export default function Home() {
               {hasTabAccess(userRole, 'purchasing') && (
                 <button 
                   onClick={() => { setActiveTab('purchasing'); setIsMobileDrawerOpen(false); }}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                  className={`flex items-center justify-between px-4 py-3 rounded-md transition-all text-left border text-sm ${
                     activeTab === 'purchasing' ? 'bg-moss-light border-accent-gold text-accent-gold' : 'border-transparent text-text-light/80'
                   }`}
                 >
-                  <DollarSign size={18} />
-                  <span>Mua hàng & Nhập kho (GRN)</span>
+                  <div className="flex items-center gap-3">
+                    <DollarSign size={18} />
+                    <span>Mua hàng & Nhập kho (GRN)</span>
+                  </div>
+                  {(pendingApprovalCount > 0 || escalationCount > 0 || agingPOCount > 0) && (
+                    <div className="flex items-center gap-1.5">
+                      {agingPOCount > 0 && (
+                        <span className="bg-[#D8AA57] text-[#090d16] text-[9px] font-bold px-1.5 py-0.5 rounded-full">
+                          {agingPOCount}h
+                        </span>
+                      )}
+                      {pendingApprovalCount + escalationCount > 0 && (
+                        <span className="bg-[#D06A5C] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
+                          {pendingApprovalCount + escalationCount}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </button>
               )}
               {hasTabAccess(userRole, 'unmapped') && (
@@ -8526,6 +8991,25 @@ export default function Home() {
                 >
                   <FileText size={18} />
                   <span>Báo cáo Chốt Kỳ</span>
+                </button>
+              )}
+
+              {hasTabAccess(userRole, 'negative') && (
+                <button 
+                  onClick={() => { setActiveTab('negative'); setIsMobileDrawerOpen(false); }}
+                  className={`flex items-center justify-between px-4 py-3 rounded-md transition-all text-left border text-sm ${
+                    activeTab === 'negative' ? 'bg-moss-light border-accent-gold text-accent-gold' : 'border-transparent text-text-light/80'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <AlertOctagon size={18} className="text-rose-400" />
+                    <span className="text-rose-400">Worklist Tồn Âm</span>
+                  </div>
+                  {negativeStockCount > 0 && (
+                    <span className="bg-[#D06A5C] text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+                      {negativeStockCount}
+                    </span>
+                  )}
                 </button>
               )}
               

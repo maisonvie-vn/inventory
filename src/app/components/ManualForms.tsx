@@ -32,6 +32,7 @@ interface ManualFormsProps {
   posMappings: Record<string, any>;
   currentUser: any;
   locations: any[];
+  checkInputGuardRail?: (ingredientId: string, type: 'qty' | 'price', value: number, txnType?: string) => { warning: boolean; msg?: string };
 }
 
 export default function ManualForms({
@@ -48,7 +49,8 @@ export default function ManualForms({
   recipes,
   posMappings,
   currentUser,
-  locations
+  locations,
+  checkInputGuardRail
 }: ManualFormsProps) {
   const [activeTab, setActiveTab] = useState<'sale' | 'grn' | 'issue'>('sale');
 
@@ -472,6 +474,21 @@ export default function ManualForms({
       alert('Vui lòng nhập số lượng hợp lệ!');
       return;
     }
+
+    if (checkInputGuardRail) {
+      const qtyRes = checkInputGuardRail(selectedGrnIng.id, 'qty', qty, 'IMPORT');
+      if (qtyRes.warning) {
+        const ok = window.confirm(`${qtyRes.msg}\n\nBạn có chắc chắn muốn thêm dòng này không?`);
+        if (!ok) return;
+      }
+      
+      const priceRes = checkInputGuardRail(selectedGrnIng.id, 'price', price, 'IMPORT');
+      if (priceRes.warning) {
+        const ok = window.confirm(`${priceRes.msg}\n\nBạn có chắc chắn muốn thêm dòng này không?`);
+        if (!ok) return;
+      }
+    }
+
     const unit = selectedGrnIng.unit || selectedGrnIng.stock_uom || 'kg';
     setManualGrnLines(prev => [
       ...prev,
@@ -697,6 +714,15 @@ export default function ManualForms({
       alert('Vui lòng nhập số lượng hợp lệ!');
       return;
     }
+
+    if (checkInputGuardRail) {
+      const qtyRes = checkInputGuardRail(selectedIssueIng.id, 'qty', qty, 'ISSUE');
+      if (qtyRes.warning) {
+        const ok = window.confirm(`${qtyRes.msg}\n\nBạn có chắc chắn muốn thêm dòng này không?`);
+        if (!ok) return;
+      }
+    }
+
     setManualIssueLines(prev => [
       ...prev,
       { 
