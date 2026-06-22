@@ -97,6 +97,7 @@ Mọi tệp tin mã nguồn và SQL phải được đặt đúng vị trí theo
     *   `/KE_HOACH_v3.0.md`: Kế hoạch tổng v3.0 (Chứa các quyết định đã khóa tại §11).
     *   `/IMPLEMENTATION_PLAN_v9.6.md`: Kế hoạch triển khai v9.6 chi tiết.
     *   `/SPEC_NhapTay_Unmapped_v9-4.md`: Đặc tả xử lý hàng bán chưa có công thức và nhập liệu thủ công.
+    *   `/instructions-22062026.md`: Nhật ký nâng cấp giao diện, sửa Yield %, ẩn cột tiếng Pháp, phân quyền định mức tồn kho và loại bỏ đơn vị tiền đ (22/06/2026).
     *   `/v9-6_01_schema.sql`: File SQL schema bổ sung v9.6.
     *   `/v9-6_02_uuid_code_migration.sql`: File SQL di chuyển id nguyên liệu sang UUID.
     *   `/CRON_TuDongHoa_MaisonVie.sql`: Cấu hình pg_cron tự động hóa tầng DB.
