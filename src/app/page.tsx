@@ -1490,7 +1490,17 @@ export default function Home() {
         }
       }
 
-      const dummyUser = { id: '90000000-0000-0000-0000-000000000001', email: authEmail, name, role };
+      let dummyId = '90000000-0000-0000-0000-000000000001';
+      if (role === 'restaurant_manager') dummyId = '90000000-0000-0000-0000-000000000002';
+      else if (role === 'head_chef') dummyId = '90000000-0000-0000-0000-000000000003';
+      else if (role === 'senior_accountant') dummyId = '90000000-0000-0000-0000-000000000004';
+      else if (role === 'foh_supervisor') dummyId = '90000000-0000-0000-0000-000000000005';
+      else if (role === 'sous_chef') dummyId = '90000000-0000-0000-0000-000000000006';
+      else if (role === 'junior_accountant') dummyId = '90000000-0000-0000-0000-000000000007';
+      else if (role === 'BAR_SUPERVISOR') dummyId = '90000000-0000-0000-0000-000000000008';
+      else if (role === 'BARTENDER') dummyId = '90000000-0000-0000-0000-000000000009';
+
+      const dummyUser = { id: dummyId, email: authEmail, name, role };
       localStorage.setItem('mv_local_user', JSON.stringify(dummyUser));
       setCurrentUser(dummyUser);
       setUserRole(role);
@@ -1590,7 +1600,17 @@ export default function Home() {
         }
       }
 
-      const dummyUser = { id: '90000000-0000-0000-0000-000000000001', email: authEmail, name, role };
+      let dummyId = '90000000-0000-0000-0000-000000000001';
+      if (role === 'restaurant_manager') dummyId = '90000000-0000-0000-0000-000000000002';
+      else if (role === 'head_chef') dummyId = '90000000-0000-0000-0000-000000000003';
+      else if (role === 'senior_accountant') dummyId = '90000000-0000-0000-0000-000000000004';
+      else if (role === 'foh_supervisor') dummyId = '90000000-0000-0000-0000-000000000005';
+      else if (role === 'sous_chef') dummyId = '90000000-0000-0000-0000-000000000006';
+      else if (role === 'junior_accountant') dummyId = '90000000-0000-0000-0000-000000000007';
+      else if (role === 'BAR_SUPERVISOR') dummyId = '90000000-0000-0000-0000-000000000008';
+      else if (role === 'BARTENDER') dummyId = '90000000-0000-0000-0000-000000000009';
+
+      const dummyUser = { id: dummyId, email: authEmail, name, role };
       localStorage.setItem('mv_local_user', JSON.stringify(dummyUser));
       setCurrentUser(dummyUser);
       setUserRole(role);
