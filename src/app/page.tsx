@@ -6087,7 +6087,7 @@ export default function Home() {
                           <td className="px-2 py-2 font-medium text-gray-100 whitespace-normal break-words">{ing.vi_name}</td>
                           <td className="px-2 py-2 text-gray-400 truncate" title={ing.category}>{ing.category}</td>
                           <td className="px-2 py-2 text-center text-gray-300 font-medium truncate">{ing.unit}</td>
-                          <td className="px-2 py-2 text-right font-mono font-semibold text-accent-gold/80 truncate">{ing.price.toLocaleString()} đ</td>
+                          <td className="px-2 py-2 text-right font-mono font-semibold text-accent-gold/80 truncate">{ing.price.toLocaleString()}</td>
                           <td className="px-2 py-2 text-center font-mono text-gray-300 truncate">
                             {(() => {
                               const displayYield = ing.yield_rate > 2 ? Math.round(ing.yield_rate) : Math.round(ing.yield_rate * 100);
