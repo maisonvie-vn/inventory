@@ -20,6 +20,44 @@ export interface NotificationBadge {
   metadata: Record<string, any>;
 }
 
+// Synthesize a dual high-pitch "beep-beep" sound using Web Audio API
+const playBeepBeep = () => {
+  if (typeof window === 'undefined') return;
+  try {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+    const ctx = new AudioContextClass();
+    
+    // Beep 1
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.type = 'sine';
+    osc1.frequency.value = 880; // A5 pitch
+    gain1.gain.setValueAtTime(0, ctx.currentTime);
+    gain1.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.05);
+    gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+    osc1.start(ctx.currentTime);
+    osc1.stop(ctx.currentTime + 0.15);
+    
+    // Beep 2
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.type = 'sine';
+    osc2.frequency.value = 880;
+    gain2.gain.setValueAtTime(0, ctx.currentTime + 0.20);
+    gain2.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.25);
+    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+    osc2.start(ctx.currentTime + 0.20);
+    osc2.stop(ctx.currentTime + 0.35);
+  } catch (e) {
+    console.error('[Badges] Play sound failed:', e);
+  }
+};
+
 export function useRealtimeBadges(userId: string | null | undefined, userRole: string) {
   const [badges, setBadges] = useState<NotificationBadge[]>([]);
   const [loading, setLoading] = useState(false);
@@ -97,7 +135,12 @@ export function useRealtimeBadges(userId: string | null | undefined, userRole: s
             if ((newBadge as any).is_active) {
               setBadges(prev => {
                 const exists = prev.find(b => b.id === newBadge.id);
-                return exists ? prev : [newBadge, ...prev];
+                if (exists) return prev;
+                // Play "beep-beep" audio alert when a new PO is pending approval or escalated
+                if (newBadge.badge_type === 'PO_PENDING_APPROVAL' || newBadge.badge_type === 'ESCALATION') {
+                  playBeepBeep();
+                }
+                return [newBadge, ...prev];
               });
             }
           } else if (payload.eventType === 'UPDATE') {

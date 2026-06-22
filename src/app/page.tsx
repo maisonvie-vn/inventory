@@ -1082,6 +1082,7 @@ export default function Home() {
 
             const role = (profile?.role || 'admin') as any;
             setCurrentUser({
+              id: session.user.id,
               email: session.user.email || '',
               name: profile?.full_name || session.user.email || '',
               role: role
@@ -1145,6 +1146,7 @@ export default function Home() {
 
           const role = (profile?.role || 'admin') as any;
           setCurrentUser({
+            id: session.user.id,
             email: session.user.email || '',
             name: profile?.full_name || session.user.email || '',
             role: role
@@ -1488,7 +1490,7 @@ export default function Home() {
         }
       }
 
-      const dummyUser = { email: authEmail, name, role };
+      const dummyUser = { id: '90000000-0000-0000-0000-000000000001', email: authEmail, name, role };
       localStorage.setItem('mv_local_user', JSON.stringify(dummyUser));
       setCurrentUser(dummyUser);
       setUserRole(role);
@@ -1536,6 +1538,7 @@ export default function Home() {
 
         const role = (profile?.role || 'admin') as any;
         setCurrentUser({
+          id: data.user.id,
           email: data.user.email || '',
           name: profile?.full_name || data.user.email || '',
           role: role
@@ -1587,7 +1590,7 @@ export default function Home() {
         }
       }
 
-      const dummyUser = { email: authEmail, name, role };
+      const dummyUser = { id: '90000000-0000-0000-0000-000000000001', email: authEmail, name, role };
       localStorage.setItem('mv_local_user', JSON.stringify(dummyUser));
       setCurrentUser(dummyUser);
       setUserRole(role);
@@ -5011,6 +5014,26 @@ export default function Home() {
                     className="bg-warn-red text-white text-xs font-semibold px-3 py-1.5 rounded-sm hover:bg-opacity-90 transition-all flex items-center gap-1.5"
                   >
                     <span>Giải quyết ngay</span>
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
+              )}
+
+              {/* Pending POs Warning Banner */}
+              {(userRole === 'admin' || userRole === 'restaurant_manager' || userRole === 'senior_accountant') && pendingApprovalCount > 0 && (
+                <div className="flex items-center justify-between bg-warn-red-bg border border-warn-red/40 rounded-sm p-4 text-warn-red font-sans">
+                  <div className="flex items-center gap-3">
+                    <Bell size={20} className="text-warn-red animate-bounce" />
+                    <div>
+                      <h4 className="text-sm font-semibold">Cảnh báo: Có PO đang chờ bạn phê duyệt</h4>
+                      <p className="text-xs text-text-light/80">Hệ thống đang ghi nhận {pendingApprovalCount} đơn đặt hàng (PO) đang chờ phê duyệt từ vai trò của bạn.</p>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setActiveTab('purchasing')}
+                    className="bg-warn-red text-white text-xs font-semibold px-3 py-1.5 rounded-sm hover:bg-opacity-90 transition-all flex items-center gap-1.5"
+                  >
+                    <span>Duyệt đơn ngay</span>
                     <ArrowRight size={14} />
                   </button>
                 </div>
