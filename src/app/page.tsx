@@ -5413,7 +5413,7 @@ export default function Home() {
                   </div>
                   
                   {/* Custom SVG Bar Chart (Scrollable on mobile) */}
-                  <div className="overflow-x-auto overflow-y-hidden max-w-full pb-2">
+                  <div className="overflow-x-auto overflow-y-hidden w-full min-w-0 max-w-full pb-2">
                     <div className="h-44 min-w-[500px] lg:min-w-0 w-full bg-moss-dark/50 rounded border border-border-moss p-4 flex items-end justify-between gap-2">
                       {roleFilteredConsumptionData.slice(0, 10).map((item, idx) => {
                         const maxVal = Math.max(...roleFilteredConsumptionData.slice(0, 10).map(c => c.totalCost));

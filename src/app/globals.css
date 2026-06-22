@@ -98,6 +98,8 @@ h1, h2, h3, h4, h5, h6, .font-serif {
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   box-shadow: 0 8px 32px 0 rgba(4, 39, 38, 0.25);
+  overflow: hidden;
+  isolation: isolate;
 }
 
 .glass-panel-gold {
