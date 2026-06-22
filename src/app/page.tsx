@@ -5459,8 +5459,8 @@ export default function Home() {
                             <td className="px-2 sm:px-4 py-2 font-mono text-accent-gold/70">{item.code && item.code.length < 20 ? item.code : '—'}</td>
                             <td className="px-2 sm:px-4 py-2 font-medium truncate max-w-[120px] sm:max-w-none">{item.name}</td>
                             <td className="px-2 sm:px-4 py-2 text-right font-mono">{item.qty.toFixed(2)} {item.unit}</td>
-                            <td className="px-2 sm:px-4 py-2 text-right font-mono">{item.unitPrice.toLocaleString()} đ</td>
-                            <td className="px-2 sm:px-4 py-2 text-right font-semibold text-gray-200 font-mono">{Math.round(item.totalCost).toLocaleString()} đ</td>
+                            <td className="px-2 sm:px-4 py-2 text-right font-mono">{item.unitPrice.toLocaleString()}</td>
+                            <td className="px-2 sm:px-4 py-2 text-right font-semibold text-gray-200 font-mono">{Math.round(item.totalCost).toLocaleString()}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -6095,36 +6095,40 @@ export default function Home() {
                             })()}
                           </td>
                           <td className="px-2 py-2 text-center">
-                            <input
-                              type="number"
-                              min="0"
-                              step="any"
-                              className="w-14 bg-[#042726] border border-border-cream/50 rounded px-1 py-0.5 text-center text-text-light font-mono text-xs focus:outline-none focus:border-accent-gold"
-                              value={ing.min_stock !== undefined ? ing.min_stock : 15}
-                              onChange={async (e) => {
-                                const valStr = e.target.value;
-                                const valNum = valStr === '' ? 0 : parseFloat(valStr);
-                                if (isNaN(valNum)) return;
-                                
-                                // Cập nhật local state
-                                setIngredients(prev => prev.map(item => item.id === ing.id ? { ...item, min_stock: valNum } : item));
-                                
-                                // Cập nhật DB Supabase nếu được cấu hình
-                                if (isSupabaseConfigured()) {
-                                  try {
-                                    const { error } = await supabase
-                                      .from('ingredients')
-                                      .update({ min_stock: valNum })
-                                      .eq('id', ing.id);
-                                    if (error) {
-                                      console.error("Lỗi cập nhật min_stock:", error);
+                            {(userRole === 'admin' || userRole === 'senior_accountant' || userRole === 'restaurant_manager') ? (
+                              <input
+                                type="number"
+                                min="0"
+                                step="any"
+                                className="w-14 bg-[#042726] border border-border-cream/50 rounded px-1 py-0.5 text-center text-text-light font-mono text-xs focus:outline-none focus:border-accent-gold"
+                                value={ing.min_stock !== undefined ? ing.min_stock : 15}
+                                onChange={async (e) => {
+                                  const valStr = e.target.value;
+                                  const valNum = valStr === '' ? 0 : parseFloat(valStr);
+                                  if (isNaN(valNum)) return;
+                                  
+                                  // Cập nhật local state
+                                  setIngredients(prev => prev.map(item => item.id === ing.id ? { ...item, min_stock: valNum } : item));
+                                  
+                                  // Cập nhật DB Supabase nếu được cấu hình
+                                  if (isSupabaseConfigured()) {
+                                    try {
+                                      const { error } = await supabase
+                                        .from('ingredients')
+                                        .update({ min_stock: valNum })
+                                        .eq('id', ing.id);
+                                      if (error) {
+                                        console.error("Lỗi cập nhật min_stock:", error);
+                                      }
+                                    } catch (err) {
+                                      console.error("Lỗi kết nối Supabase:", err);
                                     }
-                                  } catch (err) {
-                                    console.error("Lỗi kết nối Supabase:", err);
                                   }
-                                }
-                              }}
-                            />
+                                }}
+                              />
+                            ) : (
+                              <span className="font-mono text-gray-400">{ing.min_stock !== undefined ? ing.min_stock : 15}</span>
+                            )}
                           </td>
                         </tr>
                       ))}
