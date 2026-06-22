@@ -1087,7 +1087,7 @@ export default function ManualForms({
               {selectedRecipe && (
                 <div className="bg-[#042726] border border-[#A8884E]/40 p-2.5 rounded text-[11px] text-[#FBF8F4] flex flex-col gap-1 animate-fadeIn">
                   <div>Đang chọn: <span className="font-bold text-[#C2A35A]">{selectedRecipe.code} - {selectedRecipe.vi_name}</span></div>
-                  <div>Giá mặc định: <span className="font-mono text-[#62A57C]">{selectedRecipe.price.toLocaleString()}đ</span></div>
+                  <div>Giá mặc định: <span className="font-mono text-[#62A57C]">{selectedRecipe.price.toLocaleString()}</span></div>
                 </div>
               )}
 
@@ -1104,7 +1104,7 @@ export default function ManualForms({
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] uppercase text-gray-400">Đơn giá (đ)</label>
+                  <label className="text-[9px] uppercase text-gray-400">Đơn giá</label>
                   <input 
                     type="number"
                     placeholder="Giá override"
@@ -1155,9 +1155,9 @@ export default function ManualForms({
                           <td className="px-3 py-2 font-mono text-[#C2A35A] font-bold">{line.code}</td>
                           <td className="px-3 py-2 font-medium">{line.name}</td>
                           <td className="px-3 py-2 text-center font-mono font-bold text-gray-100">{line.qty}</td>
-                          <td className="px-3 py-2 text-right font-mono">{line.price.toLocaleString()}đ</td>
+                          <td className="px-3 py-2 text-right font-mono">{line.price.toLocaleString()}</td>
                           <td className="px-3 py-2 text-right font-mono text-[#62A57C] font-semibold">
-                            {(line.price * line.qty).toLocaleString()}đ
+                            {(line.price * line.qty).toLocaleString()}
                           </td>
                           <td className="px-3 py-2 text-center">
                             <button
@@ -1180,7 +1180,7 @@ export default function ManualForms({
               <div className="flex justify-between items-center text-xs">
                 <span className="text-gray-400">Tổng cộng giá trị hóa đơn:</span>
                 <span className="text-base font-serif font-bold text-[#C2A35A]">
-                  {manualSaleLines.reduce((sum, l) => sum + l.price * l.qty, 0).toLocaleString()}đ
+                  {manualSaleLines.reduce((sum, l) => sum + l.price * l.qty, 0).toLocaleString()}
                 </span>
               </div>
               <button
@@ -1305,7 +1305,7 @@ export default function ManualForms({
                     <span className="text-gray-400">ĐVT: {selectedGrnIng.unit || selectedGrnIng.stock_uom}</span>
                   </div>
                   <div className="truncate">Tên: <strong className="text-gray-100">{selectedGrnIng.vi_name}</strong></div>
-                  <div>WAC hiện tại: <span className="font-mono text-[#62A57C]">{(selectedGrnIng.price || selectedGrnIng.wac_price || 0).toLocaleString()}đ</span></div>
+                  <div>WAC hiện tại: <span className="font-mono text-[#62A57C]">{(selectedGrnIng.price || selectedGrnIng.wac_price || 0).toLocaleString()}</span></div>
                 </div>
               )}
 
@@ -1322,7 +1322,7 @@ export default function ManualForms({
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] uppercase text-gray-400">Đơn giá gốc (đ)</label>
+                  <label className="text-[9px] uppercase text-gray-400">Đơn giá gốc</label>
                   <input 
                     type="number"
                     placeholder="Đơn giá"
@@ -1386,9 +1386,9 @@ export default function ManualForms({
                             <td className="px-3 py-2 font-medium">{line.name}</td>
                             <td className="px-3 py-2 text-center text-gray-400">{line.unit}</td>
                             <td className="px-3 py-2 text-center font-mono font-bold text-gray-100">{line.qty}</td>
-                            <td className="px-3 py-2 text-right font-mono">{line.price.toLocaleString()}đ</td>
+                            <td className="px-3 py-2 text-right font-mono">{line.price.toLocaleString()}</td>
                             <td className="px-3 py-2 text-right font-mono text-emerald-400 font-bold">
-                              {Math.round(landedCost).toLocaleString()}đ
+                              {Math.round(landedCost).toLocaleString()}
                             </td>
                             <td className="px-3 py-2 text-center">
                               <button
@@ -1412,11 +1412,11 @@ export default function ManualForms({
               <div className="grid grid-cols-2 gap-4 text-xs font-mono text-gray-300">
                 <div className="flex justify-between">
                   <span>Tiền hàng gốc:</span>
-                  <span>{manualGrnLines.reduce((sum, l) => sum + l.price * l.qty, 0).toLocaleString()}đ</span>
+                  <span>{manualGrnLines.reduce((sum, l) => sum + l.price * l.qty, 0).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Tổng phí + thuế phân bổ:</span>
-                  <span>{((parseFloat(manualGrnFreight) || 0) + (parseFloat(manualGrnDuty) || 0)).toLocaleString()}đ</span>
+                  <span>{((parseFloat(manualGrnFreight) || 0) + (parseFloat(manualGrnDuty) || 0)).toLocaleString()}</span>
                 </div>
               </div>
               <div className="flex justify-between items-center text-xs mt-1">
@@ -1426,7 +1426,7 @@ export default function ManualForms({
                     manualGrnLines.reduce((sum, l) => sum + l.price * l.qty, 0) + 
                     (parseFloat(manualGrnFreight) || 0) + 
                     (parseFloat(manualGrnDuty) || 0)
-                  ).toLocaleString()}đ
+                  ).toLocaleString()}
                 </span>
               </div>
               

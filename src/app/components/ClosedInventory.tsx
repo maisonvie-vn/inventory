@@ -551,7 +551,7 @@ export default function ClosedInventory({
           <span className="text-[10px] text-gray-300 uppercase tracking-widest font-semibold block">Tồn đầu kỳ</span>
           {isFinancialVisible ? (
             <span className="text-xl font-serif text-[#C2A35A] font-bold mt-1.5 block">
-              {Math.round(totals.totalOpeningValue).toLocaleString()}đ
+              {Math.round(totals.totalOpeningValue).toLocaleString()}
             </span>
           ) : (
             <div className="flex items-center gap-1.5 text-gray-400 text-xs mt-2.5 font-medium">
@@ -564,7 +564,7 @@ export default function ClosedInventory({
           <span className="text-[10px] text-gray-300 uppercase tracking-widest font-semibold block">Tổng nhập kỳ</span>
           {isFinancialVisible ? (
             <span className="text-xl font-serif text-[#C2A35A] font-bold mt-1.5 block">
-              {Math.round(totals.totalInValue).toLocaleString()}đ
+              {Math.round(totals.totalInValue).toLocaleString()}
             </span>
           ) : (
             <div className="flex items-center gap-1.5 text-gray-400 text-xs mt-2.5 font-medium">
@@ -577,7 +577,7 @@ export default function ClosedInventory({
           <span className="text-[10px] text-gray-300 uppercase tracking-widest font-semibold block">Tổng xuất kỳ</span>
           {isFinancialVisible ? (
             <span className="text-xl font-serif text-[#C2A35A] font-bold mt-1.5 block">
-              {Math.round(totals.totalOutValue).toLocaleString()}đ
+              {Math.round(totals.totalOutValue).toLocaleString()}
             </span>
           ) : (
             <div className="flex items-center gap-1.5 text-gray-400 text-xs mt-2.5 font-medium">
@@ -590,7 +590,7 @@ export default function ClosedInventory({
           <span className="text-[10px] text-gray-300 uppercase tracking-widest font-semibold block">Giá trị tài sản cuối kỳ</span>
           {isFinancialVisible ? (
             <span className="text-xl font-serif text-emerald-400 font-bold mt-1.5 block">
-              {Math.round(totals.totalValue).toLocaleString()}đ
+              {Math.round(totals.totalValue).toLocaleString()}
             </span>
           ) : (
             <div className="flex items-center gap-1.5 text-gray-400 text-xs mt-2.5 font-medium">
@@ -746,8 +746,8 @@ export default function ClosedInventory({
                 </td>
                 {isFinancialVisible && (
                   <>
-                    <td className="p-3 text-right font-mono font-medium text-[#C2A35A]">{Math.round(row.wac).toLocaleString()}đ</td>
-                    <td className="p-3 text-right font-mono font-bold text-emerald-400">{Math.round(row.closingValue).toLocaleString()}đ</td>
+                    <td className="p-3 text-right font-mono font-medium text-[#C2A35A]">{Math.round(row.wac).toLocaleString()}</td>
+                    <td className="p-3 text-right font-mono font-bold text-emerald-400">{Math.round(row.closingValue).toLocaleString()}</td>
                   </>
                 )}
               </tr>

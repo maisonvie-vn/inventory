@@ -2264,13 +2264,13 @@ export default function Home() {
         if (value > avgPrice * 3) {
           return {
             warning: true,
-            msg: `Đơn giá (${value.toLocaleString()}đ) lệch lớn hơn gấp 3 lần so với trung bình 3 lần gần nhất (${Math.round(avgPrice).toLocaleString()}đ).`
+            msg: `Đơn giá (${value.toLocaleString()}) lệch lớn hơn gấp 3 lần so với trung bình 3 lần gần nhất (${Math.round(avgPrice).toLocaleString()}).`
           };
         }
         if (value < avgPrice / 3) {
           return {
             warning: true,
-            msg: `Đơn giá (${value.toLocaleString()}đ) lệch nhỏ hơn 1/3 lần so với trung bình 3 lần gần nhất (${Math.round(avgPrice).toLocaleString()}đ).`
+            msg: `Đơn giá (${value.toLocaleString()}) lệch nhỏ hơn 1/3 lần so với trung bình 3 lần gần nhất (${Math.round(avgPrice).toLocaleString()}).`
           };
         }
       }
@@ -5284,10 +5284,10 @@ export default function Home() {
                   <DollarSign size={16} className="text-accent-gold" />
                 </div>
                 <div className="text-lg sm:text-xl font-bold text-gray-100">
-                  {metrics.salesRevenue.toLocaleString()} đ
+                  {metrics.salesRevenue.toLocaleString()}
                 </div>
                 <div className="text-[9px] sm:text-[10px] text-gray-400 mt-1">
-                  Nửa đầu tháng 6 (Chưa trừ CK: {metrics.salesDiscount.toLocaleString()}đ)
+                  Nửa đầu tháng 6 (Chưa trừ CK: {metrics.salesDiscount.toLocaleString()})
                 </div>
               </div>
             )}
@@ -5299,7 +5299,7 @@ export default function Home() {
                 <TrendingUp size={16} className="text-accent-gold" />
               </div>
               <div className="text-lg sm:text-xl font-bold text-gray-100">
-                {canViewFinancials ? `${metrics.ingredientCost.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
+                {canViewFinancials ? `${metrics.ingredientCost.toLocaleString()}` : '🔒 Khóa (Cấp 1)'}
               </div>
               <div className="text-[9px] sm:text-[10px] text-gray-400 mt-1">
                 Chi phí nguyên liệu tiêu hao theo định mức
@@ -5313,7 +5313,7 @@ export default function Home() {
                 <Package size={16} className="text-accent-gold" />
               </div>
               <div className="text-lg sm:text-xl font-bold text-gray-100">
-                {canViewFinancials ? `${metrics.inventoryValue.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
+                {canViewFinancials ? `${metrics.inventoryValue.toLocaleString()}` : '🔒 Khóa (Cấp 1)'}
               </div>
               <div className="text-[9px] sm:text-[10px] text-gray-400 mt-1">Tổng giá trị kho nguyên liệu tĩnh tại quầy</div>
             </div>
@@ -5325,7 +5325,7 @@ export default function Home() {
                 <AlertTriangle size={16} className={metrics.varianceCost < 0 ? "text-rose-500 animate-pulse" : "text-accent-gold"} />
               </div>
               <div className={`text-lg sm:text-xl font-bold ${canViewFinancials ? (metrics.varianceCost < 0 ? "text-rose-400" : "text-emerald-400") : "text-gray-400"}`}>
-                {canViewFinancials ? `${metrics.varianceCost > 0 ? "+" : ""}${metrics.varianceCost.toLocaleString()} đ` : '🔒 Khóa (Cấp 1)'}
+                {canViewFinancials ? `${metrics.varianceCost > 0 ? "+" : ""}${metrics.varianceCost.toLocaleString()}` : '🔒 Khóa (Cấp 1)'}
               </div>
               <div className="text-[9px] sm:text-[10px] text-gray-400 mt-1">Tính theo chênh lệch các món đã kiểm kê thực tế</div>
             </div>
@@ -5427,7 +5427,7 @@ export default function Home() {
                               <div className="w-full flex items-end justify-center h-28 relative">
                                 {/* Hover cost value */}
                                 <span className="absolute -top-6 text-[9px] text-accent-gold opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1.5 py-0.5 rounded border border-border-cream whitespace-nowrap z-10 font-mono">
-                                  {Math.round(item.totalCost).toLocaleString()}đ
+                                  {Math.round(item.totalCost).toLocaleString()}
                                 </span>
                                 <div 
                                   style={{ height: `${Math.max(5, barHeight)}%` }}
@@ -5602,9 +5602,9 @@ export default function Home() {
                                 {sale.order_type === 'TAKEAWAY' ? 'MANG VỀ' : 'TẠI CHỖ'}
                               </span>
                             </td>
-                            <td className="px-4 py-3 text-right">{sale.price.toLocaleString()} đ</td>
+                            <td className="px-4 py-3 text-right">{sale.price.toLocaleString()}</td>
                             <td className="px-4 py-3 text-right font-mono font-semibold">{sale.qty}</td>
-                            <td className="px-4 py-3 text-right font-mono text-gray-200">{sale.total_before_discount.toLocaleString()} đ</td>
+                            <td className="px-4 py-3 text-right font-mono text-gray-200">{sale.total_before_discount.toLocaleString()}</td>
                             <td className="px-4 py-3 text-center">
                               {sale.mapping_status === 'NO_STOCK_IMPACT' ? (
                                 <span className="inline-block px-2 py-0.5 text-[9px] bg-gray-500/10 text-gray-400 border border-gray-500/20 rounded uppercase">Bỏ qua kho</span>
@@ -5687,7 +5687,7 @@ export default function Home() {
                                   >
                                     <span className="font-mono text-accent-gold min-w-[4.5rem] shrink-0">{code}</span>
                                     <span className="text-text-light truncate">{(r as any).name}</span>
-                                    <span className="ml-auto text-gray-400 shrink-0">{(r as any).price?.toLocaleString()}đ</span>
+                                    <span className="ml-auto text-gray-400 shrink-0">{(r as any).price?.toLocaleString()}</span>
                                   </div>
                                 ))}
                               </div>
@@ -5711,7 +5711,7 @@ export default function Home() {
                           />
                         </div>
                         <div className="flex flex-col gap-1">
-                          <label className="text-[9px] uppercase text-gray-400">Giá bán (đ)</label>
+                          <label className="text-[9px] uppercase text-gray-400">Giá bán</label>
                           <input 
                             type="number"
                             placeholder="Giá"
@@ -5747,7 +5747,7 @@ export default function Home() {
                               <tr key={idx} className="hover:bg-moss-light/20">
                                 <td className="px-2 py-1.5 font-mono">{line.code}</td>
                                 <td className="px-2 py-1.5 text-center font-mono">{line.qty}</td>
-                                <td className="px-2 py-1.5 text-right font-mono">{line.price.toLocaleString()}đ</td>
+                                <td className="px-2 py-1.5 text-right font-mono">{line.price.toLocaleString()}</td>
                                 <td className="px-2 py-1.5 text-center">
                                   <button
                                     type="button"
@@ -6466,7 +6466,7 @@ export default function Home() {
                       {activeRecipeDetails.price > 0 && (
                         <div className="text-right">
                           <span className="text-[10px] text-gray-400 uppercase tracking-wider block">Giá bán thực đơn lẻ</span>
-                          <span className="text-lg font-bold text-gray-100">{activeRecipeDetails.price.toLocaleString()} đ</span>
+                          <span className="text-lg font-bold text-gray-100">{activeRecipeDetails.price.toLocaleString()}</span>
                         </div>
                       )}
                     </div>
@@ -6497,8 +6497,8 @@ export default function Home() {
                                   <td className="px-4 py-2 text-right">{ing.qty_net.toFixed(3)} {ing.unit}</td>
                                   <td className="px-4 py-2 text-center font-mono">{(ing.yield_pct * 100).toFixed(0)}%</td>
                                   <td className="px-4 py-2 text-right font-mono font-semibold text-gray-200">{ing.qty_eff.toFixed(3)} {ing.unit}</td>
-                                  <td className="px-4 py-2 text-right">{ing.unit_price.toLocaleString()} đ</td>
-                                  <td className="px-4 py-2 text-right font-mono font-semibold text-accent-gold/80">{Math.round(ing.line_cost).toLocaleString()} đ</td>
+                                  <td className="px-4 py-2 text-right">{ing.unit_price.toLocaleString()}</td>
+                                  <td className="px-4 py-2 text-right font-mono font-semibold text-accent-gold/80">{Math.round(ing.line_cost).toLocaleString()}</td>
                                 </tr>
                               );
                             })}
@@ -6510,16 +6510,16 @@ export default function Home() {
                       <div className="mt-4 p-4 bg-moss-light rounded border border-border-moss flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs font-sans">
                         <div className="text-gray-400">
                           <p>• Chi phí nguyên liệu thực tế: <strong className="text-gray-200">
-                            {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0)).toLocaleString()} đ
+                            {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0)).toLocaleString()}
                           </strong></p>
                           <p>• Hao hụt bếp cộng thêm (Wastage buffer 10%): <strong className="text-gray-200">
-                            {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0) * 0.1).toLocaleString()} đ
+                            {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0) * 0.1).toLocaleString()}
                           </strong></p>
                         </div>
                         <div className="text-right border-t md:border-t-0 border-amber-500/15 pt-2 md:pt-0">
                           <span className="text-[10px] text-gray-400 uppercase tracking-wider block">Tổng Giá vốn đĩa (Food Cost)</span>
                           <span className="text-xl font-bold text-accent-gold">
-                            {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0) * 1.1).toLocaleString()} đ
+                            {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0) * 1.1).toLocaleString()}
                           </span>
                         </div>
                       </div>
@@ -6677,7 +6677,7 @@ export default function Home() {
                               <span className="ml-2 bg-[#d4af37]/10 border border-[#d4af37]/30 text-accent-gold px-1.5 py-0.5 rounded text-[9px] font-sans font-semibold">BAR</span>
                             )}
                           </td>
-                          <td className="px-4 py-3 text-right">{ing.price.toLocaleString()} đ</td>
+                          <td className="px-4 py-3 text-right">{ing.price.toLocaleString()}</td>
                           <td className="px-4 py-3 text-right font-mono text-gray-400">{theoretical.toFixed(3)} {ing.unit}</td>
                           <td className="px-4 py-3 text-right font-mono text-gray-400">{theoreticalRaw.toFixed(3)} {ing.unit}</td>
                           <td className="px-4 py-3 text-center flex items-center justify-center gap-2">
@@ -6744,7 +6744,7 @@ export default function Home() {
                                   ? 'text-rose-400 font-bold' 
                                   : 'text-text-light/80'
                           }`}>
-                            {isNaN(actualVal) ? "—" : `${varianceCostRaw > 0 ? "+" : ""}${Math.round(varianceCostRaw).toLocaleString()} đ`}
+                            {isNaN(actualVal) ? "—" : `${varianceCostRaw > 0 ? "+" : ""}${Math.round(varianceCostRaw).toLocaleString()}`}
                           </td>
                         </tr>
                       );
@@ -7389,7 +7389,7 @@ export default function Home() {
                                 <div key={line.ingredientId} className="flex justify-between items-center bg-[#090d16]/70 p-2 rounded border border-border-moss">
                                   <div className="flex flex-col gap-0.5">
                                     <span className="text-xs text-gray-200 font-semibold">{line.name}</span>
-                                    <span className="text-[10px] text-gray-500">Mã PO: {line.qtyOrdered} {line.unit} @ {line.unitPriceFx.toLocaleString()}đ</span>
+                                    <span className="text-[10px] text-gray-500">Mã PO: {line.qtyOrdered} {line.unit} @ {line.unitPriceFx.toLocaleString()}</span>
                                   </div>
                                   <input
                                     type="number"
@@ -7678,7 +7678,7 @@ export default function Home() {
                                   <tr key={idx} className="hover:bg-moss-light/20">
                                     <td className="px-2 py-1.5 font-mono">{ingredients.find(i => i.id === line.ingredientId)?.vi_name || line.ingredientId}</td>
                                     <td className="px-2 py-1.5 text-center font-mono">{line.qty} {line.unit}</td>
-                                    <td className="px-2 py-1.5 text-right font-mono">{line.price.toLocaleString()}đ</td>
+                                    <td className="px-2 py-1.5 text-right font-mono">{line.price.toLocaleString()}</td>
                                     <td className="px-2 py-1.5 text-center">
                                       <button
                                         type="button"
@@ -7782,7 +7782,7 @@ export default function Home() {
                             </div>
                             <div className="text-right">
                               <span className="block text-gray-400 font-mono">{po.items.length} mặt hàng</span>
-                              <span className="text-[10px] text-gray-500 font-mono">Tổng: {po.items.reduce((sum: number, it: any) => sum + (it.qtyOrdered * it.price), 0).toLocaleString()} đ</span>
+                              <span className="text-[10px] text-gray-500 font-mono">Tổng: {po.items.reduce((sum: number, it: any) => sum + (it.qtyOrdered * it.price), 0).toLocaleString()}</span>
                             </div>
                           </div>
                         ))}
@@ -7816,8 +7816,8 @@ export default function Home() {
                                 <span className="text-gray-400 text-[10px]">{grn.supplierName}</span>
                               </div>
                               <div className="text-right">
-                                <span className="block font-semibold text-accent-gold font-mono">{grn.invoiceAmount.toLocaleString()} đ</span>
-                                <span className="text-[9px] text-gray-500 font-mono font-sans">Cước: {grn.freight.toLocaleString()}đ • Thuế: {grn.duty.toLocaleString()}đ</span>
+                                <span className="block font-semibold text-accent-gold font-mono">{grn.invoiceAmount.toLocaleString()}</span>
+                                <span className="text-[9px] text-gray-500 font-mono font-sans">Cước: {grn.freight.toLocaleString()} • Thuế: {grn.duty.toLocaleString()}</span>
                               </div>
                             </div>
 
@@ -7829,8 +7829,8 @@ export default function Home() {
                                   <div key={i} className="flex justify-between text-[11px] py-1 font-sans">
                                     <span className="text-gray-300 font-medium">{line.name || line.ingredientId}</span>
                                     <div className="flex gap-4 font-mono text-gray-400">
-                                      <span>Nhận: {line.qtyReceived} • Giá gốc: {line.unitPriceFx.toLocaleString()}đ</span>
-                                      <span className="text-text-light">Landed Cost: {line.landedUnitCost.toLocaleString()}đ</span>
+                                      <span>Nhận: {line.qtyReceived} • Giá gốc: {line.unitPriceFx.toLocaleString()}</span>
+                                      <span className="text-text-light">Landed Cost: {line.landedUnitCost.toLocaleString()}</span>
                                     </div>
                                   </div>
                                 ))}
@@ -7880,7 +7880,7 @@ export default function Home() {
                                 </div>
                                 <div className="text-right">
                                   <span className="block text-rose-400 font-mono font-bold">-{t.qty.toFixed(2)} {ingDetail?.unit || 'kg'}</span>
-                                  <span className="text-[9px] text-gray-500 font-mono">Trị giá: {Math.round(t.qty * t.unit_price).toLocaleString()}đ</span>
+                                  <span className="text-[9px] text-gray-500 font-mono">Trị giá: {Math.round(t.qty * t.unit_price).toLocaleString()}</span>
                                 </div>
                               </div>
                             );
@@ -7934,7 +7934,7 @@ export default function Home() {
                         <td className="px-4 py-3 font-medium text-gray-100">{item.name}</td>
                         <td className="px-4 py-3 text-center font-mono">{item.lineCount}</td>
                         <td className="px-4 py-3 text-center font-mono font-semibold">{item.totalQty}</td>
-                        <td className="px-4 py-3 text-right font-mono text-gray-200">{(item.totalRevenue).toLocaleString()} đ</td>
+                        <td className="px-4 py-3 text-right font-mono text-gray-200">{(item.totalRevenue).toLocaleString()}</td>
                         <td className="px-4 py-3 text-center flex items-center justify-center gap-2">
                           <button
                             onClick={() => {
@@ -8061,8 +8061,8 @@ export default function Home() {
                             <td className="px-4 py-3 font-medium text-gray-100">{ing.vi_name}</td>
                             <td className="px-4 py-3 text-center text-gray-300 font-medium">{ing.unit || 'kg'}</td>
                             <td className="px-4 py-3 text-right font-mono font-bold text-rose-400">{stock.toFixed(3)}</td>
-                            <td className="px-4 py-3 text-right font-mono text-gray-300">{ing.price.toLocaleString()} đ</td>
-                            <td className="px-4 py-3 text-right font-mono text-rose-300">{valueVal.toLocaleString()} đ</td>
+                            <td className="px-4 py-3 text-right font-mono text-gray-300">{ing.price.toLocaleString()}</td>
+                            <td className="px-4 py-3 text-right font-mono text-rose-300">{valueVal.toLocaleString()}</td>
                             <td className="px-4 py-3 text-center">
                               <button
                                 onClick={() => openQuickAdjust(ing, stock)}
@@ -8179,7 +8179,7 @@ export default function Home() {
                         </select>
                       </td>
                       <td className="px-4 py-3 text-right font-mono font-semibold">{item.qty}</td>
-                      <td className="px-4 py-3 text-right font-mono text-gray-400">{item.price.toLocaleString()} đ</td>
+                      <td className="px-4 py-3 text-right font-mono text-gray-400">{item.price.toLocaleString()}</td>
                     </tr>
                   ))}
                 </tbody>

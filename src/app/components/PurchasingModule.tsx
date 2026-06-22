@@ -865,7 +865,7 @@ export default function PurchasingModule({
             <td style="text-align:center;border:1px solid #ccc;padding:6px 4px;">${uom}</td>
             <td style="text-align:right;border:1px solid #ccc;padding:6px 4px;">${qty.toLocaleString('vi-VN')}</td>
             <td style="text-align:right;border:1px solid #ccc;padding:6px 4px;">${price > 0 ? price.toLocaleString('vi-VN') : '—'}</td>
-            <td style="text-align:right;border:1px solid #ccc;padding:6px 4px;font-weight:600;">${price > 0 ? total.toLocaleString('vi-VN') + ' ₫' : '—'}</td>
+            <td style="text-align:right;border:1px solid #ccc;padding:6px 4px;font-weight:600;">${price > 0 ? total.toLocaleString('vi-VN') : '—'}</td>
             <td style="text-align:right;border:1px solid #ccc;padding:6px 4px;color:#c0392b;">${stock.toFixed(2)}</td>
           </tr>`;
       }).join('');
@@ -932,7 +932,7 @@ export default function PurchasingModule({
               <tr style="background:#f0ece3;">
                 <td colspan="6" style="text-align:right;border:1px solid #ccc;padding:8px;font-weight:700;">TỔNG CỘNG:</td>
                 <td colspan="2" style="text-align:right;border:1px solid #ccc;padding:8px;font-weight:800;color:#7a5c2e;font-size:13px;">
-                  ${grandTotal > 0 ? grandTotal.toLocaleString('vi-VN') + ' ₫' : '(Giá TBD)'}
+                  ${grandTotal > 0 ? grandTotal.toLocaleString('vi-VN') : '(Giá TBD)'}
                 </td>
               </tr>
             </tfoot>
@@ -1382,7 +1382,7 @@ function WorklistTab({
                     </td>
                     {canViewFinancials && (
                       <td className="p-2 text-right text-[#C2A35A]">
-                        {item.estimated_value ? `${Math.round(item.estimated_value).toLocaleString('vi-VN')}đ` : '–'}
+                        {item.estimated_value ? `${Math.round(item.estimated_value).toLocaleString('vi-VN')}` : '–'}
                       </td>
                     )}
                     <td className="p-2 text-center">
@@ -1517,7 +1517,7 @@ function ApproveTab({
                   </div>
                   {canViewFinancials && (
                     <div className="text-[#C2A35A] text-sm font-semibold mt-1">
-                      {po.total_value?.toLocaleString('vi-VN')} đ
+                      {po.total_value?.toLocaleString('vi-VN')}
                     </div>
                   )}
                 </div>
@@ -1690,7 +1690,7 @@ function HistoryTab({
                 <td className="p-2 text-center"><POStatusBadge status={po.status} /></td>
                 {canViewFinancials && (
                   <td className="p-2 text-right text-[#C2A35A]">
-                    {po.total_value?.toLocaleString('vi-VN')}đ
+                    {po.total_value?.toLocaleString('vi-VN')}
                   </td>
                 )}
                 <td className="p-2 text-[#C9A581]">{new Date(po.created_at).toLocaleDateString('vi-VN')}</td>
@@ -2104,7 +2104,7 @@ function CreatePOTab({ suppliers, ingredients, supplierIngredients = [], onCreat
                 <span className="text-gray-400">ĐVT: {selectedIng.unit}</span>
               </div>
               <div className="truncate">Tên: <strong className="text-gray-100">{selectedIng.vi_name}</strong></div>
-              <div>WAC hiện tại: <span className="font-mono text-[#62A57C]">{(selectedIng.wac_price || 0).toLocaleString()}đ</span></div>
+              <div>WAC hiện tại: <span className="font-mono text-[#62A57C]">{(selectedIng.wac_price || 0).toLocaleString()}</span></div>
             </div>
           )}
         </div>
@@ -2130,8 +2130,8 @@ function CreatePOTab({ suppliers, ingredients, supplierIngredients = [], onCreat
                   <td className="p-2 font-mono text-[#C2A35A]">{l.code}</td>
                   <td className="p-2 text-[#FBF8F4]">{l.name}</td>
                   <td className="p-2 text-right text-[#FBF8F4]">{l.suggested_qty} {l.uom}</td>
-                  <td className="p-2 text-right text-[#C2A35A]">{l.unit_price.toLocaleString('vi-VN')}đ</td>
-                  <td className="p-2 text-right text-[#62A57C] font-semibold">{(l.suggested_qty * l.unit_price).toLocaleString('vi-VN')}đ</td>
+                  <td className="p-2 text-right text-[#C2A35A]">{l.unit_price.toLocaleString('vi-VN')}</td>
+                  <td className="p-2 text-right text-[#62A57C] font-semibold">{(l.suggested_qty * l.unit_price).toLocaleString('vi-VN')}</td>
                   <td className="p-2 text-center">
                     <button onClick={() => handleRemoveLine(idx)} className="text-[#D06A5C] hover:text-[#f87171]">Xóa</button>
                   </td>
@@ -2877,9 +2877,8 @@ function EditPOPanel({
                     onChange={(e) => handleUpdateLinePrice(idx, Number(e.target.value))}
                     className="bg-[#03201E] border border-[#C9A581]/30 rounded p-1 text-right text-[#C2A35A] w-24"
                   />
-                  <span className="text-gray-400 text-[10px] ml-1">đ</span>
                 </td>
-                <td className="p-2 text-right text-[#62A57C] font-semibold">{(l.suggested_qty * l.unit_price).toLocaleString('vi-VN')}đ</td>
+                <td className="p-2 text-right text-[#62A57C] font-semibold">{(l.suggested_qty * l.unit_price).toLocaleString('vi-VN')}</td>
                 <td className="p-2 text-center">
                   <button onClick={() => handleRemoveLine(idx)} className="text-[#D06A5C] hover:text-[#f87171]">Xóa</button>
                 </td>
@@ -2892,7 +2891,7 @@ function EditPOPanel({
           <div className="text-right">
             <span className="text-gray-400">TỔNG CỘNG: </span>
             <strong className="text-lg text-[#C2A35A] font-bold">
-              {lines.reduce((sum, l) => sum + (l.suggested_qty * l.unit_price), 0).toLocaleString('vi-VN')} đ
+              {lines.reduce((sum, l) => sum + (l.suggested_qty * l.unit_price), 0).toLocaleString('vi-VN')}
             </strong>
           </div>
           <div className="flex gap-2">
