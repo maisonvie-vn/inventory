@@ -1138,7 +1138,7 @@ export default function ManualForms({
                 </div>
               ) : (
                 <div className="overflow-x-auto border border-[#C9A581]/30 rounded">
-                  <table className="w-full text-xs text-left text-gray-300">
+                  <table className="w-full text-xs text-left text-gray-300 min-w-[600px]">
                     <thead className="bg-[#102B2A] font-mono text-[10px] text-gray-300 uppercase border-b border-[#C9A581]/40">
                       <tr>
                         <th className="px-3 py-2">Mã POS</th>
@@ -1356,7 +1356,7 @@ export default function ManualForms({
                 </div>
               ) : (
                 <div className="overflow-x-auto border border-[#C9A581]/30 rounded">
-                  <table className="w-full text-xs text-left text-gray-300">
+                  <table className="w-full text-xs text-left text-gray-300 min-w-[700px]">
                     <thead className="bg-[#102B2A] font-mono text-[10px] text-gray-300 uppercase border-b border-[#C9A581]/40">
                       <tr>
                         <th className="px-3 py-2">Mã NVL</th>
@@ -1582,7 +1582,7 @@ export default function ManualForms({
                 </div>
               ) : (
                 <div className="overflow-x-auto border border-[#C9A581]/30 rounded">
-                  <table className="w-full text-xs text-left text-gray-300">
+                  <table className="w-full text-xs text-left text-gray-300 min-w-[600px]">
                     <thead className="bg-[#102B2A] font-mono text-[10px] text-gray-300 uppercase border-b border-[#C9A581]/40">
                       <tr>
                         <th className="px-3 py-2">Mã NVL</th>

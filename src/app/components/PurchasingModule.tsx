@@ -1304,7 +1304,7 @@ function WorklistTab({
 
       {worklist.length > 0 && (
         <div className="overflow-x-auto rounded-xl border border-[#C9A581]/20">
-          <table className="w-full text-xs">
+          <table className="w-full text-xs min-w-[850px]">
             <thead>
               <tr className="bg-[#042726] text-[#C9A581] border-b border-[#C9A581]/20">
                 <th className="p-2 text-left">
@@ -1655,7 +1655,7 @@ function HistoryTab({
         )}
       </div>
       <div className="overflow-x-auto rounded-xl border border-[#C9A581]/20">
-        <table className="w-full text-xs">
+        <table className="w-full text-xs min-w-[700px]">
           <thead>
             <tr className="bg-[#042726] text-[#C9A581] border-b border-[#C9A581]/20">
               <th className="p-2 text-left w-8">
@@ -1793,8 +1793,8 @@ function GRNTab({ goodsReceipts, importStatus, fileInputRef, onExportTemplate, o
       </div>
 
       {/* GRN list với 3-way match status */}
-      <div className="rounded-xl border border-[#C9A581]/20 overflow-hidden">
-        <table className="w-full text-xs">
+      <div className="rounded-xl border border-[#C9A581]/20 overflow-x-auto">
+        <table className="w-full text-xs min-w-[650px]">
           <thead>
             <tr className="bg-[#042726] text-[#C9A581] border-b border-[#C9A581]/20">
               <th className="p-2 text-left">Số GRN</th>
@@ -2113,7 +2113,8 @@ function CreatePOTab({ suppliers, ingredients, supplierIngredients = [], onCreat
       {/* Danh sách dòng PO đã thêm */}
       {lines.length > 0 && (
         <div className="border-t border-[#C9A581]/20 pt-3">
-          <table className="w-full text-xs">
+          <div className="overflow-x-auto rounded-xl border border-[#C9A581]/20">
+            <table className="w-full text-xs min-w-[600px]">
             <thead>
               <tr className="bg-[#03201E] text-[#C9A581] border-b border-[#C9A581]/20">
                 <th className="p-2 text-left">Mã</th>
@@ -2139,6 +2140,7 @@ function CreatePOTab({ suppliers, ingredients, supplierIngredients = [], onCreat
               ))}
             </tbody>
           </table>
+          </div>
 
           <div className="flex justify-end gap-2 mt-4">
             <button
@@ -2520,7 +2522,7 @@ function SuppliersMgmtTab({ suppliers, allIngredients, supplierIngredients, onAd
             <p className="text-[#C9A581] text-center py-8">Không tìm thấy nhà cung cấp nào</p>
           ) : (
             <div className="overflow-x-auto border border-[#C9A581]/10 rounded-lg">
-              <table className="w-full text-xs">
+              <table className="w-full text-xs min-w-[750px]">
                 <thead>
                   <tr className="bg-[#03201E] text-[#C9A581] border-b border-[#C9A581]/20">
                     <th className="p-2 text-left">Tên nhà cung cấp</th>
@@ -2840,7 +2842,8 @@ function EditPOPanel({
 
       {/* Danh sách dòng hàng */}
       <div className="border-t border-[#C9A581]/20 pt-3">
-        <table className="w-full text-xs">
+        <div className="overflow-x-auto rounded-xl border border-[#C9A581]/20">
+          <table className="w-full text-xs min-w-[650px]">
           <thead>
             <tr className="bg-[#03201E] text-[#C9A581] border-b border-[#C9A581]/20">
               <th className="p-2 text-left">Mã</th>
@@ -2886,6 +2889,7 @@ function EditPOPanel({
             ))}
           </tbody>
         </table>
+        </div>
 
         <div className="flex justify-end items-center gap-4 mt-4 pt-3 border-t border-[#C9A581]/20">
           <div className="text-right">

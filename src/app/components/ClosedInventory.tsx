@@ -707,7 +707,7 @@ export default function ClosedInventory({
 
       {/* Closed Period Data Grid Table */}
       <div className="overflow-x-auto bg-[#042726] rounded border border-[#C9A581]/40">
-        <table className="w-full text-left text-xs border-collapse">
+        <table className="w-full text-left text-xs border-collapse min-w-[800px]">
           <thead>
             <tr className="bg-[#102B2A] border-b border-[#C9A581]/60 text-gray-300 font-mono font-medium">
               <th className="p-3.5">Mã NVL</th>

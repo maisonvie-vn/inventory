@@ -5574,7 +5574,7 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 overflow-x-auto flex flex-col gap-3">
                   <h4 className="text-xs font-bold uppercase text-accent-gold border-b border-border-moss pb-2">Danh sách giao dịch POS ghi nhận</h4>
-                  <table className="w-full text-xs text-left text-gray-300 bg-moss-dark/20">
+                  <table className="w-full text-xs text-left text-gray-300 bg-moss-dark/20 min-w-[750px]">
                     <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                       <tr>
                         <th className="px-4 py-3">Mã POS</th>
@@ -5732,8 +5732,8 @@ export default function Home() {
                     </div>
 
                     {manualSaleLines.length > 0 && (
-                      <div className="border border-border-moss rounded overflow-hidden">
-                        <table className="w-full text-[10px] text-left text-gray-300 bg-moss-dark/30">
+                      <div className="border border-border-moss rounded overflow-x-auto">
+                        <table className="w-full text-[10px] text-left text-gray-300 bg-moss-dark/30 min-w-[400px]">
                           <thead className="bg-moss-light uppercase text-text-muted-light">
                             <tr>
                               <th className="px-2 py-1">Món</th>
@@ -5922,7 +5922,7 @@ export default function Home() {
                       )}
                     </div>
 
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       <div className="flex flex-col gap-1.5">
                         <label className="text-[10px] uppercase text-gray-400 font-semibold">Từ kho</label>
                         <select
@@ -6066,74 +6066,76 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 overflow-x-auto flex flex-col gap-3">
+                <div className="lg:col-span-2 flex flex-col gap-3">
                   <h4 className="text-xs font-bold uppercase text-accent-gold border-b border-border-moss pb-2">Danh mục nguyên vật liệu</h4>
-                  <table className="w-full text-xs text-left text-gray-300 bg-moss-dark/20 table-fixed">
-                    <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss text-[10px] sm:text-xs">
-                      <tr>
-                        <th className="px-2 py-2 w-16">Mã NVL</th>
-                        <th className="px-2 py-2">Tên tiếng Việt</th>
-                        <th className="px-2 py-2 w-20 sm:w-24">Danh mục</th>
-                        <th className="px-2 py-2 text-center w-10 sm:w-12">ĐVT</th>
-                        <th className="px-2 py-2 text-right w-20 sm:w-24">Giá vốn</th>
-                        <th className="px-2 py-2 text-center w-14">Yield</th>
-                        <th className="px-2 py-2 text-center w-20">Tồn tối thiểu</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-amber-500/5 text-[11px] sm:text-xs">
-                      {filteredIngredients.map((ing) => (
-                        <tr key={ing.id} className="hover:bg-moss-light/30">
-                          <td className="px-2 py-2 font-mono text-accent-gold/70 font-semibold truncate" title={ing.code || ing.id}>{ing.code && ing.code.length < 20 ? ing.code : '—'}</td>
-                          <td className="px-2 py-2 font-medium text-gray-100 whitespace-normal break-words">{ing.vi_name}</td>
-                          <td className="px-2 py-2 text-gray-400 truncate" title={ing.category}>{ing.category}</td>
-                          <td className="px-2 py-2 text-center text-gray-300 font-medium truncate">{ing.unit}</td>
-                          <td className="px-2 py-2 text-right font-mono font-semibold text-accent-gold/80 truncate">{ing.price.toLocaleString()}</td>
-                          <td className="px-2 py-2 text-center font-mono text-gray-300 truncate">
-                            {(() => {
-                              const displayYield = ing.yield_rate > 2 ? Math.round(ing.yield_rate) : Math.round(ing.yield_rate * 100);
-                              return `${displayYield}%`;
-                            })()}
-                          </td>
-                          <td className="px-2 py-2 text-center">
-                            {(userRole === 'admin' || userRole === 'senior_accountant' || userRole === 'restaurant_manager') ? (
-                              <input
-                                type="number"
-                                min="0"
-                                step="any"
-                                className="w-14 bg-[#042726] border border-border-cream/50 rounded px-1 py-0.5 text-center text-text-light font-mono text-xs focus:outline-none focus:border-accent-gold"
-                                value={ing.min_stock !== undefined ? ing.min_stock : 15}
-                                onChange={async (e) => {
-                                  const valStr = e.target.value;
-                                  const valNum = valStr === '' ? 0 : parseFloat(valStr);
-                                  if (isNaN(valNum)) return;
-                                  
-                                  // Cập nhật local state
-                                  setIngredients(prev => prev.map(item => item.id === ing.id ? { ...item, min_stock: valNum } : item));
-                                  
-                                  // Cập nhật DB Supabase nếu được cấu hình
-                                  if (isSupabaseConfigured()) {
-                                    try {
-                                      const { error } = await supabase
-                                        .from('ingredients')
-                                        .update({ min_stock: valNum })
-                                        .eq('id', ing.id);
-                                      if (error) {
-                                        console.error("Lỗi cập nhật min_stock:", error);
-                                      }
-                                    } catch (err) {
-                                      console.error("Lỗi kết nối Supabase:", err);
-                                    }
-                                  }
-                                }}
-                              />
-                            ) : (
-                              <span className="font-mono text-gray-400">{ing.min_stock !== undefined ? ing.min_stock : 15}</span>
-                            )}
-                          </td>
+                  <div className="overflow-x-auto rounded border border-border-moss bg-moss-dark/20">
+                    <table className="w-full text-xs text-left text-gray-300 min-w-[750px]">
+                      <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss text-[10px] sm:text-xs">
+                        <tr>
+                          <th className="px-2 py-2 w-16">Mã NVL</th>
+                          <th className="px-2 py-2">Tên tiếng Việt</th>
+                          <th className="px-2 py-2 w-20 sm:w-24">Danh mục</th>
+                          <th className="px-2 py-2 text-center w-10 sm:w-12">ĐVT</th>
+                          <th className="px-2 py-2 text-right w-20 sm:w-24">Giá vốn</th>
+                          <th className="px-2 py-2 text-center w-14">Yield</th>
+                          <th className="px-2 py-2 text-center w-20">Tồn tối thiểu</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-amber-500/5 text-[11px] sm:text-xs">
+                        {filteredIngredients.map((ing) => (
+                          <tr key={ing.id} className="hover:bg-moss-light/30">
+                            <td className="px-2 py-2 font-mono text-accent-gold/70 font-semibold truncate" title={ing.code || ing.id}>{ing.code && ing.code.length < 20 ? ing.code : '—'}</td>
+                            <td className="px-2 py-2 font-medium text-gray-100 whitespace-normal break-words">{ing.vi_name}</td>
+                            <td className="px-2 py-2 text-gray-400 truncate" title={ing.category}>{ing.category}</td>
+                            <td className="px-2 py-2 text-center text-gray-300 font-medium truncate">{ing.unit}</td>
+                            <td className="px-2 py-2 text-right font-mono font-semibold text-accent-gold/80 truncate">{ing.price.toLocaleString()}</td>
+                            <td className="px-2 py-2 text-center font-mono text-gray-300 truncate">
+                              {(() => {
+                                const displayYield = ing.yield_rate > 2 ? Math.round(ing.yield_rate) : Math.round(ing.yield_rate * 100);
+                                return `${displayYield}%`;
+                              })()}
+                            </td>
+                            <td className="px-2 py-2 text-center">
+                              {(userRole === 'admin' || userRole === 'senior_accountant' || userRole === 'restaurant_manager') ? (
+                                <input
+                                  type="number"
+                                  min="0"
+                                  step="any"
+                                  className="w-14 bg-[#042726] border border-border-cream/50 rounded px-1 py-0.5 text-center text-text-light font-mono text-xs focus:outline-none focus:border-accent-gold"
+                                  value={ing.min_stock !== undefined ? ing.min_stock : 15}
+                                  onChange={async (e) => {
+                                    const valStr = e.target.value;
+                                    const valNum = valStr === '' ? 0 : parseFloat(valStr);
+                                    if (isNaN(valNum)) return;
+                                    
+                                    // Cập nhật local state
+                                    setIngredients(prev => prev.map(item => item.id === ing.id ? { ...item, min_stock: valNum } : item));
+                                    
+                                    // Cập nhật DB Supabase nếu được cấu hình
+                                    if (isSupabaseConfigured()) {
+                                      try {
+                                        const { error } = await supabase
+                                          .from('ingredients')
+                                          .update({ min_stock: valNum })
+                                          .eq('id', ing.id);
+                                        if (error) {
+                                          console.error("Lỗi cập nhật min_stock:", error);
+                                        }
+                                      } catch (err) {
+                                        console.error("Lỗi kết nối Supabase:", err);
+                                      }
+                                    }
+                                  }}
+                                />
+                              ) : (
+                                <span className="font-mono text-gray-400">{ing.min_stock !== undefined ? ing.min_stock : 15}</span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
 
                 <div className="bg-moss-light border border-border-moss rounded-md p-5 flex flex-col gap-4 h-fit text-text-light font-sans">
@@ -6281,8 +6283,8 @@ export default function Home() {
                     </div>
 
                     {manualIssueLines.length > 0 && (
-                      <div className="border border-border-moss rounded overflow-hidden">
-                        <table className="w-full text-[10px] text-left text-gray-300 bg-moss-dark/30">
+                      <div className="border border-border-moss rounded overflow-x-auto">
+                        <table className="w-full text-[10px] text-left text-gray-300 bg-moss-dark/30 min-w-[450px]">
                           <thead className="bg-moss-light uppercase text-text-muted-light">
                             <tr>
                               <th className="px-2 py-1">NVL</th>
@@ -6475,7 +6477,7 @@ export default function Home() {
                     <div>
                       <h3 className="text-lg font-serif font-semibold text-accent-gold mb-3">Định lượng & Giá vốn thành phần (Yield & Loss applied)</h3>
                       <div className="overflow-x-auto">
-                        <table className="w-full text-xs text-left text-gray-300">
+                        <table className="w-full text-xs text-left text-gray-300 min-w-[700px]">
                           <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                             <tr>
                               <th className="px-4 py-2">Mã NVL</th>
@@ -6643,7 +6645,7 @@ export default function Home() {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left text-gray-300">
+                <table className="w-full text-xs text-left text-gray-300 min-w-[800px]">
                   <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                     <tr>
                       <th className="px-4 py-3">Mã</th>
@@ -6944,7 +6946,7 @@ export default function Home() {
                     </h4>
                     
                     <div className="overflow-x-auto">
-                      <table className="w-full text-xs text-left text-gray-300 font-sans">
+                      <table className="w-full text-xs text-left text-gray-300 font-sans min-w-[650px]">
                         <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss font-sans">
                           <tr>
                             <th className="px-4 py-2">Mã nguyên liệu thô</th>
@@ -6981,7 +6983,7 @@ export default function Home() {
                     <h4 className="text-sm font-semibold text-accent-gold font-serif mb-3 font-sans">Nhật ký sản xuất gần đây</h4>
                     
                     <div className="overflow-x-auto max-h-56 font-sans">
-                      <table className="w-full text-xs text-left text-gray-300 font-sans">
+                      <table className="w-full text-xs text-left text-gray-300 font-sans min-w-[650px]">
                         <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss font-sans">
                           <tr>
                             <th className="px-4 py-2 font-sans">Thời gian</th>
@@ -7087,7 +7089,7 @@ export default function Home() {
                   </div>
 
                   <div className="overflow-x-auto mt-2">
-                    <table className="w-full text-[11px] text-left text-gray-300">
+                    <table className="w-full text-[11px] text-left text-gray-300 min-w-[650px]">
                       <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                         <tr>
                           <th className="px-3 py-2">Mã NVL</th>
@@ -7131,7 +7133,7 @@ export default function Home() {
                   </p>
 
                   <div className="overflow-x-auto mt-2">
-                    <table className="w-full text-xs text-left text-gray-300">
+                    <table className="w-full text-xs text-left text-gray-300 min-w-[650px]">
                       <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                         <tr>
                           <th className="px-3 py-2">Tên Nguyên Liệu</th>
@@ -7663,8 +7665,8 @@ export default function Home() {
                         </div>
 
                         {manualGrnLines.length > 0 && (
-                          <div className="border border-border-moss rounded overflow-hidden">
-                            <table className="w-full text-[10px] text-left text-gray-300 bg-moss-dark/30">
+                          <div className="border border-border-moss rounded overflow-x-auto">
+                            <table className="w-full text-[10px] text-left text-gray-300 bg-moss-dark/30 min-w-[400px]">
                               <thead className="bg-moss-light uppercase text-text-muted-light">
                                 <tr>
                                   <th className="px-2 py-1">NVL</th>
@@ -7916,7 +7918,7 @@ export default function Home() {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left text-gray-300 bg-moss-dark/20">
+                <table className="w-full text-xs text-left text-gray-300 bg-moss-dark/20 min-w-[700px]">
                   <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                     <tr>
                       <th className="px-4 py-3">Mã POS</th>
@@ -8028,7 +8030,7 @@ export default function Home() {
               </div>
 
               <div className="overflow-x-auto rounded border border-border-moss bg-moss-dark/20">
-                <table className="w-full text-xs text-left text-gray-300">
+                <table className="w-full text-xs text-left text-gray-300 min-w-[700px]">
                   <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                     <tr>
                       <th className="px-4 py-3">Mã NVL</th>
@@ -8123,7 +8125,7 @@ export default function Home() {
             </div>
 
             <div className="overflow-auto max-h-[400px] border border-border-cream rounded">
-              <table className="w-full text-xs text-left text-gray-300">
+              <table className="w-full text-xs text-left text-gray-300 min-w-[700px]">
                 <thead className="bg-moss-dark sticky top-0 uppercase text-gray-400 border-b border-border-cream">
                   <tr>
                     <th className="px-4 py-3">Mã POS</th>
