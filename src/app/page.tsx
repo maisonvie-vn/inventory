@@ -4680,10 +4680,8 @@ export default function Home() {
 
         <div className="w-full max-w-md bg-moss-dark border border-border-moss rounded-md p-8 flex flex-col gap-6 shadow-2xl relative z-10 text-text-light">
           <div className="flex flex-col items-center gap-3 text-center">
-            <div className="relative w-12 h-12 border border-amber-500/60 flex items-center justify-center rounded-sm rotate-45 bg-[#090d16] mb-2">
-              <span className="text-accent-gold font-serif font-semibold text-2xl rotate-[-45deg] scale-90">MV</span>
-            </div>
-            <h2 className="text-2xl font-semibold tracking-widest text-accent-gold font-serif">MAISON VIE</h2>
+            <img src="/logo-white.png" alt="Maison Vie Logo" className="h-16 w-auto object-contain mb-1 filter drop-shadow-[0_2px_8px_rgba(212,175,55,0.2)]" />
+            <h2 className="text-xl font-medium tracking-[0.25em] text-accent-gold font-serif mt-1">MAISON VIE</h2>
             <p className="text-[10px] tracking-[0.2em] text-gray-400 font-sans uppercase">Hệ thống CRM/ERP Inventory & Finance</p>
           </div>
 
@@ -4772,13 +4770,11 @@ export default function Home() {
       <header className="border-b border-border-moss bg-moss-dark sticky top-0 z-50 text-text-light">
         {/* Desktop Header */}
         <div className="hidden lg:flex max-w-7xl mx-auto px-6 py-4 items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 border border-border-moss flex items-center justify-center rounded-sm rotate-45 bg-moss-light">
-              <span className="text-accent-gold font-serif font-semibold text-lg rotate-[-45deg] scale-90">MV</span>
-            </div>
-            <div>
-              <h1 className="text-2xl font-semibold tracking-widest text-accent-gold">MAISON VIE</h1>
-              <p className="text-[10px] tracking-[0.2em] text-text-light/60 font-sans uppercase">Inventory CRM & Finance Controller</p>
+          <div className="flex items-center gap-4">
+            <img src="/logo-white.png" alt="Maison Vie Logo" className="h-12 w-auto object-contain filter drop-shadow-[0_2px_6px_rgba(212,175,55,0.15)]" />
+            <div className="border-l border-border-moss/60 pl-4">
+              <h1 className="text-xl font-semibold tracking-widest text-accent-gold">MAISON VIE</h1>
+              <p className="text-[9px] tracking-[0.2em] text-text-light/60 font-sans uppercase">Inventory CRM & Finance Controller</p>
             </div>
           </div>
 
@@ -4892,11 +4888,9 @@ export default function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <div className="relative w-8 h-8 border border-border-moss flex items-center justify-center rounded-sm rotate-45 bg-moss-light">
-              <span className="text-accent-gold font-serif font-semibold text-sm rotate-[-45deg] scale-90">MV</span>
-            </div>
-            <div>
-              <h1 className="text-base font-semibold tracking-wider text-accent-gold">MAISON VIE</h1>
+            <img src="/logo-white.png" alt="Maison Vie Logo" className="h-8 w-auto object-contain" />
+            <div className="border-l border-border-moss/40 pl-2">
+              <h1 className="text-sm font-semibold tracking-wider text-accent-gold">MAISON VIE</h1>
             </div>
           </div>
 
@@ -8090,12 +8084,15 @@ export default function Home() {
       <footer className="border-t border-border-cream bg-moss-dark py-6 text-center text-xs text-gray-400 font-sans mt-auto">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© 2026 Maison Vie. Hệ thống CRM/ERP Inventory đã chuẩn hóa cấu trúc dữ liệu phẳng.</p>
-          <div className="flex gap-4">
-            <span className="text-[10px] text-accent-gold font-semibold">SUPABASE</span>
+          <div className="flex items-center gap-4">
+            <span className="text-[10px] text-accent-gold font-semibold tracking-wider">SUPABASE</span>
             <span className="text-[10px] text-gray-500">|</span>
-            <span className="text-[10px] text-gray-400">VERCEL</span>
+            <span className="flex items-center gap-1 text-[10px] text-gray-400 font-semibold tracking-wider">
+              <img src="/vercel.svg" alt="Vercel Logo" className="w-2.5 h-2.5 inline-block filter invert opacity-80" />
+              VERCEL
+            </span>
             <span className="text-[10px] text-gray-500">|</span>
-            <span className="text-[10px] text-gray-400">GITHUB</span>
+            <span className="text-[10px] text-gray-400 tracking-wider">GITHUB</span>
           </div>
         </div>
       </footer>

@@ -497,9 +497,12 @@ export default function BarPortal() {
     return (
       <div className="min-h-screen bg-bg-main flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-md bg-[#2E3A2C] rounded-2xl border border-[#46553B] shadow-2xl overflow-hidden p-6 text-[#F1EAD9]">
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-center gold-text-gradient mb-1">MAISON VIE</h1>
-            <p className="text-xs text-[#C2C9B4] tracking-widest font-semibold uppercase">Cổng Vận Hành Quầy Bar (Tablet Portal)</p>
+          <div className="text-center mb-6 flex flex-col items-center gap-3">
+            <img src="/logo-white.png" alt="Maison Vie Logo" className="h-16 w-auto object-contain filter drop-shadow-[0_2px_8px_rgba(176,141,79,0.2)]" />
+            <div>
+              <h1 className="text-2xl font-bold text-center gold-text-gradient mb-1">MAISON VIE</h1>
+              <p className="text-[10px] text-[#C2C9B4] tracking-widest font-semibold uppercase">Cổng Vận Hành Quầy Bar (Tablet Portal)</p>
+            </div>
           </div>
 
           <div className="mb-4">
@@ -591,10 +594,13 @@ export default function BarPortal() {
       <header className="bg-[#2E3A2C] border-b border-[#46553B] p-4 text-[#F1EAD9] sticky top-0 z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Wine className="w-8 h-8 text-[#B08D4F]" />
-            <div>
-              <h1 className="text-2xl font-bold leading-tight gold-text-gradient">MAISON VIE — QUẦY BAR</h1>
-              <p className="text-[10px] text-[#C2C9B4] font-semibold uppercase tracking-wider">Cổng thiết bị kiểm soát chai dở & hao hụt rót</p>
+            <img src="/logo-white.png" alt="Maison Vie Logo" className="h-10 w-auto object-contain" />
+            <div className="border-l border-[#46553B] pl-3 flex items-center gap-2">
+              <Wine className="w-5 h-5 text-[#B08D4F]" />
+              <div>
+                <h1 className="text-xl font-bold leading-tight gold-text-gradient">MAISON VIE — QUẦY BAR</h1>
+                <p className="text-[9px] text-[#C2C9B4] font-semibold uppercase tracking-wider">Cổng thiết bị kiểm soát chai dở & hao hụt rót</p>
+              </div>
             </div>
           </div>
           
