@@ -598,7 +598,7 @@ export default function BarPortal() {
             <div className="border-l border-[#46553B] pl-3 flex items-center gap-2">
               <Wine className="w-5 h-5 text-[#B08D4F]" />
               <div>
-                <h1 className="text-xl font-bold leading-tight gold-text-gradient">MAISON VIE — QUẦY BAR</h1>
+                <h1 className="text-base font-bold leading-tight gold-text-gradient uppercase tracking-wider">QUẦY BAR PORTAL</h1>
                 <p className="text-[9px] text-[#C2C9B4] font-semibold uppercase tracking-wider">Cổng thiết bị kiểm soát chai dở & hao hụt rót</p>
               </div>
             </div>

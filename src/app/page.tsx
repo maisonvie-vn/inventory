@@ -4772,9 +4772,9 @@ export default function Home() {
         <div className="hidden lg:flex max-w-7xl mx-auto px-6 py-4 items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <img src="/logo-white.png" alt="Maison Vie Logo" className="h-12 w-auto object-contain filter drop-shadow-[0_2px_6px_rgba(212,175,55,0.15)]" />
-            <div className="border-l border-border-moss/60 pl-4">
-              <h1 className="text-xl font-semibold tracking-widest text-accent-gold">MAISON VIE</h1>
-              <p className="text-[9px] tracking-[0.2em] text-text-light/60 font-sans uppercase">Inventory CRM & Finance Controller</p>
+            <div className="border-l border-border-moss/60 pl-4 flex flex-col justify-center">
+              <span className="text-[10px] tracking-[0.25em] text-accent-gold font-sans uppercase font-bold">INVENTORY CRM</span>
+              <span className="text-[9px] tracking-[0.2em] text-text-light/60 font-sans uppercase font-medium">FINANCE CONTROLLER</span>
             </div>
           </div>
 
@@ -4889,8 +4889,8 @@ export default function Home() {
               </svg>
             </button>
             <img src="/logo-white.png" alt="Maison Vie Logo" className="h-8 w-auto object-contain" />
-            <div className="border-l border-border-moss/40 pl-2">
-              <h1 className="text-sm font-semibold tracking-wider text-accent-gold">MAISON VIE</h1>
+            <div className="border-l border-border-moss/40 pl-2 flex flex-col justify-center">
+              <span className="text-[9px] tracking-widest text-accent-gold font-sans uppercase font-bold leading-tight">INVENTORY CRM</span>
             </div>
           </div>
 
