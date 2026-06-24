@@ -1239,6 +1239,7 @@ export default function Home() {
       }
       
       let ingData: any[] = [];
+      let activeIngs: any[] = getIngredients();
       let from = 0;
       let to = 999;
       let hasMore = true;
@@ -1291,6 +1292,7 @@ export default function Home() {
           max_stock: item.max_stock !== undefined ? parseFloat(item.max_stock) : 50,
           safety_stock: item.safety_stock !== undefined ? parseFloat(item.safety_stock) : 10
         }));
+        activeIngs = mappedIngs;
         setIngredients(mappedIngs as any[]);
 
         // ✅ v3.0.1: Đọc qty_on_hand thực tế từ view vào actualStocks
@@ -1419,6 +1421,58 @@ export default function Home() {
           dbMappings[row.pos_code] = { recipe: row.menu_item_id, type: 'alc' };
         });
         setPosMappings(prev => ({ ...prev, ...dbMappings }));
+      }
+
+      // 5.7. Fetch recipes from Supabase (v9.6 Fix foodcost lookup mismatches)
+      const { data: dbRecipes, error: recipesError } = await supabase
+        .from('recipes')
+        .select(`
+          id,
+          menu_item_id,
+          ingredient_id,
+          qty_net,
+          yield_pct,
+          qty_eff,
+          recipe_uom,
+          menu_items(name, sale_price)
+        `);
+
+      if (recipesError) {
+        console.error("Error fetching recipes:", recipesError);
+      } else if (dbRecipes && dbRecipes.length > 0) {
+        const parsed: Record<string, Recipe> = {};
+        dbRecipes.forEach(row => {
+          const menuId = row.menu_item_id;
+          const menuItem = row.menu_items as any;
+          if (!parsed[menuId]) {
+            parsed[menuId] = {
+              code: menuId,
+              name: menuItem?.name || `Món ${menuId}`,
+              course: 'Bếp',
+              category: 'Món chính',
+              menu_role: 'À la carte',
+              price: parseFloat(menuItem?.sale_price) || 0,
+              ingredients: [],
+              method: [],
+              notes: ''
+            };
+          }
+          
+          const ingObj = activeIngs.find(ing => ing.id === row.ingredient_id);
+          const unitPrice = ingObj ? ingObj.price : 0;
+          const qtyEff = parseFloat(row.qty_eff) || 0;
+          
+          parsed[menuId].ingredients.push({
+            ing_id: row.ingredient_id,
+            qty_net: parseFloat(row.qty_net) || 0,
+            unit: row.recipe_uom || 'kg',
+            yield_pct: (parseFloat(row.yield_pct) || 100) / 100,
+            qty_eff: qtyEff,
+            unit_price: unitPrice,
+            line_cost: qtyEff * unitPrice
+          });
+        });
+        setRecipes(parsed);
       }
 
       // 6. Fetch sales imports
