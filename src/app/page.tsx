@@ -4681,7 +4681,6 @@ export default function Home() {
         <div className="w-full max-w-md bg-moss-dark border border-border-moss rounded-md p-8 flex flex-col gap-6 shadow-2xl relative z-10 text-text-light">
           <div className="flex flex-col items-center gap-3 text-center">
             <img src="/logo-white.png" alt="Maison Vie Logo" className="h-16 w-auto object-contain mb-1 filter drop-shadow-[0_2px_8px_rgba(212,175,55,0.2)]" />
-            <h2 className="text-xl font-medium tracking-[0.25em] text-accent-gold font-serif mt-1">MAISON VIE</h2>
             <p className="text-[10px] tracking-[0.2em] text-gray-400 font-sans uppercase">Hệ thống CRM/ERP Inventory & Finance</p>
           </div>
 
