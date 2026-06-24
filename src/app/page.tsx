@@ -5377,13 +5377,13 @@ export default function Home() {
               <div className="text-[9px] sm:text-[10px] text-gray-400 mt-1">Tính theo chênh lệch các món đã kiểm kê thực tế</div>
             </div>
 
-            <div className="glass-panel rounded-md p-4 relative overflow-hidden border border-accent-gold/30 bg-accent-gold/5 shadow-[0_0_15px_rgba(216,170,87,0.1)] col-span-2 md:col-span-1">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-accent-gold/10 rounded-full blur-2xl"></div>
-              <div className="flex items-center justify-between text-accent-gold mb-1.5 font-semibold">
+            <div className="glass-panel rounded-md p-4 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-accent-gold/5 rounded-full blur-2xl"></div>
+              <div className="flex items-center justify-between text-gray-400 mb-1.5">
                 <span className="text-[10px] sm:text-xs uppercase tracking-wider font-sans">Food Cost Lý Thuyết</span>
-                <TrendingUp size={16} className="text-accent-gold animate-pulse" />
+                <TrendingUp size={16} className="text-accent-gold" />
               </div>
-              <div className="text-2xl sm:text-3xl font-serif font-extrabold text-accent-gold tracking-tight py-0.5">
+              <div className="text-lg sm:text-xl font-bold text-gray-100">
                 {canViewFinancials ? `${metrics.foodCostPct.toFixed(1)}%` : '🔒 Khóa (Cấp 1)'}
               </div>
               <div className="text-[9px] sm:text-[10px] text-gray-400 mt-1">
