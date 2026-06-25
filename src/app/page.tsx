@@ -2524,13 +2524,17 @@ export default function Home() {
 
   // v9.4 Filtered consumption data based on roleFilteredIngredients for the Dashboard
   const roleFilteredConsumptionData = useMemo(() => {
-    return consumptionData.filter(c => {
+    const filtered = consumptionData.filter(c => {
       const ingDepts = ingredientDepartments[c.id] || ['KITCHEN'];
       const matchesDept = dashboardDeptFilter === 'ALL' || ingDepts.includes(dashboardDeptFilter);
       const matchesRole = roleFilteredIngredients.some(ing => ing.id === c.id);
       return matchesDept && matchesRole;
     });
-  }, [consumptionData, roleFilteredIngredients, dashboardDeptFilter, ingredientDepartments]);
+    if (!canViewFinancials) {
+      return [...filtered].sort((a, b) => b.qty - a.qty);
+    }
+    return filtered;
+  }, [consumptionData, roleFilteredIngredients, dashboardDeptFilter, ingredientDepartments, canViewFinancials]);
 
   // v9.4 Low stock warnings filtered by department
   const lowStockIngredients = useMemo(() => {
@@ -5455,72 +5459,75 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Simulated Consumption list */}
-                {canViewFinancials ? (
-                  <div className="glass-panel rounded-md p-4 sm:p-6 lg:col-span-2 min-w-0 w-full overflow-hidden flex flex-col gap-4">
-                    <div>
-                      <h3 className="text-xl font-semibold text-accent-gold font-serif">Nguyên liệu tiêu hao nhiều nhất (01/06 - 13/06)</h3>
-                      <p className="text-[11px] text-gray-400">Đã bao gồm tỷ lệ hao hụt Yield % và 10% bù bếp</p>
-                    </div>
-                    
-                    {/* Custom SVG Bar Chart (Scrollable inside the gold border box on mobile to prevent overflow) */}
-                    <div className="w-full min-w-0 max-w-full pb-2">
-                      <div className="h-44 w-full bg-moss-dark/50 rounded border border-border-moss p-4 overflow-x-auto flex items-end">
-                        <div className="flex items-end justify-between min-w-[500px] md:min-w-0 w-full h-full gap-2 pb-1">
-                          {roleFilteredConsumptionData.slice(0, 10).map((item, idx) => {
-                            const maxVal = Math.max(...roleFilteredConsumptionData.slice(0, 10).map(c => c.totalCost));
-                            const barHeight = maxVal > 0 ? (item.totalCost / maxVal) * 100 : 0;
-                            return (
-                              <div key={item.id} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer min-w-[44px]">
-                                <div className="w-full flex items-end justify-center h-28 relative">
-                                  {/* Hover cost value */}
-                                  <span className="absolute -top-6 text-[9px] text-accent-gold opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1.5 py-0.5 rounded border border-border-cream whitespace-nowrap z-10 font-mono">
-                                    {Math.round(item.totalCost).toLocaleString()}
-                                  </span>
-                                  <div 
-                                    style={{ height: `${Math.max(5, barHeight)}%` }}
-                                    className="w-4 sm:w-6 bg-gradient-to-t from-amber-600 via-amber-400 to-[#f3e5ab] rounded-t-sm transition-all duration-500 hover:shadow-lg hover:shadow-amber-500/20 group-hover:scale-x-110"
-                                  ></div>
-                                </div>
-                                <span className="text-[9px] text-gray-400 group-hover:text-text-light w-12 text-center truncate">{item.name}</span>
+                <div className="glass-panel rounded-md p-4 sm:p-6 lg:col-span-2 min-w-0 w-full overflow-hidden flex flex-col gap-4">
+                  <div>
+                    <h3 className="text-xl font-semibold text-accent-gold font-serif">
+                      {canViewFinancials ? 'Nguyên liệu tiêu hao nhiều nhất (01/06 - 13/06)' : 'Lượng nguyên liệu tiêu hao nhiều nhất (01/06 - 13/06)'}
+                    </h3>
+                    <p className="text-[11px] text-gray-400">Đã bao gồm tỷ lệ hao hụt Yield % và 10% bù bếp</p>
+                  </div>
+                  
+                  {/* Custom SVG Bar Chart (Scrollable inside the gold border box on mobile to prevent overflow) */}
+                  <div className="w-full min-w-0 max-w-full pb-2">
+                    <div className="h-44 w-full bg-moss-dark/50 rounded border border-border-moss p-4 overflow-x-auto flex items-end">
+                      <div className="flex items-end justify-between min-w-[500px] md:min-w-0 w-full h-full gap-2 pb-1">
+                        {roleFilteredConsumptionData.slice(0, 10).map((item, idx) => {
+                          const maxVal = Math.max(...roleFilteredConsumptionData.slice(0, 10).map(c => canViewFinancials ? c.totalCost : c.qty));
+                          const currentVal = canViewFinancials ? item.totalCost : item.qty;
+                          const barHeight = maxVal > 0 ? (currentVal / maxVal) * 100 : 0;
+                          return (
+                            <div key={item.id} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer min-w-[44px]">
+                              <div className="w-full flex items-end justify-center h-28 relative">
+                                {/* Hover cost value */}
+                                <span className="absolute -top-6 text-[9px] text-accent-gold opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1.5 py-0.5 rounded border border-border-cream whitespace-nowrap z-10 font-mono">
+                                  {canViewFinancials ? Math.round(item.totalCost).toLocaleString() : item.qty.toFixed(1) + ' ' + item.unit}
+                                </span>
+                                <div 
+                                  style={{ height: Math.max(5, barHeight) + '%' }}
+                                  className="w-4 sm:w-6 bg-gradient-to-t from-amber-600 via-amber-400 to-[#f3e5ab] rounded-t-sm transition-all duration-500 hover:shadow-lg hover:shadow-amber-500/20 group-hover:scale-x-110"
+                                ></div>
                               </div>
-                            );
-                          })}
-                        </div>
+                              <span className="text-[9px] text-gray-400 group-hover:text-text-light w-12 text-center truncate">{item.name}</span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
+                  </div>
 
-                    <div className="overflow-x-auto -mx-4 sm:mx-0">
-                      <table className="w-full text-xs text-left text-gray-300 min-w-[450px] sm:min-w-0">
-                        <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss text-[10px] sm:text-xs">
-                          <tr>
-                            <th className="px-2 sm:px-4 py-2">Mã</th>
-                            <th className="px-2 sm:px-4 py-2">Tên Nguyên Liệu</th>
-                            <th className="px-2 sm:px-4 py-2 text-right">Lượng tiêu thụ</th>
-                            <th className="px-2 sm:px-4 py-2 text-right">Đơn giá</th>
-                            <th className="px-2 sm:px-4 py-2 text-right">Thành tiền</th>
+                  <div className="overflow-x-auto -mx-4 sm:mx-0">
+                    <table className="w-full text-xs text-left text-gray-300 min-w-[450px] sm:min-w-0">
+                      <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss text-[10px] sm:text-xs">
+                        <tr>
+                          <th className="px-2 sm:px-4 py-2">Mã</th>
+                          <th className="px-2 sm:px-4 py-2">Tên Nguyên Liệu</th>
+                          <th className="px-2 sm:px-4 py-2 text-right">Lượng tiêu thụ</th>
+                          {canViewFinancials && (
+                            <>
+                              <th className="px-2 sm:px-4 py-2 text-right">Đơn giá</th>
+                              <th className="px-2 sm:px-4 py-2 text-right">Thành tiền</th>
+                            </>
+                          )}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-amber-500/5 text-[11px] sm:text-xs">
+                        {roleFilteredConsumptionData.slice(0, 15).map((item) => (
+                          <tr key={item.id} className="hover:bg-moss-light/30">
+                            <td className="px-2 sm:px-4 py-2 font-mono text-accent-gold/70">{item.code && item.code.length < 20 ? item.code : '—'}</td>
+                            <td className="px-2 sm:px-4 py-2 font-medium truncate max-w-[120px] sm:max-w-none">{item.name}</td>
+                            <td className="px-2 sm:px-4 py-2 text-right font-mono">{item.qty.toFixed(2)} {item.unit}</td>
+                            {canViewFinancials && (
+                              <>
+                                <td className="px-2 sm:px-4 py-2 text-right font-mono">{item.unitPrice.toLocaleString()}</td>
+                                <td className="px-2 sm:px-4 py-2 text-right font-semibold text-gray-200 font-mono">{Math.round(item.totalCost).toLocaleString()}</td>
+                              </>
+                            )}
                           </tr>
-                        </thead>
-                        <tbody className="divide-y divide-amber-500/5 text-[11px] sm:text-xs">
-                          {roleFilteredConsumptionData.slice(0, 15).map((item) => (
-                            <tr key={item.id} className="hover:bg-moss-light/30">
-                              <td className="px-2 sm:px-4 py-2 font-mono text-accent-gold/70">{item.code && item.code.length < 20 ? item.code : '—'}</td>
-                              <td className="px-2 sm:px-4 py-2 font-medium truncate max-w-[120px] sm:max-w-none">{item.name}</td>
-                              <td className="px-2 sm:px-4 py-2 text-right font-mono">{item.qty.toFixed(2)} {item.unit}</td>
-                              <td className="px-2 sm:px-4 py-2 text-right font-mono">{item.unitPrice.toLocaleString()}</td>
-                              <td className="px-2 sm:px-4 py-2 text-right font-semibold text-gray-200 font-mono">{Math.round(item.totalCost).toLocaleString()}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                ) : (
-                  <div className="glass-panel rounded-md p-4 sm:p-6 lg:col-span-2 min-w-0 w-full flex flex-col items-center justify-center text-center gap-2 min-h-[300px] bg-moss-light/10">
-                    <AlertOctagon size={48} className="text-accent-gold/40 animate-pulse" />
-                    <h3 className="text-lg font-semibold text-accent-gold font-serif mt-2">Báo cáo tiêu hao tài chính bị khóa</h3>
-                    <p className="text-xs text-gray-400 max-w-sm font-sans">Tài khoản của bạn không được phân quyền xem báo cáo tiêu hao tài chính, đơn giá, và doanh thu chi tiết.</p>
-                  </div>
-                )}
+                </div>
 
                 {/* Live Warnings and Alerts */}
                 <div className="glass-panel rounded-md p-4 sm:p-6 min-w-0 flex flex-col gap-4">
