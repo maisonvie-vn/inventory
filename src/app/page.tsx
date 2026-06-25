@@ -9,7 +9,8 @@ import {
   BookOpen, 
   CheckSquare, 
   Search, 
-  AlertTriangle, 
+  AlertTriangle,
+  Plus,
   TrendingUp, 
   DollarSign, 
   Settings, 
@@ -264,6 +265,170 @@ export default function Home() {
 
   const handleRemoveAdhocItem = (index: number) => {
     setAdhocItemsList(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // New Ingredient Creation states
+  const [showAddIngredientModal, setShowAddIngredientModal] = useState(false);
+  const [newIngCode, setNewIngCode] = useState('');
+  const [newIngNameVi, setNewIngNameVi] = useState('');
+  const [newIngNameFr, setNewIngNameFr] = useState('');
+  const [newIngCategoryCode, setNewIngCategoryCode] = useState('MEAT');
+  const [newIngStockUom, setNewIngStockUom] = useState('KG');
+  const [newIngRecipeUom, setNewIngRecipeUom] = useState('G');
+  const [newIngFactor, setNewIngFactor] = useState('1000');
+  const [newIngWacPrice, setNewIngWacPrice] = useState('');
+  const [newIngYield, setNewIngYield] = useState('100');
+  const [newIngMinStock, setNewIngMinStock] = useState('15');
+  const [newIngIsActive, setNewIngIsActive] = useState(true);
+
+  const [dbCategories, setDbCategories] = useState<{ id: string; code: string; name: string }[]>([]);
+  const [dbUoms, setDbUoms] = useState<{ id: string; name: string }[]>([]);
+
+  const defaultCategories = [
+    { id: 'cat-meat', code: 'MEAT', name: 'Thịt' },
+    { id: 'cat-seafood', code: 'SEAFOOD', name: 'Hải sản' },
+    { id: 'cat-veg', code: 'VEGETABLE', name: 'Rau củ' },
+    { id: 'cat-alcohol', code: 'ALCOHOL', name: 'Rượu/Cồn' },
+    { id: 'cat-beverage', code: 'BEVERAGE', name: 'Nước ngọt/Đồ uống' },
+    { id: 'cat-condiment', code: 'CONDIMENT', name: 'Gia vị' },
+    { id: 'cat-dairy', code: 'DAIRY', name: 'Bơ sữa' },
+    { id: 'cat-grain', code: 'GRAIN', name: 'Gạo/Bột' },
+    { id: 'cat-herb', code: 'HERB', name: 'Rau thơm' },
+    { id: 'cat-pastry', code: 'PASTRY', name: 'Bánh' },
+    { id: 'cat-pulse', code: 'PULSE', name: 'Đậu' },
+    { id: 'cat-stock', code: 'STOCK', name: 'Nước dùng' }
+  ];
+
+  const defaultUoms = [
+    { id: 'KG', name: 'Kilogram (KG)' },
+    { id: 'G', name: 'Gram (g)' },
+    { id: 'L', name: 'Lít (L)' },
+    { id: 'ML', name: 'Mililít (ML)' },
+    { id: 'BOTTLE', name: 'Chai (BOTTLE)' },
+    { id: 'CAN', name: 'Lon (CAN)' },
+    { id: 'PIECE', name: 'Cái/Con/Quả (PIECE)' },
+    { id: 'PACK', name: 'Gói/Bao (PACK)' },
+    { id: 'GLASS', name: 'Ly (GLASS)' },
+    { id: 'BOX', name: 'Hộp (BOX)' },
+    { id: 'CASE', name: 'Thùng (CASE)' }
+  ];
+
+  const handleCreateIngredient = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newIngCode || !newIngNameVi) {
+      alert('Vui lòng điền đầy đủ Mã NVL và Tên tiếng Việt!');
+      return;
+    }
+
+    const code = newIngCode.trim().toUpperCase().replace(/\s+/g, '');
+    const viName = newIngNameVi.trim();
+    const frName = newIngNameFr.trim() || viName;
+    
+    // Find category ID
+    const catList = dbCategories.length > 0 ? dbCategories : defaultCategories;
+    const matchedCat = catList.find(c => c.code === newIngCategoryCode);
+    const categoryId = matchedCat?.id;
+
+    // Check if category is alcohol or beverage for is_beverage flag
+    const isBeverage = ['ALCOHOL', 'BEVERAGE'].includes(newIngCategoryCode);
+
+    const newIngPayload = {
+      code,
+      ten_vi: viName,
+      nom_fr: frName,
+      name_en: viName,
+      purchase_category_id: categoryId && !categoryId.startsWith('cat-') ? categoryId : null,
+      stock_uom: newIngStockUom,
+      recipe_uom: newIngRecipeUom,
+      stock_to_recipe_factor: parseFloat(newIngFactor) || 1,
+      wac_price: parseFloat(newIngWacPrice) || 0,
+      standard_price: parseFloat(newIngWacPrice) || 0,
+      yield_rate: parseFloat(newIngYield) || 100,
+      min_stock: parseFloat(newIngMinStock) || 0,
+      is_active: newIngIsActive,
+      is_beverage: isBeverage
+    };
+
+    if (isSupabaseConfigured()) {
+      try {
+        const { data, error } = await supabase
+          .from('ingredients')
+          .insert(newIngPayload)
+          .select('*')
+          .single();
+
+        if (error) {
+          console.error("Lỗi khi thêm nguyên liệu vào DB:", error);
+          alert(`Lỗi khi lưu nguyên liệu: ${error.message || 'Lỗi DB'}`);
+          return;
+        }
+
+        if (data) {
+          const mappedNewIng = {
+            id: data.id,
+            code: data.code,
+            fr_name: data.nom_fr || '',
+            vi_name: data.ten_vi || '',
+            en_name: data.name_en || '',
+            category: matchedCat?.name || 'Khác',
+            supplier_tier: 'A',
+            unit: data.stock_uom || 'kg',
+            price: data.wac_price || 0,
+            yield_rate: data.yield_rate || 100.0,
+            stock_uom: data.stock_uom,
+            recipe_uom: data.recipe_uom,
+            stock_to_recipe_factor: data.stock_to_recipe_factor || 1,
+            tolerance_percent: data.tolerance_percent || 5.0,
+            tare_weight_grams: data.tare_weight_grams || 0,
+            min_stock: data.min_stock || 0,
+            is_active: data.is_active
+          };
+          
+          setIngredients(prev => [mappedNewIng, ...prev]);
+          alert(`Đã thêm thành công nguyên liệu "${viName}" (Mã: ${code}) vào hệ thống!`);
+        }
+      } catch (err) {
+        console.error("Lỗi kết nối Supabase:", err);
+        alert('Lỗi kết nối Supabase: ' + (err as Error).message);
+        return;
+      }
+    } else {
+      const localNewIng = {
+        id: `local-uuid-${Date.now()}`,
+        code,
+        fr_name: frName,
+        vi_name: viName,
+        en_name: viName,
+        category: matchedCat?.name || 'Khác',
+        supplier_tier: 'A',
+        unit: newIngStockUom,
+        price: parseFloat(newIngWacPrice) || 0,
+        yield_rate: parseFloat(newIngYield) || 100,
+        stock_uom: newIngStockUom,
+        recipe_uom: newIngRecipeUom,
+        stock_to_recipe_factor: parseFloat(newIngFactor) || 1,
+        tolerance_percent: 5.0,
+        tare_weight_grams: 0,
+        min_stock: parseFloat(newIngMinStock) || 0,
+        is_active: newIngIsActive
+      };
+      
+      setIngredients(prev => [localNewIng, ...prev]);
+      alert(`[Sandbox Mode] Đã thêm thành công nguyên liệu "${viName}" (Mã: ${code}) vào hệ thống!`);
+    }
+
+    setNewIngCode('');
+    setNewIngNameVi('');
+    setNewIngNameFr('');
+    setNewIngCategoryCode('MEAT');
+    setNewIngStockUom('KG');
+    setNewIngRecipeUom('G');
+    setNewIngFactor('1000');
+    setNewIngWacPrice('');
+    setNewIngYield('100');
+    setNewIngMinStock('15');
+    setNewIngIsActive(true);
+    setShowAddIngredientModal(false);
   };
 
   // Group unmapped sales from salesData for worklist
@@ -1230,6 +1395,19 @@ export default function Home() {
   const fetchSupabaseData = async () => {
     if (!isSupabaseConfigured() || !currentUser) return;
     try {
+      // Fetch categories
+      const { data: catData } = await supabase
+        .from('purchase_categories')
+        .select('id, code, name')
+        .eq('is_active', true);
+      if (catData) setDbCategories(catData);
+
+      // Fetch UOMs
+      const { data: uomData } = await supabase
+        .from('uom')
+        .select('id, name');
+      if (uomData) setDbUoms(uomData);
+
       // 1. Fetch ingredients from corresponding view based on user role
       let viewName = 'v_inventory_ops';
       if (userRole === 'admin') {
@@ -5834,6 +6012,15 @@ export default function Home() {
                 </div>
                 
                 <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                  {(userRole === 'admin' || userRole === 'senior_accountant' || userRole === 'restaurant_manager') && (
+                    <button 
+                      onClick={() => setShowAddIngredientModal(true)}
+                      className="flex items-center gap-1.5 bg-[#d4af37]/20 border border-[#d4af37]/40 hover:bg-[#d4af37]/35 text-accent-gold font-semibold text-xs px-3.5 py-2.5 rounded-sm transition-all shadow-md active:scale-95"
+                    >
+                      <Plus size={14} />
+                      <span>Thêm nguyên liệu mới</span>
+                    </button>
+                  )}
                   <button 
                     onClick={downloadIngredientsTemplate}
                     className="flex items-center gap-1.5 border border-border-cream hover:bg-accent-gold/5 text-accent-gold font-semibold text-xs px-3.5 py-2.5 rounded-sm transition-all shadow-md active:scale-95"
@@ -8545,6 +8732,181 @@ export default function Home() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Thêm nguyên liệu mới */}
+      {showAddIngredientModal && (
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-moss-dark border border-border-moss w-full max-w-lg rounded-md p-6 flex flex-col gap-4 shadow-2xl relative font-sans text-text-light max-h-[90vh] overflow-y-auto">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-accent-gold/5 rounded-full blur-2xl"></div>
+            
+            <div className="border-b border-border-cream pb-3 flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-semibold text-accent-gold font-serif">🆕 THÊM NGUYÊN LIỆU MỚI THỦ CÔNG</h3>
+                <p className="text-[11px] text-gray-400 mt-1">Đăng ký sản phẩm/nguyên liệu mới vào hệ thống Master.</p>
+              </div>
+              <button 
+                onClick={() => setShowAddIngredientModal(false)}
+                className="text-gray-400 hover:text-white font-bold text-lg"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateIngredient} className="flex flex-col gap-4 text-xs">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-semibold text-gray-400 font-sans">Mã NVL (Mã Nhà hàng)</label>
+                  <input 
+                    type="text" 
+                    required
+                    placeholder="Ví dụ: abcd0123, ING_XYZ"
+                    value={newIngCode}
+                    onChange={(e) => setNewIngCode(e.target.value)}
+                    className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold font-mono w-full"
+                  />
+                  <span className="text-[9px] text-gray-500 font-sans">Mã duy nhất, viết hoa, không dấu, không khoảng cách.</span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-semibold text-gray-400 font-sans">Nhóm / Danh mục</label>
+                  <select
+                    value={newIngCategoryCode}
+                    onChange={(e) => setNewIngCategoryCode(e.target.value)}
+                    className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full font-sans"
+                  >
+                    {(dbCategories.length > 0 ? dbCategories : defaultCategories).map(cat => (
+                      <option key={cat.id} value={cat.code}>{cat.name} ({cat.code})</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] uppercase font-semibold text-gray-400 font-sans">Tên tiếng Việt</label>
+                <input 
+                  type="text" 
+                  required
+                  placeholder="Ví dụ: Thịt gà đông tảo..."
+                  value={newIngNameVi}
+                  onChange={(e) => setNewIngNameVi(e.target.value)}
+                  className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full font-sans"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] uppercase font-semibold text-gray-400 font-sans">Tên tiếng Pháp (Tùy chọn)</label>
+                <input 
+                  type="text" 
+                  placeholder="Để trống nếu trùng tên Việt..."
+                  value={newIngNameFr}
+                  onChange={(e) => setNewIngNameFr(e.target.value)}
+                  className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full font-sans"
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-semibold text-gray-400 font-sans">ĐVT Nhập kho</label>
+                  <select
+                    value={newIngStockUom}
+                    onChange={(e) => setNewIngStockUom(e.target.value)}
+                    className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full font-sans"
+                  >
+                    {(dbUoms.length > 0 ? dbUoms : defaultUoms).map(u => (
+                      <option key={u.id} value={u.id}>{u.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-semibold text-gray-400 font-sans">ĐVT Công thức</label>
+                  <select
+                    value={newIngRecipeUom}
+                    onChange={(e) => setNewIngRecipeUom(e.target.value)}
+                    className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold w-full font-sans"
+                  >
+                    {(dbUoms.length > 0 ? dbUoms : defaultUoms).map(u => (
+                      <option key={u.id} value={u.id}>{u.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-semibold text-gray-400 font-sans">Tỷ lệ quy đổi</label>
+                  <input 
+                    type="number" 
+                    required
+                    placeholder="Ví dụ: 1000"
+                    value={newIngFactor}
+                    onChange={(e) => setNewIngFactor(e.target.value)}
+                    className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold font-mono w-full"
+                  />
+                  <span className="text-[9px] text-gray-500 font-sans">1 ĐVT Kho = X ĐVT Recipe (VD: 1 KG = 1000 g)</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-semibold text-gray-400 font-sans">Giá vốn khởi tạo (đ)</label>
+                  <input 
+                    type="number" 
+                    placeholder="0"
+                    value={newIngWacPrice}
+                    onChange={(e) => setNewIngWacPrice(e.target.value)}
+                    className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold font-mono w-full"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-semibold text-gray-400 font-sans">Tỷ lệ Yield (%)</label>
+                  <input 
+                    type="number" 
+                    placeholder="100"
+                    value={newIngYield}
+                    onChange={(e) => setNewIngYield(e.target.value)}
+                    className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold font-mono w-full"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-semibold text-gray-400 font-sans">Tồn tối thiểu (Min)</label>
+                  <input 
+                    type="number" 
+                    placeholder="15"
+                    value={newIngMinStock}
+                    onChange={(e) => setNewIngMinStock(e.target.value)}
+                    className="bg-moss-light border border-border-moss text-xs rounded p-2.5 text-text-light focus:outline-none focus:border-accent-gold font-mono w-full"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 bg-moss-light p-2.5 rounded border border-border-moss mt-1 font-sans">
+                <input 
+                  type="checkbox" 
+                  id="newIngIsActive"
+                  checked={newIngIsActive}
+                  onChange={(e) => setNewIngIsActive(e.target.checked)}
+                  className="rounded border-border-moss bg-moss-dark text-accent-gold focus:ring-accent-gold cursor-pointer"
+                />
+                <label htmlFor="newIngIsActive" className="text-xs text-gray-200 font-semibold cursor-pointer select-none">
+                  Kích hoạt trạng thái hoạt động (Active)
+                </label>
+              </div>
+
+              <div className="flex justify-end gap-3 border-t border-border-cream pt-4 mt-2 font-sans">
+                <button 
+                  type="button"
+                  onClick={() => setShowAddIngredientModal(false)}
+                  className="border border-gray-700 hover:bg-gray-800 text-gray-300 px-4 py-2 rounded text-xs font-semibold cursor-pointer"
+                >
+                  Hủy
+                </button>
+                <button 
+                  type="submit"
+                  className="bg-gradient-to-r from-accent-gold to-accent-deep hover:from-accent-deep hover:to-accent-gold text-[#090d16] font-bold text-xs px-5 py-2 rounded shadow cursor-pointer"
+                >
+                  Lưu nguyên liệu
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
