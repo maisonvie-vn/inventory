@@ -1223,7 +1223,6 @@ export default function Home() {
   // Load session and profile on mount
   useEffect(() => {
     const checkSession = async () => {
-      let supabaseSessionRestored = false;
       if (isSupabaseConfigured()) {
         try {
           const { data: { session } } = await supabase.auth.getSession();
@@ -1265,42 +1264,9 @@ export default function Home() {
               role: role
             });
             setUserRole(role);
-            supabaseSessionRestored = true;
           }
         } catch (e) {
           console.error("Error getting Supabase session", e);
-        }
-      }
-
-      if (!supabaseSessionRestored) {
-        // Fallback to localStorage sandbox user (either Supabase is not configured or no active Supabase session)
-        const localUser = localStorage.getItem('mv_local_user');
-        if (localUser) {
-          try {
-            const parsed = JSON.parse(localUser);
-            let healed = parsed;
-            if (parsed && (!parsed.id || parsed.id.startsWith('90000000-0000-0000-0000-'))) {
-              let dummyId = '90000000-0000-0000-0000-000000000001';
-              const role = parsed.role || 'admin';
-              if (role === 'restaurant_manager') dummyId = '90000000-0000-0000-0000-000000000002';
-              else if (role === 'head_chef') dummyId = '90000000-0000-0000-0000-000000000003';
-              else if (role === 'senior_accountant') dummyId = '90000000-0000-0000-0000-000000000004';
-              else if (role === 'foh_supervisor') dummyId = '90000000-0000-0000-0000-000000000005';
-              else if (role === 'sous_chef') dummyId = '90000000-0000-0000-0000-000000000006';
-              else if (role === 'junior_accountant') dummyId = '90000000-0000-0000-0000-000000000007';
-              else if (role === 'BAR_SUPERVISOR') dummyId = '90000000-0000-0000-0000-000000000008';
-              else if (role === 'BARTENDER') dummyId = '90000000-0000-0000-0000-000000000009';
-              
-              if (parsed.id !== dummyId) {
-                healed = { ...parsed, id: dummyId };
-                localStorage.setItem('mv_local_user', JSON.stringify(healed));
-              }
-            }
-            setCurrentUser(healed);
-            setUserRole(healed.role);
-          } catch (e) {
-            console.error("Error parsing local user", e);
-          }
         }
       }
     };
@@ -1348,43 +1314,8 @@ export default function Home() {
           });
           setUserRole(role);
         } else {
-          // If we logged out explicitly
-          if (event === 'SIGNED_OUT') {
-            localStorage.removeItem('mv_local_user');
-            setCurrentUser(null);
-          } else {
-            // For INITIAL_SESSION or other events with null session, fallback to localStorage if it exists
-            const localUser = localStorage.getItem('mv_local_user');
-            if (localUser) {
-              try {
-                const parsed = JSON.parse(localUser);
-                let healed = parsed;
-                if (parsed && (!parsed.id || parsed.id.startsWith('90000000-0000-0000-0000-'))) {
-                  let dummyId = '90000000-0000-0000-0000-000000000001';
-                  const role = parsed.role || 'admin';
-                  if (role === 'restaurant_manager') dummyId = '90000000-0000-0000-0000-000000000002';
-                  else if (role === 'head_chef') dummyId = '90000000-0000-0000-0000-000000000003';
-                  else if (role === 'senior_accountant') dummyId = '90000000-0000-0000-0000-000000000004';
-                  else if (role === 'foh_supervisor') dummyId = '90000000-0000-0000-0000-000000000005';
-                  else if (role === 'sous_chef') dummyId = '90000000-0000-0000-0000-000000000006';
-                  else if (role === 'junior_accountant') dummyId = '90000000-0000-0000-0000-000000000007';
-                  else if (role === 'BAR_SUPERVISOR') dummyId = '90000000-0000-0000-0000-000000000008';
-                  else if (role === 'BARTENDER') dummyId = '90000000-0000-0000-0000-000000000009';
-                  
-                  if (parsed.id !== dummyId) {
-                    healed = { ...parsed, id: dummyId };
-                    localStorage.setItem('mv_local_user', JSON.stringify(healed));
-                  }
-                }
-                setCurrentUser(healed);
-                setUserRole(healed.role);
-              } catch (e) {
-                setCurrentUser(null);
-              }
-            } else {
-              setCurrentUser(null);
-            }
-          }
+          localStorage.removeItem('mv_local_user');
+          setCurrentUser(null);
         }
       });
       return () => subscription.unsubscribe();
@@ -1730,75 +1661,19 @@ export default function Home() {
     setIsAuthLoading(true);
     setAuthError('');
 
-    // Sandbox check bypass to allow local sandbox login on live deployments
-    if (authPassword === 'sandbox') {
-      let role: any = 'admin';
-      let name = 'Quản trị viên (CFO)';
-
-      if (sandboxRoleOverride) {
-        role = sandboxRoleOverride;
-        if (role === 'restaurant_manager') name = 'Quản lý Nhà hàng';
-        else if (role === 'head_chef') name = 'Bếp trưởng';
-        else if (role === 'senior_accountant') name = 'Kế toán kho cấp cao';
-        else if (role === 'foh_supervisor') name = 'Giám sát Sảnh';
-        else if (role === 'sous_chef') name = 'Bếp phó';
-        else if (role === 'junior_accountant') name = 'Thủ kho / Kế toán phụ';
-        else if (role === 'BAR_SUPERVISOR') name = 'Trưởng Bar / Giám sát';
-        else if (role === 'BARTENDER') name = 'Nhân viên Bar (Bartender)';
-      } else {
-        if (authEmail.includes('manager')) {
-          role = 'restaurant_manager';
-          name = 'Quản lý Nhà hàng';
-        } else if (authEmail.includes('chef') && !authEmail.includes('sous')) {
-          role = 'head_chef';
-          name = 'Bếp trưởng';
-        } else if (authEmail.includes('senior')) {
-          role = 'senior_accountant';
-          name = 'Kế toán kho cấp cao';
-        } else if (authEmail.includes('foh') || authEmail.includes('supervisor')) {
-          role = 'foh_supervisor';
-          name = 'Giám sát Sảnh';
-        } else if (authEmail.includes('sous') || authEmail.includes('phó')) {
-          role = 'sous_chef';
-          name = 'Bếp phó';
-        } else if (authEmail.includes('junior') || authEmail.includes('store')) {
-          role = 'junior_accountant';
-          name = 'Thủ kho / Kế toán phụ';
-        } else if (authEmail.includes('bar') && authEmail.includes('supervisor')) {
-          role = 'BAR_SUPERVISOR';
-          name = 'Trưởng Bar / Giám sát';
-        } else if (authEmail.includes('bar') || authEmail.includes('bartender')) {
-          role = 'BARTENDER';
-          name = 'Nhân viên Bar (Bartender)';
-        }
-      }
-
-      let dummyId = '90000000-0000-0000-0000-000000000001';
-      if (role === 'restaurant_manager') dummyId = '90000000-0000-0000-0000-000000000002';
-      else if (role === 'head_chef') dummyId = '90000000-0000-0000-0000-000000000003';
-      else if (role === 'senior_accountant') dummyId = '90000000-0000-0000-0000-000000000004';
-      else if (role === 'foh_supervisor') dummyId = '90000000-0000-0000-0000-000000000005';
-      else if (role === 'sous_chef') dummyId = '90000000-0000-0000-0000-000000000006';
-      else if (role === 'junior_accountant') dummyId = '90000000-0000-0000-0000-000000000007';
-      else if (role === 'BAR_SUPERVISOR') dummyId = '90000000-0000-0000-0000-000000000008';
-      else if (role === 'BARTENDER') dummyId = '90000000-0000-0000-0000-000000000009';
-
-      const dummyUser = { id: dummyId, email: authEmail, name, role };
-      localStorage.setItem('mv_local_user', JSON.stringify(dummyUser));
-      setCurrentUser(dummyUser);
-      setUserRole(role);
-      setIsAuthLoading(false);
-      return;
+    let emailToSignIn = authEmail.trim();
+    if (emailToSignIn && !emailToSignIn.includes('@')) {
+      emailToSignIn = `${emailToSignIn}@maisonvie.vn`;
     }
 
     if (isSupabaseConfigured()) {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: authEmail,
+        email: emailToSignIn,
         password: authPassword
       });
 
       if (error) {
-        setAuthError(error.message);
+        setAuthError(error.message === 'Invalid login credentials' ? 'Tên đăng nhập hoặc mật khẩu không chính xác.' : error.message);
         setIsAuthLoading(false);
       } else if (data.user) {
         let { data: profile, error: profileErr } = await supabase
@@ -1840,63 +1715,7 @@ export default function Home() {
         setIsAuthLoading(false);
       }
     } else {
-      // Sandbox mode login
-      // We map certain emails to roles for simulation
-      let role: any = 'admin';
-      let name = 'Quản trị viên (CFO)';
-
-      if (sandboxRoleOverride) {
-        role = sandboxRoleOverride;
-        if (role === 'restaurant_manager') name = 'Quản lý Nhà hàng';
-        else if (role === 'head_chef') name = 'Bếp trưởng';
-        else if (role === 'senior_accountant') name = 'Kế toán kho cấp cao';
-        else if (role === 'foh_supervisor') name = 'Giám sát Sảnh';
-        else if (role === 'sous_chef') name = 'Bếp phó';
-        else if (role === 'junior_accountant') name = 'Thủ kho / Kế toán phụ';
-        else if (role === 'BAR_SUPERVISOR') name = 'Trưởng Bar / Giám sát';
-        else if (role === 'BARTENDER') name = 'Nhân viên Bar (Bartender)';
-      } else {
-        if (authEmail.includes('manager')) {
-          role = 'restaurant_manager';
-          name = 'Quản lý Nhà hàng';
-        } else if (authEmail.includes('chef') && !authEmail.includes('sous')) {
-          role = 'head_chef';
-          name = 'Bếp trưởng';
-        } else if (authEmail.includes('senior')) {
-          role = 'senior_accountant';
-          name = 'Kế toán kho cấp cao';
-        } else if (authEmail.includes('foh') || authEmail.includes('supervisor')) {
-          role = 'foh_supervisor';
-          name = 'Giám sát Sảnh';
-        } else if (authEmail.includes('sous') || authEmail.includes('phó')) {
-          role = 'sous_chef';
-          name = 'Bếp phó';
-        } else if (authEmail.includes('junior') || authEmail.includes('store')) {
-          role = 'junior_accountant';
-          name = 'Thủ kho / Kế toán phụ';
-        } else if (authEmail.includes('bar') && authEmail.includes('supervisor')) {
-          role = 'BAR_SUPERVISOR';
-          name = 'Trưởng Bar / Giám sát';
-        } else if (authEmail.includes('bar') || authEmail.includes('bartender')) {
-          role = 'BARTENDER';
-          name = 'Nhân viên Bar (Bartender)';
-        }
-      }
-
-      let dummyId = '90000000-0000-0000-0000-000000000001';
-      if (role === 'restaurant_manager') dummyId = '90000000-0000-0000-0000-000000000002';
-      else if (role === 'head_chef') dummyId = '90000000-0000-0000-0000-000000000003';
-      else if (role === 'senior_accountant') dummyId = '90000000-0000-0000-0000-000000000004';
-      else if (role === 'foh_supervisor') dummyId = '90000000-0000-0000-0000-000000000005';
-      else if (role === 'sous_chef') dummyId = '90000000-0000-0000-0000-000000000006';
-      else if (role === 'junior_accountant') dummyId = '90000000-0000-0000-0000-000000000007';
-      else if (role === 'BAR_SUPERVISOR') dummyId = '90000000-0000-0000-0000-000000000008';
-      else if (role === 'BARTENDER') dummyId = '90000000-0000-0000-0000-000000000009';
-
-      const dummyUser = { id: dummyId, email: authEmail, name, role };
-      localStorage.setItem('mv_local_user', JSON.stringify(dummyUser));
-      setCurrentUser(dummyUser);
-      setUserRole(role);
+      setAuthError('Hệ thống chưa được kết nối với cơ sở dữ liệu Supabase.');
       setIsAuthLoading(false);
     }
   };
@@ -4918,13 +4737,13 @@ export default function Home() {
 
           <form onSubmit={handleLogin} className="flex flex-col gap-4 font-sans">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs text-gray-400">Email đăng nhập:</label>
+              <label className="text-xs text-gray-400">Tên đăng nhập:</label>
               <input 
-                type="email" 
+                type="text" 
                 required
                 value={authEmail}
                 onChange={(e) => setAuthEmail(e.target.value)}
-                placeholder="ceo@maisonvie.vn"
+                placeholder="owner, accountant, kitchen, supervisor"
                 className="bg-moss-light border border-border-moss rounded-sm p-3 text-xs text-text-light placeholder-text-muted-light focus:outline-none focus:border-accent-gold font-sans"
               />
             </div>
@@ -4954,39 +4773,38 @@ export default function Home() {
             </button>
           </form>
 
-          {/* Sandbox login helper info */}
+          {/* Quick Login Info */}
           <div className="border-t border-border-cream pt-4 flex flex-col gap-3">
             <div className="flex items-center gap-1.5 text-accent-gold/80">
-              <AlertTriangle size={14} />
-              <span className="text-[10px] uppercase font-bold tracking-wider">Local Sandbox Mode Enabled</span>
+              <span className="text-[10px] uppercase font-bold tracking-wider">Đăng nhập nhanh Live 100%</span>
             </div>
             <p className="text-[10px] text-gray-400 leading-relaxed font-sans">
-              Chưa phát hiện Supabase Environment Keys. Anh có thể click nhanh vào một trong các tài khoản mẫu dưới đây để đăng nhập và trải nghiệm tức thời 7 lớp phân quyền RLS:
+              Click nhanh vào một trong các tài khoản dưới đây để đăng nhập trực tiếp vào hệ thống:
             </p>
             <div className="grid grid-cols-2 gap-2 text-[9px] font-sans">
               <button 
-                onClick={() => { setAuthEmail('ceo@maisonvie.vn'); setAuthPassword('sandbox'); setSandboxRoleOverride('admin'); }}
+                onClick={() => { setAuthEmail('owner'); setAuthPassword('MaisonOwner@2026'); }}
                 className="border border-border-moss hover:border-accent-gold bg-moss-light p-2 text-left rounded text-text-light text-[10px]"
               >
-                💼 Owner / CFO / Admin
+                💼 Owner
               </button>
               <button 
-                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('restaurant_manager'); }}
+                onClick={() => { setAuthEmail('accountant'); setAuthPassword('MaisonAccountant@2026'); }}
                 className="border border-border-moss hover:border-accent-gold bg-moss-light p-2 text-left rounded text-text-light text-[10px]"
               >
-                👨‍🍳 Chef / Manager / Thủ Kho
+                📝 Kế Toán/Quản Lý
               </button>
               <button 
-                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('senior_accountant'); }}
+                onClick={() => { setAuthEmail('kitchen'); setAuthPassword('MaisonKitchen@2026'); }}
                 className="border border-border-moss hover:border-accent-gold bg-moss-light p-2 text-left rounded text-text-light text-[10px]"
               >
-                📊 SousChef / Kế toán
+                🍳 Kitchen/Food
               </button>
               <button 
-                onClick={() => { setAuthEmail('maisonvie.vn@gmail.com'); setAuthPassword('sandbox'); setSandboxRoleOverride('BAR_SUPERVISOR'); }}
+                onClick={() => { setAuthEmail('supervisor'); setAuthPassword('MaisonSupervisor@2026'); }}
                 className="border border-border-moss hover:border-accent-gold bg-moss-light p-2 text-left rounded text-text-light text-[10px]"
               >
-                🍸 Bar
+                🍸 Bar/Beverages
               </button>
             </div>
           </div>
@@ -5076,14 +4894,14 @@ export default function Home() {
                     setUserRole(newRole);
                     if (currentUser && currentUser.id && currentUser.id.startsWith('90000000-0000-0000-0000-')) {
                       let dummyId = '90000000-0000-0000-0000-000000000001';
-                      let name = 'Quản trị viên (CFO)';
-                      if (newRole === 'restaurant_manager') { dummyId = '90000000-0000-0000-0000-000000000002'; name = 'Quản lý Nhà hàng'; }
+                      let name = 'Owner';
+                      if (newRole === 'restaurant_manager') { dummyId = '90000000-0000-0000-0000-000000000002'; name = 'Kế Toán/Quản Lý'; }
                       else if (newRole === 'head_chef') { dummyId = '90000000-0000-0000-0000-000000000003'; name = 'Bếp trưởng'; }
-                      else if (newRole === 'senior_accountant') { dummyId = '90000000-0000-0000-0000-000000000004'; name = 'Kế toán kho cấp cao'; }
+                      else if (newRole === 'senior_accountant') { dummyId = '90000000-0000-0000-0000-000000000004'; name = 'Kitchen/Food'; }
                       else if (newRole === 'foh_supervisor') { dummyId = '90000000-0000-0000-0000-000000000005'; name = 'Giám sát Sảnh'; }
                       else if (newRole === 'sous_chef') { dummyId = '90000000-0000-0000-0000-000000000006'; name = 'Bếp phó'; }
                       else if (newRole === 'junior_accountant') { dummyId = '90000000-0000-0000-0000-000000000007'; name = 'Thủ kho / Kế toán phụ'; }
-                      else if (newRole === 'BAR_SUPERVISOR') { dummyId = '90000000-0000-0000-0000-000000000008'; name = 'Trưởng Bar / Giám sát'; }
+                      else if (newRole === 'BAR_SUPERVISOR') { dummyId = '90000000-0000-0000-0000-000000000008'; name = 'Bar/Beverages'; }
                       else if (newRole === 'BARTENDER') { dummyId = '90000000-0000-0000-0000-000000000009'; name = 'Nhân viên Bar (Bartender)'; }
                       
                       const updatedUser = { ...currentUser, id: dummyId, role: newRole, name };
@@ -5093,10 +4911,10 @@ export default function Home() {
                   }}
                   className="bg-transparent border-none text-xs text-accent-gold focus:outline-none cursor-pointer font-semibold"
                 >
-                  <option value="admin" className="bg-[#090d16] text-gray-300">Owner/CFO/Admin</option>
-                  <option value="restaurant_manager" className="bg-[#090d16] text-gray-300">Chef/Manager/Thủ Kho</option>
-                  <option value="senior_accountant" className="bg-[#090d16] text-gray-300">SousChef/Kế toán</option>
-                  <option value="BAR_SUPERVISOR" className="bg-[#090d16] text-gray-300">Bar</option>
+                  <option value="admin" className="bg-[#090d16] text-gray-300">Owner</option>
+                  <option value="restaurant_manager" className="bg-[#090d16] text-gray-300">Kế Toán/Quản Lý</option>
+                  <option value="senior_accountant" className="bg-[#090d16] text-gray-300">Kitchen/Food</option>
+                  <option value="BAR_SUPERVISOR" className="bg-[#090d16] text-gray-300">Bar/Beverages</option>
                 </select>
               </div>
             )}
@@ -5127,7 +4945,7 @@ export default function Home() {
 
           <div className="flex items-center gap-2">
             <span className="text-[9px] bg-moss-light border border-border-moss text-accent-gold px-2 py-0.5 rounded-sm font-semibold uppercase">
-              {userRole === 'admin' ? 'CFO' : userRole === 'restaurant_manager' ? 'Manager' : userRole === 'senior_accountant' ? 'Kế toán' : userRole === 'head_chef' ? 'Chef' : userRole === 'sous_chef' ? 'SousChef' : userRole === 'junior_accountant' ? 'Thủ kho' : 'Bar'}
+              {userRole === 'admin' ? 'Owner' : userRole === 'restaurant_manager' ? 'Kế toán/Quản lý' : userRole === 'senior_accountant' ? 'Kitchen/Food' : userRole === 'head_chef' ? 'Chef' : userRole === 'sous_chef' ? 'SousChef' : userRole === 'junior_accountant' ? 'Thủ kho' : 'Bar/Beverages'}
             </span>
             <span className="text-[10px] font-mono text-gray-300 font-bold bg-[#090d16] px-1.5 py-0.5 rounded-sm">
               {simulatedTime}
@@ -5214,14 +5032,14 @@ export default function Home() {
                     setUserRole(newRole);
                     if (currentUser && currentUser.id && currentUser.id.startsWith('90000000-0000-0000-0000-')) {
                       let dummyId = '90000000-0000-0000-0000-000000000001';
-                      let name = 'Quản trị viên (CFO)';
-                      if (newRole === 'restaurant_manager') { dummyId = '90000000-0000-0000-0000-000000000002'; name = 'Quản lý Nhà hàng'; }
+                      let name = 'Owner';
+                      if (newRole === 'restaurant_manager') { dummyId = '90000000-0000-0000-0000-000000000002'; name = 'Kế Toán/Quản Lý'; }
                       else if (newRole === 'head_chef') { dummyId = '90000000-0000-0000-0000-000000000003'; name = 'Bếp trưởng'; }
-                      else if (newRole === 'senior_accountant') { dummyId = '90000000-0000-0000-0000-000000000004'; name = 'Kế toán kho cấp cao'; }
+                      else if (newRole === 'senior_accountant') { dummyId = '90000000-0000-0000-0000-000000000004'; name = 'Kitchen/Food'; }
                       else if (newRole === 'foh_supervisor') { dummyId = '90000000-0000-0000-0000-000000000005'; name = 'Giám sát Sảnh'; }
                       else if (newRole === 'sous_chef') { dummyId = '90000000-0000-0000-0000-000000000006'; name = 'Bếp phó'; }
                       else if (newRole === 'junior_accountant') { dummyId = '90000000-0000-0000-0000-000000000007'; name = 'Thủ kho / Kế toán phụ'; }
-                      else if (newRole === 'BAR_SUPERVISOR') { dummyId = '90000000-0000-0000-0000-000000000008'; name = 'Trưởng Bar / Giám sát'; }
+                      else if (newRole === 'BAR_SUPERVISOR') { dummyId = '90000000-0000-0000-0000-000000000008'; name = 'Bar/Beverages'; }
                       else if (newRole === 'BARTENDER') { dummyId = '90000000-0000-0000-0000-000000000009'; name = 'Nhân viên Bar (Bartender)'; }
                       
                       const updatedUser = { ...currentUser, id: dummyId, role: newRole, name };
@@ -5231,10 +5049,10 @@ export default function Home() {
                   }}
                   className="bg-[#090d16] border border-border-moss text-xs text-accent-gold rounded px-2 py-1 focus:outline-none font-semibold"
                 >
-                  <option value="admin">Owner/CFO/Admin</option>
-                  <option value="restaurant_manager">Chef/Manager/Thủ Kho</option>
-                  <option value="senior_accountant">SousChef/Kế toán</option>
-                  <option value="BAR_SUPERVISOR">Bar</option>
+                  <option value="admin">Owner</option>
+                  <option value="restaurant_manager">Kế Toán/Quản Lý</option>
+                  <option value="senior_accountant">Kitchen/Food</option>
+                  <option value="BAR_SUPERVISOR">Bar/Beverages</option>
                 </select>
               </div>
             )}
