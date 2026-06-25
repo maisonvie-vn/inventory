@@ -1344,7 +1344,6 @@ export default function Home() {
       if (userRole === 'admin') {
         viewName = 'v_inventory_finance';
       } else if (
-        userRole === 'senior_accountant' || 
         userRole === 'restaurant_manager' || 
         userRole === 'junior_accountant' || 
         userRole === 'head_chef'
@@ -2468,7 +2467,6 @@ export default function Home() {
 
   const canViewFinancials = useMemo(() =>
     userRole === 'admin' ||
-    userRole === 'senior_accountant' ||
     userRole === 'restaurant_manager' ||
     userRole === 'head_chef' ||
     userRole === 'junior_accountant'
@@ -5457,64 +5455,72 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Simulated Consumption list */}
-                <div className="glass-panel rounded-md p-4 sm:p-6 lg:col-span-2 min-w-0 w-full overflow-hidden flex flex-col gap-4">
-                  <div>
-                    <h3 className="text-xl font-semibold text-accent-gold font-serif">Nguyên liệu tiêu hao nhiều nhất (01/06 - 13/06)</h3>
-                    <p className="text-[11px] text-gray-400">Đã bao gồm tỷ lệ hao hụt Yield % và 10% bù bếp</p>
-                  </div>
-                  
-                  {/* Custom SVG Bar Chart (Scrollable inside the gold border box on mobile to prevent overflow) */}
-                  <div className="w-full min-w-0 max-w-full pb-2">
-                    <div className="h-44 w-full bg-moss-dark/50 rounded border border-border-moss p-4 overflow-x-auto flex items-end">
-                      <div className="flex items-end justify-between min-w-[500px] md:min-w-0 w-full h-full gap-2 pb-1">
-                        {roleFilteredConsumptionData.slice(0, 10).map((item, idx) => {
-                          const maxVal = Math.max(...roleFilteredConsumptionData.slice(0, 10).map(c => c.totalCost));
-                          const barHeight = maxVal > 0 ? (item.totalCost / maxVal) * 100 : 0;
-                          return (
-                            <div key={item.id} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer min-w-[44px]">
-                              <div className="w-full flex items-end justify-center h-28 relative">
-                                {/* Hover cost value */}
-                                <span className="absolute -top-6 text-[9px] text-accent-gold opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1.5 py-0.5 rounded border border-border-cream whitespace-nowrap z-10 font-mono">
-                                  {Math.round(item.totalCost).toLocaleString()}
-                                </span>
-                                <div 
-                                  style={{ height: `${Math.max(5, barHeight)}%` }}
-                                  className="w-4 sm:w-6 bg-gradient-to-t from-amber-600 via-amber-400 to-[#f3e5ab] rounded-t-sm transition-all duration-500 hover:shadow-lg hover:shadow-amber-500/20 group-hover:scale-x-110"
-                                ></div>
+                {canViewFinancials ? (
+                  <div className="glass-panel rounded-md p-4 sm:p-6 lg:col-span-2 min-w-0 w-full overflow-hidden flex flex-col gap-4">
+                    <div>
+                      <h3 className="text-xl font-semibold text-accent-gold font-serif">Nguyên liệu tiêu hao nhiều nhất (01/06 - 13/06)</h3>
+                      <p className="text-[11px] text-gray-400">Đã bao gồm tỷ lệ hao hụt Yield % và 10% bù bếp</p>
+                    </div>
+                    
+                    {/* Custom SVG Bar Chart (Scrollable inside the gold border box on mobile to prevent overflow) */}
+                    <div className="w-full min-w-0 max-w-full pb-2">
+                      <div className="h-44 w-full bg-moss-dark/50 rounded border border-border-moss p-4 overflow-x-auto flex items-end">
+                        <div className="flex items-end justify-between min-w-[500px] md:min-w-0 w-full h-full gap-2 pb-1">
+                          {roleFilteredConsumptionData.slice(0, 10).map((item, idx) => {
+                            const maxVal = Math.max(...roleFilteredConsumptionData.slice(0, 10).map(c => c.totalCost));
+                            const barHeight = maxVal > 0 ? (item.totalCost / maxVal) * 100 : 0;
+                            return (
+                              <div key={item.id} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer min-w-[44px]">
+                                <div className="w-full flex items-end justify-center h-28 relative">
+                                  {/* Hover cost value */}
+                                  <span className="absolute -top-6 text-[9px] text-accent-gold opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1.5 py-0.5 rounded border border-border-cream whitespace-nowrap z-10 font-mono">
+                                    {Math.round(item.totalCost).toLocaleString()}
+                                  </span>
+                                  <div 
+                                    style={{ height: `${Math.max(5, barHeight)}%` }}
+                                    className="w-4 sm:w-6 bg-gradient-to-t from-amber-600 via-amber-400 to-[#f3e5ab] rounded-t-sm transition-all duration-500 hover:shadow-lg hover:shadow-amber-500/20 group-hover:scale-x-110"
+                                  ></div>
+                                </div>
+                                <span className="text-[9px] text-gray-400 group-hover:text-text-light w-12 text-center truncate">{item.name}</span>
                               </div>
-                              <span className="text-[9px] text-gray-400 group-hover:text-text-light w-12 text-center truncate">{item.name}</span>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="overflow-x-auto -mx-4 sm:mx-0">
-                    <table className="w-full text-xs text-left text-gray-300 min-w-[450px] sm:min-w-0">
-                      <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss text-[10px] sm:text-xs">
-                        <tr>
-                          <th className="px-2 sm:px-4 py-2">Mã</th>
-                          <th className="px-2 sm:px-4 py-2">Tên Nguyên Liệu</th>
-                          <th className="px-2 sm:px-4 py-2 text-right">Lượng tiêu thụ</th>
-                          <th className="px-2 sm:px-4 py-2 text-right">Đơn giá</th>
-                          <th className="px-2 sm:px-4 py-2 text-right">Thành tiền</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-amber-500/5 text-[11px] sm:text-xs">
-                        {roleFilteredConsumptionData.slice(0, 15).map((item) => (
-                          <tr key={item.id} className="hover:bg-moss-light/30">
-                            <td className="px-2 sm:px-4 py-2 font-mono text-accent-gold/70">{item.code && item.code.length < 20 ? item.code : '—'}</td>
-                            <td className="px-2 sm:px-4 py-2 font-medium truncate max-w-[120px] sm:max-w-none">{item.name}</td>
-                            <td className="px-2 sm:px-4 py-2 text-right font-mono">{item.qty.toFixed(2)} {item.unit}</td>
-                            <td className="px-2 sm:px-4 py-2 text-right font-mono">{item.unitPrice.toLocaleString()}</td>
-                            <td className="px-2 sm:px-4 py-2 text-right font-semibold text-gray-200 font-mono">{Math.round(item.totalCost).toLocaleString()}</td>
+                    <div className="overflow-x-auto -mx-4 sm:mx-0">
+                      <table className="w-full text-xs text-left text-gray-300 min-w-[450px] sm:min-w-0">
+                        <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss text-[10px] sm:text-xs">
+                          <tr>
+                            <th className="px-2 sm:px-4 py-2">Mã</th>
+                            <th className="px-2 sm:px-4 py-2">Tên Nguyên Liệu</th>
+                            <th className="px-2 sm:px-4 py-2 text-right">Lượng tiêu thụ</th>
+                            <th className="px-2 sm:px-4 py-2 text-right">Đơn giá</th>
+                            <th className="px-2 sm:px-4 py-2 text-right">Thành tiền</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody className="divide-y divide-amber-500/5 text-[11px] sm:text-xs">
+                          {roleFilteredConsumptionData.slice(0, 15).map((item) => (
+                            <tr key={item.id} className="hover:bg-moss-light/30">
+                              <td className="px-2 sm:px-4 py-2 font-mono text-accent-gold/70">{item.code && item.code.length < 20 ? item.code : '—'}</td>
+                              <td className="px-2 sm:px-4 py-2 font-medium truncate max-w-[120px] sm:max-w-none">{item.name}</td>
+                              <td className="px-2 sm:px-4 py-2 text-right font-mono">{item.qty.toFixed(2)} {item.unit}</td>
+                              <td className="px-2 sm:px-4 py-2 text-right font-mono">{item.unitPrice.toLocaleString()}</td>
+                              <td className="px-2 sm:px-4 py-2 text-right font-semibold text-gray-200 font-mono">{Math.round(item.totalCost).toLocaleString()}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="glass-panel rounded-md p-4 sm:p-6 lg:col-span-2 min-w-0 w-full flex flex-col items-center justify-center text-center gap-2 min-h-[300px] bg-moss-light/10">
+                    <AlertOctagon size={48} className="text-accent-gold/40 animate-pulse" />
+                    <h3 className="text-lg font-semibold text-accent-gold font-serif mt-2">Báo cáo tiêu hao tài chính bị khóa</h3>
+                    <p className="text-xs text-gray-400 max-w-sm font-sans">Tài khoản của bạn không được phân quyền xem báo cáo tiêu hao tài chính, đơn giá, và doanh thu chi tiết.</p>
+                  </div>
+                )}
 
                 {/* Live Warnings and Alerts */}
                 <div className="glass-panel rounded-md p-4 sm:p-6 min-w-0 flex flex-col gap-4">
@@ -6532,9 +6538,11 @@ export default function Home() {
 
                     {/* Ingredients Table */}
                     <div>
-                      <h3 className="text-lg font-serif font-semibold text-accent-gold mb-3">Định lượng & Giá vốn thành phần (Yield & Loss applied)</h3>
+                       <h3 className="text-lg font-serif font-semibold text-accent-gold mb-3">
+                        {canViewFinancials ? 'Định lượng & Giá vốn thành phần (Yield & Loss applied)' : 'Định lượng thành phần (Yield & Loss applied)'}
+                      </h3>
                       <div className="overflow-x-auto">
-                        <table className="w-full text-xs text-left text-gray-300 min-w-[700px]">
+                        <table className={`w-full text-xs text-left text-gray-300 ${canViewFinancials ? 'min-w-[700px]' : 'min-w-[400px]'}`}>
                           <thead className="bg-moss-light uppercase text-text-muted-light border-b border-border-moss">
                             <tr>
                               <th className="px-4 py-2">Mã NVL</th>
@@ -6542,8 +6550,12 @@ export default function Home() {
                               <th className="px-4 py-2 text-right">Lượng Net</th>
                               <th className="px-4 py-2 text-center">Yield %</th>
                               <th className="px-4 py-2 text-right">Lượng Thô (Deducted)</th>
-                              <th className="px-4 py-2 text-right">Giá/ĐVT</th>
-                              <th className="px-4 py-2 text-right">Chi phí</th>
+                              {canViewFinancials && (
+                                <>
+                                  <th className="px-4 py-2 text-right">Giá/ĐVT</th>
+                                  <th className="px-4 py-2 text-right">Chi phí</th>
+                                </>
+                              )}
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-amber-500/5">
@@ -6556,8 +6568,12 @@ export default function Home() {
                                   <td className="px-4 py-2 text-right">{ing.qty_net.toFixed(3)} {ing.unit}</td>
                                   <td className="px-4 py-2 text-center font-mono">{(ing.yield_pct * 100).toFixed(0)}%</td>
                                   <td className="px-4 py-2 text-right font-mono font-semibold text-gray-200">{ing.qty_eff.toFixed(3)} {ing.unit}</td>
-                                  <td className="px-4 py-2 text-right">{ing.unit_price.toLocaleString()}</td>
-                                  <td className="px-4 py-2 text-right font-mono font-semibold text-accent-gold/80">{Math.round(ing.line_cost).toLocaleString()}</td>
+                                  {canViewFinancials && (
+                                    <>
+                                      <td className="px-4 py-2 text-right">{ing.unit_price.toLocaleString()}</td>
+                                      <td className="px-4 py-2 text-right font-mono font-semibold text-accent-gold/80">{Math.round(ing.line_cost).toLocaleString()}</td>
+                                    </>
+                                  )}
                                 </tr>
                               );
                             })}
@@ -6566,22 +6582,24 @@ export default function Home() {
                       </div>
 
                       {/* Wastage calculation box */}
-                      <div className="mt-4 p-4 bg-moss-light rounded border border-border-moss flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs font-sans">
-                        <div className="text-gray-400">
-                          <p>• Chi phí nguyên liệu thực tế: <strong className="text-gray-200">
-                            {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0)).toLocaleString()}
-                          </strong></p>
-                          <p>• Hao hụt bếp cộng thêm (Wastage buffer 10%): <strong className="text-gray-200">
-                            {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0) * 0.1).toLocaleString()}
-                          </strong></p>
+                      {canViewFinancials && (
+                        <div className="mt-4 p-4 bg-moss-light rounded border border-border-moss flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs font-sans">
+                          <div className="text-gray-400">
+                            <p>• Chi phí nguyên liệu thực tế: <strong className="text-gray-200">
+                              {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0)).toLocaleString()}
+                            </strong></p>
+                            <p>• Hao hụt bếp cộng thêm (Wastage buffer 10%): <strong className="text-gray-200">
+                              {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0) * 0.1).toLocaleString()}
+                            </strong></p>
+                          </div>
+                          <div className="text-right border-t md:border-t-0 border-amber-500/15 pt-2 md:pt-0">
+                            <span className="text-[10px] text-gray-400 uppercase tracking-wider block">Tổng Giá vốn đĩa (Food Cost)</span>
+                            <span className="text-xl font-bold text-accent-gold">
+                              {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0) * 1.1).toLocaleString()}
+                            </span>
+                          </div>
                         </div>
-                        <div className="text-right border-t md:border-t-0 border-amber-500/15 pt-2 md:pt-0">
-                          <span className="text-[10px] text-gray-400 uppercase tracking-wider block">Tổng Giá vốn đĩa (Food Cost)</span>
-                          <span className="text-xl font-bold text-accent-gold">
-                            {Math.round(activeRecipeDetails.ingredients.reduce((acc, x) => acc + x.line_cost, 0) * 1.1).toLocaleString()}
-                          </span>
-                        </div>
-                      </div>
+                      )}
                     </div>
 
                     {/* Step-by-Step Method */}
