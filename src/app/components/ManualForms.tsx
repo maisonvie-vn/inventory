@@ -59,7 +59,7 @@ export default function ManualForms({
     try {
       // 1. Fetch ingredients view
       const viewName = currentUser?.role === 'admin' ? 'v_inventory_finance' : 
-                       currentUser?.role === 'senior_accountant' ? 'v_inventory_cost' : 'v_inventory_ops';
+                       (currentUser?.role === 'senior_accountant' || currentUser?.role === 'restaurant_manager' || currentUser?.role === 'junior_accountant' || currentUser?.role === 'head_chef') ? 'v_inventory_cost' : 'v_inventory_ops';
       
       const { data: ingData } = await supabase.from(viewName).select('*');
       if (ingData) {

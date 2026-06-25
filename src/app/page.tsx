@@ -1343,7 +1343,12 @@ export default function Home() {
       let viewName = 'v_inventory_ops';
       if (userRole === 'admin') {
         viewName = 'v_inventory_finance';
-      } else if (userRole === 'senior_accountant') {
+      } else if (
+        userRole === 'senior_accountant' || 
+        userRole === 'restaurant_manager' || 
+        userRole === 'junior_accountant' || 
+        userRole === 'head_chef'
+      ) {
         viewName = 'v_inventory_cost';
       }
       
@@ -5860,7 +5865,7 @@ export default function Home() {
               </div>
 
               {/* BẢNG ĐIỀU KHIỂN MÔ PHỎNG VẬN HÀNH DÀNH CHO ADMIN & KẾ TOÁN KHO CẤP CAO */}
-              {(userRole === 'admin' || userRole === 'senior_accountant' || userRole === 'head_chef') && (
+              {(userRole === 'admin' || userRole === 'senior_accountant' || userRole === 'head_chef' || userRole === 'restaurant_manager') && (
                 <div className="p-4 bg-moss-light border border-border-moss rounded-md flex flex-col gap-4 font-sans">
                   <div className="flex items-center justify-between border-b border-border-cream pb-2">
                     <div className="flex items-center gap-2">
@@ -7892,7 +7897,7 @@ export default function Home() {
                             </div>
 
                             {/* Phê duyệt bởi Kế toán trưởng / Admin (Cấp 1 & 4) */}
-                            {grn.status === 'pending' && (userRole === 'admin' || userRole === 'senior_accountant') && (
+                            {grn.status === 'pending' && (userRole === 'admin' || userRole === 'senior_accountant' || userRole === 'restaurant_manager') && (
                               <div className="flex justify-end pt-1 border-t border-border-moss">
                                 <button
                                   onClick={() => handleApproveGrn(grn.id)}
